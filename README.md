@@ -16,7 +16,7 @@ The game features simple and intuitive controls, including WASD movement and mou
 - Arena mode where players can face off against waves of enemies or individual opponents.
 
 ## Authors
-- Filip Krawiec ([@username](https://www.github.com/alwarez))
+- Filip Krawiec ([@alwarez](https://www.github.com/alwarez))
 - Jakub Molek ([@JacobDeMolay](https://github.com/JacobDeMolay))
 - Dawid Mucha ([@BzykuuDM](https://github.com/BzykuuDM))
 - Paweł Trojański ([@enviGit](https://github.com/enviGit))
