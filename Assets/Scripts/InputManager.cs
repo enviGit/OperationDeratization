@@ -16,6 +16,9 @@ public class InputManager : MonoBehaviour
         pointerPosition = GetComponent<PointerPosition>();
         OnFoot.Jump.performed += ctx => playerMotor.Jump();
         OnFoot.Shoot.performed += ctx => playerMotor.Shoot();
+        //
+        //OnFoot.Crouch.performed += ctx => playerMotor.Crouch();
+        //
     }
     private void FixedUpdate()
     {
