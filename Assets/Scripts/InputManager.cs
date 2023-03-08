@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
         playerMotor = GetComponent<PlayerMotor>();
         pointerPosition = GetComponent<PointerPosition>();
         OnFoot.Jump.performed += ctx => playerMotor.Jump();
+        OnFoot.Shoot.performed += ctx => playerMotor.Shoot();
     }
     private void FixedUpdate()
     {
@@ -22,7 +23,6 @@ public class InputManager : MonoBehaviour
     }
     private void LateUpdate()
     {
-
         pointerPosition.ProcessLook(OnFoot.PointerPosition.ReadValue<Vector2>());
     }
     private void OnEnable()

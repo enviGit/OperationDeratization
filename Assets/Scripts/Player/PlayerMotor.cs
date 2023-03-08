@@ -8,8 +8,8 @@ public class PlayerMotor : MonoBehaviour
     private bool isGrounded;
     public float speed = 5f;
     public float gravity = -9.8f;
-    public float jump = 1.5f;
-
+    public float jump = 1f;
+    
     private void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -27,7 +27,7 @@ public class PlayerMotor : MonoBehaviour
         playerVelocity.y += gravity * Time.deltaTime;
 
         if(isGrounded && playerVelocity.y < 0)
-            playerVelocity.y = -2f;
+            playerVelocity.y = -5f;
 
         controller.Move(playerVelocity * Time.deltaTime);
     }
@@ -35,5 +35,14 @@ public class PlayerMotor : MonoBehaviour
     {
         if (isGrounded)
             playerVelocity.y = Mathf.Sqrt(jump * -3f * gravity);
+    }
+    public void Shoot()
+    {
+        RaycastHit hit;
+
+        if(Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity))
+        {
+            Debug.Log("Hit: " + hit.collider.name);
+        }
     }
 }
