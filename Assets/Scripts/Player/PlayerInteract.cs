@@ -33,9 +33,7 @@ public class PlayerInteract : MonoBehaviour
                 playerUI.UpdateText(interactable.prompt);
 
                 if(inputManager.OnFoot.Interact.triggered)
-                {
                     interactable.BaseInteract();
-                }
             }
         }
     }

@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Crouch",
+                    "type": "Button",
+                    "id": "d3707e59-17f7-486d-8d87-ac3f971b0ca2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "c5f1d152-aed9-4d7d-8635-339cf469eb9d",
@@ -51,9 +60,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Crouch",
+                    "name": "Aim",
                     "type": "Button",
-                    "id": "d3707e59-17f7-486d-8d87-ac3f971b0ca2",
+                    "id": "461008fe-87db-4469-b151-0317dc46049f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "25f4a70b-94bc-4384-8456-f7bbf968fda1",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -63,7 +81,7 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "276f1e4d-8cda-4f4c-ae39-a10d9c9e6205",
+                    "id": "e03277a9-c71d-4037-b7f0-9fb54fbf76a1",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
@@ -272,19 +290,19 @@
                 },
                 {
                     "name": "",
-                    "id": "0794e286-75c2-4ece-aedb-e0e6802f1054",
-                    "path": "",
+                    "id": "75f17776-bbc2-40cf-a798-69b679de6593",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Crouch",
+                    "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "75f17776-bbc2-40cf-a798-69b679de6593",
-                    "path": "<Mouse>/leftButton",
+                    "id": "9ca107ff-873c-4ea8-8b42-ce481b58aef9",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -306,11 +324,88 @@
                 {
                     "name": "",
                     "id": "dfab8bff-6c37-4342-9d25-00e6029a1735",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0794e286-75c2-4ece-aedb-e0e6802f1054",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0c675154-e0ac-4eeb-b897-a77adaccb88b",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c75a6ab8-6046-4b91-ba46-d178be2928f6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba538551-62ef-4ac9-8687-f57c5acd8511",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1eb6de8b-271d-4ed9-97bf-13e5872ac0e7",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "62d960d1-311d-49b6-bcd6-f3966ecb3cbf",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1cf8f7bf-0e08-4fb8-97d4-36b6cc646f4f",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
