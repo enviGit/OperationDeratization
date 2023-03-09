@@ -9,8 +9,7 @@ public class PlayerStance
     public enum Stance
     {
         Stand,
-        Crouch,
-        Prone
+        Crouch
     }
 
     public float camHeight;

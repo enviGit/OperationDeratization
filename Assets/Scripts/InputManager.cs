@@ -6,7 +6,7 @@ public class InputManager : MonoBehaviour
     private PlayerInput playerInput;
     public PlayerInput.OnFootActions OnFoot;
     private PlayerMotor playerMotor;
-    private PointerPosition pointerPosition;
+    public PointerPosition pointerPosition;
 
     [Header("References")]
     public Transform cam;
@@ -20,7 +20,6 @@ public class InputManager : MonoBehaviour
     public float playerStanceSmoothing = 0.2f;
     public PlayerStance playerStandStance;
     public PlayerStance playerCrouchStance;
-    public PlayerStance playerProneStance;
     private float stanceCheckErrorMargin = 0.05f;
     private float camHeight;
     private float camHeightVelocity;
@@ -37,11 +36,9 @@ public class InputManager : MonoBehaviour
         OnFoot.Jump.performed += ctx => playerMotor.Jump();
         OnFoot.Shoot.performed += ctx => playerMotor.Shoot();
         OnFoot.Crouch.performed += ctx => playerMotor.Crouch();
-        OnFoot.Prone.performed += ctx => playerMotor.Prone();
         camHeight = cam.localPosition.y;
         playerStandStance.camHeight = 3.4f;
-        playerCrouchStance.camHeight = 2f;
-        playerProneStance.camHeight = 1f;
+        playerCrouchStance.camHeight = 1.5f;
     }
     private void Update()
     {
@@ -69,8 +66,6 @@ public class InputManager : MonoBehaviour
 
         if (playerStance == PlayerStance.Stance.Crouch)
             currentStance = playerCrouchStance;
-        else if (playerStance == PlayerStance.Stance.Prone)
-            currentStance = playerProneStance;
 
         camHeight = Mathf.SmoothDamp(cam.localPosition.y, currentStance.camHeight, ref camHeightVelocity, playerStanceSmoothing);
         cam.localPosition = new Vector3(cam.localPosition.x, camHeight, cam.localPosition.z);

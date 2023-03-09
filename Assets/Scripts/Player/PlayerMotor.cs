@@ -59,11 +59,6 @@ public class PlayerMotor : MonoBehaviour
     }
     public void Crouch()
     {
-        /*if (isGrounded && currentState.playerStance != PlayerStance.Stance.Crouch)
-            currentState.playerStance = PlayerStance.Stance.Crouch;
-        else if (isGrounded && currentState.playerStance == PlayerStance.Stance.Crouch)
-            currentState.playerStance = PlayerStance.Stance.Stand;*/
-
         if (!isGrounded)
             return;
         if (currentState.playerStance == PlayerStance.Stance.Crouch)
@@ -72,6 +67,7 @@ public class PlayerMotor : MonoBehaviour
                 return;
 
             currentState.playerStance = PlayerStance.Stance.Stand;
+            speed = 5f;
         }
         else
         {
@@ -79,37 +75,7 @@ public class PlayerMotor : MonoBehaviour
                 return;
 
             currentState.playerStance = PlayerStance.Stance.Crouch;
-        }
-    }
-    public void Prone()
-    {
-        /*if (isGrounded && currentState.playerStance != PlayerStance.Stance.Prone)
-            currentState.playerStance = PlayerStance.Stance.Prone;
-        else if (isGrounded && currentState.playerStance == PlayerStance.Stance.Prone)
-            currentState.playerStance = PlayerStance.Stance.Stand;*/
-
-        if (!isGrounded)
-            return;
-        if (currentState.playerStance == PlayerStance.Stance.Prone)
-        {
-            if (currentState.StanceCheck(currentState.playerStandStance.collider.height))
-            {
-                currentState.playerStance = PlayerStance.Stance.Stand;
-
-                return;
-            }
-            if (currentState.StanceCheck(currentState.playerCrouchStance.collider.height))
-            {
-                currentState.playerStance = PlayerStance.Stance.Crouch;
-
-                return;
-            }
-
-            currentState.playerStance = PlayerStance.Stance.Stand;
-        }
-        else
-        {
-            currentState.playerStance = PlayerStance.Stance.Prone;
+            speed = 2f;
         }
     }
 }

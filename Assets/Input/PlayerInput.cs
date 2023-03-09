@@ -64,15 +64,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Prone"",
-                    ""type"": ""Button"",
-                    ""id"": ""00d44ffc-e3d2-462d-a523-0ef9193c3d15"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""c5f1d152-aed9-4d7d-8635-339cf469eb9d"",
@@ -437,28 +428,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Reload"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7ad8770e-6c41-4f9e-8dd7-aadfcd084f51"",
-                    ""path"": ""<Keyboard>/leftShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Prone"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b33de635-65f2-4a5c-b79f-fc8e4458561a"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Prone"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -989,7 +958,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_OnFoot_PointerPosition = m_OnFoot.FindAction("PointerPosition", throwIfNotFound: true);
         m_OnFoot_Jump = m_OnFoot.FindAction("Jump", throwIfNotFound: true);
         m_OnFoot_Crouch = m_OnFoot.FindAction("Crouch", throwIfNotFound: true);
-        m_OnFoot_Prone = m_OnFoot.FindAction("Prone", throwIfNotFound: true);
         m_OnFoot_Interact = m_OnFoot.FindAction("Interact", throwIfNotFound: true);
         m_OnFoot_Shoot = m_OnFoot.FindAction("Shoot", throwIfNotFound: true);
         m_OnFoot_Aim = m_OnFoot.FindAction("Aim", throwIfNotFound: true);
@@ -1069,7 +1037,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_PointerPosition;
     private readonly InputAction m_OnFoot_Jump;
     private readonly InputAction m_OnFoot_Crouch;
-    private readonly InputAction m_OnFoot_Prone;
     private readonly InputAction m_OnFoot_Interact;
     private readonly InputAction m_OnFoot_Shoot;
     private readonly InputAction m_OnFoot_Aim;
@@ -1082,7 +1049,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @PointerPosition => m_Wrapper.m_OnFoot_PointerPosition;
         public InputAction @Jump => m_Wrapper.m_OnFoot_Jump;
         public InputAction @Crouch => m_Wrapper.m_OnFoot_Crouch;
-        public InputAction @Prone => m_Wrapper.m_OnFoot_Prone;
         public InputAction @Interact => m_Wrapper.m_OnFoot_Interact;
         public InputAction @Shoot => m_Wrapper.m_OnFoot_Shoot;
         public InputAction @Aim => m_Wrapper.m_OnFoot_Aim;
@@ -1108,9 +1074,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Crouch.started -= m_Wrapper.m_OnFootActionsCallbackInterface.OnCrouch;
                 @Crouch.performed -= m_Wrapper.m_OnFootActionsCallbackInterface.OnCrouch;
                 @Crouch.canceled -= m_Wrapper.m_OnFootActionsCallbackInterface.OnCrouch;
-                @Prone.started -= m_Wrapper.m_OnFootActionsCallbackInterface.OnProne;
-                @Prone.performed -= m_Wrapper.m_OnFootActionsCallbackInterface.OnProne;
-                @Prone.canceled -= m_Wrapper.m_OnFootActionsCallbackInterface.OnProne;
                 @Interact.started -= m_Wrapper.m_OnFootActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_OnFootActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_OnFootActionsCallbackInterface.OnInteract;
@@ -1139,9 +1102,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Crouch.started += instance.OnCrouch;
                 @Crouch.performed += instance.OnCrouch;
                 @Crouch.canceled += instance.OnCrouch;
-                @Prone.started += instance.OnProne;
-                @Prone.performed += instance.OnProne;
-                @Prone.canceled += instance.OnProne;
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
@@ -1269,7 +1229,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnPointerPosition(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
-        void OnProne(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
