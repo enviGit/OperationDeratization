@@ -2,21 +2,56 @@ using UnityEngine;
 
 public class LadderTrigger : Interactable
 {
-    [SerializeField] private float climbSpeed = 3f;
+    [SerializeField] 
+    private float climbSpeed = 3f;
     private bool isClimbing;
-     private void OnTriggerEnter(Collider other)
+    private Vector3 ladderTop;
+    private Vector3 ladderBottom;
+    private Transform playerTransform;
+    private CharacterController characterController;
+
+    protected override void Interact()
     {
-        if (other.CompareTag("Player"))
-        {
-            isClimbing = true;
-        }
+        prompt = "Climb Ladder";
+
+        if (isClimbing)
+            DetachFromLadder();
+        else
+            AttachToLadder();
     }
 
-    private void OnTriggerExit(Collider other)
+    private void AttachToLadder()
     {
-        if (other.CompareTag("Player"))
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        characterController = playerTransform.GetComponent<CharacterController>();
+        isClimbing = true;
+        ladderTop = transform.GetChild(0).position;
+        ladderBottom = transform.GetChild(1).position;
+        playerTransform.position = new Vector3(transform.position.x, playerTransform.position.y, transform.position.z);
+        playerTransform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+        characterController.enabled = false;
+    }
+
+    private void DetachFromLadder()
+    {
+        characterController.enabled = true;
+        isClimbing = false;
+    }
+
+    private void FixedUpdate()
+    {
+        if (isClimbing)
         {
-            isClimbing = false;
+            float verticalInput = Input.GetAxis("Vertical");
+
+            if (verticalInput > 0 && playerTransform.position.y < ladderTop.y)
+                playerTransform.Translate(Vector3.up * climbSpeed * Time.deltaTime);
+            else if (verticalInput < 0 && playerTransform.position.y > ladderBottom.y)
+                playerTransform.Translate(Vector3.down * climbSpeed * Time.deltaTime);
+            else if (verticalInput == 0)
+                playerTransform.Translate(Vector3.zero);
+            else
+                DetachFromLadder();
         }
     }
 }
