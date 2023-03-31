@@ -6,7 +6,7 @@ public class PlayerMotor : MonoBehaviour
     private Vector3 playerVelocity;
     private bool isGrounded;
     public float gravity = -9.8f;
-    public float jumpHeight = 0.1f;
+    public float jumpHeight = 0.7f;
     [SerializeField]
     private Gun currentGun;
     private PlayerStance currentState = new PlayerStance();
@@ -135,7 +135,7 @@ public class PlayerMotor : MonoBehaviour
     }
     private void Climb()
     {
-        if (Input.GetKey(KeyCode.Space) && !isGrounded)
+        if (Input.GetKey(KeyCode.E) && !isGrounded)
         {
             float climbSpeed = 3f;
             Vector3 climbDirection = transform.up * climbSpeed * Time.deltaTime;
