@@ -1,17 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 
 [Serializable]
 public class PlayerStance
 {
+    public Stance playerStance;
+    public PlayerStance playerStandStance;
+    public PlayerStance playerCrouchStance;
+    public float camHeight;
+
     public enum Stance
     {
-        Stand,
-        Crouch
+        Idle,
+        Walking,
+        Jumping,
+        Crouching,
+        Climbing
     }
-
-    public float camHeight;
-    public CapsuleCollider collider;
 }

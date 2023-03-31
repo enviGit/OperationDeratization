@@ -1,81 +1,154 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMotor : MonoBehaviour
 {
     public CharacterController controller;
     private Vector3 playerVelocity;
     private bool isGrounded;
-    public float speed = 5f;
     public float gravity = -9.8f;
-    public float jump = 1f;
+    public float jumpHeight = 0.1f;
     [SerializeField]
     private Gun currentGun;
-    private InputManager currentState;
+    private PlayerStance currentState = new PlayerStance();
+    public float moveSpeed = 5f;
+    public Camera cam;
+    private float xRotation = 0f;
+    public float xSensitivity = 3f;
+    public float ySensitivity = 3f;
 
     private void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         controller = GetComponent<CharacterController>();
-        currentState = FindObjectOfType<InputManager>();
+        currentState = new PlayerStance();
+        currentState.playerStance = PlayerStance.Stance.Idle;
+        currentState.camHeight = Camera.main.transform.localPosition.y;
     }
+
     private void Update()
     {
         isGrounded = controller.isGrounded;
+        Move();
+
+        if (isGrounded && playerVelocity.y < 0)
+            playerVelocity.y = -2f;
+
+        Gravity();
+        Crouch();
+        CrouchToggle();
+        Jump();
+        Shoot();
+        Climb();
+        PointerPosition();
     }
-    public void ProcessMove(Vector2 input)
+    private void Move()
     {
-        Vector3 moveDirection = Vector3.zero;
-        moveDirection.x = input.x;
-        moveDirection.z = input.y;
-        controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        Vector3 moveDirection = transform.right * x + transform.forward * z;
+        controller.Move(moveDirection * moveSpeed * Time.deltaTime);
+    }
+    private void Gravity()
+    {
         playerVelocity.y += gravity * Time.deltaTime;
-
-        if(isGrounded && playerVelocity.y < 0)
-            playerVelocity.y = -5f;
-
         controller.Move(playerVelocity * Time.deltaTime);
     }
-    public void Jump()
+    private void Crouch()
     {
-        if (isGrounded)
+        if (currentState.playerStance == PlayerStance.Stance.Crouching)
         {
-            currentState.playerStance = PlayerStance.Stance.Stand;
-            playerVelocity.y = Mathf.Sqrt(jump * -3f * gravity);
-        }
-    }
-    public void Shoot()
-    {
-        RaycastHit hit;
-
-        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity))
-        {
-            Debug.Log("Hit: " + hit.collider.name);
-            IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-
-            if (damageable != null)
-                damageable.DealDamage(Random.Range(currentGun.minimumDamage, currentGun.maximumDamage));
-
-        }
-    }
-    public void Crouch()
-    {
-        if (!isGrounded)
-            return;
-        if (currentState.playerStance == PlayerStance.Stance.Crouch)
-        {
-            if (currentState.StanceCheck(currentState.playerStandStance.collider.height))
-                return;
-
-            currentState.playerStance = PlayerStance.Stance.Stand;
-            speed = 5f;
+            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, currentState.camHeight / 2f, Time.deltaTime * 5f);
+            Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
+            controller.height = 1f;
+            moveSpeed = 2f;
         }
         else
         {
-            if (currentState.StanceCheck(currentState.playerCrouchStance.collider.height))
+            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, currentState.camHeight, Time.deltaTime * 5f);
+            Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
+            controller.height = 2f;
+            moveSpeed = 5f;
+        }
+    }
+    private void CrouchToggle()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            if (!isGrounded)
+                return;
+            if (currentState.playerStance == PlayerStance.Stance.Crouching)
+            {
+                RaycastHit hit;
+                LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
+
+                if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
+                    currentState.playerStance = PlayerStance.Stance.Crouching;
+                else
+                {
+                    currentState.playerStance = PlayerStance.Stance.Idle;
+                    currentState.camHeight = Camera.main.transform.localPosition.y * 2f;
+                }
+            }
+            else
+                currentState.playerStance = PlayerStance.Stance.Crouching;
+        }
+    }
+    private void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            RaycastHit hit;
+            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
+
+            if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
                 return;
 
-            currentState.playerStance = PlayerStance.Stance.Crouch;
-            speed = 2f;
+            if (currentState.playerStance == PlayerStance.Stance.Jumping)
+            {
+                currentState.playerStance = PlayerStance.Stance.Idle;
+                moveSpeed = 3f;
+            }
+            else
+            {
+                currentState.playerStance = PlayerStance.Stance.Jumping;
+                moveSpeed = 5f;
+            }
+
+            playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
+    }
+    private void Shoot()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity))
+            {
+                Debug.Log("Hit: " + hit.collider.name);
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+
+                if (damageable != null)
+                    damageable.DealDamage(Random.Range(currentGun.minimumDamage, currentGun.maximumDamage));
+            }
+        }
+    }
+    private void Climb()
+    {
+        if (Input.GetKey(KeyCode.Space) && !isGrounded)
+        {
+            float climbSpeed = 3f;
+            Vector3 climbDirection = transform.up * climbSpeed * Time.deltaTime;
+            controller.Move(climbDirection);
+        }
+    }
+    private void PointerPosition()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * xSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * ySensitivity;
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -80f, 80f);
+        transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
+        Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 }
