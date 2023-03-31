@@ -27,7 +27,7 @@ public class LadderTrigger : Interactable
         isClimbing = true;
         ladderTop = transform.GetChild(0).position;
         ladderBottom = transform.GetChild(1).position;
-        playerTransform.position = new Vector3(transform.position.x, playerTransform.position.y, transform.position.z);
+        playerTransform.position = new Vector3(transform.position.x, playerTransform.position.y, transform.position.z + -0.5f); //-0.5f is to change, we don't know how the ladder will be rotated
         playerTransform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
         characterController.enabled = false;
     }
