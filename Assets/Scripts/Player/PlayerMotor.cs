@@ -47,10 +47,10 @@ public class PlayerMotor : MonoBehaviour
         float z = Input.GetAxis("Vertical");
         Vector3 moveDirection = transform.right * x + transform.forward * z;
 
-        if (moveDirection.magnitude > 0)
+        /*if (moveDirection.magnitude > 0)
             currentState.playerStance = PlayerStance.Stance.Walking;
         else
-            currentState.playerStance = PlayerStance.Stance.Idle;
+            currentState.playerStance = PlayerStance.Stance.Idle;*/
 
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
