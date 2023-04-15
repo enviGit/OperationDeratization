@@ -13,8 +13,6 @@ public class PlayerStance
     {
         Idle,
         Walking,
-        Jumping,
         Crouching,
-        Climbing
     }
 }

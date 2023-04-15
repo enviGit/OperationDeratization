@@ -15,6 +15,7 @@ public class PlayerMotor : MonoBehaviour
     private float xRotation = 0f;
     public float xSensitivity = 3f;
     public float ySensitivity = 3f;
+    private bool isCrouching;
 
     private void Start()
     {
@@ -27,6 +28,7 @@ public class PlayerMotor : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(currentState.playerStance);
         isGrounded = controller.isGrounded;
         Move();
 
@@ -47,10 +49,20 @@ public class PlayerMotor : MonoBehaviour
         float z = Input.GetAxis("Vertical");
         Vector3 moveDirection = transform.right * x + transform.forward * z;
 
-        /*if (moveDirection.magnitude > 0)
-            currentState.playerStance = PlayerStance.Stance.Walking;
+        if (moveDirection.magnitude > 0)
+        {
+            if (isCrouching)
+                currentState.playerStance = PlayerStance.Stance.Crouching;
+            else
+                currentState.playerStance = PlayerStance.Stance.Walking;
+        }
         else
-            currentState.playerStance = PlayerStance.Stance.Idle;*/
+        {
+            if (isCrouching)
+                currentState.playerStance = PlayerStance.Stance.Crouching;
+            else
+                currentState.playerStance = PlayerStance.Stance.Idle;
+        }
 
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
@@ -89,17 +101,20 @@ public class PlayerMotor : MonoBehaviour
 
                 if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
                 {
+                    isCrouching = true;
                     currentState.playerStance = PlayerStance.Stance.Crouching;
                     currentState.camHeight = 1.7f;
                 }
                 else
                 {
+                    isCrouching = false;
                     currentState.playerStance = PlayerStance.Stance.Idle;
                     currentState.camHeight = 3.4f;
                 }
             }
             else
             {
+                isCrouching = true;
                 currentState.playerStance = PlayerStance.Stance.Crouching;
                 currentState.camHeight = 1.7f;
             }
@@ -114,16 +129,6 @@ public class PlayerMotor : MonoBehaviour
 
             if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
                 return;
-            if (currentState.playerStance == PlayerStance.Stance.Jumping)
-            {
-                currentState.playerStance = PlayerStance.Stance.Idle;
-                moveSpeed = 3f;
-            }
-            else
-            {
-                currentState.playerStance = PlayerStance.Stance.Jumping;
-                moveSpeed = 5f;
-            }
 
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
