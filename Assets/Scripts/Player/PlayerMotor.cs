@@ -55,17 +55,21 @@ public class PlayerMotor : MonoBehaviour
         if (moveDirection.magnitude > 0)
         {
             if (isCrouching)
+            {
                 currentState.playerStance = PlayerStance.Stance.Crouching;
+            }
             else
             {
-                anim.SetFloat("Speed", 0.5f, 0.3f, Time.deltaTime);
+                anim.SetFloat("Speed", 1f, 0.3f, Time.deltaTime);
                 currentState.playerStance = PlayerStance.Stance.Walking;
             }
         }
         else
         {
             if (isCrouching)
+            {
                 currentState.playerStance = PlayerStance.Stance.Crouching;
+            }
             else
             {
                 anim.SetFloat("Speed", 0f, 0.3f, Time.deltaTime);
@@ -111,12 +115,14 @@ public class PlayerMotor : MonoBehaviour
                 if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
                 {
                     isCrouching = true;
+                    anim.SetBool("IsCrouching", isCrouching);
                     currentState.playerStance = PlayerStance.Stance.Crouching;
                     currentState.camHeight = 1.7f;
                 }
                 else
                 {
                     isCrouching = false;
+                    anim.SetBool("IsCrouching", isCrouching);
                     currentState.playerStance = PlayerStance.Stance.Idle;
                     currentState.camHeight = 3.4f;
                 }
@@ -124,6 +130,7 @@ public class PlayerMotor : MonoBehaviour
             else
             {
                 isCrouching = true;
+                anim.SetBool("IsCrouching", isCrouching);
                 currentState.playerStance = PlayerStance.Stance.Crouching;
                 currentState.camHeight = 1.7f;
             }
