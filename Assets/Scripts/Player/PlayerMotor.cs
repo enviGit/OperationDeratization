@@ -22,7 +22,7 @@ public class PlayerMotor : MonoBehaviour
         controller = GetComponent<CharacterController>();
         currentState = new PlayerStance();
         currentState.playerStance = PlayerStance.Stance.Idle;
-        currentState.camHeight = Camera.main.transform.localPosition.y;
+        currentState.camHeight = 3.4f;
     }
 
     private void Update()
@@ -46,6 +46,12 @@ public class PlayerMotor : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         Vector3 moveDirection = transform.right * x + transform.forward * z;
+
+        if (moveDirection.magnitude > 0)
+            currentState.playerStance = PlayerStance.Stance.Walking;
+        else
+            currentState.playerStance = PlayerStance.Stance.Idle;
+
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
     private void Gravity()
@@ -57,14 +63,14 @@ public class PlayerMotor : MonoBehaviour
     {
         if (currentState.playerStance == PlayerStance.Stance.Crouching)
         {
-            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, currentState.camHeight / 2f, Time.deltaTime * 5f);
+            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 1.7f, Time.deltaTime * 5f);
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
             controller.height = 1f;
             moveSpeed = 2f;
         }
         else
         {
-            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, currentState.camHeight, Time.deltaTime * 5f);
+            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 3.4f, Time.deltaTime * 5f);
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
             controller.height = 2f;
             moveSpeed = 5f;
@@ -82,15 +88,21 @@ public class PlayerMotor : MonoBehaviour
                 LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
                 if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
+                {
                     currentState.playerStance = PlayerStance.Stance.Crouching;
+                    currentState.camHeight = 1.7f;
+                }
                 else
                 {
                     currentState.playerStance = PlayerStance.Stance.Idle;
-                    currentState.camHeight = Camera.main.transform.localPosition.y * 2f;
+                    currentState.camHeight = 3.4f;
                 }
             }
             else
+            {
                 currentState.playerStance = PlayerStance.Stance.Crouching;
+                currentState.camHeight = 1.7f;
+            }
         }
     }
     private void Jump()
@@ -102,7 +114,6 @@ public class PlayerMotor : MonoBehaviour
 
             if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
                 return;
-
             if (currentState.playerStance == PlayerStance.Stance.Jumping)
             {
                 currentState.playerStance = PlayerStance.Stance.Idle;
