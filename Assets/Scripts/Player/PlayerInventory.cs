@@ -52,8 +52,13 @@ public class PlayerInventory : MonoBehaviour
 
         if (collidedObject.layer == LayerMask.NameToLayer("Interactable"))
         {
-            Destroy(collidedObject.GetComponent<Rigidbody>());
+            Rigidbody collidedRigidbody = collidedObject.GetComponent<Rigidbody>();
+
+            if (collidedRigidbody != null)
+                Destroy(collidedRigidbody);
+
             collidedObject.transform.position = collision.contacts[0].point;
+            collidedObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, collision.contacts[0].normal);
         }
     }
 }
