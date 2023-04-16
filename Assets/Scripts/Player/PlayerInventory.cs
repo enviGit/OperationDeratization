@@ -1,4 +1,4 @@
-/*using UnityEngine;
+using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
@@ -31,4 +31,3 @@ public class PlayerInventory : MonoBehaviour
         weapons = new Gun[3];
     }
 }
-*/

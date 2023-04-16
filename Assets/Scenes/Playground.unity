@@ -1939,8 +1939,7 @@ Transform:
   m_LocalPosition: {x: 0.5310004, y: -0.24599767, z: 0.36600205}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1797260643}
+  m_Children: []
   m_Father: {fileID: 1350570617}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2776,75 +2775,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcb5c50335d5ead4abea041e6e413ccd, type: 3}
---- !u!1001 &1122217264
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 794113911}
-    m_Modifications:
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5559442646728411565, guid: 38c96234ac22ee04697a4f3604688996,
-        type: 3}
-      propertyPath: m_Name
-      value: Rifle_00
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 38c96234ac22ee04697a4f3604688996, type: 3}
 --- !u!1 &1172622610
 GameObject:
   m_ObjectHideFlags: 0
@@ -5075,12 +5005,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1797260643 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5074654138207818519, guid: 38c96234ac22ee04697a4f3604688996,
-    type: 3}
-  m_PrefabInstance: {fileID: 1122217264}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1838398914
 GameObject:
   m_ObjectHideFlags: 0
@@ -6109,6 +6033,8 @@ GameObject:
   - component: {fileID: 2017800344}
   - component: {fileID: 2017800348}
   - component: {fileID: 2017800349}
+  - component: {fileID: 858864972477991368}
+  - component: {fileID: 858864972477991367}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -7198,6 +7124,35 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &858864972477991367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45209206938391423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f41e6fca2aca61b4f9ad4e3381f8271c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupRange: 0
+  pickupLayer:
+    m_Bits: 0
+  cam: {fileID: 0}
+--- !u!114 &858864972477991368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45209206938391423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef56b20cc5c1aec4687581ae549d2fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapons: []
 --- !u!1 &906678509941310255
 GameObject:
   m_ObjectHideFlags: 0
@@ -12371,6 +12326,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5074654138534741934}
+  - component: {fileID: 5559442647608990998}
+  - component: {fileID: 5559442647608990997}
   m_Layer: 6
   m_Name: Rifle_00
   m_TagString: Untagged
@@ -12378,6 +12335,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &5559442647608990997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5559442647608990996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7573a5f98a84ca345a6ba95fb77ac296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useEvents: 0
+  prompt: Pickup weapon
+  gun: {fileID: 11400000, guid: d8c52795110395343ab35102db60eedb, type: 2}
+--- !u!65 &5559442647608990998
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5559442647608990996}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.083559185, y: 0.34719586, z: 0.9452574}
+  m_Center: {x: 0.009266034, y: 0.020549417, z: 0.089298606}
 --- !u!4 &5563504768524852554
 Transform:
   m_ObjectHideFlags: 0
