@@ -56,6 +56,7 @@ public class PlayerMotor : MonoBehaviour
         {
             if (isCrouching)
             {
+                anim.SetFloat("Speed", 1f, 0.3f, Time.deltaTime);
                 currentState.playerStance = PlayerStance.Stance.Crouching;
             }
             else
@@ -68,6 +69,7 @@ public class PlayerMotor : MonoBehaviour
         {
             if (isCrouching)
             {
+                anim.SetFloat("Speed", 0f, 0.3f, Time.deltaTime);
                 currentState.playerStance = PlayerStance.Stance.Crouching;
             }
             else
