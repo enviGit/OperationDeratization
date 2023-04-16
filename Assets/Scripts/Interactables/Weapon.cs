@@ -7,7 +7,7 @@ public class Weapon : Interactable
 
     protected override void Interact()
     {
-        prompt = "Pickup weapon";
+        prompt = "Pick up weapon";
         PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
         inventory.AddItem(gun);
         GameObject weaponObject = Instantiate(gun.gunPrefab, Vector3.zero, Quaternion.identity, Camera.main.transform.Find("WeaponHolder"));
