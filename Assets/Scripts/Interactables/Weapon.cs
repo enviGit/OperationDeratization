@@ -13,7 +13,12 @@ public class Weapon : Interactable
         GameObject weaponObject = Instantiate(gun.gunPrefab, Vector3.zero, Quaternion.identity, Camera.main.transform.Find("WeaponHolder"));
         weaponObject.transform.localPosition = Vector3.zero;
         weaponObject.transform.localRotation = Quaternion.identity;
-        weaponObject.transform.localScale = Vector3.one;
+        int childIndex = 1;
+
+        if (gun.gunStyle == GunStyle.Secondary)
+            childIndex = 2;
+
+        weaponObject.transform.SetSiblingIndex(childIndex);
         Destroy(gameObject);
     }
 }

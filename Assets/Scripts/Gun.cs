@@ -17,4 +17,4 @@ public class Gun : ScriptableObject
     public float range;
 }
 public enum GunType { Melee, Pistol, Rifle, Shotgun, Sniper }
-public enum GunStyle { Primary, Secondary, Melee }
+public enum GunStyle { Melee, Primary, Secondary }
