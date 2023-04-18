@@ -28,7 +28,7 @@ public class PlayerMotor : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(currentState.playerStance);
+        //Debug.Log(currentState.playerStance);
 
         isGrounded = controller.isGrounded;
         Move();
