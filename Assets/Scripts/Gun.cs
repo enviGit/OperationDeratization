@@ -12,7 +12,8 @@ public class Gun : ScriptableObject
 
     [Header("Stats")]
     public int magazineSize;
-    public int magazineCount;
+    public int currentAmmoCount;
+    public int maxAmmoCount;
     public int minimumDamage;
     public int maximumDamage;
     public float range;

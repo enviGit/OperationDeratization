@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
@@ -17,6 +18,9 @@ public class PlayerMotor : MonoBehaviour
     private Animator anim;
     private bool isShooting = false;
     private float shotTimer = 0f;
+    private Gun currentWeapon;
+    [SerializeField]
+    private TextMeshProUGUI ammoText;
 
     private void Start()
     {
@@ -32,6 +36,7 @@ public class PlayerMotor : MonoBehaviour
     {
         //Debug.Log(currentState.playerStance);
 
+        currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         isGrounded = controller.isGrounded;
         Move();
 
@@ -45,6 +50,12 @@ public class PlayerMotor : MonoBehaviour
         Shoot();
         Climb();
         PointerPosition();
+        Reload();
+
+        if (currentWeapon.gunStyle != GunStyle.Melee)
+            UpdateAmmoText();
+        else
+            ammoText.text = "";
     }
     private void Move()
     {
@@ -152,21 +163,31 @@ public class PlayerMotor : MonoBehaviour
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
+    private void Climb()
+    {
+        if (Input.GetKey(KeyCode.E) && !isGrounded)
+        {
+            float climbSpeed = 3f;
+            Vector3 climbDirection = transform.up * climbSpeed * Time.deltaTime;
+            controller.Move(climbDirection);
+        }
+    }
     private void Shoot()
     {
-        Gun currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
-
         if (Input.GetMouseButtonDown(0))
             isShooting = true;
         else if (Input.GetMouseButtonUp(0))
             isShooting = false;
 
-        if (isShooting && Time.time > shotTimer)
+        if (isShooting && Time.time > shotTimer && currentWeapon.currentAmmoCount > 0)
         {
             RaycastHit hit;
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, currentWeapon.range))
             {
+                if(currentWeapon.gunStyle != GunStyle.Melee)
+                    currentWeapon.currentAmmoCount--;
+
                 Debug.Log("Hit: " + hit.collider.name);
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
 
@@ -184,14 +205,26 @@ public class PlayerMotor : MonoBehaviour
             shotTimer = Time.time + currentWeapon.timeBetweenShots;
         }
     }
-    private void Climb()
+    private void Reload()
     {
-        if (Input.GetKey(KeyCode.E) && !isGrounded)
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            float climbSpeed = 3f;
-            Vector3 climbDirection = transform.up * climbSpeed * Time.deltaTime;
-            controller.Move(climbDirection);
-        }
+            if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)
+                return;
+
+            int ammoNeeded = currentWeapon.magazineSize - currentWeapon.currentAmmoCount;
+            int ammoAvailable = Mathf.Min(currentWeapon.maxAmmoCount, ammoNeeded);
+
+            if (ammoAvailable == 0)
+                return;
+
+            currentWeapon.currentAmmoCount += ammoAvailable;
+            currentWeapon.maxAmmoCount -= currentWeapon.magazineSize;
+        }  
+    }
+    private void UpdateAmmoText()
+    {
+        ammoText.text = currentWeapon.currentAmmoCount + " / " + currentWeapon.maxAmmoCount;
     }
     private void PointerPosition()
     {
