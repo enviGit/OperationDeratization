@@ -4,8 +4,7 @@ public class PlayerInventory : MonoBehaviour
 {
     [SerializeField]
     private Gun fists;
-    [SerializeField]
-    private Gun[] weapons;
+    public Gun[] weapons;
     private int currentWeaponIndex = -1;
 
     private void Start()
@@ -65,27 +64,15 @@ public class PlayerInventory : MonoBehaviour
                     Destroy(melee.gameObject);
             }
 
-            foreach (Transform child in transform.Find("Main Camera/WeaponHolder")) //Doesn't do what it should
-                child.gameObject.SetActive(false);                                  //Doesn't do what it should
-
             Vector3 dropPosition = transform.position + transform.forward;
             GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
             newWeapon.layer = LayerMask.NameToLayer("Interactable");
             SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
-            RemoveItem(newItemIndex);
             Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
             weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
         }
 
         weapons[newItemIndex] = newItem;
-    }
-    public void RemoveItem(int index)
-    {
-        weapons[index] = null;
-    }
-    public Gun GetItem(int index)
-    {
-        return weapons[index];
     }
     public static void SetLayerRecursively(GameObject obj, int layer)
     {
@@ -94,31 +81,8 @@ public class PlayerInventory : MonoBehaviour
         foreach (Transform child in obj.transform)
             SetLayerRecursively(child.gameObject, layer);
     }
-    private void SetCurrentWeapon(int index)
+    public void SetCurrentWeapon(int index)
     {
-        //old
-        /*if (index < 0 || index >= weapons.Length || weapons[index] == null)
-            return;
-
-        if (currentWeaponIndex >= 0 && currentWeaponIndex < weapons.Length)
-        {
-            Transform weaponHolder = transform.Find("Main Camera/WeaponHolder");
-            Transform oldWeapon = weaponHolder.GetChild(currentWeaponIndex);
-
-            if (oldWeapon != null)
-                oldWeapon.gameObject.SetActive(false);
-        }
-
-        Transform newWeapon = transform.Find("Main Camera/WeaponHolder/" + weapons[index].gunPrefab.name + "(Clone)");
-
-        if (newWeapon != null)
-            newWeapon.gameObject.SetActive(true);
-
-        currentWeaponIndex = index;*/
-
-
-
-        //new
         if (index < 0 || index >= weapons.Length || weapons[index] == null)
             return;
 

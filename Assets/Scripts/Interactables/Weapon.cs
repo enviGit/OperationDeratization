@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Weapon : Interactable
@@ -20,5 +21,7 @@ public class Weapon : Interactable
 
         weaponObject.transform.SetSiblingIndex(childIndex);
         Destroy(gameObject);
+
+        inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
     }
 }
