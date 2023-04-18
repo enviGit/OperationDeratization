@@ -158,17 +158,18 @@ public class PlayerMotor : MonoBehaviour
 
             Gun currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
 
-            if (currentWeapon == null)
-            {
-                Debug.LogError("No weapon equipped!");
-
-                return;
-            }
             if (Physics.Raycast(transform.position, transform.forward, out hit, currentWeapon.range))
             {
                 Debug.Log("Hit: " + hit.collider.name);
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
 
+                if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                {
+                    Transform muzzle = transform.Find("Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation);
+                    Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
+                    bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
+                }
                 if (damageable != null)
                     damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
             }
