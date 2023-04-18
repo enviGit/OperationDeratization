@@ -15,6 +15,8 @@ public class PlayerMotor : MonoBehaviour
     public float ySensitivity = 3f;
     private bool isCrouching;
     private Animator anim;
+    private bool isShooting = false;
+    private float shotTimer = 0f;
 
     private void Start()
     {
@@ -152,11 +154,16 @@ public class PlayerMotor : MonoBehaviour
     }
     private void Shoot()
     {
+        Gun currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
+
         if (Input.GetMouseButtonDown(0))
+            isShooting = true;
+        else if (Input.GetMouseButtonUp(0))
+            isShooting = false;
+
+        if (isShooting && Time.time > shotTimer)
         {
             RaycastHit hit;
-
-            Gun currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, currentWeapon.range))
             {
@@ -173,6 +180,8 @@ public class PlayerMotor : MonoBehaviour
                 if (damageable != null)
                     damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
             }
+
+            shotTimer = Time.time + currentWeapon.timeBetweenShots;
         }
     }
     private void Climb()
