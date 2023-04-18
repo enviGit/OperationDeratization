@@ -64,6 +64,8 @@ public class PlayerInventory : MonoBehaviour
             SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
             Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
             weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
+            Quaternion randomRotation = Random.rotation; 
+            newWeapon.transform.rotation = randomRotation;
         }
 
         weapons[newItemIndex] = newItem;
@@ -104,6 +106,8 @@ public class PlayerInventory : MonoBehaviour
                 SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
                 Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
                 weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
+                Quaternion randomRotation = Random.rotation;
+                newWeapon.transform.rotation = randomRotation;
                 Transform weaponHolder = transform.Find("Main Camera/WeaponHolder");
 
                 foreach (Transform child in weaponHolder)
