@@ -8,13 +8,13 @@ public class Door : Interactable
 
     protected override void Interact()
     {
-        prompt = "Open Door";
+        prompt = "Open door";
         doorOpen = !doorOpen;
         door.GetComponent<Animator>().SetBool("IsOpen", doorOpen);
 
         if (doorOpen)
-            prompt = "Close Door";
+            prompt = "Close door";
         else
-            prompt = "Open Door";
+            prompt = "Open door";
     }
 }

@@ -7,8 +7,6 @@ public class PlayerMotor : MonoBehaviour
     private bool isGrounded;
     public float gravity = -9.8f;
     public float jumpHeight = 0.7f;
-    [SerializeField]
-    private Gun currentGun;
     private PlayerStance currentState = new PlayerStance();
     public float moveSpeed = 5f;
     public Camera cam;
@@ -56,12 +54,12 @@ public class PlayerMotor : MonoBehaviour
         {
             if (isCrouching)
             {
-                anim.SetFloat("Speed", 1f, 0.3f, Time.deltaTime);
+                anim.SetFloat("Speed", 1f, 0.1f, Time.deltaTime);
                 currentState.playerStance = PlayerStance.Stance.Crouching;
             }
             else
             {
-                anim.SetFloat("Speed", 1f, 0.3f, Time.deltaTime);
+                anim.SetFloat("Speed", 1f, 0.1f, Time.deltaTime);
                 currentState.playerStance = PlayerStance.Stance.Walking;
             }
         }
@@ -69,12 +67,12 @@ public class PlayerMotor : MonoBehaviour
         {
             if (isCrouching)
             {
-                anim.SetFloat("Speed", 0f, 0.3f, Time.deltaTime);
+                anim.SetFloat("Speed", 0f, 0.1f, Time.deltaTime);
                 currentState.playerStance = PlayerStance.Stance.Crouching;
             }
             else
             {
-                anim.SetFloat("Speed", 0f, 0.3f, Time.deltaTime);
+                anim.SetFloat("Speed", 0f, 0.1f, Time.deltaTime);
                 currentState.playerStance = PlayerStance.Stance.Idle;
             }  
         }
@@ -158,13 +156,21 @@ public class PlayerMotor : MonoBehaviour
         {
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity))
+            Gun currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
+
+            if (currentWeapon == null)
+            {
+                Debug.LogError("No weapon equipped!");
+
+                return;
+            }
+            if (Physics.Raycast(transform.position, transform.forward, out hit, currentWeapon.range))
             {
                 Debug.Log("Hit: " + hit.collider.name);
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
 
                 if (damageable != null)
-                    damageable.DealDamage(Random.Range(currentGun.minimumDamage, currentGun.maximumDamage));
+                    damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
             }
         }
     }

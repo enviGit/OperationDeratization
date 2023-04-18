@@ -12,7 +12,7 @@ public class LadderTrigger : Interactable
 
     protected override void Interact()
     {
-        prompt = "Climb Ladder";
+        prompt = "Climb ladder";
 
         if (isClimbing)
             DetachFromLadder();

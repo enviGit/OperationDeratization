@@ -6,6 +6,16 @@ public class PlayerInventory : MonoBehaviour
     private Gun fists;
     public Gun[] weapons;
     private int currentWeaponIndex = -1;
+    public Gun CurrentWeapon
+    {
+        get
+        {
+            if (currentWeaponIndex >= 0 && currentWeaponIndex < weapons.Length)
+                return weapons[currentWeaponIndex];
+            else
+                return null;
+        }
+    }
 
     private void Start()
     {
@@ -17,24 +27,8 @@ public class PlayerInventory : MonoBehaviour
     }
     private void Update()
     {
-        int scrollDelta = (int)Input.mouseScrollDelta.y;
-
-        if (scrollDelta != 0)
-        {
-            int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
-
-            if (newWeaponIndex < 0)
-                newWeaponIndex += weapons.Length;
-
-            SetCurrentWeapon(newWeaponIndex);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            SetCurrentWeapon(0);
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            SetCurrentWeapon(1);
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-            SetCurrentWeapon(2);
+        SwitchItem();
+        RemoveItem();
     }
     public void AddItem(Gun newItem)
     {
@@ -64,7 +58,7 @@ public class PlayerInventory : MonoBehaviour
                     Destroy(melee.gameObject);
             }
 
-            Vector3 dropPosition = transform.position + transform.forward;
+            Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
             GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
             newWeapon.layer = LayerMask.NameToLayer("Interactable");
             SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
@@ -73,6 +67,57 @@ public class PlayerInventory : MonoBehaviour
         }
 
         weapons[newItemIndex] = newItem;
+    }
+    public void SwitchItem()
+    {
+        int scrollDelta = (int)Input.mouseScrollDelta.y;
+
+        if (scrollDelta != 0)
+        {
+            int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
+
+            if (newWeaponIndex < 0)
+                newWeaponIndex += weapons.Length;
+
+            SetCurrentWeapon(newWeaponIndex);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            SetCurrentWeapon(0);
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+            SetCurrentWeapon(1);
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+            SetCurrentWeapon(2);
+    }
+    public void RemoveItem()
+    {
+        if (Input.GetKeyDown(KeyCode.G) && currentWeaponIndex != 0)
+        {
+            Gun droppedWeapon = CurrentWeapon;
+            weapons[currentWeaponIndex] = null;
+
+            if (droppedWeapon != null)
+            {
+                Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
+                GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity);
+                newWeapon.layer = LayerMask.NameToLayer("Interactable");
+                SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
+                Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
+                weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
+                Transform weaponHolder = transform.Find("Main Camera/WeaponHolder");
+
+                foreach (Transform child in weaponHolder)
+                {
+                    if (child.gameObject.name == droppedWeapon.gunPrefab.name + "(Clone)")
+                    {
+                        Destroy(child.gameObject);
+                        break;
+                    }
+                }
+            }
+
+            SetCurrentWeapon(0);
+        }
     }
     public static void SetLayerRecursively(GameObject obj, int layer)
     {

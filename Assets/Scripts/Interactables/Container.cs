@@ -8,13 +8,13 @@ public class Container : Interactable
 
     protected override void Interact()
     {
-        prompt = "Open Container";
+        prompt = "Open container";
         containerOpen = !containerOpen;
         container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
 
         if (containerOpen)
-            prompt = "Close Container";
+            prompt = "Close container";
         else
-            prompt = "Open Container";
+            prompt = "Open container";
     }
 }

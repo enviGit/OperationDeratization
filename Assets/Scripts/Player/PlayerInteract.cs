@@ -22,7 +22,6 @@ public class PlayerInteract : MonoBehaviour
         ray = new Ray(cam.transform.position, cam.transform.forward);
         Debug.DrawRay(ray.origin, ray.direction * distance);
 
-
         if (Physics.Raycast(ray, out hitInfo, distance, mask))
         {
             if (hitInfo.collider.GetComponent<Interactable>() != null)
