@@ -229,6 +229,22 @@ public class PlayerMotor : MonoBehaviour
                 if (damageable != null)
                     damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
             }
+            else
+            {
+                if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                {
+                    gunAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunAudio.Play();
+                    currentWeapon.currentAmmoCount--;
+                    Transform muzzle = transform.Find("Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation);
+                    ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
+                    flash.Play();
+                    Destroy(flash.gameObject, 0.1f);
+                    Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
+                    bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
+                }
+            }
 
             shotTimer = Time.time + currentWeapon.timeBetweenShots;
         }
