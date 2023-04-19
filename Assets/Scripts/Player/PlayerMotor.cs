@@ -105,7 +105,7 @@ public class PlayerMotor : MonoBehaviour
                 currentState.playerStance = PlayerStance.Stance.Idle;
             }
         }
-        
+
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
     private void Gravity()
@@ -208,23 +208,32 @@ public class PlayerMotor : MonoBehaviour
         {
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, transform.forward, out hit, currentWeapon.range))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, currentWeapon.range))
             {
                 Debug.Log("Hit: " + hit.collider.name);
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
 
-                if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                // Cast a second raycast downwards to determine the height of the target
+                RaycastHit heightHit;
+                if (Physics.Raycast(hit.point + Vector3.up, Vector3.down, out heightHit))
                 {
-                    gunAudio.clip = currentWeapon.gunAudioClips[0];
-                    gunAudio.Play();
-                    currentWeapon.currentAmmoCount--;
+                    // Use the height of the hit point to adjust the position of the bullet spawn point
                     Transform muzzle = transform.Find("Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation);
+                    Vector3 bulletSpawnPoint = heightHit.point + Vector3.up * muzzle.localPosition.y;
+
+                    // Spawn the bullet and play the effects
+                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, bulletSpawnPoint, muzzle.rotation);
                     ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
                     flash.Play();
                     Destroy(flash.gameObject, 0.1f);
                     Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
                     bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
+                }
+                if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                {
+                    gunAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunAudio.Play();
+                    currentWeapon.currentAmmoCount--;
                 }
                 if (damageable != null)
                     damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
