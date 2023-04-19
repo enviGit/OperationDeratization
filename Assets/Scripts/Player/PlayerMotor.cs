@@ -25,6 +25,10 @@ public class PlayerMotor : MonoBehaviour
     private bool isReloading = false;
     public ParticleSystem muzzleFlash;
     public AudioSource gunAudio;
+    public AudioSource characterAudio;
+    public AudioClip[] characterAudioClips;
+    private bool wasGrounded = true;
+    private Gun weaponReload;
 
     private void Start()
     {
@@ -39,14 +43,20 @@ public class PlayerMotor : MonoBehaviour
     private void Update()
     {
         //Debug.Log(currentState.playerStance);
-
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         isGrounded = controller.isGrounded;
-        Move();
 
         if (isGrounded && playerVelocity.y < 0)
             playerVelocity.y = -2f;
+        if (isGrounded && !wasGrounded)
+        {
+            characterAudio.clip = characterAudioClips[3];
+            characterAudio.Play();
+        }
 
+        wasGrounded = isGrounded;
+
+        Move();
         Gravity();
         Crouch();
         CrouchToggle();
@@ -55,8 +65,11 @@ public class PlayerMotor : MonoBehaviour
         Climb();
         PointerPosition();
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.magazineSize != currentWeapon.currentAmmoCount && currentWeapon.maxAmmoCount != 0)
+        {
+            weaponReload = currentWeapon;
             StartCoroutine(ReloadCoroutine());
+        }
 
         UpdateAmmoText();
     }
@@ -92,7 +105,7 @@ public class PlayerMotor : MonoBehaviour
                 currentState.playerStance = PlayerStance.Stance.Idle;
             }
         }
-
+        
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
     private void Gravity()
@@ -162,6 +175,8 @@ public class PlayerMotor : MonoBehaviour
             if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
                 return;
 
+            characterAudio.clip = characterAudioClips[2];
+            characterAudio.Play();
             currentState.playerStance = PlayerStance.Stance.Idle;
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
@@ -182,6 +197,13 @@ public class PlayerMotor : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
             isShooting = false;
 
+        if (isShooting && Time.time > shotTimer && currentWeapon.currentAmmoCount == 0 && !isReloading)
+        {
+            isShooting = false;
+            gunAudio.clip = currentWeapon.gunAudioClips[1];
+            gunAudio.Play();
+            return;
+        }
         if (isShooting && Time.time > shotTimer && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
             RaycastHit hit;
@@ -214,19 +236,33 @@ public class PlayerMotor : MonoBehaviour
     private IEnumerator ReloadCoroutine()
     {
         isReloading = true;
+        gunAudio.clip = weaponReload.gunAudioClips[2];
+        gunAudio.Play();
         yield return new WaitForSeconds(1.5f);
 
-        if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)
+        if (weaponReload.currentAmmoCount == weaponReload.magazineSize)
             yield break;
 
-        int ammoNeeded = currentWeapon.magazineSize - currentWeapon.currentAmmoCount;
-        int ammoAvailable = Mathf.Min(currentWeapon.maxAmmoCount, ammoNeeded);
+        int ammoNeeded = weaponReload.magazineSize - weaponReload.currentAmmoCount;
+        int ammoAvailable = Mathf.Min(weaponReload.maxAmmoCount, ammoNeeded);
 
         if (ammoAvailable == 0)
             yield break;
 
-        currentWeapon.currentAmmoCount += ammoAvailable;
-        currentWeapon.maxAmmoCount -= currentWeapon.magazineSize;
+        int startingAmmoCount = weaponReload.currentAmmoCount;
+        int startingMaxAmmoCount = weaponReload.maxAmmoCount;
+
+        if (weaponReload != currentWeapon)
+        {
+            gunAudio.Stop(); //doesn't do what it should, it works after clip sound ends
+            weaponReload.currentAmmoCount = startingAmmoCount;
+            weaponReload.maxAmmoCount = startingMaxAmmoCount;
+            isReloading = false;
+            yield break;
+        }
+
+        weaponReload.currentAmmoCount += ammoAvailable;
+        weaponReload.maxAmmoCount -= weaponReload.magazineSize;
         isReloading = false;
     }
     private void UpdateAmmoText()
