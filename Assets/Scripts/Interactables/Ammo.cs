@@ -11,7 +11,10 @@ public class Ammo : Interactable
             foreach (Gun gun in inventory.weapons)
             {
                 if (gun != null && gun.gunStyle != GunStyle.Melee)
-                    gun.maxAmmoCount += gun.magazineSize * 2;
+                {
+                    if (gun.maxAmmoCount < gun.magazineSize * 4)
+                        gun.maxAmmoCount += gun.magazineSize;
+                }
             }
         }
     }
