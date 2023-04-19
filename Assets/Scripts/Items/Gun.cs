@@ -9,6 +9,7 @@ public class Gun : ScriptableObject
     public Sprite gunIcon;
     public GunType gunType;
     public GunStyle gunStyle;
+    public AudioClip[] gunAudioClips;
 
     [Header("Stats")]
     public int magazineSize;

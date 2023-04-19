@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -21,6 +22,9 @@ public class PlayerMotor : MonoBehaviour
     private Gun currentWeapon;
     [SerializeField]
     private TextMeshProUGUI ammoText;
+    private bool isReloading = false;
+    public ParticleSystem muzzleFlash;
+    public AudioSource gunAudio;
 
     private void Start()
     {
@@ -50,12 +54,11 @@ public class PlayerMotor : MonoBehaviour
         Shoot();
         Climb();
         PointerPosition();
-        Reload();
 
-        if (currentWeapon.gunStyle != GunStyle.Melee)
-            UpdateAmmoText();
-        else
-            ammoText.text = "";
+        if (Input.GetKeyDown(KeyCode.R))
+            StartCoroutine(ReloadCoroutine());
+
+        UpdateAmmoText();
     }
     private void Move()
     {
@@ -87,7 +90,7 @@ public class PlayerMotor : MonoBehaviour
             {
                 anim.SetFloat("Speed", 0f, 0.1f, Time.deltaTime);
                 currentState.playerStance = PlayerStance.Stance.Idle;
-            }  
+            }
         }
 
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
@@ -179,22 +182,25 @@ public class PlayerMotor : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
             isShooting = false;
 
-        if (isShooting && Time.time > shotTimer && currentWeapon.currentAmmoCount > 0)
+        if (isShooting && Time.time > shotTimer && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
             RaycastHit hit;
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, currentWeapon.range))
             {
-                if(currentWeapon.gunStyle != GunStyle.Melee)
-                    currentWeapon.currentAmmoCount--;
-
                 Debug.Log("Hit: " + hit.collider.name);
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
 
                 if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
                 {
+                    gunAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunAudio.Play();
+                    currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
                     GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation);
+                    ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
+                    flash.Play();
+                    Destroy(flash.gameObject, 0.1f);
                     Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
                     bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
                 }
@@ -205,26 +211,30 @@ public class PlayerMotor : MonoBehaviour
             shotTimer = Time.time + currentWeapon.timeBetweenShots;
         }
     }
-    private void Reload()
+    private IEnumerator ReloadCoroutine()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)
-                return;
+        isReloading = true;
+        yield return new WaitForSeconds(1.5f);
 
-            int ammoNeeded = currentWeapon.magazineSize - currentWeapon.currentAmmoCount;
-            int ammoAvailable = Mathf.Min(currentWeapon.maxAmmoCount, ammoNeeded);
+        if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)
+            yield break;
 
-            if (ammoAvailable == 0)
-                return;
+        int ammoNeeded = currentWeapon.magazineSize - currentWeapon.currentAmmoCount;
+        int ammoAvailable = Mathf.Min(currentWeapon.maxAmmoCount, ammoNeeded);
 
-            currentWeapon.currentAmmoCount += ammoAvailable;
-            currentWeapon.maxAmmoCount -= currentWeapon.magazineSize;
-        }  
+        if (ammoAvailable == 0)
+            yield break;
+
+        currentWeapon.currentAmmoCount += ammoAvailable;
+        currentWeapon.maxAmmoCount -= currentWeapon.magazineSize;
+        isReloading = false;
     }
     private void UpdateAmmoText()
     {
-        ammoText.text = currentWeapon.currentAmmoCount + " / " + currentWeapon.maxAmmoCount;
+        if (currentWeapon.gunStyle != GunStyle.Melee)
+            ammoText.text = currentWeapon.currentAmmoCount + " / " + currentWeapon.maxAmmoCount;
+        else
+            ammoText.text = "";
     }
     private void PointerPosition()
     {
