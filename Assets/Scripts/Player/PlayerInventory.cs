@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerInventory : MonoBehaviour
 {
     [SerializeField]
-    private Gun fists;
+    private Gun knife;
     public Gun[] weapons;
     private int currentWeaponIndex = -1;
     private AudioSource gunAudio;
@@ -21,7 +21,7 @@ public class PlayerInventory : MonoBehaviour
     private void Start()
     {
         weapons = new Gun[3];
-        weapons[0] = fists;
+        weapons[0] = knife;
         weapons[1] = null;
         weapons[2] = null;
         currentWeaponIndex = 0;
@@ -54,7 +54,7 @@ public class PlayerInventory : MonoBehaviour
             }
             else if (newItem.gunStyle == GunStyle.Melee)
             {
-                Transform melee = transform.Find("Main Camera/WeaponHolder/Fists(Clone)");
+                Transform melee = transform.Find("Main Camera/WeaponHolder/Knife_00(Clone)");
 
                 if (melee != null)
                     Destroy(melee.gameObject);

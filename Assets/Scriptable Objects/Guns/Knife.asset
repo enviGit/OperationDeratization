@@ -10,19 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90d29b6d7fc027a4b9fe7325fe49c838, type: 3}
-  m_Name: Fists
+  m_Name: Knife
   m_EditorClassIdentifier: 
-  gunName: Fists
+  gunName: Knife
   gunPrefab: {fileID: 8779585986254822556, guid: 3213f8a9b323b5548b1f8f3759630c8b,
     type: 3}
   bulletPrefab: {fileID: 0}
   gunIcon: {fileID: 0}
   gunType: 0
   gunStyle: 0
+  gunAudioClips:
+  - {fileID: 8300000, guid: 8381cfa68b44d734b9c039db0dbad2a1, type: 3}
+  - {fileID: 8300000, guid: 4aaa78b2722c0344cb0363a3980adf64, type: 3}
   magazineSize: 1
   currentAmmoCount: 1
   maxAmmoCount: 1
-  minimumDamage: 2
-  maximumDamage: 10
+  minimumDamage: 20
+  maximumDamage: 35
   range: 1
   timeBetweenShots: 0.5
