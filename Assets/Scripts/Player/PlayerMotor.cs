@@ -336,6 +336,7 @@ public class PlayerMotor : MonoBehaviour
     private TextMeshProUGUI ammoText;
     private bool isReloading = false;
     public ParticleSystem muzzleFlash;
+    public GameObject impactEffect;
     public AudioSource gunAudio;
     private Gun weaponReload;
     private Gun previousWeapon;
@@ -521,12 +522,20 @@ public class PlayerMotor : MonoBehaviour
                 {
                     currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation, transform);
                     ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
+                    flash.transform.SetParent(muzzle);
                     flash.Play();
-                    Destroy(flash.gameObject, 0.1f);
+                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation, transform);
                     Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
                     bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
+                    Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+                    GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
+                    Destroy(impact, 5f);
+
+                    if (hit.rigidbody != null)
+                        impact.transform.SetParent(hit.collider.transform);
+                    if (damageable != null)
+                        Destroy(impact);
                 }
                 if (hit.rigidbody != null)
                     hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
@@ -542,10 +551,10 @@ public class PlayerMotor : MonoBehaviour
                 {
                     currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation, transform);
                     ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
+                    flash.transform.SetParent(muzzle);
                     flash.Play();
-                    Destroy(flash.gameObject, 0.1f);
+                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation, transform);
                     Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
                     bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
                 }
