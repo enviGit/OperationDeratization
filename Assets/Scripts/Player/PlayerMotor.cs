@@ -221,7 +221,7 @@ public class PlayerMotor : MonoBehaviour
                     GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
                     Destroy(impact, 5f);
 
-                    if (hit.rigidbody != null)
+                    if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
                         impact.transform.SetParent(hit.collider.transform);
                     if (damageable != null)
                         Destroy(impact);
