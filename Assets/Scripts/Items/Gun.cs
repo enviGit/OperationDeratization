@@ -19,6 +19,7 @@ public class Gun : ScriptableObject
     public int maximumDamage;
     public float range;
     public float timeBetweenShots;
+    public float impactForce;
 }
 public enum GunType { Melee, Pistol, Rifle, Shotgun, Sniper }
 public enum GunStyle { Melee, Primary, Secondary }

@@ -510,7 +510,7 @@ public class PlayerMotor : MonoBehaviour
         {
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, transform.forward, out hit, currentWeapon.range))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range))
             {
                 Debug.Log("Hit: " + hit.collider.name);
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
@@ -528,6 +528,8 @@ public class PlayerMotor : MonoBehaviour
                     Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
                     bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
                 }
+                if (hit.rigidbody != null)
+                    hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
                 if (damageable != null)
                     damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
             }

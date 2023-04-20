@@ -6,9 +6,9 @@ public class Ammo : Interactable
 {
     [SerializeField]
     private TextMeshProUGUI ammoRefillPrompt;
-    private float fadeDuration = 1.0f;
+    private float fadeDuration = 1.5f;
     private Coroutine hideCoroutine;
-    private const int maxLines = 4;
+    private const int maxLines = 2;
 
     protected override void Interact()
     {
