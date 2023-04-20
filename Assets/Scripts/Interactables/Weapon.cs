@@ -12,7 +12,7 @@ public class Weapon : Interactable
         PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
         inventory.AddItem(gun);
         GameObject weaponObject = Instantiate(gun.gunPrefab, Vector3.zero, Quaternion.identity, Camera.main.transform.Find("WeaponHolder"));
-        weaponObject.layer = LayerMask.NameToLayer("Default");
+        weaponObject.layer = LayerMask.NameToLayer("Player");
         weaponObject.transform.localPosition = Vector3.zero;
         weaponObject.transform.localRotation = Quaternion.identity;
         int childIndex = 1;

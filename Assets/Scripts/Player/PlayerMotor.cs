@@ -199,8 +199,9 @@ public class PlayerMotor : MonoBehaviour
         if (isShooting && Time.time > shotTimer && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
             RaycastHit hit;
+            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
             {
                 Debug.Log("Hit: " + hit.collider.name);
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
