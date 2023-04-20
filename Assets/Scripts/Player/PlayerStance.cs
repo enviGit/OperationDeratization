@@ -5,8 +5,6 @@ using System;
 public class PlayerStance
 {
     public Stance playerStance;
-    public PlayerStance playerStandStance;
-    public PlayerStance playerCrouchStance;
     public float camHeight;
 
     public enum Stance

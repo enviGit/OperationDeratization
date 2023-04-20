@@ -6,7 +6,6 @@ public class PlayerInventory : MonoBehaviour
     private Gun knife;
     public Gun[] weapons;
     private int currentWeaponIndex = -1;
-    private AudioSource gunAudio;
     public Gun CurrentWeapon
     {
         get
@@ -25,7 +24,6 @@ public class PlayerInventory : MonoBehaviour
         weapons[1] = null;
         weapons[2] = null;
         currentWeaponIndex = 0;
-        gunAudio = GetComponent<PlayerMotor>().gunAudio;
     }
     private void Update()
     {

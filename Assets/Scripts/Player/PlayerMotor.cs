@@ -346,7 +346,7 @@ public class PlayerMotor : MonoBehaviour
         controller = GetComponent<CharacterController>();
         currentState = new PlayerStance();
         currentState.playerStance = PlayerStance.Stance.Idle;
-        currentState.camHeight = 3.4f;
+        currentState.camHeight = 2f;
         previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
     }
@@ -424,14 +424,14 @@ public class PlayerMotor : MonoBehaviour
     {
         if (currentState.playerStance == PlayerStance.Stance.Crouching)
         {
-            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 1.7f, Time.deltaTime * 5f);
+            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 1f, Time.deltaTime * 5f);
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
             controller.height = 1f;
             moveSpeed = 2f;
         }
         else
         {
-            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 3.4f, Time.deltaTime * 5f);
+            float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 2f, Time.deltaTime * 5f);
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
             controller.height = 2f;
             moveSpeed = 5f;
@@ -452,20 +452,20 @@ public class PlayerMotor : MonoBehaviour
                 {
                     isCrouching = true;
                     currentState.playerStance = PlayerStance.Stance.Crouching;
-                    currentState.camHeight = 1.7f;
+                    currentState.camHeight = 1f;
                 }
                 else
                 {
                     isCrouching = false;
                     currentState.playerStance = PlayerStance.Stance.Idle;
-                    currentState.camHeight = 3.4f;
+                    currentState.camHeight = 2f;
                 }
             }
             else
             {
                 isCrouching = true;
                 currentState.playerStance = PlayerStance.Stance.Crouching;
-                currentState.camHeight = 1.7f;
+                currentState.camHeight = 1f;
             }
         }
     }
