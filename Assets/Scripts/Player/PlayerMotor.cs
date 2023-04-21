@@ -29,7 +29,7 @@ public class PlayerMotor : MonoBehaviour
     private Gun weaponReload;
     private Gun previousWeapon;
     public GameObject crosshair;
-    private bool isAiming = false;
+    //private bool isAiming = false;
 
     private void Start()
     {
@@ -204,7 +204,7 @@ public class PlayerMotor : MonoBehaviour
 
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
             {
-                Debug.Log("Hit: " + hit.collider.name);
+                //Debug.Log("Hit: " + hit.collider.name);
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
                 gunAudio.clip = currentWeapon.gunAudioClips[0];
                 gunAudio.Play();
@@ -332,7 +332,7 @@ public class PlayerMotor : MonoBehaviour
         {
             crosshair.gameObject.SetActive(true);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-            isAiming = true;
+            //isAiming = true;
             weaponHolder.localPosition = aimingPosition;
             weaponHolder.localRotation = Quaternion.Euler(aimingRotation);
         }
@@ -340,7 +340,7 @@ public class PlayerMotor : MonoBehaviour
         {
             crosshair.gameObject.SetActive(false);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
-            isAiming = false;
+            //isAiming = false;
             weaponHolder.localPosition = originalPosition;
             weaponHolder.localRotation = Quaternion.Euler(originalRotation);
         }
