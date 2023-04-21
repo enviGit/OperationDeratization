@@ -77,6 +77,7 @@ public class PlayerInventory : MonoBehaviour
             newWeapon.layer = LayerMask.NameToLayer("Interactable");
             SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
             Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
+            weaponRigidbody.mass = 5f;
             weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
             Quaternion randomRotation = Random.rotation;
             newWeapon.transform.rotation = randomRotation;
@@ -148,6 +149,7 @@ public class PlayerInventory : MonoBehaviour
                 SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
                 Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
                 weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
+                weaponRigidbody.mass = 5f;
                 Quaternion randomRotation = Random.rotation;
                 newWeapon.transform.rotation = randomRotation;
                 Transform weaponHolder = transform.Find("Main Camera/WeaponHolder");
@@ -163,6 +165,7 @@ public class PlayerInventory : MonoBehaviour
             }
 
             SetCurrentWeapon(0);
+            UpdateWeaponImages();
         }
     }
     public static void SetLayerRecursively(GameObject obj, int layer)
