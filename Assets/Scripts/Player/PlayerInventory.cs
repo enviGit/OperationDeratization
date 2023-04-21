@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PlayerInventory : MonoBehaviour
@@ -26,6 +27,10 @@ public class PlayerInventory : MonoBehaviour
 
     private void Start()
     {
+        Transform mesh = transform.Find("Main Camera/WeaponHolder/Knife_00(Clone)");
+        MeshRenderer meshRenderer = mesh.GetComponent<MeshRenderer>();
+        meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+        meshRenderer.receiveShadows = false;
         weapons = new Gun[3];
         weapons[0] = weaponTypes[0];
         weapons[1] = null;
