@@ -24,6 +24,7 @@ public class PlayerMotor : MonoBehaviour
     private bool isReloading = false;
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
+    public GameObject impactRicochet;
     public AudioSource gunAudio;
     private Gun weaponReload;
     private Gun previousWeapon;
@@ -219,13 +220,18 @@ public class PlayerMotor : MonoBehaviour
                     Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
                     bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
-                    GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
-                    Destroy(impact, 5f);
 
-                    if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                        impact.transform.SetParent(hit.collider.transform);
-                    if (damageable != null)
-                        Destroy(impact);
+                    if (damageable == null)
+                    {
+                        GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
+                        GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+
+                        if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                            impact.transform.SetParent(hit.collider.transform);
+
+                        Destroy(ricochet, 2f);
+                        Destroy(impact, 5f);
+                    }
                 }
                 if (hit.rigidbody != null)
                     hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
