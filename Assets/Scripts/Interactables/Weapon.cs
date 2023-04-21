@@ -22,7 +22,7 @@ public class Weapon : Interactable
 
         weaponObject.transform.SetSiblingIndex(childIndex);
         Destroy(gameObject);
-
         inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
+        inventory.UpdateWeaponImages();
     }
 }

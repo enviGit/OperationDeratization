@@ -308,22 +308,10 @@ public class PlayerMotor : MonoBehaviour
 
         switch (currentWeapon.gunType)
         {
-            case GunType.Melee:
-                originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
-                originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0, -0.17f, 0.24f);
-                aimingRotation = new Vector3(0, 0, 0);
-                break;
             case GunType.Pistol:
                 originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
                 originalRotation = new Vector3(3f, 0, 0);
                 aimingPosition = new Vector3(0, -0.1f, 0.24f);
-                aimingRotation = new Vector3(0, 0, 0);
-                break;
-            case GunType.Rifle:
-                originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
-                originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0, -0.17f, 0.24f);
                 aimingRotation = new Vector3(0, 0, 0);
                 break;
             default:
@@ -334,19 +322,10 @@ public class PlayerMotor : MonoBehaviour
                 break;
         }
 
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee)
         {
-            if(currentWeapon.gunStyle != GunStyle.Melee)
-            {
-                crosshair.gameObject.SetActive(true);
-                cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-            }
-            else
-            {
-                crosshair.gameObject.SetActive(false);
-                cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
-            }
-
+            crosshair.gameObject.SetActive(true);
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
             isAiming = true;
             weaponHolder.localPosition = aimingPosition;
             weaponHolder.localRotation = Quaternion.Euler(aimingRotation);

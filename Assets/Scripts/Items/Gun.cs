@@ -7,6 +7,7 @@ public class Gun : ScriptableObject
     public GameObject gunPrefab;
     public GameObject bulletPrefab;
     public Sprite gunIcon;
+    public Sprite activeGunIcon;
     public GunType gunType;
     public GunStyle gunStyle;
     public AudioClip[] gunAudioClips;

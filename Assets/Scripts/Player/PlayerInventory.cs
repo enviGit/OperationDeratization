@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInventory : MonoBehaviour
 {
     [SerializeField]
-    private Gun knife;
+    private Gun[] weaponTypes;
     public Gun[] weapons;
     private int currentWeaponIndex = -1;
     public Gun CurrentWeapon
@@ -16,15 +17,23 @@ public class PlayerInventory : MonoBehaviour
                 return null;
         }
     }
+    [SerializeField]
+    private Image meleeWeaponImage;
+    [SerializeField]
+    private Image primaryWeaponImage;
+    [SerializeField]
+    private Image secondaryWeaponImage;
 
     private void Start()
     {
         weapons = new Gun[3];
-        weapons[0] = knife;
+        weapons[0] = weaponTypes[0];
         weapons[1] = null;
         weapons[2] = null;
         currentWeaponIndex = 0;
+        UpdateWeaponImages();
     }
+
     private void Update()
     {
         SwitchItem();
@@ -64,11 +73,12 @@ public class PlayerInventory : MonoBehaviour
             SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
             Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
             weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
-            Quaternion randomRotation = Random.rotation; 
+            Quaternion randomRotation = Random.rotation;
             newWeapon.transform.rotation = randomRotation;
         }
 
         weapons[newItemIndex] = newItem;
+        UpdateWeaponImages();
     }
     public void SwitchItem()
     {
@@ -82,13 +92,24 @@ public class PlayerInventory : MonoBehaviour
                 newWeaponIndex += weapons.Length;
 
             SetCurrentWeapon(newWeaponIndex);
+            UpdateWeaponImages();
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
             SetCurrentWeapon(0);
+            UpdateWeaponImages();
+        }
+
         else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
             SetCurrentWeapon(1);
+            UpdateWeaponImages();
+        }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
             SetCurrentWeapon(2);
+            UpdateWeaponImages();
+        }
     }
     public void RemoveItem()
     {
@@ -99,6 +120,23 @@ public class PlayerInventory : MonoBehaviour
 
             if (droppedWeapon != null)
             {
+                Image weaponImage = null;
+
+                switch (droppedWeapon.gunStyle)
+                {
+                    case GunStyle.Melee:
+                        weaponImage = meleeWeaponImage;
+                        break;
+                    case GunStyle.Primary:
+                        weaponImage = primaryWeaponImage;
+                        break;
+                    case GunStyle.Secondary:
+                        weaponImage = secondaryWeaponImage;
+                        break;
+                }
+                if (weaponImage != null)
+                    weaponImage.gameObject.SetActive(false);
+
                 Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
                 GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity);
                 newWeapon.layer = LayerMask.NameToLayer("Interactable");
@@ -145,6 +183,39 @@ public class PlayerInventory : MonoBehaviour
         }
 
         currentWeaponIndex = index;
+    }
+    public void UpdateWeaponImages()
+    {
+        if (meleeWeaponImage != null)
+        {
+            if (CurrentWeapon.gunStyle != GunStyle.Melee)
+                meleeWeaponImage.sprite = weaponTypes[0].gunIcon;
+            else
+            {
+                meleeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                meleeWeaponImage.gameObject.SetActive(true);
+            }
+        }
+        if (primaryWeaponImage != null)
+        {
+            if (CurrentWeapon.gunStyle != GunStyle.Primary)
+                primaryWeaponImage.sprite = weaponTypes[1].gunIcon;
+            else
+            {
+                primaryWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                primaryWeaponImage.gameObject.SetActive(true);
+            }
+        }
+        if (secondaryWeaponImage != null)
+        {
+            if (CurrentWeapon.gunStyle != GunStyle.Secondary)
+                secondaryWeaponImage.sprite = weaponTypes[2].gunIcon;
+            else
+            {
+                secondaryWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                secondaryWeaponImage.gameObject.SetActive(true);
+            }
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
