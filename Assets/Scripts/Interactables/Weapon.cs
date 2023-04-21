@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Weapon : Interactable
 {
@@ -15,6 +16,19 @@ public class Weapon : Interactable
         weaponObject.layer = LayerMask.NameToLayer("Player");
         weaponObject.transform.localPosition = Vector3.zero;
         weaponObject.transform.localRotation = Quaternion.identity;
+        Transform mesh = weaponObject.transform.Find("Mesh");
+
+        foreach (Transform child in mesh)
+        {
+            SkinnedMeshRenderer meshRenderer = child.GetComponent<SkinnedMeshRenderer>();
+
+            if (meshRenderer != null)
+            {
+                meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+                meshRenderer.receiveShadows = false;
+            }
+        }
+
         int childIndex = 1;
 
         if (gun.gunStyle == GunStyle.Secondary)
