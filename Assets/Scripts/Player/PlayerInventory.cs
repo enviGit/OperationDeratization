@@ -8,6 +8,12 @@ public class PlayerInventory : MonoBehaviour
     private Gun[] weaponTypes;
     public Gun[] weapons;
     private int currentWeaponIndex = -1;
+    [SerializeField]
+    private Image meleeWeaponImage;
+    [SerializeField]
+    private Image primaryWeaponImage;
+    [SerializeField]
+    private Image secondaryWeaponImage;
     public Gun CurrentWeapon
     {
         get
@@ -18,12 +24,7 @@ public class PlayerInventory : MonoBehaviour
                 return null;
         }
     }
-    [SerializeField]
-    private Image meleeWeaponImage;
-    [SerializeField]
-    private Image primaryWeaponImage;
-    [SerializeField]
-    private Image secondaryWeaponImage;
+    
 
     private void Start()
     {

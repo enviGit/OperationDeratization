@@ -1,5 +1,4 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
@@ -19,8 +18,6 @@ public class PlayerMotor : MonoBehaviour
     private bool isShooting = false;
     private float shotTimer = 0f;
     private Gun currentWeapon;
-    [SerializeField]
-    private TextMeshProUGUI ammoText;
     private bool isReloading = false;
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
@@ -80,8 +77,6 @@ public class PlayerMotor : MonoBehaviour
             weaponReload = currentWeapon;
             StartCoroutine(ReloadCoroutine());
         }
-
-        UpdateAmmoText();
     }
     private void Move()
     {
@@ -291,13 +286,7 @@ public class PlayerMotor : MonoBehaviour
         weaponReload.maxAmmoCount -= weaponReload.magazineSize;
         isReloading = false;
     }
-    private void UpdateAmmoText()
-    {
-        if (currentWeapon.gunStyle != GunStyle.Melee)
-            ammoText.text = currentWeapon.currentAmmoCount + " / " + currentWeapon.maxAmmoCount;
-        else
-            ammoText.text = "";
-    }
+    
     private void PointerPosition()
     {
         float mouseX = Input.GetAxis("Mouse X") * xSensitivity;

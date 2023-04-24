@@ -7,7 +7,7 @@ public class PlayerInteract : MonoBehaviour
     private float distance = 3f;
     [SerializeField]
     private LayerMask mask;
-    public PlayerUI playerUI;
+    private PlayerUI playerUI;
     public Ray ray;
     public RaycastHit hitInfo;
 
