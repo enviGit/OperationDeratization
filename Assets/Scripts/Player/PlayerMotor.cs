@@ -26,7 +26,9 @@ public class PlayerMotor : MonoBehaviour
     private Gun weaponReload;
     private Gun previousWeapon;
     public GameObject crosshair;
-    //private bool isAiming = false;
+    public bool isAiming = false;
+    [SerializeField]
+    private Recoil recoil;
 
     private void Start()
     {
@@ -206,6 +208,7 @@ public class PlayerMotor : MonoBehaviour
 
                 if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
                 {
+                    recoil.RecoilFire();
                     currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
                     ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
@@ -240,6 +243,7 @@ public class PlayerMotor : MonoBehaviour
 
                 if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
                 {
+                    recoil.RecoilFire();
                     currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
                     ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
@@ -321,7 +325,7 @@ public class PlayerMotor : MonoBehaviour
         {
             crosshair.gameObject.SetActive(true);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-            //isAiming = true;
+            isAiming = true;
             weaponHolder.localPosition = aimingPosition;
             weaponHolder.localRotation = Quaternion.Euler(aimingRotation);
         }
@@ -329,7 +333,7 @@ public class PlayerMotor : MonoBehaviour
         {
             crosshair.gameObject.SetActive(false);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
-            //isAiming = false;
+            isAiming = false;
             weaponHolder.localPosition = originalPosition;
             weaponHolder.localRotation = Quaternion.Euler(originalRotation);
         }
