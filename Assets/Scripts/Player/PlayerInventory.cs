@@ -27,7 +27,7 @@ public class PlayerInventory : MonoBehaviour
 
     private void Start()
     {
-        Transform mesh = transform.Find("Main Camera/WeaponHolder/Knife_00(Clone)");
+        Transform mesh = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
         MeshRenderer meshRenderer = mesh.GetComponent<MeshRenderer>();
         meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
         meshRenderer.receiveShadows = false;
@@ -52,21 +52,21 @@ public class PlayerInventory : MonoBehaviour
         {
             if (newItem.gunStyle == GunStyle.Primary)
             {
-                Transform pistol = transform.Find("Main Camera/WeaponHolder/Pistol_00(Clone)");
+                Transform pistol = transform.Find("Camera/Main Camera/WeaponHolder/Pistol_00(Clone)");
 
                 if (pistol != null)
                     Destroy(pistol.gameObject);
             }
             else if (newItem.gunStyle == GunStyle.Secondary)
             {
-                Transform rifle = transform.Find("Main Camera/WeaponHolder/Rifle_00(Clone)");
+                Transform rifle = transform.Find("Camera/Main Camera/WeaponHolder/Rifle_00(Clone)");
 
                 if (rifle != null)
                     Destroy(rifle.gameObject);
             }
             else if (newItem.gunStyle == GunStyle.Melee)
             {
-                Transform melee = transform.Find("Main Camera/WeaponHolder/Knife_00(Clone)");
+                Transform melee = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
 
                 if (melee != null)
                     Destroy(melee.gameObject);
@@ -152,7 +152,7 @@ public class PlayerInventory : MonoBehaviour
                 weaponRigidbody.mass = 5f;
                 Quaternion randomRotation = Random.rotation;
                 newWeapon.transform.rotation = randomRotation;
-                Transform weaponHolder = transform.Find("Main Camera/WeaponHolder");
+                Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
 
                 foreach (Transform child in weaponHolder)
                 {
@@ -180,7 +180,7 @@ public class PlayerInventory : MonoBehaviour
         if (index < 0 || index >= weapons.Length || weapons[index] == null)
             return;
 
-        Transform weaponHolder = transform.Find("Main Camera/WeaponHolder");
+        Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
 
         foreach (Transform weapon in weaponHolder)
         {

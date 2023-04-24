@@ -212,7 +212,7 @@ public class PlayerMotor : MonoBehaviour
                 if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
                 {
                     currentWeapon.currentAmmoCount--;
-                    Transform muzzle = transform.Find("Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+                    Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
                     ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
                     flash.transform.SetParent(muzzle);
                     flash.Play();
@@ -246,7 +246,7 @@ public class PlayerMotor : MonoBehaviour
                 if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
                 {
                     currentWeapon.currentAmmoCount--;
-                    Transform muzzle = transform.Find("Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+                    Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
                     ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
                     flash.transform.SetParent(muzzle);
                     flash.Play();
@@ -306,7 +306,7 @@ public class PlayerMotor : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
         transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        Transform weaponHolder = transform.Find("Main Camera/WeaponHolder");
+        Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
         Vector3 originalPosition;
         Vector3 originalRotation;
         Vector3 aimingPosition;
