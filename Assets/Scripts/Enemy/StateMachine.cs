@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour
@@ -11,10 +9,6 @@ public class StateMachine : MonoBehaviour
     {
         patrolState = new PatrolState();
         ChangeState(patrolState);
-    }
-    private void Start()
-    {
-        
     }
     private void Update()
     {

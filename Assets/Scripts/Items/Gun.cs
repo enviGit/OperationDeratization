@@ -5,7 +5,6 @@ public class Gun : ScriptableObject
 {
     public string gunName;
     public GameObject gunPrefab;
-    public GameObject bulletPrefab;
     public Sprite gunIcon;
     public Sprite activeGunIcon;
     public GunType gunType;

@@ -203,6 +203,7 @@ public class PlayerMotor : MonoBehaviour
         {
             RaycastHit hit;
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
+
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
             {
                 //Debug.Log("Hit: " + hit.collider.name);
@@ -218,9 +219,6 @@ public class PlayerMotor : MonoBehaviour
                     ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
                     flash.transform.SetParent(muzzle);
                     flash.Play();
-                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation, transform);
-                    Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
-                    bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
 
                     if (damageable == null)
@@ -253,9 +251,6 @@ public class PlayerMotor : MonoBehaviour
                     ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
                     flash.transform.SetParent(muzzle);
                     flash.Play();
-                    GameObject bullet = Instantiate(currentWeapon.bulletPrefab, muzzle.position + muzzle.forward * 0.5f, muzzle.rotation, transform);
-                    Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
-                    bulletRigidbody.AddForce(muzzle.forward * currentWeapon.range, ForceMode.Impulse);
                 }
             }
 
