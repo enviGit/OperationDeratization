@@ -172,7 +172,13 @@ public class PlayerMotor : MonoBehaviour
             if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
                 return;
 
-            currentState.playerStance = PlayerStance.Stance.Idle;
+            if(isCrouching)
+            {
+                isCrouching = false;
+                currentState.playerStance = PlayerStance.Stance.Idle;
+                currentState.camHeight = 2f;
+            }
+
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
