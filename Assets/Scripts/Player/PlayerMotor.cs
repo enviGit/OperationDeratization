@@ -5,7 +5,6 @@ public class PlayerMotor : MonoBehaviour
 {
     public CharacterController controller;
     private Vector3 playerVelocity;
-    private bool isGrounded;
     public float gravity = -9.8f;
     public float jumpHeight = 0.7f;
     private PlayerStance currentState = new PlayerStance();
@@ -14,11 +13,8 @@ public class PlayerMotor : MonoBehaviour
     private float xRotation = 0f;
     public float xSensitivity = 3f;
     public float ySensitivity = 3f;
-    private bool isCrouching;
-    private bool isShooting = false;
     private float shotTimer = 0f;
     private Gun currentWeapon;
-    private bool isReloading = false;
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
     public GameObject impactRicochet;
@@ -26,9 +22,13 @@ public class PlayerMotor : MonoBehaviour
     private Gun weaponReload;
     private Gun previousWeapon;
     //public GameObject crosshair;
+    public bool isGrounded;
+    public bool isCrouching = false;
+    private bool isShooting = false;
+    private bool isReloading = false;
     public bool isAiming = false;
     public bool isMoving = false;
-    private bool isRunning = false;
+    public bool isRunning = false;
     [SerializeField]
     private WeaponRecoil recoil;
 
@@ -42,7 +42,6 @@ public class PlayerMotor : MonoBehaviour
         previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
     }
-
     private void Update()
     {
         previousWeapon = currentWeapon;
@@ -120,7 +119,7 @@ public class PlayerMotor : MonoBehaviour
                 currentState.playerStance = PlayerStance.Stance.Idle;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching)
+        if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && GetComponent<PlayerStamina>().HasStamina(GetComponent<PlayerStamina>().jumpStaminaCost))
         {
             isRunning = true;
             moveSpeed *= 1.3f;
@@ -190,7 +189,7 @@ public class PlayerMotor : MonoBehaviour
     }
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().jumpStaminaCost)
         {
             RaycastHit hit;
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));

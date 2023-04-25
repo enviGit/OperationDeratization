@@ -4004,6 +4004,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1558302632 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8594871364028991294, guid: f40d8f528275c1c40a748ae5d7f0e8f8,
+    type: 3}
+  m_PrefabInstance: {fileID: 691483384}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1561570622
 GameObject:
   m_ObjectHideFlags: 0
@@ -4478,6 +4490,7 @@ GameObject:
   - component: {fileID: 1605920388}
   - component: {fileID: 1605920387}
   - component: {fileID: 1605920386}
+  - component: {fileID: 1605920393}
   - component: {fileID: 1605920385}
   - component: {fileID: 1605920392}
   m_Layer: 10
@@ -4593,8 +4606,11 @@ MonoBehaviour:
   impactEffect: {fileID: 100002, guid: 957385c45b877e645a128e11a3efb2f9, type: 3}
   impactRicochet: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
   gunAudio: {fileID: 1245183256}
+  isGrounded: 0
+  isCrouching: 0
   isAiming: 0
   isMoving: 0
+  isRunning: 0
   recoil: {fileID: 633308227}
 --- !u!143 &1605920390
 CharacterController:
@@ -4630,6 +4646,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1605920393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605920383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 407ecc3f24bb75846a815723db786a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxStamina: 100
+  sprintStaminaCost: 10
+  jumpStaminaCost: 30
+  staminaRegenRate: 10
+  staminaBarFill: {fileID: 1558302632}
+  currentStamina: 100
 --- !u!4 &1611855761 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1572340664928408213, guid: 254307bbcf4c1e843848b73f0dc34794,
