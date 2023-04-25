@@ -24,7 +24,6 @@ public class PlayerInventory : MonoBehaviour
                 return null;
         }
     }
-    
 
     private void Start()
     {

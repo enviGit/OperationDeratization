@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Recoil : MonoBehaviour
+public class WeaponRecoil : MonoBehaviour
 {
     [SerializeField]
     private PlayerMotor playerMot;

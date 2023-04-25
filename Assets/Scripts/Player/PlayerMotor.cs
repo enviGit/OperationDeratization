@@ -9,7 +9,7 @@ public class PlayerMotor : MonoBehaviour
     public float gravity = -9.8f;
     public float jumpHeight = 0.7f;
     private PlayerStance currentState = new PlayerStance();
-    public float moveSpeed = 5f;
+    public float moveSpeed = 4f;
     public Camera cam;
     private float xRotation = 0f;
     public float xSensitivity = 3f;
@@ -27,8 +27,9 @@ public class PlayerMotor : MonoBehaviour
     private Gun previousWeapon;
     public GameObject crosshair;
     public bool isAiming = false;
+    public bool isMoving = false;
     [SerializeField]
-    private Recoil recoil;
+    private WeaponRecoil recoil;
 
     private void Start()
     {
@@ -88,6 +89,8 @@ public class PlayerMotor : MonoBehaviour
 
         if (moveDirection.magnitude > 0)
         {
+            isMoving = true;
+
             if (isCrouching)
                 currentState.playerStance = PlayerStance.Stance.Crouching;
             else
@@ -95,6 +98,8 @@ public class PlayerMotor : MonoBehaviour
         }
         else
         {
+            isMoving = false;
+
             if (isCrouching)
                 currentState.playerStance = PlayerStance.Stance.Crouching;
             else
@@ -122,7 +127,7 @@ public class PlayerMotor : MonoBehaviour
             float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 2f, Time.deltaTime * 5f);
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
             controller.height = 2f;
-            moveSpeed = 5f;
+            moveSpeed = 4f;
         }
     }
     private void CrouchToggle()
@@ -299,7 +304,7 @@ public class PlayerMotor : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
         transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
+        Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
         Vector3 originalPosition;
         Vector3 originalRotation;
         Vector3 aimingPosition;
@@ -307,6 +312,12 @@ public class PlayerMotor : MonoBehaviour
 
         switch (currentWeapon.gunType)
         {
+            case GunType.Melee:
+                originalPosition = new Vector3(0.05f, -0.08f, 0.2f);
+                originalRotation = new Vector3(5.2f, -125, 101);
+                aimingPosition = new Vector3(0.05f, -0.08f, 0.2f);
+                aimingRotation = new Vector3(5.2f, -125, 101);
+                break;
             case GunType.Pistol:
                 originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
                 originalRotation = new Vector3(3f, 0, 0);
@@ -326,16 +337,18 @@ public class PlayerMotor : MonoBehaviour
             crosshair.gameObject.SetActive(true);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
             isAiming = true;
-            weaponHolder.localPosition = aimingPosition;
-            weaponHolder.localRotation = Quaternion.Euler(aimingRotation);
+            weapon.localPosition = aimingPosition;
+            weapon.localRotation = Quaternion.Euler(aimingRotation);
+            moveSpeed = 2f;
         }
         else
         {
             crosshair.gameObject.SetActive(false);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
             isAiming = false;
-            weaponHolder.localPosition = originalPosition;
-            weaponHolder.localRotation = Quaternion.Euler(originalRotation);
+            weapon.localPosition = originalPosition;
+            weapon.localRotation = Quaternion.Euler(originalRotation);
+            moveSpeed = 4f;
         }
     }
 }
