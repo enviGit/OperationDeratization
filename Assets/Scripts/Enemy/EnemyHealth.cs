@@ -22,7 +22,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         currentHealth = enemyStats.maxHealth;
         SetHealthBarUI();
         lastDamageTime = Time.time;
-        showHealthBar = true;
+        showHealthBar = false;
     }
     private void Update()
     {
