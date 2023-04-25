@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
@@ -339,7 +340,10 @@ public class PlayerMotor : MonoBehaviour
             isAiming = true;
             weapon.localPosition = aimingPosition;
             weapon.localRotation = Quaternion.Euler(aimingRotation);
-            moveSpeed = 2f;
+            if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
+                moveSpeed = 2f;
+            else
+                moveSpeed = 1f;
         }
         else
         {
@@ -348,7 +352,10 @@ public class PlayerMotor : MonoBehaviour
             isAiming = false;
             weapon.localPosition = originalPosition;
             weapon.localRotation = Quaternion.Euler(originalRotation);
-            moveSpeed = 4f;
+            if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
+                moveSpeed = 4f;
+            else
+                moveSpeed = 2f;
         }
     }
 }
