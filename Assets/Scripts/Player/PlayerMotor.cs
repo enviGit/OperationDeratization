@@ -21,7 +21,6 @@ public class PlayerMotor : MonoBehaviour
     public AudioSource gunAudio;
     private Gun weaponReload;
     private Gun previousWeapon;
-    //public GameObject crosshair;
     public bool isGrounded;
     public bool isCrouching = false;
     private bool isShooting = false;
@@ -359,11 +358,11 @@ public class PlayerMotor : MonoBehaviour
 
         if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee)
         {
-            //crosshair.gameObject.SetActive(true);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
             isAiming = true;
             weapon.localPosition = aimingPosition;
             weapon.localRotation = Quaternion.Euler(aimingRotation);
+
             if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
                 moveSpeed = 2f;
             else
@@ -371,11 +370,11 @@ public class PlayerMotor : MonoBehaviour
         }
         else
         {
-            //crosshair.gameObject.SetActive(false);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
             isAiming = false;
             weapon.localPosition = originalPosition;
             weapon.localRotation = Quaternion.Euler(originalRotation);
+
             if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
                 moveSpeed = 4f;
             else
