@@ -8,8 +8,6 @@ public class WeaponSway : MonoBehaviour
     private Rigidbody rb;
     [SerializeField]
     private PlayerMotor player;
-    //[SerializeField]
-    //private GameObject crosshair;
     private bool isAiming;
     private bool isMoving;
     public float step = 0.01f;

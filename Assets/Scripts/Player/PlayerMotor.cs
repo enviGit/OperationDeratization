@@ -25,7 +25,7 @@ public class PlayerMotor : MonoBehaviour
     public AudioSource gunAudio;
     private Gun weaponReload;
     private Gun previousWeapon;
-    public GameObject crosshair;
+    //public GameObject crosshair;
     public bool isAiming = false;
     public bool isMoving = false;
     [SerializeField]
@@ -321,7 +321,7 @@ public class PlayerMotor : MonoBehaviour
             case GunType.Pistol:
                 originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
                 originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0, -0.1f, 0.24f);
+                aimingPosition = new Vector3(0, -0.07f, 0.24f);
                 aimingRotation = new Vector3(0, 0, 0);
                 break;
             default:
@@ -334,7 +334,7 @@ public class PlayerMotor : MonoBehaviour
 
         if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee)
         {
-            crosshair.gameObject.SetActive(true);
+            //crosshair.gameObject.SetActive(true);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
             isAiming = true;
             weapon.localPosition = aimingPosition;
@@ -346,7 +346,7 @@ public class PlayerMotor : MonoBehaviour
         }
         else
         {
-            crosshair.gameObject.SetActive(false);
+            //crosshair.gameObject.SetActive(false);
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
             isAiming = false;
             weapon.localPosition = originalPosition;
