@@ -11,5 +11,6 @@ public class PlayerStance
         Idle,
         Walking,
         Crouching,
+        Running
     }
 }

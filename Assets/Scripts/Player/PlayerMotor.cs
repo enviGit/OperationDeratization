@@ -28,6 +28,7 @@ public class PlayerMotor : MonoBehaviour
     //public GameObject crosshair;
     public bool isAiming = false;
     public bool isMoving = false;
+    private bool isRunning = false;
     [SerializeField]
     private WeaponRecoil recoil;
 
@@ -80,6 +81,19 @@ public class PlayerMotor : MonoBehaviour
             weaponReload = currentWeapon;
             StartCoroutine(ReloadCoroutine());
         }
+
+        switch(currentWeapon.gunType)
+        {
+            case GunType.Pistol:
+                moveSpeed *= 0.9f;
+                break;
+            case GunType.Rifle:
+                moveSpeed *= 0.75f;
+                break;
+            default:
+                moveSpeed *= 1f;
+                break;
+        }
     }
     private void Move()
     {
@@ -104,6 +118,18 @@ public class PlayerMotor : MonoBehaviour
                 currentState.playerStance = PlayerStance.Stance.Crouching;
             else
                 currentState.playerStance = PlayerStance.Stance.Idle;
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching)
+        {
+            isRunning = true;
+            moveSpeed *= 1.3f;
+        }
+        else
+        {
+            isRunning = false;
+            moveSpeed /= 1.3f;
+            moveSpeed = Mathf.Clamp(moveSpeed, 1f, 4f);
         }
 
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
