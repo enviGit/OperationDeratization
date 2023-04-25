@@ -119,7 +119,7 @@ public class PlayerMotor : MonoBehaviour
                 currentState.playerStance = PlayerStance.Stance.Idle;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && GetComponent<PlayerStamina>().HasStamina(GetComponent<PlayerStamina>().jumpStaminaCost))
+        if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && GetComponent<PlayerStamina>().currentStamina > 0f)
         {
             isRunning = true;
             moveSpeed *= 1.3f;
@@ -189,7 +189,7 @@ public class PlayerMotor : MonoBehaviour
     }
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().jumpStaminaCost)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().jumpStaminaCost / 2)
         {
             RaycastHit hit;
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
