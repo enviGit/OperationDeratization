@@ -14,17 +14,30 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     [SerializeField]
     private Color noHealthColour;
     private int currentHealth;
+    private float lastDamageTime;
+    private bool showHealthBar;
 
     private void Start()
     {
         currentHealth = enemyStats.maxHealth;
         SetHealthBarUI();
+        lastDamageTime = Time.time;
+        showHealthBar = true;
+    }
+    private void Update()
+    {
+        if (Time.time - lastDamageTime > 3f)
+            showHealthBar = false;
+
+        healthBarSlider.gameObject.SetActive(showHealthBar);
     }
     public void DealDamage(int damage)
     {
         currentHealth -= damage;
         CheckIfDead();
         SetHealthBarUI();
+        lastDamageTime = Time.time;
+        showHealthBar = true;
     }
     private void CheckIfDead()
     {

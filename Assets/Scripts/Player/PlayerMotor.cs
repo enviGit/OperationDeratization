@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
@@ -204,7 +203,6 @@ public class PlayerMotor : MonoBehaviour
         {
             RaycastHit hit;
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
-
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
             {
                 //Debug.Log("Hit: " + hit.collider.name);
@@ -296,7 +294,7 @@ public class PlayerMotor : MonoBehaviour
         weaponReload.maxAmmoCount -= weaponReload.magazineSize;
         isReloading = false;
     }
-    
+
     private void PointerPosition()
     {
         float mouseX = Input.GetAxis("Mouse X") * xSensitivity;
