@@ -3,27 +3,28 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private float health;
+    private float currentHealth;
     private float lerpTimer;
-    public int maxHealth = 100;
+    public float maxHealth = 100;
     public float chipSpeed = 2f;
     public Image frontHealthBar;
     public Image backHealthBar;
+    private bool isAlive = true;
 
     private void Start()
     {
-        health = maxHealth;
+        currentHealth = maxHealth;
     }
     private void Update()
     {
-        health = Mathf.Clamp(health, 0, maxHealth);
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateHealthUI();
     }
     public void UpdateHealthUI()
     {
         float fillF = frontHealthBar.fillAmount;
         float fillB = backHealthBar.fillAmount;
-        float hFraction = health / maxHealth;
+        float hFraction = currentHealth / maxHealth;
 
         if (fillB > hFraction)
         {
@@ -46,12 +47,25 @@ public class PlayerHealth : MonoBehaviour
     }
     public void TakeDamage(float damage)
     {
-        health -= damage;
+        if (!isAlive)
+            return;
+
+        currentHealth -= damage;
         lerpTimer = 0f;
+
+        if (currentHealth <= 0)
+            Die();
+    }
+    private void Die()
+    {
+        isAlive = false;
     }
     public void RestoreHealth(float healAmount)
     {
-        health += healAmount;
+        if (!isAlive)
+            return;
+
+        currentHealth += healAmount;
         lerpTimer = 0f;
     }
 }

@@ -3,24 +3,39 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
+    [Header("References")]
     public CharacterController controller;
+    public Camera cam;
+    private PlayerStance currentState = new PlayerStance();
+
+    [Header("Movement")]
     private Vector3 playerVelocity;
     public float gravity = -9.8f;
     public float jumpHeight = 0.7f;
-    private PlayerStance currentState = new PlayerStance();
     public float moveSpeed = 4f;
-    public Camera cam;
     private float xRotation = 0f;
     public float xSensitivity = 3f;
     public float ySensitivity = 3f;
-    private float shotTimer = 0f;
+
+    [Header("Weapon")]
     private Gun currentWeapon;
+    private Gun weaponReload;
+    private Gun previousWeapon;
+    [SerializeField] private WeaponRecoil recoil;
+    private float shotTimer = 0f;
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
     public GameObject impactRicochet;
     public AudioSource gunAudio;
-    private Gun weaponReload;
-    private Gun previousWeapon;
+
+    [Header("Fall damage")]
+    public float fallDamageMultiplier = 1.5f;
+    private float fallTime = 0f;
+    public float fallHeight = 10f;
+    private float lastYPosition;
+    private float fallDamageTaken;
+
+    [Header("Bool checks")]
     public bool isGrounded;
     public bool isCrouching = false;
     private bool isShooting = false;
@@ -28,8 +43,6 @@ public class PlayerMotor : MonoBehaviour
     public bool isAiming = false;
     public bool isMoving = false;
     public bool isRunning = false;
-    [SerializeField]
-    private WeaponRecoil recoil;
 
     private void Start()
     {
@@ -61,9 +74,6 @@ public class PlayerMotor : MonoBehaviour
         }
 
         isGrounded = controller.isGrounded;
-
-        if (isGrounded && playerVelocity.y < 0)
-            playerVelocity.y = -2f;
 
         Move();
         Gravity();
@@ -136,6 +146,34 @@ public class PlayerMotor : MonoBehaviour
     {
         playerVelocity.y += gravity * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+
+        if (controller.isGrounded)
+        {
+            fallTime = 0f;
+            playerVelocity.y = -2f;
+
+            if (fallDamageTaken > 0)
+            {
+                //Debug.Log(fallDamageTaken);
+                GetComponent<PlayerHealth>().TakeDamage(fallDamageTaken);
+                fallDamageTaken = 0;
+            }
+        }
+        else
+        {
+            fallTime += Time.deltaTime;
+
+            if (fallTime > 0.1f && (transform.position.y < lastYPosition || transform.position.y - lastYPosition >= fallHeight))
+            {
+                float fallDistance = transform.position.y - lastYPosition - fallHeight;
+                float fallDamage = fallDistance * fallDamageMultiplier;
+
+                if (fallDamage > 0)
+                    fallDamageTaken += fallDamage;
+
+                lastYPosition = transform.position.y;
+            }
+        }
     }
     private void Crouch()
     {
@@ -356,7 +394,7 @@ public class PlayerMotor : MonoBehaviour
                 break;
         }
 
-        if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee)
+        if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee && !isRunning)
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
             isAiming = true;

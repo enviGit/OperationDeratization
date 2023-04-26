@@ -14,6 +14,8 @@ public class Weapon : Interactable
         inventory.AddItem(gun);
         GameObject weaponObject = Instantiate(gun.gunPrefab, Vector3.zero, Quaternion.identity, Camera.main.transform.Find("WeaponHolder"));
         weaponObject.layer = LayerMask.NameToLayer("Player");
+        var script = weaponObject.GetComponent<Weapon>();
+        Destroy(script);
         weaponObject.transform.localPosition = Vector3.zero;
         weaponObject.transform.localRotation = Quaternion.identity;
         Transform mesh = weaponObject.transform.Find("Mesh");

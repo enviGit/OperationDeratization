@@ -10,6 +10,7 @@ public class WeaponSway : MonoBehaviour
     private PlayerMotor player;
     private bool isAiming;
     private bool isMoving;
+    private bool isRunning;
     public float step = 0.01f;
     public float maxStepDistance = 0.06f;
     public float rotationStep = 4f;
@@ -33,8 +34,11 @@ public class WeaponSway : MonoBehaviour
     {
         isAiming = player.isAiming;
         isMoving = player.isMoving;
+        isRunning = player.isRunning;
 
-        if (isMoving && !isAiming)
+        if (isRunning && !isAiming)
+            multiplier = Vector3.one * 5f;
+        else if (isMoving && !isAiming)
             multiplier = Vector3.one * 2.5f;
         else if (isMoving && isAiming)
             multiplier = Vector3.one * 0.3f;

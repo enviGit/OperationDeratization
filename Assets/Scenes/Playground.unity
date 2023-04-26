@@ -3630,6 +3630,10 @@ PrefabInstance:
       value: PTK_Cuboid_5
       objectReference: {fileID: 0}
     - target: {fileID: 1078868141710040, guid: db58b1eda8133c84983d20108c13888e, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 1078868141710040, guid: db58b1eda8133c84983d20108c13888e, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 8
       objectReference: {fileID: 0}
@@ -4314,6 +4318,8 @@ MonoBehaviour:
   chipSpeed: 1
   frontHealthBar: {fileID: 1439213717}
   backHealthBar: {fileID: 699358344}
+  fallDamageThreshold: 10
+  fallDamageMultiplier: 1.5
 --- !u!114 &1605920387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4341,9 +4347,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 3
-  mask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!114 &1605920389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4442,7 +4445,6 @@ GameObject:
   - component: {fileID: 1614734152}
   - component: {fileID: 1614734155}
   - component: {fileID: 1614734154}
-  - component: {fileID: 1614734153}
   m_Layer: 10
   m_Name: Knife_00(Clone)
   m_TagString: Untagged
@@ -4465,21 +4467,6 @@ Transform:
   m_Father: {fileID: 806478987}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 5.2, y: -125, z: 101}
---- !u!114 &1614734153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1614734151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7573a5f98a84ca345a6ba95fb77ac296, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  useEvents: 0
-  prompt: 
-  gun: {fileID: 11400000, guid: 3880d37e7cc547a41b35abfa981276dd, type: 2}
 --- !u!23 &1614734154
 MeshRenderer:
   m_ObjectHideFlags: 0
