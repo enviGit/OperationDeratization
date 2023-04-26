@@ -89,7 +89,7 @@ public class PlayerMotor : MonoBehaviour
             StartCoroutine(ReloadCoroutine());
         }
 
-        switch(currentWeapon.gunType)
+        switch (currentWeapon.gunType)
         {
             case GunType.Pistol:
                 moveSpeed *= 0.9f;
@@ -230,7 +230,7 @@ public class PlayerMotor : MonoBehaviour
             if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
                 return;
 
-            if(isCrouching)
+            if (isCrouching)
             {
                 isCrouching = false;
                 currentState.playerStance = PlayerStance.Stance.Idle;
@@ -238,12 +238,16 @@ public class PlayerMotor : MonoBehaviour
             }
 
             fallTimeCalc = 1.2f;
+            fallDamageMultiplier = 0.8f;
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
         else
         {
-            if(isGrounded)
+            if (isGrounded)
+            {
                 fallTimeCalc = 0.7f;
+                fallDamageMultiplier = 1.5f;
+            }
         }
     }
     private void Climb()
