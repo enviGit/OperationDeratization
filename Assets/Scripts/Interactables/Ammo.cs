@@ -11,6 +11,7 @@ public class Ammo : Interactable
     [SerializeField] private Slider slider;
     [SerializeField] private TextMeshProUGUI sliderValue;
     private PlayerInventory inventory;
+    private PlayerInteract interact;
 
     [Header("Ammo")]
     private float fadeDuration = 1.5f;
@@ -23,6 +24,7 @@ public class Ammo : Interactable
     private void Start()
     {
         inventory = FindObjectOfType<PlayerInventory>();
+        interact = FindObjectOfType<PlayerInteract>();
     }
     protected override void Interact()
     {
@@ -62,7 +64,7 @@ public class Ammo : Interactable
 
         while (Time.time - startTime < 3.0f)
         {
-            if (inventory.CurrentWeapon.gunStyle == GunStyle.Melee)
+            if (inventory.CurrentWeapon.gunStyle == GunStyle.Melee || !Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance))
             {
                 isFilling = false;
                 loadingSlider.SetActive(false);
