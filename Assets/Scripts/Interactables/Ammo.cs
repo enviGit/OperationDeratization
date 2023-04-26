@@ -1,20 +1,66 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class Ammo : Interactable
 {
     [Header("References")]
     [SerializeField] private TextMeshProUGUI ammoRefillPrompt;
+    [SerializeField] private GameObject loadingSlider;
+    [SerializeField] private Slider slider;
+    [SerializeField] private TextMeshProUGUI sliderValue;
+    private PlayerInventory inventory;
 
     [Header("Ammo")]
     private float fadeDuration = 1.5f;
     private Coroutine hideCoroutine;
     private const int maxLines = 2;
+    private bool isFilling = false;
 
+    private void Start()
+    {
+        inventory = FindObjectOfType<PlayerInventory>();
+    }
     protected override void Interact()
     {
-        PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
+        if (inventory != null)
+        {
+            foreach (Gun gun in inventory.weapons)
+            {
+                if (gun != null && gun.gunStyle != GunStyle.Melee)
+                {
+                    if (gun.maxAmmoCount >= gun.magazineSize * 4)
+                    {
+                        ShowAmmoRefillPrompt(gun.gunName);
+                        return;
+                    }
+                }
+            }
+        }
+        if (!isFilling)
+            StartCoroutine(ReloadAmmo());
+    }
+    private IEnumerator ReloadAmmo()
+    {
+        isFilling = true;
+        loadingSlider.SetActive(true);
+        float startTime = Time.time;
+
+        while (Time.time - startTime < 3.0f)
+        {
+            if (inventory.CurrentWeapon.gunStyle == GunStyle.Melee)
+            {
+                isFilling = false;
+                loadingSlider.SetActive(false);
+                yield break;
+            }
+
+            float progress = (Time.time - startTime) / 3.0f;
+            slider.value = progress;
+            sliderValue.text = string.Format("{0:F1}", progress * 3.0f);
+            yield return new WaitForSeconds(0.1f);
+        }
 
         if (inventory != null)
         {
@@ -29,6 +75,9 @@ public class Ammo : Interactable
                 }
             }
         }
+
+        loadingSlider.SetActive(false);
+        isFilling = false;
     }
     private void ShowAmmoRefillPrompt(string gunName)
     {
