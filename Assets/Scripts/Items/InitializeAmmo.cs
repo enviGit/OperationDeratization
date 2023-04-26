@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class InitializeAmmo : MonoBehaviour
 {
+    [Header("References")]
     public Gun[] guns = new Gun[6];
 
-    void Start()
+    private void Start()
     {
         foreach (var gun in guns)
         {

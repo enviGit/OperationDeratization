@@ -3,12 +3,17 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [Header("Health bar")]
     private float currentHealth;
     private float lerpTimer;
     public float maxHealth = 100;
     public float chipSpeed = 2f;
+
+    [Header("Health bar images")]
     public Image frontHealthBar;
     public Image backHealthBar;
+
+    [Header("Player state")]
     private bool isAlive = true;
 
     private void Start()

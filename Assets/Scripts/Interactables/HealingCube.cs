@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class HealingCube : Interactable
 {
+    [Header("References")]
     private PlayerHealth hp;
 
     private void Start()

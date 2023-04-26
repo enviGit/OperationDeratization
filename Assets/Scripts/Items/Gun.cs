@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Gun", menuName = "Gun")]
 public class Gun : ScriptableObject
 {
+    [Header("Weapon")]
     public string gunName;
     public GameObject gunPrefab;
     public Sprite gunIcon;
@@ -31,5 +32,6 @@ public class Gun : ScriptableObject
     public float snappiness;
     public float returnSpeed;
 }
+
 public enum GunType { Melee, Pistol, Rifle, Shotgun, Sniper }
 public enum GunStyle { Melee, Primary, Secondary }

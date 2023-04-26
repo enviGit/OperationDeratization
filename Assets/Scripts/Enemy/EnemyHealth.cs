@@ -3,16 +3,16 @@ using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour, IDamageable
 {
-    [SerializeField]
-    private EnemyStats enemyStats;
-    [SerializeField]
-    private Slider healthBarSlider;
-    [SerializeField]
-    private Image healthBarSliderImage;
-    [SerializeField]
-    private Color maxHealthColour;
-    [SerializeField]
-    private Color noHealthColour;
+    [Header("References")]
+    [SerializeField] private EnemyStats enemyStats;
+    [SerializeField] private Slider healthBarSlider;
+    [SerializeField] private Image healthBarSliderImage;
+
+    [Header("Health bar colours")]
+    [SerializeField] private Color maxHealthColour;
+    [SerializeField] private Color noHealthColour;
+
+    [Header("Enemy health bar")]
     private int currentHealth;
     private float lastDamageTime;
     private bool showHealthBar;

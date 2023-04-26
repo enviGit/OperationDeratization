@@ -4,16 +4,15 @@ using UnityEngine.UI;
 
 public class PlayerInventory : MonoBehaviour
 {
-    [SerializeField]
-    private Gun[] weaponTypes;
+    [Header("Weapon images")]
+    [SerializeField] private Image meleeWeaponImage;
+    [SerializeField] private Image primaryWeaponImage;
+    [SerializeField] private Image secondaryWeaponImage;
+
+    [Header("Weapon")]
+    [SerializeField] private Gun[] weaponTypes;
     public Gun[] weapons;
     private int currentWeaponIndex = -1;
-    [SerializeField]
-    private Image meleeWeaponImage;
-    [SerializeField]
-    private Image primaryWeaponImage;
-    [SerializeField]
-    private Image secondaryWeaponImage;
     public Gun CurrentWeapon
     {
         get

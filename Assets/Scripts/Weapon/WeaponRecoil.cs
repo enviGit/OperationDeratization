@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class WeaponRecoil : MonoBehaviour
 {
-    [SerializeField]
-    private PlayerMotor playerMot;
-    [SerializeField]
-    private PlayerInventory playerInv;
+    [Header("References")]
+    [SerializeField] private PlayerMotor playerMot;
+    [SerializeField] private PlayerInventory playerInv;
     private Gun gun;
+
+    [Header("Recoil")]
     private bool isAiming;
     private Vector3 currentRotation;
     private Vector3 targetRotation;

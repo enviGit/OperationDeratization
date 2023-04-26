@@ -4,8 +4,8 @@ using UnityEngine.Rendering;
 
 public class Weapon : Interactable
 {
-    [SerializeField]
-    private Gun gun;
+    [Header("References")]
+    [SerializeField] private Gun gun;
 
     protected override void Interact()
     {

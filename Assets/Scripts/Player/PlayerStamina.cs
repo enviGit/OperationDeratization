@@ -3,15 +3,21 @@ using UnityEngine.UI;
 
 public class PlayerStamina : MonoBehaviour
 {
+    [Header("Stamina bar")]
     public float maxStamina = 100f;
     public float sprintStaminaCost = 10f;
     public float jumpStaminaCost = 30f;
     //public float attackStaminaCost = 30f;
     public float staminaRegenRate = 20f;
-    public Image staminaBarFill;
-    public float currentStamina;
-    private bool isStaminaRegenBlocked = false;
     //private float attackTimer = 0f;
+    public float currentStamina;
+
+    [Header("Stamina bar images")]
+    public Image staminaBarFill;
+
+    [Header("Bool checks")]
+    private bool isStaminaRegenBlocked = false;
+    
 
     private void Start()
     {

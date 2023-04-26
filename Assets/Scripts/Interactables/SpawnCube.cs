@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class SpawnCube : Interactable
 {
-    [SerializeField] 
-    private GameObject botPrefab;
-    [SerializeField] 
-    private List<Vector3> botSpawnPositions;
+    [Header("References")]
+    [SerializeField] private GameObject botPrefab;
+
+    [Header("Bots")]
+    [SerializeField] private List<Vector3> botSpawnPositions;
 
     private void Start()
     {

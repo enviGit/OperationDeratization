@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
+    [Header("References")]
     public BaseState activeState;
     public PatrolState patrolState;
 

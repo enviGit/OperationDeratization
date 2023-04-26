@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class LadderTrigger : Interactable
 {
-    [SerializeField] 
-    private float climbSpeed = 3f;
+    [Header("References")]
+    private Transform playerTransform;
+    private CharacterController characterController;
+
+    [Header("Ladder")]
+    [SerializeField] private float climbSpeed = 3f;
     private bool isClimbing;
     private Vector3 ladderTop;
     private Vector3 ladderBottom;
-    private Transform playerTransform;
-    private CharacterController characterController;
 
     protected override void Interact()
     {

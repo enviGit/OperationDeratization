@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class Door : Interactable
 {
-    [SerializeField]
-    private GameObject door;
+    [Header("References")]
+    [SerializeField] private GameObject door;
+
+    [Header("Door")]
     private bool doorOpen;
 
     protected override void Interact()

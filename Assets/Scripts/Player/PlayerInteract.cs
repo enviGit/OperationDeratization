@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
+    [Header("References")]
     private Camera cam;
-    [SerializeField]
-    private float distance = 3f;
     private PlayerUI playerUI;
+
+    [Header("Raycast")]
+    [SerializeField] private float distance = 3f;
     public Ray ray;
     public RaycastHit hitInfo;
 

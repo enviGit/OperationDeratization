@@ -4,14 +4,13 @@ using UnityEditor;
 
 public class Path : MonoBehaviour
 {
-
+    [Header("References")]
     public List<Transform> waypoints;
-    [SerializeField]
-    private bool alwaysDrawPath;
-    [SerializeField]
-    private bool drawAsLoop;
-    [SerializeField]
-    private bool drawNumbers;
+
+    [Header("Path")]
+    [SerializeField] private bool alwaysDrawPath;
+    [SerializeField] private bool drawAsLoop;
+    [SerializeField] private bool drawNumbers;
     public Color debugColour = Color.white;
 
  #if UNITY_EDITOR

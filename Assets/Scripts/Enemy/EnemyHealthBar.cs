@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyHealthBar : MonoBehaviour
 {
+    [Header("References")]
     private Camera cam;
 
     private void Start()

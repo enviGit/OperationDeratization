@@ -1,11 +1,14 @@
 using System;
+using UnityEngine;
 
 [Serializable]
 public class PlayerStance
 {
+    [Header("References")]
     public Stance playerStance;
-    public float camHeight;
 
+    [Header("Player stance")]
+    public float camHeight;
     public enum Stance
     {
         Idle,

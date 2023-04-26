@@ -4,8 +4,10 @@ using TMPro;
 
 public class Ammo : Interactable
 {
-    [SerializeField]
-    private TextMeshProUGUI ammoRefillPrompt;
+    [Header("References")]
+    [SerializeField] private TextMeshProUGUI ammoRefillPrompt;
+
+    [Header("Ammo")]
     private float fadeDuration = 1.5f;
     private Coroutine hideCoroutine;
     private const int maxLines = 2;

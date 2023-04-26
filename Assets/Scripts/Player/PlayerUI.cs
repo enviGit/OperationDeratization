@@ -3,11 +3,12 @@ using TMPro;
 
 public class PlayerUI : MonoBehaviour
 {
-    [SerializeField]
-    private TextMeshProUGUI promptText;
-    [SerializeField]
-    private TextMeshProUGUI ammoText;
+    [Header("Reference")]
     private Gun currentWeapon;
+
+    [Header("Player UI")]
+    [SerializeField] private TextMeshProUGUI promptText;
+    [SerializeField] private TextMeshProUGUI ammoText;
 
     private void Update()
     {

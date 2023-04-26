@@ -2,15 +2,12 @@ using UnityEngine;
 
 public class WeaponSway : MonoBehaviour
 {
-    [SerializeField]
-    private CharacterController mover;
-    [SerializeField]
-    private Rigidbody rb;
-    [SerializeField]
-    private PlayerMotor player;
-    private bool isAiming;
-    private bool isMoving;
-    private bool isRunning;
+    [Header("References")]
+    [SerializeField] private CharacterController mover;
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private PlayerMotor player;
+
+    [Header("Sway and bob")]
     public float step = 0.01f;
     public float maxStepDistance = 0.06f;
     public float rotationStep = 4f;
@@ -29,6 +26,11 @@ public class WeaponSway : MonoBehaviour
     Vector3 swayEulerRot;
     Vector3 bobPosition;
     Vector3 bobEulerRotation;
+
+    [Header("Bool checks")]
+    private bool isAiming;
+    private bool isMoving;
+    private bool isRunning;
 
     private void Update()
     {
