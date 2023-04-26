@@ -31,9 +31,8 @@ public class PlayerMotor : MonoBehaviour
     [Header("Fall damage")]
     public float fallDamageMultiplier = 1.5f;
     private float fallTime = 0f;
-    public float fallHeight = 10f;
-    private float lastYPosition;
     private float fallDamageTaken;
+    private float fallTimeCalc = 0.7f;
 
     [Header("Bool checks")]
     public bool isGrounded;
@@ -76,10 +75,10 @@ public class PlayerMotor : MonoBehaviour
         isGrounded = controller.isGrounded;
 
         Move();
-        Gravity();
         Crouch();
         CrouchToggle();
         Jump();
+        Gravity();
         Shoot();
         Climb();
         PointerPosition();
@@ -154,7 +153,7 @@ public class PlayerMotor : MonoBehaviour
 
             if (fallDamageTaken > 0)
             {
-                //Debug.Log(fallDamageTaken);
+                Debug.Log(fallDamageTaken);
                 GetComponent<PlayerHealth>().TakeDamage(fallDamageTaken);
                 fallDamageTaken = 0;
             }
@@ -163,15 +162,12 @@ public class PlayerMotor : MonoBehaviour
         {
             fallTime += Time.deltaTime;
 
-            if (fallTime > 0.1f && (transform.position.y < lastYPosition || transform.position.y - lastYPosition >= fallHeight))
+            if (fallTime > fallTimeCalc)
             {
-                float fallDistance = transform.position.y - lastYPosition - fallHeight;
-                float fallDamage = fallDistance * fallDamageMultiplier;
+                float fallDamage = fallTime * fallDamageMultiplier;
 
                 if (fallDamage > 0)
                     fallDamageTaken += fallDamage;
-
-                lastYPosition = transform.position.y;
             }
         }
     }
@@ -241,7 +237,13 @@ public class PlayerMotor : MonoBehaviour
                 currentState.camHeight = 2f;
             }
 
+            fallTimeCalc = 1.2f;
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+        else
+        {
+            if(isGrounded)
+                fallTimeCalc = 0.7f;
         }
     }
     private void Climb()
