@@ -17,6 +17,7 @@ public class Ammo : Interactable
     private Coroutine hideCoroutine;
     private const int maxLines = 2;
     private bool isFilling = false;
+    private int weaponsFullAmmo = 0;
 
     private void Start()
     {
@@ -32,14 +33,21 @@ public class Ammo : Interactable
                 {
                     if (gun.maxAmmoCount >= gun.magazineSize * 4)
                     {
+                        weaponsFullAmmo++;
                         ShowAmmoRefillPrompt(gun.gunName);
-                        return;
                     }
                 }
             }
         }
+        if (weaponsFullAmmo >= 2)
+        {
+            weaponsFullAmmo = 0;
+            return;
+        }
         if (!isFilling)
             StartCoroutine(ReloadAmmo());
+
+        weaponsFullAmmo = 0;
     }
     private IEnumerator ReloadAmmo()
     {
