@@ -34,5 +34,5 @@ public class Gun : ScriptableObject
     public float returnSpeed;
 }
 
-public enum GunType { Melee, Pistol, Rifle, Shotgun, Sniper }
+public enum GunType { Melee, Pistol, Revolver, Shotgun, Rifle, Sniper }
 public enum GunStyle { Melee, Primary, Secondary }

@@ -12,6 +12,10 @@ public class LadderTrigger : Interactable
     private Vector3 ladderTop;
     private Vector3 ladderBottom;
 
+    [Header("Mouse Rotation Limits")]
+    [SerializeField] private float minRotation = -65f;
+    [SerializeField] private float maxRotation = 65f;
+
     protected override void Interact()
     {
         prompt = "Climb ladder";
@@ -29,8 +33,7 @@ public class LadderTrigger : Interactable
         isClimbing = true;
         ladderTop = transform.GetChild(0).position;
         ladderBottom = transform.GetChild(1).position;
-        playerTransform.position = new Vector3(transform.position.x, playerTransform.position.y, transform.position.z + -0.5f); //-0.5f is to change, we don't know how the ladder will be rotated
-        playerTransform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+        playerTransform.position = new Vector3(ladderBottom.x, ladderBottom.y, ladderBottom.z);
         characterController.enabled = false;
     }
 
@@ -38,6 +41,7 @@ public class LadderTrigger : Interactable
     {
         characterController.enabled = true;
         isClimbing = false;
+        //playerTransform.position = new Vector3(ladderBottom.x, playerTransform.position.y, playerTransform.position.y);
     }
 
     private void FixedUpdate()
@@ -54,6 +58,12 @@ public class LadderTrigger : Interactable
                 playerTransform.Translate(Vector3.zero);
             else
                 DetachFromLadder();
+
+            /*float horizontalInput = Input.GetAxis("Mouse X");
+            Vector3 rotation = playerTransform.localRotation.eulerAngles;
+            rotation.y += horizontalInput;
+            rotation.y = Mathf.Clamp(rotation.y, minRotation, maxRotation);
+            playerTransform.localRotation = Quaternion.Euler(rotation);*/
         }
     }
 }

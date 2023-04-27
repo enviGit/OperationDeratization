@@ -49,12 +49,22 @@ public class PlayerInventory : MonoBehaviour
 
         if (weapons[newItemIndex] != null)
         {
-            if (newItem.gunStyle == GunStyle.Primary)
+            if (newItem.gunStyle == GunStyle.Melee)
+            {
+                Transform melee = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
+
+                if (melee != null)
+                    Destroy(melee.gameObject);
+            }
+            else if (newItem.gunStyle == GunStyle.Primary)
             {
                 Transform pistol = transform.Find("Camera/Main Camera/WeaponHolder/Pistol_00(Clone)");
+                Transform revolver = transform.Find("Camera/Main Camera/WeaponHolder/Revolver_00(Clone)");
 
                 if (pistol != null)
                     Destroy(pistol.gameObject);
+                if (revolver != null)
+                    Destroy(revolver.gameObject);
             }
             else if (newItem.gunStyle == GunStyle.Secondary)
             {
@@ -63,13 +73,7 @@ public class PlayerInventory : MonoBehaviour
                 if (rifle != null)
                     Destroy(rifle.gameObject);
             }
-            else if (newItem.gunStyle == GunStyle.Melee)
-            {
-                Transform melee = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
-
-                if (melee != null)
-                    Destroy(melee.gameObject);
-            }
+            
 
             Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
             GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
@@ -196,7 +200,7 @@ public class PlayerInventory : MonoBehaviour
         if (meleeWeaponImage != null)
         {
             if (CurrentWeapon.gunStyle != GunStyle.Melee)
-                meleeWeaponImage.sprite = weaponTypes[0].gunIcon;
+                meleeWeaponImage.sprite = weapons[0].gunIcon;
             else
             {
                 meleeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
@@ -206,7 +210,10 @@ public class PlayerInventory : MonoBehaviour
         if (primaryWeaponImage != null)
         {
             if (CurrentWeapon.gunStyle != GunStyle.Primary)
-                primaryWeaponImage.sprite = weaponTypes[1].gunIcon;
+            {
+                if(weapons[1] != null)
+                    primaryWeaponImage.sprite = weapons[1].gunIcon;
+            }
             else
             {
                 primaryWeaponImage.sprite = CurrentWeapon.activeGunIcon;
@@ -216,7 +223,10 @@ public class PlayerInventory : MonoBehaviour
         if (secondaryWeaponImage != null)
         {
             if (CurrentWeapon.gunStyle != GunStyle.Secondary)
-                secondaryWeaponImage.sprite = weaponTypes[2].gunIcon;
+            {
+                if (weapons[2] != null)
+                    secondaryWeaponImage.sprite = weapons[2].gunIcon;
+            }
             else
             {
                 secondaryWeaponImage.sprite = CurrentWeapon.activeGunIcon;

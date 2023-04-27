@@ -7,7 +7,7 @@ public class PlayerInteract : MonoBehaviour
     private PlayerUI playerUI;
 
     [Header("Raycast")]
-    public float distance = 3f;
+    public float distance = 2f;
     public Ray ray;
     public RaycastHit hitInfo;
 

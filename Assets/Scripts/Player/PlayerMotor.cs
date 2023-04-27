@@ -94,6 +94,9 @@ public class PlayerMotor : MonoBehaviour
             case GunType.Pistol:
                 moveSpeed *= 0.9f;
                 break;
+            case GunType.Revolver:
+                moveSpeed *= 0.9f;
+                break;
             case GunType.Rifle:
                 moveSpeed *= 0.75f;
                 break;
@@ -431,10 +434,16 @@ public class PlayerMotor : MonoBehaviour
                 originalRotation = new Vector3(5.2f, -125, 101);
                 break;
             case GunType.Pistol:
-                originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
+                originalPosition = new Vector3(0.16f, -0.15f, 0.3f);
                 originalRotation = new Vector3(3f, 0, 0);
                 aimingPosition = new Vector3(0, -0.07f, 0.24f);
                 aimingRotation = new Vector3(0, 0, 0);
+                break;
+            case GunType.Revolver:
+                originalPosition = new Vector3(0.12f, -0.24f, 0.2f);
+                originalRotation = new Vector3(-90f, 0, 0);
+                aimingPosition = new Vector3(0, -0.18f, 0.2f);
+                aimingRotation = new Vector3(-87f, 0, 0);
                 break;
             case GunType.Rifle:
                 originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
