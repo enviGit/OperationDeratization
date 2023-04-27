@@ -153,7 +153,7 @@ public class PlayerMotor : MonoBehaviour
 
             if (fallDamageTaken > 0)
             {
-                Debug.Log(fallDamageTaken);
+                //Debug.Log(fallDamageTaken);
                 GetComponent<PlayerHealth>().TakeDamage(fallDamageTaken);
                 fallDamageTaken = 0;
             }
@@ -238,7 +238,7 @@ public class PlayerMotor : MonoBehaviour
             }
 
             fallTimeCalc = 1.2f;
-            fallDamageMultiplier = 0.8f;
+            fallDamageMultiplier = 0.6f;
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
         else

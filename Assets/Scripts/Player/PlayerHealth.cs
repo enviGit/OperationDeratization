@@ -13,6 +13,14 @@ public class PlayerHealth : MonoBehaviour
     public Image frontHealthBar;
     public Image backHealthBar;
 
+    [Header("Armor bar")]
+    private float currentArmor;
+    public float maxArmor = 100;
+
+    [Header("Armor bar images")]
+    public Image frontArmorBar;
+    public Image backArmorBar;
+
     [Header("Player state")]
     private bool isAlive = true;
 

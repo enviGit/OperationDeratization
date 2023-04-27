@@ -26,6 +26,13 @@ public class Ammo : Interactable
         inventory = FindObjectOfType<PlayerInventory>();
         interact = FindObjectOfType<PlayerInteract>();
     }
+    private void Update()
+    {
+        if (isFilling)
+            prompt = "";
+        else
+            prompt = "Refill ammo";
+    }
     protected override void Interact()
     {
         if (inventory != null)
@@ -64,7 +71,7 @@ public class Ammo : Interactable
 
         while (Time.time - startTime < 3.0f)
         {
-            if (inventory.CurrentWeapon.gunStyle == GunStyle.Melee || !Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance))
+            if (inventory.CurrentWeapon.gunStyle == GunStyle.Melee || !Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance - 1f))
             {
                 isFilling = false;
                 loadingSlider.SetActive(false);
