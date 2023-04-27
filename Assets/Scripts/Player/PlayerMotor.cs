@@ -154,7 +154,7 @@ public class PlayerMotor : MonoBehaviour
             if (fallDamageTaken > 0)
             {
                 //Debug.Log(fallDamageTaken);
-                GetComponent<PlayerHealth>().TakeDamage(fallDamageTaken);
+                GetComponent<PlayerHealth>().TakeFallingDamage(fallDamageTaken);
                 fallDamageTaken = 0;
             }
         }

@@ -8,16 +8,13 @@ public class PlayerHealth : MonoBehaviour
     private float lerpTimer;
     public float maxHealth = 100;
     public float chipSpeed = 2f;
-
-    [Header("Health bar images")]
     public Image frontHealthBar;
     public Image backHealthBar;
 
-    [Header("Armor bar")]
-    private float currentArmor;
+    [Header("Armor")]
+    private float currentArmor = 0f;
     public float maxArmor = 100;
-
-    [Header("Armor bar images")]
+    public Transform armorBar;
     public Image frontArmorBar;
     public Image backArmorBar;
 
@@ -31,6 +28,7 @@ public class PlayerHealth : MonoBehaviour
     private void Update()
     {
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
         UpdateHealthUI();
     }
     public void UpdateHealthUI()
@@ -57,8 +55,63 @@ public class PlayerHealth : MonoBehaviour
             percentComplete = percentComplete * percentComplete;
             frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete);
         }
+
+        float fillAF = frontArmorBar.fillAmount;
+        float fillAB = backArmorBar.fillAmount;
+        float aFraction = currentArmor / maxArmor;
+
+        if (currentArmor == 0)
+        {
+            armorBar.gameObject.SetActive(false);
+            backArmorBar.fillAmount = 0;
+        }
+        else
+        {
+            armorBar.gameObject.SetActive(true);
+
+            if (fillAB > aFraction)
+            {
+                frontArmorBar.fillAmount = aFraction;
+                backArmorBar.color = Color.gray;
+                lerpTimer += Time.deltaTime;
+                float percentComplete = lerpTimer / chipSpeed;
+                percentComplete = percentComplete * percentComplete;
+                backArmorBar.fillAmount = Mathf.Lerp(fillAB, aFraction, percentComplete);
+            }
+            if (fillAF < aFraction)
+            {
+                backArmorBar.color = Color.blue;
+                backArmorBar.fillAmount = aFraction;
+                lerpTimer += Time.deltaTime;
+                float percentComplete = lerpTimer / chipSpeed;
+                percentComplete = percentComplete * percentComplete;
+                frontArmorBar.fillAmount = Mathf.Lerp(fillAF, backArmorBar.fillAmount, percentComplete);
+            }
+        }
     }
     public void TakeDamage(float damage)
+    {
+        if (!isAlive)
+            return;
+
+        float damageToHealth = damage;
+
+        if (currentArmor > 0)
+        {
+            float armorMultiplier = 0.2f;
+            damageToHealth = damage * armorMultiplier;
+            currentArmor -= damage / 2f;
+            currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
+        }
+
+        currentHealth -= damageToHealth;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        lerpTimer = 0f;
+
+        if (currentHealth <= 0)
+            Die();
+    }
+    public void TakeFallingDamage(float damage)
     {
         if (!isAlive)
             return;
