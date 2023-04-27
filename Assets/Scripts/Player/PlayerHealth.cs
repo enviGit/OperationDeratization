@@ -6,14 +6,14 @@ public class PlayerHealth : MonoBehaviour
     [Header("Health bar")]
     private float currentHealth;
     private float lerpTimer;
-    public float maxHealth = 100;
+    public float maxHealth = 100f;
     public float chipSpeed = 2f;
     public Image frontHealthBar;
     public Image backHealthBar;
 
     [Header("Armor")]
-    private float currentArmor = 0f;
-    public float maxArmor = 100;
+    private float currentArmor = 0;
+    public float maxArmor = 100f;
     public Transform armorBar;
     public Image frontArmorBar;
     public Image backArmorBar;
@@ -100,7 +100,7 @@ public class PlayerHealth : MonoBehaviour
         {
             float armorMultiplier = 0.2f;
             damageToHealth = damage * armorMultiplier;
-            currentArmor -= damage / 2f;
+            currentArmor -= damage;
             currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
         }
 
