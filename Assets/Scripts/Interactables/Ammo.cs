@@ -25,6 +25,7 @@ public class Ammo : Interactable
     {
         inventory = FindObjectOfType<PlayerInventory>();
         interact = FindObjectOfType<PlayerInteract>();
+        loadingSlider.SetActive(false);
     }
     private void Update()
     {
