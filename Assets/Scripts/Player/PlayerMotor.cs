@@ -363,7 +363,6 @@ public class PlayerMotor : MonoBehaviour
         weaponReload.maxAmmoCount -= weaponReload.magazineSize;
         isReloading = false;
     }
-
     private void PointerPosition()
     {
         float mouseX = Input.GetAxis("Mouse X") * xSensitivity;
@@ -373,18 +372,16 @@ public class PlayerMotor : MonoBehaviour
         transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
-        Vector3 originalPosition;
-        Vector3 originalRotation;
-        Vector3 aimingPosition;
-        Vector3 aimingRotation;
+        Vector3 originalPosition = new Vector3(0.05f, -0.08f, 0.2f);
+        Vector3 originalRotation = new Vector3(5.2f, -125, 101);
+        Vector3 aimingPosition = new Vector3(0.05f, -0.08f, 0.2f);
+        Vector3 aimingRotation = new Vector3(5.2f, -125, 101);
 
         switch (currentWeapon.gunType)
         {
             case GunType.Melee:
                 originalPosition = new Vector3(0.05f, -0.08f, 0.2f);
                 originalRotation = new Vector3(5.2f, -125, 101);
-                aimingPosition = new Vector3(0.05f, -0.08f, 0.2f);
-                aimingRotation = new Vector3(5.2f, -125, 101);
                 break;
             case GunType.Pistol:
                 originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
@@ -392,7 +389,7 @@ public class PlayerMotor : MonoBehaviour
                 aimingPosition = new Vector3(0, -0.07f, 0.24f);
                 aimingRotation = new Vector3(0, 0, 0);
                 break;
-            default:
+            case GunType.Rifle:
                 originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
                 originalRotation = new Vector3(3f, 0, 0);
                 aimingPosition = new Vector3(0, -0.17f, 0.24f);
