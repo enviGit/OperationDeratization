@@ -21,6 +21,7 @@ public class Gun : ScriptableObject
     public float range;
     public float timeBetweenShots;
     public float impactForce;
+    public bool autoFire;
 
     [Header("Recoil stats")]
     public float recoilX;

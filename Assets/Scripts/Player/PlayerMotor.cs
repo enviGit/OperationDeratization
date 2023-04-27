@@ -22,6 +22,7 @@ public class PlayerMotor : MonoBehaviour
     private Gun weaponReload;
     private Gun previousWeapon;
     [SerializeField] private WeaponRecoil recoil;
+    private float autoShotTimer = 0f;
     private float shotTimer = 0f;
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
@@ -261,32 +262,19 @@ public class PlayerMotor : MonoBehaviour
     }
     private void Shoot()
     {
-        if (Input.GetMouseButtonDown(0))
-            isShooting = true;
-        else if (Input.GetMouseButtonUp(0))
-            isShooting = false;
+        RaycastHit hit;
+        LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
-        if (isShooting && Time.time > shotTimer && currentWeapon.currentAmmoCount == 0 && !isReloading)
+        if (Time.time > autoShotTimer && currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
-            isShooting = false;
-            gunAudio.clip = currentWeapon.gunAudioClips[1];
-            gunAudio.Play();
-            return;
-        }
-        if (isShooting && Time.time > shotTimer && currentWeapon.currentAmmoCount > 0 && !isReloading)
-        {
-            RaycastHit hit;
-            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
-
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
+            if (Input.GetMouseButton(0))
             {
-                //Debug.Log("Hit: " + hit.collider.name);
-                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-                gunAudio.clip = currentWeapon.gunAudioClips[0];
-                gunAudio.Play();
-
-                if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                 {
+                    //Debug.Log("Hit: " + hit.collider.name);
+                    IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                    gunAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunAudio.Play();
                     recoil.RecoilFire();
                     currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
@@ -306,19 +294,15 @@ public class PlayerMotor : MonoBehaviour
                         Destroy(ricochet, 2f);
                         Destroy(impact, 5f);
                     }
+                    if (hit.rigidbody != null)
+                        hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
+                    if (damageable != null)
+                        damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
                 }
-                if (hit.rigidbody != null)
-                    hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
-                if (damageable != null)
-                    damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
-            }
-            else
-            {
-                gunAudio.clip = currentWeapon.gunAudioClips[0];
-                gunAudio.Play();
-
-                if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                else
                 {
+                    gunAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunAudio.Play();
                     recoil.RecoilFire();
                     currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
@@ -326,9 +310,67 @@ public class PlayerMotor : MonoBehaviour
                     flash.transform.SetParent(muzzle);
                     flash.Play();
                 }
+
+                autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
             }
 
-            shotTimer = Time.time + currentWeapon.timeBetweenShots;
+        }
+        if (Time.time > shotTimer && !currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
+                {
+                    //Debug.Log("Hit: " + hit.collider.name);
+                    IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                    gunAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunAudio.Play();
+
+                    if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                    {
+                        recoil.RecoilFire();
+                        currentWeapon.currentAmmoCount--;
+                        Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+                        ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
+                        flash.transform.SetParent(muzzle);
+                        flash.Play();
+                        Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+
+                        if (damageable == null)
+                        {
+                            GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
+                            GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+
+                            if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                                impact.transform.SetParent(hit.collider.transform);
+
+                            Destroy(ricochet, 2f);
+                            Destroy(impact, 5f);
+                        }
+                    }
+                    if (hit.rigidbody != null)
+                        hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
+                    if (damageable != null)
+                        damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
+                }
+                else
+                {
+                    gunAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunAudio.Play();
+
+                    if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                    {
+                        recoil.RecoilFire();
+                        currentWeapon.currentAmmoCount--;
+                        Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+                        ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
+                        flash.transform.SetParent(muzzle);
+                        flash.Play();
+                    }
+                }
+
+                shotTimer = Time.time + currentWeapon.timeBetweenShots;
+            }
         }
     }
     private IEnumerator ReloadCoroutine()
