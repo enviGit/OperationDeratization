@@ -18,7 +18,7 @@ The game features simple and intuitive controls, including WASD movement and mou
 ## Authors
 - **Graphic Designer:** Filip Krawiec ([@alwarez](https://www.github.com/alwarez))
 - **Level Designer:** Jakub Molek ([@JacobDeMolay](https://github.com/JacobDeMolay))
-- **Tester:** Dawid Mucha ([@BzykuuDM](https://github.com/BzykuuDM))
+- **Tester / Innovation strategist:** Dawid Mucha ([@BzykuuDM](https://github.com/BzykuuDM))
 - **Developer:** Paweł Trojański ([@enviGit](https://github.com/enviGit))
 
 ## Copyrights Information
