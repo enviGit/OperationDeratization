@@ -43,7 +43,7 @@ public class Ammo : Interactable
                 {
                     allWeapons++;
 
-                    if (gun.maxAmmoCount >= gun.magazineSize * 4)
+                    if (gun.maxAmmoCount >= gun.magazineSize * 3)
                     {
                         weaponsFullAmmo++;
                         ShowAmmoRefillPrompt(gun.gunName);
@@ -90,7 +90,7 @@ public class Ammo : Interactable
             {
                 if (gun != null && gun.gunStyle != GunStyle.Melee)
                 {
-                    if (gun.maxAmmoCount < gun.magazineSize * 4)
+                    if (gun.maxAmmoCount < gun.magazineSize * 3)
                         gun.maxAmmoCount += gun.magazineSize;
                     else
                         ShowAmmoRefillPrompt(gun.gunName);

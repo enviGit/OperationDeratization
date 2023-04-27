@@ -13,12 +13,12 @@ public class InitializeAmmo : MonoBehaviour
             {
                 gun.magazineSize = 12;
                 gun.currentAmmoCount = 12;
-                gun.maxAmmoCount = 48;
+                gun.maxAmmoCount = 36;
             }else if (gun.name.Contains("Rifle"))
             {
                 gun.magazineSize = 30;
                 gun.currentAmmoCount = 30;
-                gun.maxAmmoCount = 120;
+                gun.maxAmmoCount = 90;
             }
         }
     }
