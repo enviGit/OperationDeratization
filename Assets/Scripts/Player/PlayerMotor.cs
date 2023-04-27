@@ -38,7 +38,6 @@ public class PlayerMotor : MonoBehaviour
     [Header("Bool checks")]
     public bool isGrounded;
     public bool isCrouching = false;
-    private bool isShooting = false;
     private bool isReloading = false;
     public bool isAiming = false;
     public bool isMoving = false;
@@ -265,6 +264,12 @@ public class PlayerMotor : MonoBehaviour
         RaycastHit hit;
         LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
+        if (Input.GetMouseButtonDown(0) && (Time.time > shotTimer || Time.time > autoShotTimer) && currentWeapon.currentAmmoCount == 0 && !isReloading)
+        {
+            gunAudio.clip = currentWeapon.gunAudioClips[1];
+            gunAudio.Play();
+            return;
+        }
         if (Time.time > autoShotTimer && currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
             if (Input.GetMouseButton(0))
