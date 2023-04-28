@@ -276,7 +276,7 @@ public class PlayerMotor : MonoBehaviour
             gunAudio.Play();
             return;
         }
-        if(Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !(GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().attackStaminaCost / 2))
+        if (Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !(GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().attackStaminaCost / 2))
             return;
         if (Time.time > autoShotTimer && currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
@@ -351,14 +351,34 @@ public class PlayerMotor : MonoBehaviour
 
                         if (damageable == null)
                         {
-                            GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
-                            GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+                            if (currentWeapon.gunType == GunType.Shotgun)
+                            {
+                                GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+                                Destroy(ricochet, 2f);
 
-                            if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                                impact.transform.SetParent(hit.collider.transform);
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    float offset = Random.Range(-0.2f, 0.2f);
+                                    Vector3 direction = Camera.main.transform.forward + new Vector3(offset, offset, offset);
+                                    GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
-                            Destroy(ricochet, 2f);
-                            Destroy(impact, 5f);
+                                    if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                                        impact.transform.SetParent(hit.collider.transform);
+
+                                    Destroy(impact, 5f);
+                                }
+                            }
+                            else
+                            {
+                                GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
+                                GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+
+                                if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                                    impact.transform.SetParent(hit.collider.transform);
+
+                                Destroy(ricochet, 2f);
+                                Destroy(impact, 5f);
+                            }
                         }
                     }
                     if (hit.rigidbody != null)
