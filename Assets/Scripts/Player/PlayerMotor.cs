@@ -487,6 +487,11 @@ public class PlayerMotor : MonoBehaviour
             {
                 xSensitivity = 1f;
                 ySensitivity = 1f;
+                Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
+                Camera zoomCamera = zoom.GetComponent<Camera>();
+                float newFieldOfView = zoomCamera.fieldOfView - Input.GetAxis("Mouse ScrollWheel") * 25f;
+                newFieldOfView = Mathf.Clamp(newFieldOfView, 1f, 6f);
+                zoomCamera.fieldOfView = newFieldOfView;
             }
             else
             {
