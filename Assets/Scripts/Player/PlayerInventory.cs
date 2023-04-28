@@ -79,7 +79,6 @@ public class PlayerInventory : MonoBehaviour
                 if (sniper != null)
                     Destroy(sniper.gameObject);
             }
-            
 
             Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
             GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
