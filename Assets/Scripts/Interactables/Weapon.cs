@@ -11,15 +11,17 @@ public class Weapon : Interactable
     [SerializeField] private Image bottomImage;
     private PlayerInteract interact;
     private PlayerInventory inventory;
+    private PlayerMotor motor;
 
     private void Start()
     {
         interact = FindObjectOfType<PlayerInteract>();
         inventory = FindObjectOfType<PlayerInventory>();
+        motor = FindObjectOfType<PlayerMotor>();
     }
     private void Update()
     {
-        if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance) && interact.hitInfo.transform.GetComponent<Weapon>())
+        if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance) && interact.hitInfo.transform.GetComponent<Weapon>() && motor.isAiming == false)
         {
             if (upperImage != null)
             {
@@ -27,7 +29,7 @@ public class Weapon : Interactable
                 upperImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
             }
 
-            string promptText = "Pick up " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
+            prompt = "Pick up " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
 
             if (inventory.HasWeaponOfSameCategory(interact.hitInfo.transform.GetComponent<Weapon>().gun))
             {
@@ -38,8 +40,7 @@ public class Weapon : Interactable
                     if (gun != null && gun.gunStyle == interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle)
                         inventoryWeapon = gun;
                 }
-
-                promptText = "Swap " + inventoryWeapon.gunName + "\n\n\nfor " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
+                prompt = "Swap " + inventoryWeapon.gunName + "\n\n\nfor " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
 
                 if (upperImage != null)
                 {
@@ -52,8 +53,6 @@ public class Weapon : Interactable
                     bottomImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
                 }
             }
-
-            prompt = promptText;
         }
         else
         {
@@ -61,6 +60,7 @@ public class Weapon : Interactable
             {
                 upperImage.gameObject.SetActive(false);
                 bottomImage.gameObject.SetActive(false);
+                prompt = "";
             } 
         }
     }

@@ -96,24 +96,26 @@ public class PlayerInventory : MonoBehaviour
     }
     public void SwitchItem()
     {
-        int scrollDelta = (int)Input.mouseScrollDelta.y;
-
-        if (scrollDelta != 0)
+        if (GetComponent<PlayerMotor>().isAiming == false)
         {
-            int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
+            int scrollDelta = (int)Input.mouseScrollDelta.y;
 
-            if (newWeaponIndex < 0)
-                newWeaponIndex += weapons.Length;
+            if (scrollDelta != 0)
+            {
+                int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
 
-            SetCurrentWeapon(newWeaponIndex);
-            UpdateWeaponImages();
+                if (newWeaponIndex < 0)
+                    newWeaponIndex += weapons.Length;
+
+                SetCurrentWeapon(newWeaponIndex);
+                UpdateWeaponImages();
+            }
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SetCurrentWeapon(0);
             UpdateWeaponImages();
         }
-
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             SetCurrentWeapon(1);
