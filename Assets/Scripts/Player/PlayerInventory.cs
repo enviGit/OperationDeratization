@@ -85,8 +85,8 @@ public class PlayerInventory : MonoBehaviour
             newWeapon.layer = LayerMask.NameToLayer("Interactable");
             SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
             Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
-            weaponRigidbody.mass = 5f;
             weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
+            weaponRigidbody.mass = 5f;
             Quaternion randomRotation = Random.rotation;
             newWeapon.transform.rotation = randomRotation;
         }

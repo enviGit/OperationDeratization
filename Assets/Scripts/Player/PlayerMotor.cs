@@ -474,7 +474,7 @@ public class PlayerMotor : MonoBehaviour
                 aimingRotation = new Vector3(0, 0, 0);
                 break;
             case GunType.Sniper:
-                originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
+                originalPosition = new Vector3(0.16f, -0.2f, 0.6f);
                 originalRotation = new Vector3(3f, 0, 0);
                 aimingPosition = new Vector3(0.0119f, -0.13355f, 0.42f);
                 aimingRotation = new Vector3(0, 0, 0);
