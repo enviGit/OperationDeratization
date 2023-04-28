@@ -458,7 +458,7 @@ public class PlayerMotor : MonoBehaviour
             case GunType.Revolver:
                 originalPosition = new Vector3(0.12f, -0.24f, 0.2f);
                 originalRotation = new Vector3(-90f, 0, 0);
-                aimingPosition = new Vector3(0, -0.18f, 0.2f);
+                aimingPosition = new Vector3(0, -0.173f, 0.2f);
                 aimingRotation = new Vector3(-87f, 0, 0);
                 break;
             case GunType.Shotgun:
@@ -476,8 +476,8 @@ public class PlayerMotor : MonoBehaviour
             case GunType.Sniper:
                 originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
                 originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0.03f, -0.15f, 0.55f);
-                aimingRotation = new Vector3(0.85f, 0.3f, 0);
+                aimingPosition = new Vector3(0.0119f, -0.13355f, 0.42f);
+                aimingRotation = new Vector3(0, 0, 0);
                 break;
         }
 
