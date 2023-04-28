@@ -239,6 +239,16 @@ public class PlayerInventory : MonoBehaviour
             }
         }
     }
+    public bool HasWeaponOfSameCategory(Gun newGun)
+    {
+        foreach (Gun gun in weapons)
+        {
+            if (gun != null && gun.gunStyle == newGun.gunStyle)
+                return true;
+        }
+
+        return false;
+    }
     private void OnCollisionEnter(Collision collision)
     {
         GameObject collidedObject = collision.gameObject;

@@ -1,16 +1,71 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class Weapon : Interactable
 {
     [Header("References")]
     [SerializeField] private Gun gun;
+    [SerializeField] private Image upperImage;
+    [SerializeField] private Image bottomImage;
+    private PlayerInteract interact;
+    private PlayerInventory inventory;
 
+    private void Start()
+    {
+        interact = FindObjectOfType<PlayerInteract>();
+        inventory = FindObjectOfType<PlayerInventory>();
+    }
+    private void Update()
+    {
+        if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance) && interact.hitInfo.transform.GetComponent<Weapon>())
+        {
+            if (upperImage != null)
+            {
+                upperImage.gameObject.SetActive(true);
+                upperImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
+            }
+
+            string promptText = "Pick up " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
+
+            if (inventory.HasWeaponOfSameCategory(interact.hitInfo.transform.GetComponent<Weapon>().gun))
+            {
+                Gun inventoryWeapon = null;
+
+                foreach (Gun gun in inventory.weapons)
+                {
+                    if (gun != null && gun.gunStyle == interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle)
+                        inventoryWeapon = gun;
+                }
+
+                promptText = "Swap " + inventoryWeapon.gunName + "\n\n\nfor " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
+
+                if (upperImage != null)
+                {
+                    upperImage.gameObject.SetActive(true);
+                    upperImage.sprite = inventoryWeapon.activeGunIcon;
+                }
+                if (bottomImage != null)
+                {
+                    bottomImage.gameObject.SetActive(true);
+                    bottomImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
+                }
+            }
+
+            prompt = promptText;
+        }
+        else
+        {
+            if (upperImage != null || bottomImage != null)
+            {
+                upperImage.gameObject.SetActive(false);
+                bottomImage.gameObject.SetActive(false);
+            } 
+        }
+    }
     protected override void Interact()
     {
-        prompt = "Pick up " + gun.gunName;
-        PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
         inventory.AddItem(gun);
         GameObject weaponObject = Instantiate(gun.gunPrefab, Vector3.zero, Quaternion.identity, Camera.main.transform.Find("WeaponHolder"));
         weaponObject.layer = LayerMask.NameToLayer("Player");
