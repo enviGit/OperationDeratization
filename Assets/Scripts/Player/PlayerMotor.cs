@@ -100,6 +100,9 @@ public class PlayerMotor : MonoBehaviour
             case GunType.Rifle:
                 moveSpeed *= 0.75f;
                 break;
+            case GunType.Sniper:
+                moveSpeed *= 0.6f;
+                break;
             default:
                 moveSpeed *= 1f;
                 break;
@@ -323,7 +326,7 @@ public class PlayerMotor : MonoBehaviour
             }
 
         }
-        if (Time.time > shotTimer && !currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading)
+        if (Time.time > shotTimer && !currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading && (currentWeapon.gunStyle == GunStyle.Melee && GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().attackStaminaCost / 2))
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -386,7 +389,18 @@ public class PlayerMotor : MonoBehaviour
         isReloading = true;
         gunAudio.clip = weaponReload.gunAudioClips[2];
         gunAudio.Play();
-        yield return new WaitForSeconds(1.5f);
+
+        if (currentWeapon.gunType == GunType.Pistol)
+            yield return new WaitForSeconds(2f);
+        else if (currentWeapon.gunType == GunType.Revolver)
+            yield return new WaitForSeconds(3f);
+        else if (currentWeapon.gunType == GunType.Shotgun)
+            yield return new WaitForSeconds(4f);
+        else if (currentWeapon.gunType == GunType.Rifle)
+            yield return new WaitForSeconds(3f);
+        else if (currentWeapon.gunType == GunType.Sniper)
+            yield return new WaitForSeconds(4f);
+
 
         if (weaponReload.currentAmmoCount == weaponReload.magazineSize)
             yield break;
@@ -445,11 +459,23 @@ public class PlayerMotor : MonoBehaviour
                 aimingPosition = new Vector3(0, -0.18f, 0.2f);
                 aimingRotation = new Vector3(-87f, 0, 0);
                 break;
+            case GunType.Shotgun:
+                originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
+                originalRotation = new Vector3(3f, 0, 0);
+                aimingPosition = new Vector3(0.015f, -0.15f, 0.5f);
+                aimingRotation = new Vector3(5f, 0.5f, 0);
+                break;
             case GunType.Rifle:
                 originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
                 originalRotation = new Vector3(3f, 0, 0);
                 aimingPosition = new Vector3(0, -0.17f, 0.24f);
                 aimingRotation = new Vector3(0, 0, 0);
+                break;
+            case GunType.Sniper:
+                originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
+                originalRotation = new Vector3(3f, 0, 0);
+                aimingPosition = new Vector3(0.03f, -0.15f, 0.55f);
+                aimingRotation = new Vector3(0.85f, 0.3f, 0);
                 break;
         }
 

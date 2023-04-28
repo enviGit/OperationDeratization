@@ -10,7 +10,7 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private Image secondaryWeaponImage;
 
     [Header("Weapon")]
-    [SerializeField] private Gun[] weaponTypes;
+    [SerializeField] private Gun melee;
     public Gun[] weapons;
     private int currentWeaponIndex = -1;
     public Gun CurrentWeapon
@@ -31,7 +31,7 @@ public class PlayerInventory : MonoBehaviour
         meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
         meshRenderer.receiveShadows = false;
         weapons = new Gun[3];
-        weapons[0] = weaponTypes[0];
+        weapons[0] = melee;
         weapons[1] = null;
         weapons[2] = null;
         currentWeaponIndex = 0;
@@ -68,10 +68,16 @@ public class PlayerInventory : MonoBehaviour
             }
             else if (newItem.gunStyle == GunStyle.Secondary)
             {
+                Transform shotgun = transform.Find("Camera/Main Camera/WeaponHolder/Shotgun_00(Clone)");
                 Transform rifle = transform.Find("Camera/Main Camera/WeaponHolder/Rifle_00(Clone)");
+                Transform sniper = transform.Find("Camera/Main Camera/WeaponHolder/Sniper_00(Clone)");
 
+                if (shotgun != null)
+                    Destroy(shotgun.gameObject);
                 if (rifle != null)
                     Destroy(rifle.gameObject);
+                if (sniper != null)
+                    Destroy(sniper.gameObject);
             }
             
 

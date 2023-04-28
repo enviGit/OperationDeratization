@@ -7,9 +7,10 @@ public class PlayerStamina : MonoBehaviour
     public float maxStamina = 100f;
     public float sprintStaminaCost = 10f;
     public float jumpStaminaCost = 20f;
-    //public float attackStaminaCost = 20f;
-    public float staminaRegenRate = 30f;
-    //private float attackTimer = 0f;
+    public float attackStaminaCost = 20f;
+    public float staminaRegenRate = 25f;
+    private float attackTimer = 0f;
+    private float lastAttackTime = 0f;
     public float currentStamina;
 
     [Header("Stamina bar images")]
@@ -30,14 +31,15 @@ public class PlayerStamina : MonoBehaviour
             UseStamina(sprintStaminaCost * Time.deltaTime);
         if (Input.GetKeyDown(KeyCode.Space) && GetComponent<PlayerMotor>().isGrounded && HasStamina(jumpStaminaCost / 2))
             UseStamina(jumpStaminaCost);
-        /*if (Input.GetMouseButton(0) && Time.time > attackTimer && GetComponent<PlayerInventory>().CurrentWeapon.gunStyle == GunStyle.Melee && HasStamina(attackStaminaCost / 2))
+        if (Input.GetMouseButton(0) && Time.time > attackTimer && GetComponent<PlayerInventory>().CurrentWeapon.gunStyle == GunStyle.Melee && HasStamina(attackStaminaCost / 2))
         {
             attackTimer = Time.time + GetComponent<PlayerInventory>().CurrentWeapon.timeBetweenShots;
             UseStamina(attackStaminaCost);
-        }*/
+            lastAttackTime = Time.time;
+        }
         if (!GetComponent<PlayerMotor>().isRunning && GetComponent<PlayerMotor>().isGrounded && !Input.GetKeyDown(KeyCode.Space))
         {
-            if (!isStaminaRegenBlocked)
+            if (!isStaminaRegenBlocked && Time.time - lastAttackTime > 1f)
                 currentStamina = Mathf.Clamp(currentStamina + staminaRegenRate * Time.deltaTime, 0, maxStamina);
         }
 

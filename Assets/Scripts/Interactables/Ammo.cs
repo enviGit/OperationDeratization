@@ -72,7 +72,7 @@ public class Ammo : Interactable
 
         while (Time.time - startTime < 3.0f)
         {
-            if (inventory.CurrentWeapon.gunStyle == GunStyle.Melee || !Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance - 1f))
+            if (inventory.CurrentWeapon.gunStyle == GunStyle.Melee || !Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance))
             {
                 isFilling = false;
                 loadingSlider.SetActive(false);
