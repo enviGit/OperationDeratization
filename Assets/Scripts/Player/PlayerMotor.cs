@@ -276,6 +276,8 @@ public class PlayerMotor : MonoBehaviour
             gunAudio.Play();
             return;
         }
+        if(Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !(GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().attackStaminaCost / 2))
+            return;
         if (Time.time > autoShotTimer && currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
             if (Input.GetMouseButton(0))
@@ -326,7 +328,7 @@ public class PlayerMotor : MonoBehaviour
             }
 
         }
-        if (Time.time > shotTimer && !currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading && (currentWeapon.gunStyle == GunStyle.Melee && GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().attackStaminaCost / 2))
+        if (Time.time > shotTimer && !currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
             if (Input.GetMouseButtonDown(0))
             {
