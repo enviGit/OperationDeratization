@@ -483,6 +483,17 @@ public class PlayerMotor : MonoBehaviour
 
         if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee && !isRunning)
         {
+            if(currentWeapon.gunType == GunType.Sniper)
+            {
+                xSensitivity = 1f;
+                ySensitivity = 1f;
+            }
+            else
+            {
+                xSensitivity = 3f;
+                ySensitivity = 3f;
+            }
+
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
             isAiming = true;
             weapon.localPosition = aimingPosition;
@@ -504,6 +515,9 @@ public class PlayerMotor : MonoBehaviour
                 moveSpeed = 4f;
             else
                 moveSpeed = 2f;
+
+            xSensitivity = 3f;
+            ySensitivity = 3f;
         }
     }
 }
