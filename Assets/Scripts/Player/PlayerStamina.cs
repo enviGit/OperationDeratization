@@ -27,7 +27,7 @@ public class PlayerStamina : MonoBehaviour
     }
     private void Update()
     {
-        if (GetComponent<PlayerMotor>().isRunning)
+        if (GetComponent<PlayerMotor>().isRunning && GetComponent<PlayerMotor>().isMoving)
             UseStamina(sprintStaminaCost * Time.deltaTime);
         if (Input.GetKeyDown(KeyCode.Space) && GetComponent<PlayerMotor>().isGrounded && HasStamina(jumpStaminaCost / 2))
             UseStamina(jumpStaminaCost);
