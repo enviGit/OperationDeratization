@@ -11,6 +11,7 @@ public class LadderTrigger : Interactable
     public bool isClimbing = false;
     private Vector3 ladderTop;
     private Vector3 ladderBottom;
+
     protected override void Interact()
     {
         prompt = "Climb ladder";
