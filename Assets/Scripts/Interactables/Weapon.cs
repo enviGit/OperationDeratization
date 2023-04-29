@@ -40,7 +40,9 @@ public class Weapon : Interactable
                     if (gun != null && gun.gunStyle == interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle)
                         inventoryWeapon = gun;
                 }
-                prompt = "Swap " + inventoryWeapon.gunName + "\n\n\nfor " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
+
+                //prompt = "Swap " + inventoryWeapon.gunName + "\n\n\n\nfor " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
+                prompt = "Swap\n\n\n\nfor";
 
                 if (upperImage != null)
                 {
