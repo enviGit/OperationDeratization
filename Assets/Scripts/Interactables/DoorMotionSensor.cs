@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DoorMotionSensor : Interactable
@@ -8,26 +9,67 @@ public class DoorMotionSensor : Interactable
     [SerializeField] private GameObject rightDoor1;
     [SerializeField] private GameObject leftDoor2;
     [SerializeField] private GameObject rightDoor2;
+    private CharacterController playerController;
 
     [Header("Door")]
     public float doorSlideAmount = 1.35f;
     public float doorSlideTime = 1f;
     public float doorScaleAmount = 0.5f;
     public float doorScaleTime = 0.5f;
+    public float activationDistance = 3f;
     private Vector3 originalLeftDoorScale;
     private Vector3 originalRightDoorScale;
 
     [Header("Bool checks")]
-    private bool doorsOpen = false;
-    private bool doorsMoving = false;
-    private Coroutine closeDoorCoroutine;
+    private static bool doorsOpen = false;
+    private static bool doorsMoving = false;
 
+    private void Start()
+    {
+        playerController = FindObjectOfType<CharacterController>();
+    }
     private void Awake()
     {
         originalLeftDoorScale = leftDoor1.transform.localScale;
         originalRightDoorScale = rightDoor1.transform.localScale;
         originalLeftDoorScale = leftDoor2.transform.localScale;
         originalRightDoorScale = rightDoor2.transform.localScale;
+    }
+    private void Update()
+    {
+        List<float> distance = new List<float>();
+        float distanceToPlayer = Vector3.Distance(transform.position, playerController.transform.position);
+        distance.Add(distanceToPlayer);
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        int count = 0;
+
+        foreach (GameObject enemy in enemies)
+        {
+            float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+            distance.Add(distanceToEnemy);
+        }
+        foreach(float item in distance)
+        {
+            if (item <= activationDistance)
+                count++;
+        }
+
+        if (count != 0 && !doorsMoving && !doorsOpen)
+            OpenDoors();
+        if (count == 0 && !doorsMoving && doorsOpen)
+            CloseDoors();
+    }
+    private void OpenDoors()
+    {
+        SlideDoors(doorSlideAmount);
+        ScaleDoors(doorScaleAmount, true);
+        doorsOpen = true;
+    }
+    private void CloseDoors()
+    {
+        SlideDoors(-doorSlideAmount);
+        ScaleDoors(-doorScaleAmount, false);
+        doorsOpen = false;
     }
     private void SlideDoors(float amount)
     {
@@ -41,8 +83,8 @@ public class DoorMotionSensor : Interactable
         Vector3 rightDoorPos2 = rightDoor2.transform.position;
         leftDoorPos2.z += amount;
         rightDoorPos2.z -= amount;
-        StartCoroutine(LerpDoorPosition(leftDoor2.transform, leftDoorPos1, doorSlideTime));
-        StartCoroutine(LerpDoorPosition(rightDoor2.transform, rightDoorPos1, doorSlideTime));
+        StartCoroutine(LerpDoorPosition(leftDoor2.transform, leftDoorPos2, doorSlideTime));
+        StartCoroutine(LerpDoorPosition(rightDoor2.transform, rightDoorPos2, doorSlideTime));
         doorsMoving = true;
     }
     private void ScaleDoors(float amount, bool opening)
@@ -80,7 +122,6 @@ public class DoorMotionSensor : Interactable
         StartCoroutine(LerpDoorScale(leftDoor2.transform, leftDoorScale2, doorScaleTime));
         StartCoroutine(LerpDoorScale(rightDoor2.transform, rightDoorScale2, doorScaleTime));
     }
-
     IEnumerator LerpDoorPosition(Transform door, Vector3 targetPos, float slideTime)
     {
         Vector3 start = door.position;
@@ -109,16 +150,5 @@ public class DoorMotionSensor : Interactable
         }
 
         door.localScale = targetScale;
-    }
-    IEnumerator CloseDoorAfterDelay()
-    {
-        yield return new WaitForSeconds(5f);
-
-        if (doorsOpen)
-        {
-            SlideDoors(-doorSlideAmount);
-            ScaleDoors(-doorScaleAmount, false);
-            doorsOpen = false;
-        }
     }
 }
