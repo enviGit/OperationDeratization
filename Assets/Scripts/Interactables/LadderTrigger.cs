@@ -8,14 +8,9 @@ public class LadderTrigger : Interactable
 
     [Header("Ladder")]
     [SerializeField] private float climbSpeed = 3f;
-    private bool isClimbing;
+    public bool isClimbing = false;
     private Vector3 ladderTop;
     private Vector3 ladderBottom;
-
-    [Header("Mouse Rotation Limits")]
-    [SerializeField] private float minRotation = -65f;
-    [SerializeField] private float maxRotation = 65f;
-
     protected override void Interact()
     {
         prompt = "Climb ladder";
@@ -25,7 +20,6 @@ public class LadderTrigger : Interactable
         else
             AttachToLadder();
     }
-
     private void AttachToLadder()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
@@ -33,17 +27,14 @@ public class LadderTrigger : Interactable
         isClimbing = true;
         ladderTop = transform.GetChild(0).position;
         ladderBottom = transform.GetChild(1).position;
-        playerTransform.position = new Vector3(ladderBottom.x, ladderBottom.y, ladderBottom.z);
+        playerTransform.position = new Vector3(ladderBottom.x, playerTransform.position.y, ladderBottom.z + 0.3f);
         characterController.enabled = false;
     }
-
-    private void DetachFromLadder()
+    public void DetachFromLadder()
     {
         characterController.enabled = true;
         isClimbing = false;
-        //playerTransform.position = new Vector3(ladderBottom.x, playerTransform.position.y, playerTransform.position.y);
     }
-
     private void FixedUpdate()
     {
         if (isClimbing)
@@ -51,19 +42,21 @@ public class LadderTrigger : Interactable
             float verticalInput = Input.GetAxis("Vertical");
 
             if (verticalInput > 0 && playerTransform.position.y < ladderTop.y)
+            {
                 playerTransform.Translate(Vector3.up * climbSpeed * Time.deltaTime);
+
+                if (playerTransform.position.y >= ladderTop.y)
+                {
+                    Vector3 targetPosition = new Vector3(playerTransform.position.x, playerTransform.position.y, ladderTop.z);
+                    playerTransform.position = Vector3.Lerp(playerTransform.position, targetPosition, 25f * Time.deltaTime);
+                }
+            }
             else if (verticalInput < 0 && playerTransform.position.y > ladderBottom.y)
                 playerTransform.Translate(Vector3.down * climbSpeed * Time.deltaTime);
             else if (verticalInput == 0)
                 playerTransform.Translate(Vector3.zero);
             else
                 DetachFromLadder();
-
-            /*float horizontalInput = Input.GetAxis("Mouse X");
-            Vector3 rotation = playerTransform.localRotation.eulerAngles;
-            rotation.y += horizontalInput;
-            rotation.y = Mathf.Clamp(rotation.y, minRotation, maxRotation);
-            playerTransform.localRotation = Quaternion.Euler(rotation);*/
         }
     }
 }

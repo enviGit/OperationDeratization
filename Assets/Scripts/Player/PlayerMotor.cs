@@ -80,7 +80,6 @@ public class PlayerMotor : MonoBehaviour
         Jump();
         Gravity();
         Shoot();
-        Climb();
         PointerPosition();
 
         if (Input.GetKeyDown(KeyCode.R) && currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.magazineSize != currentWeapon.currentAmmoCount && currentWeapon.maxAmmoCount != 0)
@@ -154,6 +153,9 @@ public class PlayerMotor : MonoBehaviour
 
         if (controller.isGrounded)
         {
+            if (FindObjectOfType<LadderTrigger>().isClimbing)
+                isGrounded = false;
+
             fallTime = 0f;
             playerVelocity.y = -2f;
 
@@ -166,7 +168,8 @@ public class PlayerMotor : MonoBehaviour
         }
         else
         {
-            fallTime += Time.deltaTime;
+            if(!FindObjectOfType<LadderTrigger>().isClimbing)
+                fallTime += Time.deltaTime;
 
             if (fallTime > fallTimeCalc)
             {
@@ -176,6 +179,8 @@ public class PlayerMotor : MonoBehaviour
                     fallDamageTaken += fallDamage;
             }
         }
+
+        
     }
     private void Crouch()
     {
@@ -235,7 +240,8 @@ public class PlayerMotor : MonoBehaviour
 
             if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
                 return;
-
+            if (FindObjectOfType<LadderTrigger>().isClimbing)
+                FindObjectOfType<LadderTrigger>().DetachFromLadder();
             if (isCrouching)
             {
                 isCrouching = false;
@@ -254,15 +260,6 @@ public class PlayerMotor : MonoBehaviour
                 fallTimeCalc = 0.7f;
                 fallDamageMultiplier = 1.5f;
             }
-        }
-    }
-    private void Climb()
-    {
-        if (Input.GetKey(KeyCode.E) && !isGrounded)
-        {
-            float climbSpeed = 3f;
-            Vector3 climbDirection = transform.up * climbSpeed * Time.deltaTime;
-            controller.Move(climbDirection);
         }
     }
     private void Shoot()
@@ -301,7 +298,7 @@ public class PlayerMotor : MonoBehaviour
                         GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
                         GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
 
-                        if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                        if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
                             impact.transform.SetParent(hit.collider.transform);
 
                         Destroy(ricochet, 2f);
@@ -479,7 +476,7 @@ public class PlayerMotor : MonoBehaviour
                 break;
         }
 
-        if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee && !isRunning)
+        if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee && !isRunning && !FindObjectOfType<LadderTrigger>().isClimbing)
         {
             if (currentWeapon.gunType == GunType.Sniper)
             {
