@@ -12,8 +12,10 @@ public class PlayerHealth : MonoBehaviour
     public Image backHealthBar;
 
     [Header("Armor")]
-    private float currentArmor = 0;
+    public float currentArmor = 0;
     public float maxArmor = 100f;
+    private float armorLerpTimer;
+public float armorChipSpeed = 2f;
     public Transform armorBar;
     public Image frontArmorBar;
     public Image backArmorBar;
@@ -68,6 +70,7 @@ public class PlayerHealth : MonoBehaviour
         else
         {
             armorBar.gameObject.SetActive(true);
+            backArmorBar.fillAmount = aFraction;
 
             if (fillAB > aFraction)
             {
@@ -133,5 +136,15 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth += healAmount;
         lerpTimer = 0f;
+    }
+    public void PickupArmor()
+    {
+        if (!isAlive)
+            return;
+        if (currentArmor > 99f)
+            return;
+
+        currentArmor = 100;
+        UpdateHealthUI();
     }
 }

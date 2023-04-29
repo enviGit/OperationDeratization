@@ -179,8 +179,6 @@ public class PlayerMotor : MonoBehaviour
                     fallDamageTaken += fallDamage;
             }
         }
-
-        
     }
     private void Crouch()
     {
