@@ -19,7 +19,7 @@ public class DoorOnButton : Interactable
 
     [Header("Bool checks")]
     public static bool doorsOpen = false;
-    private static bool doorsMoving = false;
+    public static bool doorsMoving = false;
     private Coroutine closeDoorCoroutine;
 
     private void Awake()

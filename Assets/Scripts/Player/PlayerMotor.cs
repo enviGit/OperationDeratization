@@ -352,13 +352,11 @@ public class PlayerMotor : MonoBehaviour
                         if (damageable == null)
                         {
                             GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+                            Destroy(ricochet, 2f);
                             GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
-                            if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                            if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
                                 impact.transform.SetParent(hit.collider.transform);
-
-                            Destroy(ricochet, 2f);
-                            Destroy(impact, 5f);
                         }
                     }
                     if (hit.rigidbody != null)
@@ -483,7 +481,7 @@ public class PlayerMotor : MonoBehaviour
 
         if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee && !isRunning)
         {
-            if(currentWeapon.gunType == GunType.Sniper)
+            if (currentWeapon.gunType == GunType.Sniper)
             {
                 xSensitivity = 1f;
                 ySensitivity = 1f;
