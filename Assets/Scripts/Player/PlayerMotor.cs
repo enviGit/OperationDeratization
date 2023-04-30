@@ -28,7 +28,8 @@ public class PlayerMotor : MonoBehaviour
     public GameObject impactEffect;
     public GameObject impactRicochet;
     public AudioSource gunAudio;
-    public float throwForce = 20f;
+    public float throwForce = 25f;
+    public float throwUpForce = 10f;
 
     [Header("Fall damage")]
     public float fallDamageMultiplier = 1.5f;
@@ -382,7 +383,12 @@ public class PlayerMotor : MonoBehaviour
                     rb.isKinematic = false;
                     rb.freezeRotation = false;
                     rb.transform.SetParent(null, true);
-                    rb.AddForce(cam.transform.forward * 1f + cam.transform.forward * throwForce + cam.transform.up * 1f, ForceMode.VelocityChange);
+                    Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
+
+                    if(isAiming)
+                        rb.AddForce(weaponHolder.transform.forward * throwForce + weaponHolder.transform.up * throwUpForce, ForceMode.Impulse);
+                    else
+                        rb.AddForce(weaponHolder.transform.forward * throwForce / 2 + weaponHolder.transform.up * throwUpForce / 5, ForceMode.Impulse);
 
                     if (currentWeapon.gunStyle == GunStyle.Grenade)
                     {
