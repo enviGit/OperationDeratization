@@ -16,7 +16,7 @@ public class Ammo : Interactable
     [Header("Ammo")]
     private float fadeDuration = 1.5f;
     private Coroutine hideCoroutine;
-    private const int maxLines = 2;
+    private const int maxLines = 5;
     private bool isFilling = false;
     private int allWeapons = 0;
     private int weaponsFullAmmo = 0;
@@ -47,12 +47,12 @@ public class Ammo : Interactable
                     if (gun.maxAmmoCount >= gun.magazineSize * 3)
                     {
                         weaponsFullAmmo++;
-                        ShowAmmoRefillPrompt(gun.gunName);
+                        ShowAmmoRefillPrompt(gun.gunName, gun.gunStyle);
                     }
                 }
             }
         }
-        if ((weaponsFullAmmo == 1 && allWeapons == 1) || (weaponsFullAmmo == 2 && allWeapons == 2))
+        if (weaponsFullAmmo == allWeapons)
         {
             allWeapons = 0;
             weaponsFullAmmo = 0;
@@ -92,9 +92,17 @@ public class Ammo : Interactable
                 if (gun != null && gun.gunStyle != GunStyle.Melee)
                 {
                     if (gun.maxAmmoCount < gun.magazineSize * 3)
-                        gun.maxAmmoCount += gun.magazineSize;
+                    {
+                        if(gun.gunStyle == GunStyle.Grenade || gun.gunStyle == GunStyle.Flashbang || gun.gunStyle == GunStyle.Smoke)
+                        {
+                            gun.currentAmmoCount = 1;
+                            gun.maxAmmoCount = 3;
+                        }
+                        else
+                            gun.maxAmmoCount += gun.magazineSize;
+                    }
                     else
-                        ShowAmmoRefillPrompt(gun.gunName);
+                        ShowAmmoRefillPrompt(gun.gunName, gun.gunStyle);
                 }
             }
         }
@@ -102,9 +110,13 @@ public class Ammo : Interactable
         loadingSlider.SetActive(false);
         isFilling = false;
     }
-    private void ShowAmmoRefillPrompt(string gunName)
+    private void ShowAmmoRefillPrompt(string gunName, GunStyle gunStyle)
     {
-        ammoRefillPrompt.text = "You cannot carry more " + gunName + " ammo!\n" + ammoRefillPrompt.text;
+        if(gunStyle == GunStyle.Grenade || gunStyle == GunStyle.Flashbang || gunStyle == GunStyle.Smoke)
+            ammoRefillPrompt.text = "You cannot carry more " + gunName + "s!\n" + ammoRefillPrompt.text;
+        else
+            ammoRefillPrompt.text = "You cannot carry more " + gunName + " ammo!\n" + ammoRefillPrompt.text;
+
         string[] lines = ammoRefillPrompt.text.Split('\n');
 
         if (lines.Length > maxLines)

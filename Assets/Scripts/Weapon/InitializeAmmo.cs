@@ -3,7 +3,7 @@ using UnityEngine;
 public class InitializeAmmo : MonoBehaviour
 {
     [Header("References")]
-    public Gun[] guns = new Gun[9];
+    public Gun[] guns = new Gun[12];
 
     private void Start()
     {
@@ -38,6 +38,24 @@ public class InitializeAmmo : MonoBehaviour
                 gun.magazineSize = 5;
                 gun.currentAmmoCount = 5;
                 gun.maxAmmoCount = 15;
+            }
+            else if (gun.name.Contains("Grenade"))
+            {
+                gun.magazineSize = 1;
+                gun.currentAmmoCount = 1;
+                gun.maxAmmoCount = 3;
+            }
+            else if (gun.name.Contains("Flashbang"))
+            {
+                gun.magazineSize = 1;
+                gun.currentAmmoCount = 1;
+                gun.maxAmmoCount = 3;
+            }
+            else if (gun.name.Contains("Smoke"))
+            {
+                gun.magazineSize = 1;
+                gun.currentAmmoCount = 1;
+                gun.maxAmmoCount = 3;
             }
         }
     }

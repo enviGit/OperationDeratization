@@ -79,8 +79,14 @@ public class Weapon : Interactable
 
         foreach (Transform child in mesh)
         {
-            SkinnedMeshRenderer meshRenderer = child.GetComponent<SkinnedMeshRenderer>();
+            SkinnedMeshRenderer skinnedMeshRenderer = child.GetComponent<SkinnedMeshRenderer>();
+            MeshRenderer meshRenderer = child.GetComponent<MeshRenderer>();
 
+            if (skinnedMeshRenderer != null)
+            {
+                skinnedMeshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+                skinnedMeshRenderer.receiveShadows = false;
+            }
             if (meshRenderer != null)
             {
                 meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
@@ -88,10 +94,20 @@ public class Weapon : Interactable
             }
         }
 
-        int childIndex = 1;
+        int childIndex = 0;
 
-        if (gun.gunStyle == GunStyle.Secondary)
+        if (gun.gunStyle == GunStyle.Melee)
+            childIndex = 0;
+        else if (gun.gunStyle == GunStyle.Primary)
+            childIndex = 1;
+        else if (gun.gunStyle == GunStyle.Secondary)
             childIndex = 2;
+        else if(gun.gunStyle == GunStyle.Grenade)
+            childIndex = 3;
+        else if (gun.gunStyle == GunStyle.Flashbang)
+            childIndex = 4;
+        else
+            childIndex = 5;
 
         weaponObject.transform.SetSiblingIndex(childIndex);
         Destroy(gameObject);

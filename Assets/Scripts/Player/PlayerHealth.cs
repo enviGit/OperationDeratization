@@ -14,8 +14,6 @@ public class PlayerHealth : MonoBehaviour
     [Header("Armor")]
     public float currentArmor = 0;
     public float maxArmor = 100f;
-    private float armorLerpTimer;
-public float armorChipSpeed = 2f;
     public Transform armorBar;
     public Image frontArmorBar;
     public Image backArmorBar;

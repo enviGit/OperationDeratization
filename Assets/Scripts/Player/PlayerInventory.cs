@@ -8,11 +8,15 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private Image meleeWeaponImage;
     [SerializeField] private Image primaryWeaponImage;
     [SerializeField] private Image secondaryWeaponImage;
+    public Image grenadeWeaponImage;
+    public Image flashbangWeaponImage;
+    public Image smokeWeaponImage;
 
     [Header("Weapon")]
     [SerializeField] private Gun melee;
     public Gun[] weapons;
-    private int currentWeaponIndex = -1;
+    public int currentWeaponIndex = -1;
+    private int currentItemIndex = 0;
     public Gun CurrentWeapon
     {
         get
@@ -30,10 +34,13 @@ public class PlayerInventory : MonoBehaviour
         MeshRenderer meshRenderer = mesh.GetComponent<MeshRenderer>();
         meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
         meshRenderer.receiveShadows = false;
-        weapons = new Gun[3];
+        weapons = new Gun[6];
         weapons[0] = melee;
         weapons[1] = null;
         weapons[2] = null;
+        weapons[3] = null;
+        weapons[4] = null;
+        weapons[5] = null;
         currentWeaponIndex = 0;
         UpdateWeaponImages();
     }
@@ -78,6 +85,27 @@ public class PlayerInventory : MonoBehaviour
                     Destroy(rifle.gameObject);
                 if (sniper != null)
                     Destroy(sniper.gameObject);
+            }
+            else if (newItem.gunStyle == GunStyle.Grenade)
+            {
+                Transform grenade = transform.Find("Camera/Main Camera/WeaponHolder/Grenade_00(Clone)");
+
+                if (grenade != null)
+                    Destroy(grenade.gameObject);
+            }
+            else if (newItem.gunStyle == GunStyle.Flashbang)
+            {
+                Transform flashbang = transform.Find("Camera/Main Camera/WeaponHolder/Flashbang_00(Clone)");
+
+                if (flashbang != null)
+                    Destroy(flashbang.gameObject);
+            }
+            else if (newItem.gunStyle == GunStyle.Smoke)
+            {
+                Transform smoke = transform.Find("Camera/Main Camera/WeaponHolder/Smoke_00(Clone)");
+
+                if (smoke != null)
+                    Destroy(smoke.gameObject);
             }
 
             Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
@@ -126,6 +154,17 @@ public class PlayerInventory : MonoBehaviour
             SetCurrentWeapon(2);
             UpdateWeaponImages();
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            currentItemIndex++;
+
+            if (currentItemIndex > 2)
+                currentItemIndex = 0;
+
+            int newWeaponIndex = currentItemIndex + 3;
+            SetCurrentWeapon(newWeaponIndex);
+            UpdateWeaponImages();
+        }
     }
     public void RemoveItem()
     {
@@ -149,7 +188,17 @@ public class PlayerInventory : MonoBehaviour
                     case GunStyle.Secondary:
                         weaponImage = secondaryWeaponImage;
                         break;
+                    case GunStyle.Grenade:
+                        weaponImage = grenadeWeaponImage;
+                        break;
+                    case GunStyle.Flashbang:
+                        weaponImage = flashbangWeaponImage;
+                        break;
+                    case GunStyle.Smoke:
+                        weaponImage = smokeWeaponImage;
+                        break;
                 }
+
                 if (weaponImage != null)
                     weaponImage.gameObject.SetActive(false);
 
@@ -238,6 +287,45 @@ public class PlayerInventory : MonoBehaviour
             {
                 secondaryWeaponImage.sprite = CurrentWeapon.activeGunIcon;
                 secondaryWeaponImage.gameObject.SetActive(true);
+            }
+        }
+        if (grenadeWeaponImage != null)
+        {
+            if (CurrentWeapon.gunStyle != GunStyle.Grenade)
+            {
+                if (weapons[3] != null)
+                    grenadeWeaponImage.sprite = weapons[3].gunIcon;
+            }
+            else
+            {
+                grenadeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                grenadeWeaponImage.gameObject.SetActive(true);
+            }
+        }
+        if (flashbangWeaponImage != null)
+        {
+            if (CurrentWeapon.gunStyle != GunStyle.Flashbang)
+            {
+                if (weapons[4] != null)
+                    flashbangWeaponImage.sprite = weapons[4].gunIcon;
+            }
+            else
+            {
+                flashbangWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                flashbangWeaponImage.gameObject.SetActive(true);
+            }
+        }
+        if (smokeWeaponImage != null)
+        {
+            if (CurrentWeapon.gunStyle != GunStyle.Smoke)
+            {
+                if (weapons[5] != null)
+                    smokeWeaponImage.sprite = weapons[5].gunIcon;
+            }
+            else
+            {
+                smokeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                smokeWeaponImage.gameObject.SetActive(true);
             }
         }
     }
