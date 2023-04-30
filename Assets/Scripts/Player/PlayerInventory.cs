@@ -161,22 +161,32 @@ public class PlayerInventory : MonoBehaviour
     {
         if (GetComponent<PlayerMotor>().isAiming == false)
         {
+            Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
             int scrollDelta = (int)Input.mouseScrollDelta.y;
 
             if (scrollDelta != 0)
             {
-                int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
+                int childCount = weaponHolder.childCount;
 
-                if (newWeaponIndex < 0)
-                    newWeaponIndex += weapons.Length;
+                for (int i = 0; i < childCount; i++)
+                {
+                    Transform weapon = weaponHolder.GetChild(i);
 
-                if (newWeaponIndex >= 3)
-                    currentItemIndex = newWeaponIndex - 3;
-                else
-                    currentItemIndex = newWeaponIndex;
+                    if (weapon.gameObject.activeSelf)
+                    {
+                        int currentWeaponIndex = i;
+                        int newWeaponIndex = currentWeaponIndex + scrollDelta;
 
-                SetCurrentWeapon(newWeaponIndex);
-                UpdateWeaponImages();
+                        if (newWeaponIndex >= childCount)
+                            newWeaponIndex = 0;
+                        else if (newWeaponIndex < 0)
+                            newWeaponIndex = childCount - 1;
+
+                        SetCurrentWeapon(newWeaponIndex);
+                        UpdateWeaponImages();
+                        break;
+                    }
+                }
             }
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -197,11 +207,11 @@ public class PlayerInventory : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             currentItemIndex++;
-
             if (currentItemIndex > 2)
                 currentItemIndex = 0;
 
             int newWeaponIndex = currentItemIndex + 3;
+
             SetCurrentWeapon(newWeaponIndex);
             UpdateWeaponImages();
         }
@@ -379,19 +389,4 @@ public class PlayerInventory : MonoBehaviour
 
         return false;
     }
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        GameObject collidedObject = collision.gameObject;
-
-        if (collidedObject.layer == LayerMask.NameToLayer("Interactable"))
-        {
-            Rigidbody collidedRigidbody = collidedObject.GetComponent<Rigidbody>();
-
-            if (collidedRigidbody != null)
-                Destroy(collidedRigidbody);
-
-            collidedObject.transform.position = collision.contacts[0].point;
-            collidedObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, collision.contacts[0].normal);
-        }
-    }*/
 }

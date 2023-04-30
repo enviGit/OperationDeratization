@@ -4,6 +4,7 @@ public class Grenade : MonoBehaviour
 {
     [Header("References")]
     public GameObject explosionEffect;
+    public Gun grenade;
 
     [Header("Grenade")]
     public float delay = 3f;
@@ -51,6 +52,23 @@ public class Grenade : MonoBehaviour
 
             if (dest != null)
                 dest.Destroy();
+        }
+
+        Collider[] collidersToDamage = Physics.OverlapSphere(transform.position, radius);
+
+        foreach (Collider nearbyObject in collidersToDamage)
+        {
+            IDamageable damageable = nearbyObject.GetComponent<IDamageable>();
+
+            float distance = Vector3.Distance(nearbyObject.transform.position, transform.position);
+            float damageRatio = Mathf.Clamp01(1f - (distance / radius));
+            float damage = grenade.minimumDamage + (damageRatio * (grenade.maximumDamage - grenade.minimumDamage));
+            int damageInt = Mathf.RoundToInt(damage);
+
+            if (damageable != null)
+                damageable.DealDamage(damageInt);
+            else if (damageable == null && nearbyObject.CompareTag("Player"))
+                FindObjectOfType<PlayerHealth>().TakeDamage(damageInt);
         }
 
         Destroy(gameObject);
