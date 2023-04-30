@@ -16,7 +16,7 @@ public class Ammo : Interactable
     [Header("Ammo")]
     private float fadeDuration = 1.5f;
     private Coroutine hideCoroutine;
-    private const int maxLines = 5;
+    private const int maxLines = 2;
     private bool isFilling = false;
     private int allWeapons = 0;
     private int weaponsFullAmmo = 0;
@@ -40,14 +40,14 @@ public class Ammo : Interactable
         {
             foreach (Gun gun in inventory.weapons)
             {
-                if (gun != null && gun.gunStyle != GunStyle.Melee)
+                if (gun != null && gun.gunStyle != GunStyle.Melee && gun.gunStyle != GunStyle.Grenade && gun.gunStyle != GunStyle.Flashbang && gun.gunStyle != GunStyle.Smoke)
                 {
                     allWeapons++;
 
                     if (gun.maxAmmoCount >= gun.magazineSize * 3)
                     {
                         weaponsFullAmmo++;
-                        ShowAmmoRefillPrompt(gun.gunName, gun.gunStyle);
+                        ShowAmmoRefillPrompt(gun.gunName);
                     }
                 }
             }
@@ -72,7 +72,7 @@ public class Ammo : Interactable
 
         while (Time.time - startTime < 3.0f)
         {
-            if (inventory.CurrentWeapon.gunStyle == GunStyle.Melee || !Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance))
+            if (!Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance))
             {
                 isFilling = false;
                 loadingSlider.SetActive(false);
@@ -89,20 +89,12 @@ public class Ammo : Interactable
         {
             foreach (Gun gun in inventory.weapons)
             {
-                if (gun != null && gun.gunStyle != GunStyle.Melee)
+                if (gun != null && gun.gunStyle != GunStyle.Melee && gun.gunStyle != GunStyle.Grenade && gun.gunStyle != GunStyle.Flashbang && gun.gunStyle != GunStyle.Smoke)
                 {
                     if (gun.maxAmmoCount < gun.magazineSize * 3)
-                    {
-                        if(gun.gunStyle == GunStyle.Grenade || gun.gunStyle == GunStyle.Flashbang || gun.gunStyle == GunStyle.Smoke)
-                        {
-                            gun.currentAmmoCount = 1;
-                            gun.maxAmmoCount = 3;
-                        }
-                        else
-                            gun.maxAmmoCount += gun.magazineSize;
-                    }
+                        gun.maxAmmoCount += gun.magazineSize;
                     else
-                        ShowAmmoRefillPrompt(gun.gunName, gun.gunStyle);
+                        ShowAmmoRefillPrompt(gun.gunName);
                 }
             }
         }
@@ -110,13 +102,9 @@ public class Ammo : Interactable
         loadingSlider.SetActive(false);
         isFilling = false;
     }
-    private void ShowAmmoRefillPrompt(string gunName, GunStyle gunStyle)
+    private void ShowAmmoRefillPrompt(string gunName)
     {
-        if(gunStyle == GunStyle.Grenade || gunStyle == GunStyle.Flashbang || gunStyle == GunStyle.Smoke)
-            ammoRefillPrompt.text = "You cannot carry more " + gunName + "s!\n" + ammoRefillPrompt.text;
-        else
-            ammoRefillPrompt.text = "You cannot carry more " + gunName + " ammo!\n" + ammoRefillPrompt.text;
-
+        ammoRefillPrompt.text = "You cannot carry more " + gunName + " ammo!\n" + ammoRefillPrompt.text;
         string[] lines = ammoRefillPrompt.text.Split('\n');
 
         if (lines.Length > maxLines)

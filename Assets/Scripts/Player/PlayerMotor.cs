@@ -28,7 +28,7 @@ public class PlayerMotor : MonoBehaviour
     public GameObject impactEffect;
     public GameObject impactRicochet;
     public AudioSource gunAudio;
-    public float throwForce = 10f;
+    public float throwForce = 20f;
 
     [Header("Fall damage")]
     public float fallDamageMultiplier = 1.5f;
@@ -54,7 +54,6 @@ public class PlayerMotor : MonoBehaviour
         previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
     }
-
     private void Update()
     {
         previousWeapon = currentWeapon;
@@ -287,32 +286,35 @@ public class PlayerMotor : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !(GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().attackStaminaCost / 2))
             return;
-        if((currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke) && currentWeapon.maxAmmoCount + currentWeapon.currentAmmoCount == 0)
+        if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
         {
-            Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
-
-            if (weapon != null)
-                Destroy(weapon.gameObject);
-            if(currentWeapon.gunStyle == GunStyle.Grenade)
+            if (currentWeapon.maxAmmoCount + currentWeapon.currentAmmoCount == 0)
             {
-                GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
-                GetComponent<PlayerInventory>().grenadeWeaponImage.gameObject.SetActive(false);
-            }
-            if (currentWeapon.gunStyle == GunStyle.Flashbang)
-            {
-                GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
-                GetComponent<PlayerInventory>().flashbangWeaponImage.gameObject.SetActive(false);
-            }
-            if (currentWeapon.gunStyle == GunStyle.Smoke)
-            {
-                GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
-                GetComponent<PlayerInventory>().smokeWeaponImage.gameObject.SetActive(false);
-            }
+                Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
 
-            GetComponent<PlayerInventory>().SetCurrentWeapon(0);
-            GetComponent<PlayerInventory>().UpdateWeaponImages();
+                if (weapon != null)
+                    Destroy(weapon.gameObject);
+                if (currentWeapon.gunStyle == GunStyle.Grenade)
+                {
+                    GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
+                    GetComponent<PlayerInventory>().grenadeWeaponImage.gameObject.SetActive(false);
+                }
+                if (currentWeapon.gunStyle == GunStyle.Flashbang)
+                {
+                    GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
+                    GetComponent<PlayerInventory>().flashbangWeaponImage.gameObject.SetActive(false);
+                }
+                if (currentWeapon.gunStyle == GunStyle.Smoke)
+                {
+                    GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
+                    GetComponent<PlayerInventory>().smokeWeaponImage.gameObject.SetActive(false);
+                }
 
-            return;
+                GetComponent<PlayerInventory>().SetCurrentWeapon(0);
+                GetComponent<PlayerInventory>().UpdateWeaponImages();
+
+                return;
+            }
         }
         if (Time.time > autoShotTimer && currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
@@ -334,14 +336,16 @@ public class PlayerMotor : MonoBehaviour
 
                     if (damageable == null)
                     {
-                        GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
                         GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
-
-                        if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
-                            impact.transform.SetParent(hit.collider.transform);
-
                         Destroy(ricochet, 2f);
-                        Destroy(impact, 5f);
+
+                        if (!hit.collider.gameObject.GetComponent<Weapon>())
+                        {
+                            GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
+
+                            if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
+                                impact.transform.SetParent(hit.collider.transform);
+                        }
                     }
                     if (hit.rigidbody != null)
                         hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
@@ -371,18 +375,34 @@ public class PlayerMotor : MonoBehaviour
                 if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
                 {
                     currentWeapon.currentAmmoCount--;
-                    GameObject grenade = Instantiate(currentWeapon.gunPrefab, transform.position, transform.rotation);
+                    GameObject grenade = Instantiate(currentWeapon.gunPrefab, cam.transform.position, transform.rotation);
                     grenade.AddComponent<GrenadeIndicator>();
-                    grenade.AddComponent<Rigidbody>();
                     Rigidbody rb = grenade.GetComponent<Rigidbody>();
-                    rb.AddForce(transform.forward + transform.forward * throwForce + transform.up * 1f, ForceMode.VelocityChange);
                     Weapon weaponScript = grenade.GetComponent<Weapon>();
                     Destroy(weaponScript);
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    rb.isKinematic = false;
+                    rb.freezeRotation = false;
+                    rb.transform.SetParent(null, true);
+                    rb.AddForce(cam.transform.forward * 1f + cam.transform.forward * throwForce + cam.transform.up * 1f, ForceMode.VelocityChange);
 
                     if (currentWeapon.gunStyle == GunStyle.Grenade)
                     {
                         Grenade grenadeScript = grenade.GetComponent<Grenade>();
                         grenadeScript.shouldExplode = true;
+                    }
+                    else if (currentWeapon.gunStyle == GunStyle.Flashbang)
+                    {
+                        //
+
+                        //
+                    }
+                    else
+                    {
+                        //
+
+                        //
                     }
                 }
                 else
@@ -408,10 +428,14 @@ public class PlayerMotor : MonoBehaviour
                             {
                                 GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                                 Destroy(ricochet, 2f);
-                                GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
-                                if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
-                                    impact.transform.SetParent(hit.collider.transform);
+                                if (!hit.collider.gameObject.GetComponent<Weapon>())
+                                {
+                                    GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
+
+                                    if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
+                                        impact.transform.SetParent(hit.collider.transform);
+                                }
                             }
                         }
                         if (hit.rigidbody != null)
@@ -543,48 +567,25 @@ public class PlayerMotor : MonoBehaviour
             case GunType.Grenade:
                 originalPosition = new Vector3(0.16f, -0.15f, 0.3f);
                 originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0, -0.07f, 0.24f);
-                aimingRotation = new Vector3(0, 0, 0);
+                aimingPosition = new Vector3(0.16f, -0.15f, 0.3f);
+                aimingRotation = new Vector3(3f, 0, 0);
                 break;
             case GunType.Flashbang:
                 originalPosition = new Vector3(0.16f, -0.15f, 0.3f);
                 originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0, -0.07f, 0.24f);
-                aimingRotation = new Vector3(0, 0, 0);
+                aimingPosition = new Vector3(0.16f, -0.15f, 0.3f);
+                aimingRotation = new Vector3(3f, 0, 0);
                 break;
             case GunType.Smoke:
                 originalPosition = new Vector3(0.16f, -0.15f, 0.3f);
                 originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0, -0.07f, 0.24f);
-                aimingRotation = new Vector3(0, 0, 0);
+                aimingPosition = new Vector3(0.16f, -0.15f, 0.3f);
+                aimingRotation = new Vector3(3f, 0, 0);
                 break;
         }
 
         if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee && !isRunning && !FindObjectOfType<LadderTrigger>().isClimbing)
         {
-            if (currentWeapon.gunType == GunType.Sniper)
-            {
-                xSensitivity = 1f;
-                ySensitivity = 1f;
-                Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
-                Camera zoomCamera = zoom.GetComponent<Camera>();
-                float newFieldOfView = zoomCamera.fieldOfView - Input.GetAxis("Mouse ScrollWheel") * 25f;
-                newFieldOfView = Mathf.Clamp(newFieldOfView, 1f, 6f);
-                zoomCamera.fieldOfView = newFieldOfView;
-            }
-            else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke )
-            {
-                //
-
-                //
-            }
-            else
-            {
-                xSensitivity = 3f;
-                ySensitivity = 3f;
-            }
-
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
             isAiming = true;
             weapon.localPosition = aimingPosition;
             weapon.localRotation = Quaternion.Euler(aimingRotation);
@@ -593,6 +594,38 @@ public class PlayerMotor : MonoBehaviour
                 moveSpeed = 2f;
             else
                 moveSpeed = 1f;
+            if (currentWeapon.gunType == GunType.Sniper)
+            {
+                cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
+
+                weapon.localPosition = aimingPosition;
+                weapon.localRotation = Quaternion.Euler(aimingRotation);
+
+                if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
+                    moveSpeed = 2f;
+                else
+                    moveSpeed = 1f;
+
+                xSensitivity = 1f;
+                ySensitivity = 1f;
+                Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
+                Camera zoomCamera = zoom.GetComponent<Camera>();
+                float newFieldOfView = zoomCamera.fieldOfView - Input.GetAxis("Mouse ScrollWheel") * 25f;
+                newFieldOfView = Mathf.Clamp(newFieldOfView, 1f, 6f);
+                zoomCamera.fieldOfView = newFieldOfView;
+            }
+            else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke)
+            {
+                //
+                Debug.Log("Trajektoria hehe");
+                //
+            }
+            else
+            {
+                cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
+                xSensitivity = 3f;
+                ySensitivity = 3f;
+            }
         }
         else
         {
@@ -610,5 +643,4 @@ public class PlayerMotor : MonoBehaviour
             ySensitivity = 3f;
         }
     }
-    
 }

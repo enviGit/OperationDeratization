@@ -17,7 +17,7 @@ public class GrenadeIndicator : MonoBehaviour
         MeshFilter filter = indicator.AddComponent<MeshFilter>();
         filter.mesh = CreateCircleMesh(size);
     }
-    private void Update()
+    /*private void Update()
     {
         Vector3 indicatorPos = transform.position + Vector3.up * 0.3f;
         indicator.transform.position = indicatorPos;
@@ -27,7 +27,7 @@ public class GrenadeIndicator : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(lookPos, Vector3.up);
         rotation.eulerAngles = new Vector3(0f, rotation.eulerAngles.y, 0f);
         indicator.transform.rotation = rotation;
-    }
+    }*/
     private Mesh CreateCircleMesh(float size)
     {
         int segments = 32;

@@ -112,7 +112,7 @@ public class PlayerInventory : MonoBehaviour
             GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
             newWeapon.layer = LayerMask.NameToLayer("Interactable");
             SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
-            Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
+            Rigidbody weaponRigidbody = newWeapon.GetComponent<Rigidbody>();
             weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
             weaponRigidbody.mass = 5f;
             Quaternion randomRotation = Random.rotation;
@@ -211,7 +211,7 @@ public class PlayerInventory : MonoBehaviour
                 GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity);
                 newWeapon.layer = LayerMask.NameToLayer("Interactable");
                 SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
-                Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
+                Rigidbody weaponRigidbody = newWeapon.GetComponent<Rigidbody>();
                 weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
                 weaponRigidbody.mass = 5f;
                 Quaternion randomRotation = Random.rotation;
