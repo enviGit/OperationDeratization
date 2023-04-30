@@ -135,6 +135,11 @@ public class PlayerInventory : MonoBehaviour
                 if (newWeaponIndex < 0)
                     newWeaponIndex += weapons.Length;
 
+                if (newWeaponIndex >= 3)
+                    currentItemIndex = newWeaponIndex - 3;
+                else
+                    currentItemIndex = newWeaponIndex;
+
                 SetCurrentWeapon(newWeaponIndex);
                 UpdateWeaponImages();
             }
@@ -339,7 +344,7 @@ public class PlayerInventory : MonoBehaviour
 
         return false;
     }
-    private void OnCollisionEnter(Collision collision)
+    /*private void OnCollisionEnter(Collision collision)
     {
         GameObject collidedObject = collision.gameObject;
 
@@ -353,5 +358,5 @@ public class PlayerInventory : MonoBehaviour
             collidedObject.transform.position = collision.contacts[0].point;
             collidedObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, collision.contacts[0].normal);
         }
-    }
+    }*/
 }
