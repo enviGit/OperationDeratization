@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 5257644306219454434}
   - component: {fileID: 5100879916745482355}
   - component: {fileID: 9153258875233299000}
+  - component: {fileID: -9064735139459936115}
   m_Layer: 6
   m_Name: Flashbang_00
   m_TagString: Untagged
@@ -279,5 +280,22 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!114 &-9064735139459936115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8180224343944659998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3073e964bec61074583240be422b4a7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 1.5
+  duration: 2
+  intensity: 1.5
+  shouldFlash: 0
+  flashTexture: {fileID: 2800000, guid: 3da0e0054d727a3438004f80be591c84, type: 3}

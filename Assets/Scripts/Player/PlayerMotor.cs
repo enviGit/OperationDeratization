@@ -30,6 +30,9 @@ public class PlayerMotor : MonoBehaviour
     public AudioSource gunAudio;
     public float throwForce = 25f;
     public float throwUpForce = 10f;
+    [SerializeField] [Range(10, 100)] private int linePoints = 25;
+    [SerializeField] [Range(0.01f, 0.25f)] private float timeBetweenPoints = 0.1f;
+    private LayerMask grenadeCollisionMask;
 
     [Header("Fall damage")]
     public float fallDamageMultiplier = 1.5f;
@@ -54,6 +57,16 @@ public class PlayerMotor : MonoBehaviour
         currentState.camHeight = 2f;
         previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
+    }
+    private void Awake()
+    {
+        int grenadeLayer = FindObjectOfType<Grenade>().gameObject.layer;
+
+        for (int i = 0; i < 32; i++)
+        {
+            if (!Physics.GetIgnoreLayerCollision(grenadeLayer, i))
+                grenadeCollisionMask |= 1 << i;
+        }
     }
     private void Update()
     {
@@ -318,18 +331,19 @@ public class PlayerMotor : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
+                gunAudio.clip = currentWeapon.gunAudioClips[0];
+                gunAudio.Play();
+                recoil.RecoilFire();
+                currentWeapon.currentAmmoCount--;
+                Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+                ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
+                flash.transform.SetParent(muzzle);
+                flash.Play();
+
                 if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                 {
                     //Debug.Log("Hit: " + hit.collider.name);
                     IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-                    gunAudio.clip = currentWeapon.gunAudioClips[0];
-                    gunAudio.Play();
-                    recoil.RecoilFire();
-                    currentWeapon.currentAmmoCount--;
-                    Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                    ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
-                    flash.transform.SetParent(muzzle);
-                    flash.Play();
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
 
                     if (damageable == null)
@@ -350,17 +364,6 @@ public class PlayerMotor : MonoBehaviour
                     if (damageable != null)
                         damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
                 }
-                else
-                {
-                    gunAudio.clip = currentWeapon.gunAudioClips[0];
-                    gunAudio.Play();
-                    recoil.RecoilFire();
-                    currentWeapon.currentAmmoCount--;
-                    Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                    ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
-                    flash.transform.SetParent(muzzle);
-                    flash.Play();
-                }
 
                 autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
             }
@@ -372,8 +375,12 @@ public class PlayerMotor : MonoBehaviour
             {
                 if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
                 {
+                    //gunAudio.clip = currentWeapon.gunAudioClips[0];
+                    //gunAudio.Play();
                     currentWeapon.currentAmmoCount--;
-                    GameObject grenade = Instantiate(currentWeapon.gunPrefab, cam.transform.position, transform.rotation);
+                    Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
+                    Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
+                    GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation);
                     grenade.AddComponent<GrenadeIndicator>();
                     Rigidbody rb = grenade.GetComponent<Rigidbody>();
                     Weapon weaponScript = grenade.GetComponent<Weapon>();
@@ -383,10 +390,9 @@ public class PlayerMotor : MonoBehaviour
                     rb.isKinematic = false;
                     rb.freezeRotation = false;
                     rb.transform.SetParent(null, true);
-                    Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
 
-                    if(isAiming)
-                        rb.AddForce(weaponHolder.transform.forward * throwForce + weaponHolder.transform.up * throwUpForce, ForceMode.Impulse);
+                    if (isAiming)
+                        rb.AddForce(weaponHolder.transform.forward * throwForce, ForceMode.Impulse);
                     else
                         rb.AddForce(weaponHolder.transform.forward * throwForce / 2 + weaponHolder.transform.up * throwUpForce / 5, ForceMode.Impulse);
 
@@ -397,69 +403,53 @@ public class PlayerMotor : MonoBehaviour
                     }
                     else if (currentWeapon.gunStyle == GunStyle.Flashbang)
                     {
-                        //
-
-                        //
+                        Flashbang flashbangScript = grenade.AddComponent<Flashbang>();
+                        flashbangScript.shouldFlash = true;
                     }
                     else
                     {
-                        //
-
-                        //
+                        Smoke smokeScript = grenade.GetComponent<Smoke>();
+                        smokeScript.shouldSmoke = true;
                     }
                 }
                 else
                 {
+                    gunAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunAudio.Play();
+
+                    if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                    {
+                        recoil.RecoilFire();
+                        currentWeapon.currentAmmoCount--;
+                        Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+                        ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
+                        flash.transform.SetParent(muzzle);
+                        flash.Play();
+                    }
                     if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                     {
                         //Debug.Log("Hit: " + hit.collider.name);
                         IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-                        gunAudio.clip = currentWeapon.gunAudioClips[0];
-                        gunAudio.Play();
 
-                        if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                        Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+
+                        if (damageable == null)
                         {
-                            recoil.RecoilFire();
-                            currentWeapon.currentAmmoCount--;
-                            Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                            ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
-                            flash.transform.SetParent(muzzle);
-                            flash.Play();
-                            Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+                            GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+                            Destroy(ricochet, 2f);
 
-                            if (damageable == null)
+                            if (!hit.collider.gameObject.GetComponent<Weapon>())
                             {
-                                GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
-                                Destroy(ricochet, 2f);
+                                GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
-                                if (!hit.collider.gameObject.GetComponent<Weapon>())
-                                {
-                                    GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
-
-                                    if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
-                                        impact.transform.SetParent(hit.collider.transform);
-                                }
+                                if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
+                                    impact.transform.SetParent(hit.collider.transform);
                             }
                         }
                         if (hit.rigidbody != null)
                             hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
                         if (damageable != null)
                             damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
-                    }
-                    else
-                    {
-                        gunAudio.clip = currentWeapon.gunAudioClips[0];
-                        gunAudio.Play();
-
-                        if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
-                        {
-                            recoil.RecoilFire();
-                            currentWeapon.currentAmmoCount--;
-                            Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                            ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
-                            flash.transform.SetParent(muzzle);
-                            flash.Play();
-                        }
                     }
                 }
 
@@ -612,11 +602,7 @@ public class PlayerMotor : MonoBehaviour
                 zoomCamera.fieldOfView = newFieldOfView;
             }
             else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke)
-            {
-                //
-                
-                //
-            }
+                DrawTrajectory();
             else
             {
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
@@ -628,6 +614,8 @@ public class PlayerMotor : MonoBehaviour
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
             isAiming = false;
+            LineRenderer lineRenderer = cam.GetComponent<LineRenderer>();
+            lineRenderer.enabled = false;
             weapon.localPosition = originalPosition;
             weapon.localRotation = Quaternion.Euler(originalRotation);
 
@@ -638,6 +626,35 @@ public class PlayerMotor : MonoBehaviour
 
             xSensitivity = 3f;
             ySensitivity = 3f;
+        }
+    }
+    private void DrawTrajectory()
+    {
+        Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
+        LineRenderer lineRenderer = cam.GetComponent<LineRenderer>();
+        lineRenderer.enabled = true;
+        lineRenderer.positionCount = Mathf.CeilToInt(linePoints / timeBetweenPoints + 1);
+        Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
+        Vector3 startPosition = weaponHolder.transform.position + grenadeOffset;
+        Vector3 startVelocity = throwForce * weaponHolder.transform.forward / 2f;
+        int i = 0;
+        lineRenderer.SetPosition(i, startPosition);
+
+        for (float time = 0; time < linePoints; time += timeBetweenPoints)
+        {
+            i++;
+            Vector3 point = startPosition + time * startVelocity;
+            point.y = startPosition.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
+            lineRenderer.SetPosition(i, point);
+
+            Vector3 lastPosition = lineRenderer.GetPosition(i - 1);
+
+            if (Physics.Raycast(lastPosition, (point - lastPosition).normalized, out RaycastHit hit, (point - lastPosition).magnitude, grenadeCollisionMask))
+            {
+                lineRenderer.SetPosition(i, hit.point);
+                lineRenderer.positionCount = i + 1;
+                return;
+            }
         }
     }
 }

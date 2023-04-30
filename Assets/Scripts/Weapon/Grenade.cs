@@ -13,7 +13,6 @@ public class Grenade : MonoBehaviour
     bool hasExploded = false;
     float countdown;
 
-
     private void Start()
     {
         countdown = delay;
