@@ -12,6 +12,9 @@ public class PlayerInventory : MonoBehaviour
     public Image flashbangWeaponImage;
     public Image smokeWeaponImage;
 
+    [Header("Bool checks")]
+    public bool isPickable = true;
+
     [Header("Weapon")]
     [SerializeField] private Gun melee;
     public Gun[] weapons;
@@ -92,6 +95,16 @@ public class PlayerInventory : MonoBehaviour
 
                 if (grenade != null)
                     Destroy(grenade.gameObject);
+                if (newItem.currentAmmoCount < newItem.maxAmmoCount)
+                {
+                    newItem.currentAmmoCount++;
+                    isPickable = true;
+                }
+                else
+                {
+                    FindObjectOfType<Ammo>().ammoRefillPrompt.text = "You cannot carry more " + newItem.gunName + "s!\n" + FindObjectOfType<Ammo>().ammoRefillPrompt.text;
+                    isPickable = false;
+                }
             }
             else if (newItem.gunStyle == GunStyle.Flashbang)
             {
@@ -99,6 +112,16 @@ public class PlayerInventory : MonoBehaviour
 
                 if (flashbang != null)
                     Destroy(flashbang.gameObject);
+                if (newItem.currentAmmoCount < newItem.maxAmmoCount)
+                {
+                    newItem.currentAmmoCount++;
+                    isPickable = true;
+                }
+                else
+                {
+                    FindObjectOfType<Ammo>().ammoRefillPrompt.text = "You cannot carry more " + newItem.gunName + "s!\n" + FindObjectOfType<Ammo>().ammoRefillPrompt.text;
+                    isPickable = false;
+                }
             }
             else if (newItem.gunStyle == GunStyle.Smoke)
             {
@@ -106,17 +129,29 @@ public class PlayerInventory : MonoBehaviour
 
                 if (smoke != null)
                     Destroy(smoke.gameObject);
+                if (newItem.currentAmmoCount < newItem.maxAmmoCount)
+                {
+                    newItem.currentAmmoCount++;
+                    isPickable = true;
+                }
+                else
+                {
+                    FindObjectOfType<Ammo>().ammoRefillPrompt.text = "You cannot carry more " + newItem.gunName + "s!\n" + FindObjectOfType<Ammo>().ammoRefillPrompt.text;
+                    isPickable = false;
+                }
             }
-
-            Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
-            GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
-            newWeapon.layer = LayerMask.NameToLayer("Interactable");
-            SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
-            Rigidbody weaponRigidbody = newWeapon.GetComponent<Rigidbody>();
-            weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
-            weaponRigidbody.mass = 5f;
-            Quaternion randomRotation = Random.rotation;
-            newWeapon.transform.rotation = randomRotation;
+            if (newItem.gunStyle != GunStyle.Grenade && newItem.gunStyle != GunStyle.Flashbang && newItem.gunStyle != GunStyle.Smoke)
+            {
+                Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
+                GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
+                newWeapon.layer = LayerMask.NameToLayer("Interactable");
+                SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
+                Rigidbody weaponRigidbody = newWeapon.GetComponent<Rigidbody>();
+                weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
+                weaponRigidbody.mass = 5f;
+                Quaternion randomRotation = Random.rotation;
+                newWeapon.transform.rotation = randomRotation;
+            }
         }
 
         weapons[newItemIndex] = newItem;
@@ -173,7 +208,7 @@ public class PlayerInventory : MonoBehaviour
     }
     public void RemoveItem()
     {
-        if (Input.GetKeyDown(KeyCode.G) && currentWeaponIndex != 0)
+        if (Input.GetKeyDown(KeyCode.G) && CurrentWeapon.gunStyle != GunStyle.Melee && CurrentWeapon.gunStyle != GunStyle.Grenade && CurrentWeapon.gunStyle != GunStyle.Flashbang && CurrentWeapon.gunStyle != GunStyle.Smoke)
         {
             Gun droppedWeapon = CurrentWeapon;
             weapons[currentWeaponIndex] = null;
@@ -272,7 +307,7 @@ public class PlayerInventory : MonoBehaviour
         {
             if (CurrentWeapon.gunStyle != GunStyle.Primary)
             {
-                if(weapons[1] != null)
+                if (weapons[1] != null)
                     primaryWeaponImage.sprite = weapons[1].gunIcon;
             }
             else

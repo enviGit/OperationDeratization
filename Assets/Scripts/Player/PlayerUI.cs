@@ -24,7 +24,7 @@ public class PlayerUI : MonoBehaviour
         if (currentWeapon.gunStyle != GunStyle.Melee)
         {
             if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
-                ammoText.text = (currentWeapon.currentAmmoCount + currentWeapon.maxAmmoCount).ToString();
+                ammoText.text = currentWeapon.currentAmmoCount.ToString();
             else
                 ammoText.text = currentWeapon.currentAmmoCount + " / " + currentWeapon.maxAmmoCount;
         }

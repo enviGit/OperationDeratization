@@ -94,11 +94,6 @@ public class PlayerMotor : MonoBehaviour
             weaponReload = currentWeapon;
             StartCoroutine(ReloadCoroutine());
         }
-        else if ((currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke) && currentWeapon.magazineSize != currentWeapon.currentAmmoCount && currentWeapon.maxAmmoCount != 0)
-        {
-            weaponReload = currentWeapon;
-            StartCoroutine(ReloadCoroutine());
-        }
 
         switch (currentWeapon.gunType)
         {
@@ -288,7 +283,7 @@ public class PlayerMotor : MonoBehaviour
             return;
         if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
         {
-            if (currentWeapon.maxAmmoCount + currentWeapon.currentAmmoCount == 0)
+            if (currentWeapon.currentAmmoCount == 0)
             {
                 Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
 
@@ -483,12 +478,6 @@ public class PlayerMotor : MonoBehaviour
             yield return new WaitForSeconds(3f);
         else if (currentWeapon.gunType == GunType.Sniper)
             yield return new WaitForSeconds(4f);
-        else if (currentWeapon.gunType == GunType.Grenade)
-            yield return new WaitForSeconds(0.1f);
-        else if (currentWeapon.gunType == GunType.Flashbang)
-            yield return new WaitForSeconds(0.1f);
-        else if (currentWeapon.gunType == GunType.Smoke)
-            yield return new WaitForSeconds(0.1f);
         if (weaponReload.currentAmmoCount == weaponReload.magazineSize)
             yield break;
 
@@ -617,7 +606,7 @@ public class PlayerMotor : MonoBehaviour
             else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke)
             {
                 //
-                Debug.Log("Trajektoria hehe");
+                
                 //
             }
             else

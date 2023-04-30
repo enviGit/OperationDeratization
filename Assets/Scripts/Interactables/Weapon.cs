@@ -31,7 +31,8 @@ public class Weapon : Interactable
 
             prompt = "Pick up " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
 
-            if (inventory.HasWeaponOfSameCategory(interact.hitInfo.transform.GetComponent<Weapon>().gun))
+            if (inventory.HasWeaponOfSameCategory(interact.hitInfo.transform.GetComponent<Weapon>().gun) && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade &&
+                interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke)
             {
                 Gun inventoryWeapon = null;
 
@@ -63,7 +64,7 @@ public class Weapon : Interactable
                 upperImage.gameObject.SetActive(false);
                 bottomImage.gameObject.SetActive(false);
                 prompt = "";
-            } 
+            }
         }
     }
     protected override void Interact()
@@ -102,7 +103,7 @@ public class Weapon : Interactable
             childIndex = 1;
         else if (gun.gunStyle == GunStyle.Secondary)
             childIndex = 2;
-        else if(gun.gunStyle == GunStyle.Grenade)
+        else if (gun.gunStyle == GunStyle.Grenade)
             childIndex = 3;
         else if (gun.gunStyle == GunStyle.Flashbang)
             childIndex = 4;
@@ -110,7 +111,15 @@ public class Weapon : Interactable
             childIndex = 5;
 
         weaponObject.transform.SetSiblingIndex(childIndex);
-        Destroy(gameObject);
+
+        if (gun.gunStyle != GunStyle.Grenade && gun.gunStyle != GunStyle.Flashbang && gun.gunStyle != GunStyle.Smoke)
+            Destroy(gameObject);
+        else
+        {
+            if(inventory.isPickable)
+                Destroy(gameObject);
+        }
+
         inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
         inventory.UpdateWeaponImages();
     }

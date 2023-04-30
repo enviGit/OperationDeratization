@@ -39,23 +39,11 @@ public class InitializeAmmo : MonoBehaviour
                 gun.currentAmmoCount = 5;
                 gun.maxAmmoCount = 15;
             }
-            else if (gun.name.Contains("Grenade"))
+            else if (gun.name.Contains("Grenade") || gun.name.Contains("Flashbang") || gun.name.Contains("Smoke"))
             {
                 gun.magazineSize = 1;
                 gun.currentAmmoCount = 1;
-                gun.maxAmmoCount = 3;
-            }
-            else if (gun.name.Contains("Flashbang"))
-            {
-                gun.magazineSize = 1;
-                gun.currentAmmoCount = 1;
-                gun.maxAmmoCount = 3;
-            }
-            else if (gun.name.Contains("Smoke"))
-            {
-                gun.magazineSize = 1;
-                gun.currentAmmoCount = 1;
-                gun.maxAmmoCount = 3;
+                gun.maxAmmoCount = 4;
             }
         }
     }

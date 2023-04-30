@@ -6,7 +6,7 @@ using TMPro;
 public class Ammo : Interactable
 {
     [Header("References")]
-    [SerializeField] private TextMeshProUGUI ammoRefillPrompt;
+    public TextMeshProUGUI ammoRefillPrompt;
     [SerializeField] private GameObject loadingSlider;
     [SerializeField] private Slider slider;
     [SerializeField] private TextMeshProUGUI sliderValue;
