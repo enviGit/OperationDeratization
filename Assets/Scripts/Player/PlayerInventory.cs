@@ -13,7 +13,7 @@ public class PlayerInventory : MonoBehaviour
     public Image smokeWeaponImage;
 
     [Header("Bool checks")]
-    public bool isPickable = true;
+    public bool isPickable = false;
 
     [Header("Weapon")]
     [SerializeField] private Gun melee;
@@ -102,7 +102,7 @@ public class PlayerInventory : MonoBehaviour
                 }
                 else
                 {
-                    FindObjectOfType<Ammo>().ammoRefillPrompt.text = "You cannot carry more " + newItem.gunName + "s!\n" + FindObjectOfType<Ammo>().ammoRefillPrompt.text;
+                    FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
                     isPickable = false;
                 }
             }
@@ -119,7 +119,7 @@ public class PlayerInventory : MonoBehaviour
                 }
                 else
                 {
-                    FindObjectOfType<Ammo>().ammoRefillPrompt.text = "You cannot carry more " + newItem.gunName + "s!\n" + FindObjectOfType<Ammo>().ammoRefillPrompt.text;
+                    FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
                     isPickable = false;
                 }
             }
@@ -136,7 +136,7 @@ public class PlayerInventory : MonoBehaviour
                 }
                 else
                 {
-                    FindObjectOfType<Ammo>().ammoRefillPrompt.text = "You cannot carry more " + newItem.gunName + "s!\n" + FindObjectOfType<Ammo>().ammoRefillPrompt.text;
+                    FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
                     isPickable = false;
                 }
             }

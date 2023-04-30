@@ -286,6 +286,8 @@ public class PlayerMotor : MonoBehaviour
             if (currentWeapon.currentAmmoCount == 0)
             {
                 Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
+                currentWeapon.currentAmmoCount = currentWeapon.magazineSize;
+                GetComponent<PlayerInventory>().isPickable = true;
 
                 if (weapon != null)
                     Destroy(weapon.gameObject);

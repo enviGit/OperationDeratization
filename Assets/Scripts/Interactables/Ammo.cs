@@ -59,12 +59,12 @@ public class Ammo : Interactable
             return;
         }
         if (!isFilling)
-            StartCoroutine(ReloadAmmo());
+            StartCoroutine(RefillAmmo());
 
         allWeapons = 0;
         weaponsFullAmmo = 0;
     }
-    private IEnumerator ReloadAmmo()
+    private IEnumerator RefillAmmo()
     {
         isFilling = true;
         loadingSlider.SetActive(true);
@@ -105,6 +105,25 @@ public class Ammo : Interactable
     private void ShowAmmoRefillPrompt(string gunName)
     {
         ammoRefillPrompt.text = "You cannot carry more " + gunName + " ammo!\n" + ammoRefillPrompt.text;
+        string[] lines = ammoRefillPrompt.text.Split('\n');
+
+        if (lines.Length > maxLines)
+        {
+            string newText = "";
+
+            for (int i = 0; i < maxLines; i++)
+                newText += lines[i] + "\n";
+
+            ammoRefillPrompt.text = newText;
+        }
+        if (hideCoroutine != null)
+            StopCoroutine(hideCoroutine);
+
+        hideCoroutine = StartCoroutine(HideAmmoRefillPrompt());
+    }
+    public void ShowGrenadePrompt(string gunName)
+    {
+        ammoRefillPrompt.text = "You cannot carry more " + gunName + "s!\n" + ammoRefillPrompt.text;
         string[] lines = ammoRefillPrompt.text.Split('\n');
 
         if (lines.Length > maxLines)
