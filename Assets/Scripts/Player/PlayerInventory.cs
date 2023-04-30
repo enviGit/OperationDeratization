@@ -159,34 +159,20 @@ public class PlayerInventory : MonoBehaviour
     }
     public void SwitchItem()
     {
+        /*
         if (GetComponent<PlayerMotor>().isAiming == false)
         {
-            Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
             int scrollDelta = (int)Input.mouseScrollDelta.y;
 
             if (scrollDelta != 0)
             {
-                int childCount = weaponHolder.childCount;
+                int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
 
-                for (int i = 0; i < childCount; i++)
-                {
-                    Transform weapon = weaponHolder.GetChild(i);
+                if (newWeaponIndex < 0)
+                    newWeaponIndex += weapons.Length;
 
-                    if (weapon.gameObject.activeSelf)
-                    {
-                        int currentWeaponIndex = i;
-                        int newWeaponIndex = currentWeaponIndex + scrollDelta;
-
-                        if (newWeaponIndex >= childCount)
-                            newWeaponIndex = 0;
-                        else if (newWeaponIndex < 0)
-                            newWeaponIndex = childCount - 1;
-
-                        SetCurrentWeapon(newWeaponIndex);
-                        UpdateWeaponImages();
-                        break;
-                    }
-                }
+                SetCurrentWeapon(newWeaponIndex);
+                UpdateWeaponImages();
             }
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -213,6 +199,36 @@ public class PlayerInventory : MonoBehaviour
             int newWeaponIndex = currentItemIndex + 3;
 
             SetCurrentWeapon(newWeaponIndex);
+            UpdateWeaponImages();
+        }*/
+        if (GetComponent<PlayerMotor>().isAiming == false)
+        {
+            int scrollDelta = (int)Input.mouseScrollDelta.y;
+
+            if (scrollDelta != 0)
+            {
+                int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
+
+                if (newWeaponIndex < 0)
+                    newWeaponIndex += weapons.Length;
+
+                SetCurrentWeapon(newWeaponIndex);
+                UpdateWeaponImages();
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SetCurrentWeapon(0);
+            UpdateWeaponImages();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SetCurrentWeapon(1);
+            UpdateWeaponImages();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SetCurrentWeapon(2);
             UpdateWeaponImages();
         }
     }

@@ -367,7 +367,6 @@ public class PlayerMotor : MonoBehaviour
 
                 autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
             }
-
         }
         if (Time.time > shotTimer && !currentWeapon.autoFire && currentWeapon.currentAmmoCount > 0 && !isReloading)
         {
@@ -430,15 +429,14 @@ public class PlayerMotor : MonoBehaviour
                     {
                         //Debug.Log("Hit: " + hit.collider.name);
                         IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-
                         Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
 
-                        if (damageable == null)
+                        if (damageable == null && currentWeapon.gunStyle != GunStyle.Melee) //Here the line that can be replaced in the future
                         {
                             GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                             Destroy(ricochet, 2f);
 
-                            if (!hit.collider.gameObject.GetComponent<Weapon>())
+                            if (!hit.collider.gameObject.GetComponent<Weapon>() /*&& currentWeapon.gunStyle != GunStyle.Melee*/) //For the future if I will find proper knife melee attack on surface particle
                             {
                                 GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
