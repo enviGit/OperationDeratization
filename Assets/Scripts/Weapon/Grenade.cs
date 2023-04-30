@@ -41,7 +41,16 @@ public class Grenade : MonoBehaviour
             Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
 
             if (rb != null)
+            {
                 rb.AddExplosionForce(force, transform.position, radius);
+                Grenade grenade = nearbyObject.GetComponent<Grenade>();
+
+                if (grenade != null)
+                {
+                    grenade.countdown = 1f;
+                    grenade.shouldExplode = true;
+                }
+            }
         }
 
         Collider[] collidersToDestroy = Physics.OverlapSphere(transform.position, radius);
@@ -59,7 +68,6 @@ public class Grenade : MonoBehaviour
         foreach (Collider nearbyObject in collidersToDamage)
         {
             IDamageable damageable = nearbyObject.GetComponent<IDamageable>();
-
             float distance = Vector3.Distance(nearbyObject.transform.position, transform.position);
             float damageRatio = Mathf.Clamp01(1f - (distance / radius));
             float damage = grenade.minimumDamage + (damageRatio * (grenade.maximumDamage - grenade.minimumDamage));
