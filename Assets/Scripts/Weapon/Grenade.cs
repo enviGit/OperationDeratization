@@ -64,7 +64,7 @@ public class Grenade : MonoBehaviour
                     grenade.countdown = 0.1f;
                     grenade.shouldExplode = true;
 
-                    if(distance < radius * 2)
+                    if(distance < radius)
                         foreach(Gun weapon in FindObjectOfType<PlayerInventory>().weapons)
                             if(weapon != null && weapon.gunStyle == GunStyle.Grenade)
                                 FindObjectOfType<PlayerInventory>().CurrentWeapon.currentAmmoCount = 0;

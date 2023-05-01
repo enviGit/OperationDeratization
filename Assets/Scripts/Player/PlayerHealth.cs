@@ -99,7 +99,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (currentArmor > 0)
         {
-            float armorMultiplier = 0.1f;
+            float armorMultiplier = 0.5f;
             damageToHealth = damage * armorMultiplier;
             currentArmor -= damage;
             currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
