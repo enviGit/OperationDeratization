@@ -1,109 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class WindowManager : MonoBehaviour {
-
-    #region Attributes
-
-    #region Player Pref Key Constats
-
+public class WindowManager : MonoBehaviour
+{
     private const string RESOLUTION_PREF_KEY = "resolution";
-
-    #endregion
-
-    #region Resolution
-
-    [SerializeField]
-    private TextMeshProUGUI resolutionText;
-
+    [SerializeField] private TextMeshProUGUI resolutionText;
+    [SerializeField] private Slider resolutionSlider;
     private Resolution[] resolutions;
-
     private int currentResolutionIndex = 0;
 
-    #endregion
-
-    #endregion
-
-    void Start() 
+    private void Start()
     {
         resolutions = Screen.resolutions;
-
         currentResolutionIndex = PlayerPrefs.GetInt(RESOLUTION_PREF_KEY, 0);
-
-        SetResolutionText(resolutions[currentResolutionIndex]);
+        SetResolution(currentResolutionIndex);
     }
-
-    #region Resolution Cycling
-
     private void SetResolutionText(Resolution resolution)
     {
-        resolutionText.text = resolution.width + "x" +resolution.height;
+        resolutionText.text = resolution.width + "x" + resolution.height;
     }
-
-    public void SetNextResolution()
+    private void SetResolution(int index)
     {
-        currentResolutionIndex = GetNextWrappedIndex(resolutions, currentResolutionIndex);
+        currentResolutionIndex = index;
         SetResolutionText(resolutions[currentResolutionIndex]);
+        resolutionSlider.value = (float)currentResolutionIndex / (resolutions.Length - 1);
     }
-
-    public void SetPreviousResolution()
+    public void OnResolutionSliderChanged()
     {
-        currentResolutionIndex = GetPreviousWrappedIndex(resolutions, currentResolutionIndex);
-        SetResolutionText(resolutions[currentResolutionIndex]);
+        int newIndex = Mathf.RoundToInt(resolutionSlider.value * (resolutions.Length - 1));
+
+        if (newIndex != currentResolutionIndex)
+            SetResolution(newIndex);
     }
-
-    #endregion
-
-    #region Apply Resolution
-
+    private void ApplyResolution(Resolution resolution)
+    {
+        SetResolutionText(resolution);
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        PlayerPrefs.SetInt(RESOLUTION_PREF_KEY, currentResolutionIndex);
+    }
+    private void ApplyCurrentResolution()
+    {
+        ApplyResolution(resolutions[currentResolutionIndex]);
+    }
     private void SetAndApplyResolution(int newResolutionIndex)
     {
         currentResolutionIndex = newResolutionIndex;
         ApplyCurrentResolution();
     }
-
-    private void ApplyCurrentResolution()
-    {
-        ApplyResolution(resolutions[currentResolutionIndex]);
-    }
-
-    private void ApplyResolution(Resolution resolution)
-    {
-        SetResolutionText(resolution);
-
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-        PlayerPrefs.SetInt(RESOLUTION_PREF_KEY, currentResolutionIndex);
-    }
-
-    #endregion
-
-    #region Misc helpers
-
-    #region Index Wrap Helpers
-    private int GetNextWrappedIndex<T>(IList<T> collection, int currentIndex)
-    {
-        if (collection.Count < 1) return 0;
-        return (currentIndex + 1) % collection.Count;
-    }
-
-    private int GetPreviousWrappedIndex<T>(IList<T> collection, int currentIndex)
-    {
-        if (collection.Count < 1) return 0;
-        if((currentIndex - 1) < 0) return collection.Count - 1;
-        return (currentIndex -1) % collection.Count;
-    }
-    #endregion
-
-    #endregion
-
     public void ApplyChanges()
     {
         SetAndApplyResolution(currentResolutionIndex);
     }
-
 }
