@@ -185,7 +185,7 @@ public class PlayerShoot : MonoBehaviour
                 {
                     //gunAudio.clip = currentWeapon.gunAudioClips[0];
                     //gunAudio.Play();
-                    currentWeapon.currentAmmoCount--;
+                    //currentWeapon.currentAmmoCount--;
                     Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
                     Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
                     GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation);
@@ -421,9 +421,12 @@ public class PlayerShoot : MonoBehaviour
             isAiming = false;
             LineRenderer lineRenderer = cam.GetComponent<LineRenderer>();
             lineRenderer.enabled = false;
-            weapon.localPosition = originalPosition;
-            weapon.localRotation = Quaternion.Euler(originalRotation);
 
+            if(weapon != null)
+            {
+                weapon.localPosition = originalPosition;
+                weapon.localRotation = Quaternion.Euler(originalRotation);
+            }
             if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
                 playerMotor.moveSpeed = 4f;
             else
