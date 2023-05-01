@@ -381,6 +381,8 @@ public class PlayerMotor : MonoBehaviour
                     Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
                     GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation);
                     grenade.AddComponent<GrenadeIndicator>();
+                    //grenade.transform.Find("Indicator").gameObject.SetActive(true);
+                    //grenade.transform.Find("Distance").gameObject.SetActive(true);
                     Rigidbody rb = grenade.GetComponent<Rigidbody>();
                     Weapon weaponScript = grenade.GetComponent<Weapon>();
                     Destroy(weaponScript);
@@ -394,7 +396,6 @@ public class PlayerMotor : MonoBehaviour
                         rb.AddForce(weaponHolder.transform.forward * throwForce, ForceMode.Impulse);
                     else
                         rb.AddForce(weaponHolder.transform.forward * throwForce / 2 + weaponHolder.transform.up * throwUpForce / 5, ForceMode.Impulse);
-
                     if (currentWeapon.gunStyle == GunStyle.Grenade)
                     {
                         Grenade grenadeScript = grenade.GetComponent<Grenade>();
