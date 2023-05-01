@@ -5,6 +5,7 @@ public class Grenade : MonoBehaviour
     [Header("References")]
     public GameObject explosionEffect;
     public Gun grenade;
+    private AudioSource bang;
 
     [Header("Grenade")]
     public float delay = 3f;
@@ -13,10 +14,13 @@ public class Grenade : MonoBehaviour
     public bool shouldExplode = false;
     bool hasExploded = false;
     float countdown;
+    private float maxDistance = 50f;
+    private float volume;
 
     private void Start()
     {
         countdown = delay;
+        bang = GameObject.FindGameObjectWithTag("Bang").GetComponent<AudioSource>();
     }
     private void Update()
     {
@@ -30,9 +34,18 @@ public class Grenade : MonoBehaviour
                 hasExploded = true;
             }
         }
+
+        float distance = Vector3.Distance(transform.position, Camera.main.transform.position);
+        volume = Mathf.Clamp(1 - (distance / maxDistance), 0, 1);
     }
     private void Explode()
     {
+        bang.clip = bang.GetComponent<ProjectileSound>().audioClips[0];
+        bang.volume = volume;
+
+        if (bang.clip != null)
+            bang.Play();
+
         Instantiate(explosionEffect, transform.position, transform.rotation);
         Collider[] collidersToMove = Physics.OverlapSphere(transform.position, radius);
 
@@ -47,7 +60,7 @@ public class Grenade : MonoBehaviour
 
                 if (grenade != null)
                 {
-                    grenade.countdown = 1f;
+                    grenade.countdown = 0.1f;
                     grenade.shouldExplode = true;
 
                     if (FindObjectOfType<PlayerInventory>().CurrentWeapon.gunStyle == GunStyle.Grenade)

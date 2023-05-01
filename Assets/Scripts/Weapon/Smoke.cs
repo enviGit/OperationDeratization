@@ -4,6 +4,7 @@ public class Smoke : MonoBehaviour
 {
     [Header("References")]
     public GameObject smokeEffect;
+    private AudioSource bang;
 
     [Header("Grenade")]
     public float delay = 2f;
@@ -11,9 +12,14 @@ public class Smoke : MonoBehaviour
     bool hasSmoked = false;
     float countdown;
 
+    [Header("Distance")]
+    private float maxDistance = 20f;
+    private float volume;
+
     private void Start()
     {
         countdown = delay;
+        bang = GameObject.FindGameObjectWithTag("Bang").GetComponent<AudioSource>();
     }
     private void Update()
     {
@@ -27,9 +33,18 @@ public class Smoke : MonoBehaviour
                 hasSmoked = true;
             }
         }
+
+        float distance = Vector3.Distance(transform.position, Camera.main.transform.position);
+        volume = Mathf.Clamp(1 - (distance / maxDistance), 0, 1);
     }
     private void SmokeOn()
     {
+        bang.clip = bang.GetComponent<ProjectileSound>().audioClips[2];
+        bang.volume = volume;
+
+        if (bang.clip != null)
+            bang.Play();
+
         Instantiate(smokeEffect, transform.position, transform.rotation);
         Destroy(gameObject);
     }
