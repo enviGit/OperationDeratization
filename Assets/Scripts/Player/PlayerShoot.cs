@@ -8,7 +8,9 @@ public class PlayerShoot : MonoBehaviour
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
     public GameObject impactRicochet;
-    public AudioSource gunAudio;
+    public AudioSource gunFireAudio;
+    public AudioSource gunReloadAudio;
+    public AudioSource gunSwitchAudio;
     private PlayerStance currentState = new PlayerStance();
     public Camera cam;
     private PlayerMotor playerMotor;
@@ -63,8 +65,8 @@ public class PlayerShoot : MonoBehaviour
         {
             if (currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke)
             {
-                gunAudio.clip = currentWeapon.gunAudioClips[3];
-                gunAudio.Play();
+                gunSwitchAudio.clip = currentWeapon.gunAudioClips[3];
+                gunSwitchAudio.Play();
             }
             else if (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke)
             {
@@ -74,15 +76,15 @@ public class PlayerShoot : MonoBehaviour
             }
             else
             {
-                gunAudio.clip = currentWeapon.gunAudioClips[0];
-                gunAudio.Play();
+                gunSwitchAudio.clip = currentWeapon.gunAudioClips[0];
+                gunSwitchAudio.Play();
             }
         }
 
         Shoot();
         PointerPosition();
 
-        if (Input.GetKeyDown(KeyCode.R) && currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.magazineSize != currentWeapon.currentAmmoCount && currentWeapon.maxAmmoCount != 0)
+        if (Input.GetKeyDown(KeyCode.R) && currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.magazineSize != currentWeapon.currentAmmoCount && currentWeapon.maxAmmoCount != 0 && !isReloading)
         {
             weaponReload = currentWeapon;
             StartCoroutine(ReloadCoroutine());
@@ -96,8 +98,8 @@ public class PlayerShoot : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && (Time.time > shotTimer || Time.time > autoShotTimer) && currentWeapon.currentAmmoCount == 0 && !isReloading &&
             (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke))
         {
-            gunAudio.clip = currentWeapon.gunAudioClips[1];
-            gunAudio.Play();
+            gunFireAudio.clip = currentWeapon.gunAudioClips[1];
+            gunFireAudio.Play();
             return;
         }
         if (Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !(GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().attackStaminaCost / 2))
@@ -138,8 +140,8 @@ public class PlayerShoot : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                gunAudio.clip = currentWeapon.gunAudioClips[0];
-                gunAudio.Play();
+                gunFireAudio.clip = currentWeapon.gunAudioClips[0];
+                gunFireAudio.Play();
                 recoil.RecoilFire();
                 currentWeapon.currentAmmoCount--;
                 Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
@@ -219,8 +221,8 @@ public class PlayerShoot : MonoBehaviour
                 }
                 else
                 {
-                    gunAudio.clip = currentWeapon.gunAudioClips[0];
-                    gunAudio.Play();
+                    gunFireAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunFireAudio.Play();
 
                     if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
                     {
@@ -267,8 +269,8 @@ public class PlayerShoot : MonoBehaviour
 
         if (currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke)
         {
-            gunAudio.clip = weaponReload.gunAudioClips[2];
-            gunAudio.Play();
+            gunReloadAudio.clip = weaponReload.gunAudioClips[2];
+            gunReloadAudio.Play();
         }
         if (currentWeapon.gunType == GunType.Pistol)
             yield return new WaitForSeconds(2f);
@@ -294,7 +296,7 @@ public class PlayerShoot : MonoBehaviour
 
         if (weaponReload != currentWeapon)
         {
-            gunAudio.Stop();
+            gunReloadAudio.Stop();
             weaponReload.currentAmmoCount = startingAmmoCount;
             weaponReload.maxAmmoCount = startingMaxAmmoCount;
             isReloading = false;
