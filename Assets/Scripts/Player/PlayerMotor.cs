@@ -7,7 +7,6 @@ public class PlayerMotor : MonoBehaviour
     private PlayerStance currentState = new PlayerStance();
     private Gun currentWeapon;
     private LadderTrigger ladder;
-    bool _isClimbing = false;
     private PlayerStamina stamina;
     private PlayerHealth health;
 
@@ -25,6 +24,7 @@ public class PlayerMotor : MonoBehaviour
 
     [Header("Bool checks")]
     public bool isGrounded;
+    private bool _isClimbing = false;
     public bool isCrouching = false;
     public bool isMoving = false;
     public bool isRunning = false;
@@ -39,12 +39,13 @@ public class PlayerMotor : MonoBehaviour
         stamina = GetComponent<PlayerStamina>();
         health = GetComponent<PlayerHealth>();
         ladder = FindObjectOfType<LadderTrigger>();
-        _isClimbing = ladder.isClimbing;
+        
     }
     private void Update()
     {
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         isGrounded = controller.isGrounded;
+        _isClimbing = ladder.isClimbing;
         Move();
         Crouch();
         CrouchToggle();
