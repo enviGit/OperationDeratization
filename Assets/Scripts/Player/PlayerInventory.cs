@@ -159,7 +159,7 @@ public class PlayerInventory : MonoBehaviour
     }
     public void SwitchItem()
     {
-        if (GetComponent<PlayerMotor>().isAiming == false)
+        if (GetComponent<PlayerShoot>().isAiming == false)
         {
             int scrollDelta = (int)Input.mouseScrollDelta.y;
 

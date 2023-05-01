@@ -5231,8 +5231,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b25510a5c37cff4ea8ec67addbe8e8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMot: {fileID: 1534348634}
-  playerInv: {fileID: 1534348629}
 --- !u!114 &549386204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28737,6 +28735,7 @@ GameObject:
   - component: {fileID: 1534348627}
   - component: {fileID: 1534348635}
   - component: {fileID: 1534348634}
+  - component: {fileID: 1534348636}
   - component: {fileID: 1534348633}
   - component: {fileID: 1534348632}
   - component: {fileID: 1534348631}
@@ -28883,26 +28882,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bb27cf4d6ced774f86cb26e0e71572c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 1534348635}
-  cam: {fileID: 576624735}
   gravity: -9.8
   jumpHeight: 0.7
   moveSpeed: 4
-  xSensitivity: 3
-  ySensitivity: 3
-  recoil: {fileID: 549386203}
-  muzzleFlash: {fileID: 19800004, guid: 56e0e2eb44b8b05459913533ae401929, type: 3}
-  impactEffect: {fileID: 100002, guid: 957385c45b877e645a128e11a3efb2f9, type: 3}
-  impactRicochet: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
-  gunAudio: {fileID: 2037323944}
-  throwForce: 25
-  throwUpForce: 10
-  linePoints: 25
-  timeBetweenPoints: 0.1
   fallDamageMultiplier: 1.5
   isGrounded: 0
   isCrouching: 0
-  isAiming: 0
   isMoving: 0
   isRunning: 0
 --- !u!143 &1534348635
@@ -28923,6 +28908,31 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1534348636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534348626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b60c7c1477e19814eae1a0bb09bfba3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recoil: {fileID: 549386203}
+  muzzleFlash: {fileID: 19800004, guid: 56e0e2eb44b8b05459913533ae401929, type: 3}
+  impactEffect: {fileID: 100002, guid: 957385c45b877e645a128e11a3efb2f9, type: 3}
+  impactRicochet: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
+  gunAudio: {fileID: 2037323944}
+  cam: {fileID: 576624735}
+  throwForce: 25
+  throwUpForce: 10
+  linePoints: 25
+  timeBetweenPoints: 0.1
+  xSensitivity: 3
+  ySensitivity: 3
+  isAiming: 0
 --- !u!1 &1538867365
 GameObject:
   m_ObjectHideFlags: 0
@@ -28970,7 +28980,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mover: {fileID: 1534348635}
   rb: {fileID: 1534348628}
-  player: {fileID: 1534348634}
   step: 0.01
   maxStepDistance: 0.06
   rotationStep: 4

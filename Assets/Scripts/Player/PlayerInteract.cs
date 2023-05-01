@@ -13,7 +13,7 @@ public class PlayerInteract : MonoBehaviour
 
     private void Start()
     {
-        cam = GetComponent<PlayerMotor>().cam;
+        cam = GetComponent<PlayerShoot>().cam;
         playerUI = GetComponent<PlayerUI>();
     }
     private void Update()

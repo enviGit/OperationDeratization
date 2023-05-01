@@ -11,6 +11,7 @@ public class Weapon : Interactable
     [SerializeField] private Image bottomImage;
     private PlayerInteract interact;
     private PlayerInventory inventory;
+    private PlayerShoot shoot;
     private PlayerMotor motor;
 
     private void Start()
@@ -18,10 +19,11 @@ public class Weapon : Interactable
         interact = FindObjectOfType<PlayerInteract>();
         inventory = FindObjectOfType<PlayerInventory>();
         motor = FindObjectOfType<PlayerMotor>();
+        shoot = FindObjectOfType<PlayerShoot>();
     }
     private void Update()
     {
-        if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance) && interact.hitInfo.transform.GetComponent<Weapon>() && motor.isAiming == false)
+        if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance) && interact.hitInfo.transform.GetComponent<Weapon>() && shoot.isAiming == false)
         {
             if (upperImage != null)
             {

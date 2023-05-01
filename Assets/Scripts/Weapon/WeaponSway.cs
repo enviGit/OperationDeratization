@@ -5,7 +5,8 @@ public class WeaponSway : MonoBehaviour
     [Header("References")]
     [SerializeField] private CharacterController mover;
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private PlayerMotor player;
+    private PlayerMotor playerMotor;
+    private PlayerShoot playerShoot;
 
     [Header("Sway and bob")]
     public float step = 0.01f;
@@ -32,11 +33,16 @@ public class WeaponSway : MonoBehaviour
     private bool isMoving;
     private bool isRunning;
 
+    private void Start()
+    {
+        playerMotor = FindObjectOfType<PlayerMotor>();
+        playerShoot = FindObjectOfType<PlayerShoot>();
+    }
     private void Update()
     {
-        isAiming = player.isAiming;
-        isMoving = player.isMoving;
-        isRunning = player.isRunning;
+        isAiming = playerShoot.isAiming;
+        isMoving = playerMotor.isMoving;
+        isRunning = playerMotor.isRunning;
 
         if (isRunning && !isAiming)
             multiplier = Vector3.one * 5f;
