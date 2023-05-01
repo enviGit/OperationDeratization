@@ -12,7 +12,7 @@ public class GrenadeIndicator : MonoBehaviour
     {
         indicator = transform.Find("Indicator");
         indicator.gameObject.SetActive(true);
-        distanceText = transform.Find("Distance");
+        distanceText = transform.Find("Indicator/Distance");
         distanceShow = distanceText.GetComponent<TextMeshPro>();
         distanceShow.gameObject.SetActive(true);
     }

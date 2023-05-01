@@ -381,8 +381,6 @@ public class PlayerMotor : MonoBehaviour
                     Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
                     GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation);
                     grenade.AddComponent<GrenadeIndicator>();
-                    //grenade.transform.Find("Indicator").gameObject.SetActive(true);
-                    //grenade.transform.Find("Distance").gameObject.SetActive(true);
                     Rigidbody rb = grenade.GetComponent<Rigidbody>();
                     Weapon weaponScript = grenade.GetComponent<Weapon>();
                     Destroy(weaponScript);

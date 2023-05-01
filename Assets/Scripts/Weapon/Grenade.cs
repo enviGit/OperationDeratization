@@ -49,6 +49,9 @@ public class Grenade : MonoBehaviour
                 {
                     grenade.countdown = 1f;
                     grenade.shouldExplode = true;
+
+                    if (FindObjectOfType<PlayerInventory>().CurrentWeapon.gunStyle == GunStyle.Grenade)
+                        FindObjectOfType<PlayerInventory>().CurrentWeapon.currentAmmoCount = 0;
                 }
             }
         }
