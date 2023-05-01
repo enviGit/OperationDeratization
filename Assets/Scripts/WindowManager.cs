@@ -34,6 +34,8 @@ public class WindowManager : MonoBehaviour {
         resolutions = Screen.resolutions;
 
         currentResolutionIndex = PlayerPrefs.GetInt(RESOLUTION_PREF_KEY, 0);
+
+        SetResolutionText(resolutions[currentResolutionIndex]);
     }
 
     #region Resolution Cycling
@@ -57,6 +59,29 @@ public class WindowManager : MonoBehaviour {
 
     #endregion
 
+    #region Apply Resolution
+
+    private void SetAndApplyResolution(int newResolutionIndex)
+    {
+        currentResolutionIndex = newResolutionIndex;
+        ApplyCurrentResolution();
+    }
+
+    private void ApplyCurrentResolution()
+    {
+        ApplyResolution(resolutions[currentResolutionIndex]);
+    }
+
+    private void ApplyResolution(Resolution resolution)
+    {
+        SetResolutionText(resolution);
+
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        PlayerPrefs.SetInt(RESOLUTION_PREF_KEY, currentResolutionIndex);
+    }
+
+    #endregion
+
     #region Misc helpers
 
     #region Index Wrap Helpers
@@ -75,5 +100,10 @@ public class WindowManager : MonoBehaviour {
     #endregion
 
     #endregion
+
+    public void ApplyChanges()
+    {
+        SetAndApplyResolution(currentResolutionIndex);
+    }
 
 }
