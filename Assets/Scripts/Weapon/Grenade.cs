@@ -15,6 +15,7 @@ public class Grenade : MonoBehaviour
     bool hasExploded = false;
     float countdown;
     private float maxDistance = 50f;
+    private float distance;
     private float volume;
 
     private void Start()
@@ -35,7 +36,7 @@ public class Grenade : MonoBehaviour
             }
         }
 
-        float distance = Vector3.Distance(transform.position, Camera.main.transform.position);
+        distance = Vector3.Distance(transform.position, Camera.main.transform.position);
         volume = Mathf.Clamp(1 - (distance / maxDistance), 0, 1);
     }
     private void Explode()
@@ -63,8 +64,10 @@ public class Grenade : MonoBehaviour
                     grenade.countdown = 0.1f;
                     grenade.shouldExplode = true;
 
-                    if (FindObjectOfType<PlayerInventory>().CurrentWeapon.gunStyle == GunStyle.Grenade)
-                        FindObjectOfType<PlayerInventory>().CurrentWeapon.currentAmmoCount = 0;
+                    if(distance < radius * 2)
+                        foreach(Gun weapon in FindObjectOfType<PlayerInventory>().weapons)
+                            if(weapon != null && weapon.gunStyle == GunStyle.Grenade)
+                                FindObjectOfType<PlayerInventory>().CurrentWeapon.currentAmmoCount = 0;
                 }
             }
         }

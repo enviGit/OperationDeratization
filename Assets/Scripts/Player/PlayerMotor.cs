@@ -581,7 +581,6 @@ public class PlayerMotor : MonoBehaviour
             if (currentWeapon.gunType == GunType.Sniper)
             {
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-
                 weapon.localPosition = aimingPosition;
                 weapon.localRotation = Quaternion.Euler(aimingRotation);
 
@@ -643,7 +642,6 @@ public class PlayerMotor : MonoBehaviour
             Vector3 point = startPosition + time * startVelocity;
             point.y = startPosition.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
             lineRenderer.SetPosition(i, point);
-
             Vector3 lastPosition = lineRenderer.GetPosition(i - 1);
 
             if (Physics.Raycast(lastPosition, (point - lastPosition).normalized, out RaycastHit hit, (point - lastPosition).magnitude, grenadeCollisionMask))
