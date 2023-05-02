@@ -195,7 +195,7 @@ public class PlayerMotor : MonoBehaviour
     }
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && stamina.currentStamina >= stamina.jumpStaminaCost / 2)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && stamina.HasStamina(stamina.jumpStaminaCost / 2))
         {
             RaycastHit hit;
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
@@ -214,6 +214,7 @@ public class PlayerMotor : MonoBehaviour
             fallTimeCalc = 1.2f;
             fallDamageMultiplier = 0.6f;
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            stamina.UseStamina(stamina.jumpStaminaCost);
         }
         else
         {

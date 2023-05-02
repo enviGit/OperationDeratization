@@ -6,7 +6,16 @@ public class Destructible : MonoBehaviour
 
     public void Destroy()
     {
-        Instantiate(destroyedVersion, transform.position, transform.rotation);
+        if(destroyedVersion != null)
+            Instantiate(destroyedVersion, transform.position, transform.rotation);
+
+        Destroy(gameObject);
+    }
+    public void DestroyFromBullet()
+    {
+        if (destroyedVersion != null)
+            Instantiate(destroyedVersion, transform.position, transform.rotation);
+
         Destroy(gameObject);
     }
 }

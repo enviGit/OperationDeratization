@@ -15,6 +15,7 @@ public class PlayerShoot : MonoBehaviour
     public Camera cam;
     private PlayerMotor playerMotor;
     private LadderTrigger ladder;
+    private PlayerStamina stamina;
 
     [Header("Weapon")]
     private Gun currentWeapon;
@@ -41,6 +42,7 @@ public class PlayerShoot : MonoBehaviour
     {
         ladder = FindObjectOfType<LadderTrigger>();
         playerMotor = GetComponent<PlayerMotor>();
+        stamina = GetComponent<PlayerStamina>();
         cam = Camera.main;
         previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
@@ -102,7 +104,7 @@ public class PlayerShoot : MonoBehaviour
             gunFireAudio.Play();
             return;
         }
-        if (Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !(GetComponent<PlayerStamina>().currentStamina >= GetComponent<PlayerStamina>().attackStaminaCost / 2))
+        if (Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !stamina.HasStamina(stamina.attackStaminaCost / 2))
             return;
         if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
         {
@@ -233,6 +235,12 @@ public class PlayerShoot : MonoBehaviour
                         flash.transform.SetParent(muzzle);
                         flash.Play();
                     }
+                    else
+                    {
+                        stamina.UseStamina(stamina.attackStaminaCost);
+                        stamina.BlockStaminaOnAttack();
+                    }
+                        
                     if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                     {
                         //Debug.Log("Hit: " + hit.collider.name);
