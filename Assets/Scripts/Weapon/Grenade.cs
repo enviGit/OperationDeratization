@@ -86,15 +86,15 @@ public class Grenade : MonoBehaviour
 
         foreach (Collider nearbyObject in collidersToDamage)
         {
-            IDamageable damageable = nearbyObject.GetComponent<IDamageable>();
+            HitBox hitBox = nearbyObject.GetComponent<HitBox>();
             float distance = Vector3.Distance(nearbyObject.transform.position, transform.position);
             float damageRatio = Mathf.Clamp01(1f - (distance / radius));
             float damage = grenade.minimumDamage + (damageRatio * (grenade.maximumDamage - grenade.minimumDamage));
             int damageInt = Mathf.RoundToInt(damage);
 
-            if (damageable != null)
-                damageable.DealDamage(damageInt);
-            else if (damageable == null && nearbyObject.CompareTag("Player"))
+            if (hitBox != null)
+                hitBox.OnRaycastHit(grenade, new Vector3(0, 0, 0));
+            else if (hitBox == null && nearbyObject.CompareTag("Player"))
                 FindObjectOfType<PlayerHealth>().TakeDamage(damageInt);
         }
 

@@ -1,0 +1,36 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UI;
+
+public class AiAgent : MonoBehaviour
+{
+    public AiStateMachine stateMachine;
+    public AiStateId initialState;
+    public NavMeshAgent navMeshAgent;
+    public AiAgentConfig config;
+    public Ragdoll ragdoll;
+    public EnemyHealth healthBar;
+    public Transform playerTransform;
+
+
+    private void Start()
+    {
+        ragdoll = GetComponent<Ragdoll>();
+        healthBar = GetComponent<EnemyHealth>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+
+        if (playerTransform == null)
+            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+
+        stateMachine = new AiStateMachine(this);
+        stateMachine.RegisterState(new AiChasePlayerState());
+        stateMachine.RegisterState(new AiDeathState());
+        stateMachine.RegisterState(new AiIdleState());
+        stateMachine.ChangeState(initialState);
+    }
+    private void Update()
+    {
+        stateMachine.Update();
+    }
+}

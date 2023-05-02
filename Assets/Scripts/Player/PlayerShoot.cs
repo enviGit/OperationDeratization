@@ -154,10 +154,10 @@ public class PlayerShoot : MonoBehaviour
                 if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                 {
                     //Debug.Log("Hit: " + hit.collider.name);
-                    IDamageable damageable = hit.collider.GetComponent<IDamageable>();
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+                    var hitBox = hit.collider.GetComponent<HitBox>();
 
-                    if (damageable == null)
+                    if (hitBox == null)
                     {
                         GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                         Destroy(ricochet, 2f);
@@ -172,8 +172,8 @@ public class PlayerShoot : MonoBehaviour
                     }
                     if (hit.rigidbody != null)
                         hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
-                    if (damageable != null)
-                        damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
+                    if (hitBox != null)
+                        hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);
                 }
 
                 autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
@@ -187,7 +187,7 @@ public class PlayerShoot : MonoBehaviour
                 {
                     //gunAudio.clip = currentWeapon.gunAudioClips[0];
                     //gunAudio.Play();
-                    //currentWeapon.currentAmmoCount--;
+                    currentWeapon.currentAmmoCount--;
                     Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
                     Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
                     GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation);
@@ -240,14 +240,13 @@ public class PlayerShoot : MonoBehaviour
                         stamina.UseStamina(stamina.attackStaminaCost);
                         stamina.BlockStaminaOnAttack();
                     }
-                        
                     if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                     {
                         //Debug.Log("Hit: " + hit.collider.name);
-                        IDamageable damageable = hit.collider.GetComponent<IDamageable>();
                         Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+                        var hitBox = hit.collider.GetComponent<HitBox>();
 
-                        if (damageable == null && currentWeapon.gunStyle != GunStyle.Melee) //Here the line that can be replaced in the future
+                        if (hitBox == null && currentWeapon.gunStyle != GunStyle.Melee) //Here the line that can be replaced in the future
                         {
                             GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                             Destroy(ricochet, 2f);
@@ -262,8 +261,8 @@ public class PlayerShoot : MonoBehaviour
                         }
                         if (hit.rigidbody != null)
                             hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
-                        if (damageable != null)
-                            damageable.DealDamage(Random.Range(currentWeapon.minimumDamage, currentWeapon.maximumDamage));
+                        if (hitBox != null)
+                            hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);
                     }
                 }
 

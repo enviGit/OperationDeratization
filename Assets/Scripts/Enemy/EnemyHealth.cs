@@ -1,28 +1,49 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyHealth : MonoBehaviour, IDamageable
+public class EnemyHealth : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private EnemyStats enemyStats;
     [SerializeField] private Slider healthBarSlider;
     [SerializeField] private Image healthBarSliderImage;
-
-    [Header("Health bar colours")]
+    List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
+    AiAgent agent;
+    
+    [Header("Enemy health bar")]
     [SerializeField] private Color maxHealthColour;
     [SerializeField] private Color noHealthColour;
-
-    [Header("Enemy health bar")]
     private int currentHealth;
     private float lastDamageTime;
-    private bool showHealthBar;
+    public bool showHealthBar;
+
+    [Header("Enemy health")]
+    public float blinkIntensity = 10f;
+    public float blinkDuration = 0.05f;
+    float blinkTimer;
 
     private void Start()
     {
+        agent = GetComponent<AiAgent>();
         currentHealth = enemyStats.maxHealth;
         SetHealthBarUI();
         lastDamageTime = Time.time;
         showHealthBar = false;
+        var rigidBodies = GetComponentsInChildren<Rigidbody>();
+
+        foreach (var rigidBody in rigidBodies)
+        {
+            HitBox hitBox = rigidBody.gameObject.AddComponent<HitBox>();
+            hitBox.health = this;
+        }
+        foreach (Transform child in transform)
+        {
+            SkinnedMeshRenderer smr = child.GetComponent<SkinnedMeshRenderer>();
+
+            if (smr != null)
+                skinnedMeshRenderers.Add(smr);
+        }
     }
     private void Update()
     {
@@ -30,19 +51,30 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             showHealthBar = false;
 
         healthBarSlider.gameObject.SetActive(showHealthBar);
+        blinkTimer -= Time.deltaTime;
+        float lerp = Mathf.Clamp01(blinkTimer / blinkDuration);
+        float intensity = (lerp * blinkIntensity) + 1f;
+
+        foreach (var item in skinnedMeshRenderers)
+            item.material.color = Color.white * intensity;
     }
-    public void DealDamage(int damage)
+    public void DealDamage(int damage, Vector3 direction)
     {
         currentHealth -= damage;
-        CheckIfDead();
+
+        if (currentHealth <= 0)
+            Die(direction);
+
+        blinkTimer = blinkDuration;
         SetHealthBarUI();
         lastDamageTime = Time.time;
         showHealthBar = true;
     }
-    private void CheckIfDead()
+    private void Die(Vector3 direction)
     {
-        if(currentHealth <= 0)
-            Destroy(gameObject);
+        AiDeathState deathState = agent.stateMachine.GetState(AiStateId.Death) as AiDeathState;
+        deathState.direction = direction;
+        agent.stateMachine.ChangeState(AiStateId.Death);
     }
     private void SetHealthBarUI()
     {
