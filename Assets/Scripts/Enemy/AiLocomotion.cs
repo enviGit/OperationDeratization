@@ -17,6 +17,5 @@ public class AiLocomotion : MonoBehaviour
             animator.SetFloat("Speed", agent.velocity.magnitude);
         else
             animator.SetFloat("Speed", 0);
-
     }
 }

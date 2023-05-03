@@ -39,7 +39,7 @@ public class Grenade : MonoBehaviour
         distance = Vector3.Distance(transform.position, Camera.main.transform.position);
         volume = Mathf.Clamp(1 - (distance / maxDistance), 0, 1);
     }
-    private void Explode()
+    public void Explode()
     {
         bang.clip = bang.GetComponent<ProjectileSound>().audioClips[0];
         bang.volume = volume;

@@ -43,7 +43,7 @@ public class InitializeAmmo : MonoBehaviour
             {
                 gun.magazineSize = 1;
                 gun.currentAmmoCount = 1;
-                gun.maxAmmoCount = 4;
+                gun.maxAmmoCount = 3;
             }
         }
     }

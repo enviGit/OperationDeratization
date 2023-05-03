@@ -6,19 +6,18 @@ using UnityEngine.UI;
 public class Weapon : Interactable
 {
     [Header("References")]
-    [SerializeField] private Gun gun;
+    public Gun gun;
     [SerializeField] private Image upperImage;
     [SerializeField] private Image bottomImage;
     private PlayerInteract interact;
     private PlayerInventory inventory;
     private PlayerShoot shoot;
-    private PlayerMotor motor;
+    MeshSockets sockets;
 
     private void Start()
     {
         interact = FindObjectOfType<PlayerInteract>();
         inventory = FindObjectOfType<PlayerInventory>();
-        motor = FindObjectOfType<PlayerMotor>();
         shoot = FindObjectOfType<PlayerShoot>();
     }
     private void Update()
@@ -113,16 +112,31 @@ public class Weapon : Interactable
             childIndex = 5;
 
         weaponObject.transform.SetSiblingIndex(childIndex);
-
-        if (gun.gunStyle != GunStyle.Grenade && gun.gunStyle != GunStyle.Flashbang && gun.gunStyle != GunStyle.Smoke)
-            Destroy(gameObject);
-        else
-        {
-            if(inventory.isPickable)
-                Destroy(gameObject);
-        }
-
+        Destroy(gameObject);
         inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
         inventory.UpdateWeaponImages();
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        AiWeapons weapons = other.gameObject.GetComponent<AiWeapons>();
+        sockets = other.gameObject.GetComponentInChildren<MeshSockets>();
+
+        if (weapons != null && weapons.GetComponent<AiAgent>().stateMachine.currentState != AiStateId.Death)
+        {
+            GameObject newWeapon = Instantiate(gun.gunPrefab);
+            weapons.Equip(newWeapon, sockets);
+            Destroy(gameObject);
+        }
+    }
+    /*private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Weapon"))
+        {
+            Destroy(GetComponent<Rigidbody>());
+            Collider collider = GetComponent<Collider>();
+
+            if (collider != null)
+                collider.isTrigger = true;
+        }
+    }*/
 }

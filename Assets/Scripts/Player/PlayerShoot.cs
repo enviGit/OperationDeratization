@@ -8,6 +8,7 @@ public class PlayerShoot : MonoBehaviour
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
     public GameObject impactRicochet;
+    public GameObject bloodSpread;
     public AudioSource gunFireAudio;
     public AudioSource gunReloadAudio;
     public AudioSource gunSwitchAudio;
@@ -46,7 +47,6 @@ public class PlayerShoot : MonoBehaviour
         cam = Camera.main;
         previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
-        
     }
     private void Awake()
     {
@@ -112,22 +112,24 @@ public class PlayerShoot : MonoBehaviour
             {
                 Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
                 currentWeapon.currentAmmoCount = currentWeapon.magazineSize;
-                GetComponent<PlayerInventory>().isPickable = true;
 
                 if (weapon != null)
                     Destroy(weapon.gameObject);
                 if (currentWeapon.gunStyle == GunStyle.Grenade)
                 {
+                    GetComponent<PlayerInventory>().isGrenadePickable = true;
                     GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
                     GetComponent<PlayerInventory>().grenadeWeaponImage.gameObject.SetActive(false);
                 }
                 if (currentWeapon.gunStyle == GunStyle.Flashbang)
                 {
+                    GetComponent<PlayerInventory>().isSmokePickable = true;
                     GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
                     GetComponent<PlayerInventory>().flashbangWeaponImage.gameObject.SetActive(false);
                 }
                 if (currentWeapon.gunStyle == GunStyle.Smoke)
                 {
+                    GetComponent<PlayerInventory>().isSmokePickable = true;
                     GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
                     GetComponent<PlayerInventory>().smokeWeaponImage.gameObject.SetActive(false);
                 }
@@ -170,10 +172,19 @@ public class PlayerShoot : MonoBehaviour
                                 impact.transform.SetParent(hit.collider.transform);
                         }
                     }
-                    if (hit.rigidbody != null)
-                        hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
-                    if (hitBox != null)
+                    else
+                    {
                         hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);
+                        GameObject blood = Instantiate(bloodSpread, hit.point, impactRotation);
+                        blood.transform.SetParent(hit.collider.transform);
+                    }
+                    if (hit.rigidbody != null)
+                    {
+                        hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
+
+                        if (hit.rigidbody.GetComponent<Grenade>())
+                            hit.rigidbody.GetComponent<Grenade>().Explode();
+                    }
                 }
 
                 autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
@@ -259,10 +270,19 @@ public class PlayerShoot : MonoBehaviour
                                     impact.transform.SetParent(hit.collider.transform);
                             }
                         }
-                        if (hit.rigidbody != null)
-                            hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
                         if (hitBox != null)
-                            hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);
+                        {
+                            hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);//
+                            GameObject blood = Instantiate(bloodSpread, hit.point, impactRotation);
+                            blood.transform.SetParent(hit.collider.transform);
+                        }
+                        if (hit.rigidbody != null)
+                        {
+                            hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
+
+                            if (hit.rigidbody.GetComponent<Grenade>() && currentWeapon.gunStyle != GunStyle.Melee)
+                                hit.rigidbody.GetComponent<Grenade>().Explode();
+                        } 
                     }
                 }
 
@@ -429,7 +449,7 @@ public class PlayerShoot : MonoBehaviour
             LineRenderer lineRenderer = cam.GetComponent<LineRenderer>();
             lineRenderer.enabled = false;
 
-            if(weapon != null)
+            if (weapon != null)
             {
                 weapon.localPosition = originalPosition;
                 weapon.localRotation = Quaternion.Euler(originalRotation);

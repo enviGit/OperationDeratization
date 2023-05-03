@@ -13,7 +13,9 @@ public class PlayerInventory : MonoBehaviour
     public Image smokeWeaponImage;
 
     [Header("Bool checks")]
-    public bool isPickable = false;
+    public bool isGrenadePickable = false;
+    public bool isFlashbangPickable = false;
+    public bool isSmokePickable = false;
 
     [Header("Weapon")]
     [SerializeField] private Gun melee;
@@ -98,12 +100,12 @@ public class PlayerInventory : MonoBehaviour
                 if (newItem.currentAmmoCount < newItem.maxAmmoCount)
                 {
                     newItem.currentAmmoCount++;
-                    isPickable = true;
+                    isGrenadePickable = true;
                 }
                 else
                 {
                     FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
-                    isPickable = false;
+                    isGrenadePickable = false;
                 }
             }
             else if (newItem.gunStyle == GunStyle.Flashbang)
@@ -115,12 +117,12 @@ public class PlayerInventory : MonoBehaviour
                 if (newItem.currentAmmoCount < newItem.maxAmmoCount)
                 {
                     newItem.currentAmmoCount++;
-                    isPickable = true;
+                    isFlashbangPickable = true;
                 }
                 else
                 {
                     FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
-                    isPickable = false;
+                    isFlashbangPickable = false;
                 }
             }
             else if (newItem.gunStyle == GunStyle.Smoke)
@@ -132,12 +134,12 @@ public class PlayerInventory : MonoBehaviour
                 if (newItem.currentAmmoCount < newItem.maxAmmoCount)
                 {
                     newItem.currentAmmoCount++;
-                    isPickable = true;
+                    isSmokePickable = true;
                 }
                 else
                 {
                     FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
-                    isPickable = false;
+                    isSmokePickable = false;
                 }
             }
             if (newItem.gunStyle != GunStyle.Grenade && newItem.gunStyle != GunStyle.Flashbang && newItem.gunStyle != GunStyle.Smoke)
@@ -146,9 +148,10 @@ public class PlayerInventory : MonoBehaviour
                 GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
                 newWeapon.layer = LayerMask.NameToLayer("Interactable");
                 SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
-                Rigidbody weaponRigidbody = newWeapon.GetComponent<Rigidbody>();
+                Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
                 weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
-                weaponRigidbody.mass = 5f;
+                weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                weaponRigidbody.mass = 2f;
                 Quaternion randomRotation = Random.rotation;
                 newWeapon.transform.rotation = randomRotation;
             }
@@ -241,9 +244,10 @@ public class PlayerInventory : MonoBehaviour
                 GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity);
                 newWeapon.layer = LayerMask.NameToLayer("Interactable");
                 SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
-                Rigidbody weaponRigidbody = newWeapon.GetComponent<Rigidbody>();
+                Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
                 weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
-                weaponRigidbody.mass = 5f;
+                weaponRigidbody.mass = 2f;
+                weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 Quaternion randomRotation = Random.rotation;
                 newWeapon.transform.rotation = randomRotation;
                 Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");

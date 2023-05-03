@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AiDeathState : AiState
@@ -17,6 +15,7 @@ public class AiDeathState : AiState
         direction.y = 1;
         agent.ragdoll.ApplyForce(direction * agent.config.dieForce);
         agent.healthBar.showHealthBar = false;
+        agent.weapons.DropWeapon();
     }
     public void Exit(AiAgent agent)
     {

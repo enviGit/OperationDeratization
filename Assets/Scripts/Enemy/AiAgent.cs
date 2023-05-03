@@ -12,13 +12,14 @@ public class AiAgent : MonoBehaviour
     public Ragdoll ragdoll;
     public EnemyHealth healthBar;
     public Transform playerTransform;
-
+    public AiWeapons weapons;
 
     private void Start()
     {
         ragdoll = GetComponent<Ragdoll>();
         healthBar = GetComponent<EnemyHealth>();
         navMeshAgent = GetComponent<NavMeshAgent>();
+        weapons = GetComponent<AiWeapons>();
 
         if (playerTransform == null)
             playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
@@ -27,6 +28,7 @@ public class AiAgent : MonoBehaviour
         stateMachine.RegisterState(new AiChasePlayerState());
         stateMachine.RegisterState(new AiDeathState());
         stateMachine.RegisterState(new AiIdleState());
+        stateMachine.RegisterState(new AiFindWeaponState());
         stateMachine.ChangeState(initialState);
     }
     private void Update()
