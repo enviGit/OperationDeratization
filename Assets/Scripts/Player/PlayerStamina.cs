@@ -5,9 +5,9 @@ public class PlayerStamina : MonoBehaviour
 {
     [Header("Stamina bar")]
     public float maxStamina = 100f;
-    public float sprintStaminaCost = 10f;
-    public float jumpStaminaCost = 20f;
-    public float attackStaminaCost = 20f;
+    public float sprintStaminaCost = 5f;
+    public float jumpStaminaCost = 15f;
+    public float attackStaminaCost = 15f;
     public float staminaRegenRate = 25f;
     public float currentStamina;
 

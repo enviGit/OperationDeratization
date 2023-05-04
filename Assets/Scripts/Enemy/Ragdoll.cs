@@ -14,16 +14,21 @@ public class Ragdoll : MonoBehaviour
     public void DeactivateRagdoll()
     {
         foreach(var rigidBody in rigidBodies)
+        {
             rigidBody.isKinematic = true;
+            rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        }
 
-        animator.enabled = true;
+        if(animator != null)
+            animator.enabled = true;
     }
     public void ActivateRagdoll()
     {
         foreach (var rigidBody in rigidBodies)
             rigidBody.isKinematic = false;
 
-        animator.enabled = false;
+        if (animator != null)
+            animator.enabled = false;
     }
     public void ApplyForce(Vector3 force)
     {

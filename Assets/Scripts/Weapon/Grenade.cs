@@ -103,18 +103,10 @@ public class Grenade : MonoBehaviour
                     if (hit.collider != nearbyObject)
                         continue;
                 }
-
-                hitBox.OnRaycastHit(grenade, new Vector3(0, 0, 0));
-            }
-            if (nearbyObject.CompareTag("Player"))
-            {
-                RaycastHit hit;
-
-                if (Physics.Raycast(transform.position, nearbyObject.transform.position - transform.position, out hit, radius))
-                {
-                    if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))
-                        FindObjectOfType<PlayerHealth>().TakeDamage(damageInt);
-                }
+                if (nearbyObject.CompareTag("Enemy"))
+                    hitBox.OnExplosion(damageInt);
+                if (nearbyObject.CompareTag("Player"))
+                    hitBox.OnExplosionPlayer(damageInt);
             }
         }
 

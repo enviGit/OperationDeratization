@@ -39,7 +39,6 @@ public class PlayerMotor : MonoBehaviour
         stamina = GetComponent<PlayerStamina>();
         health = GetComponent<PlayerHealth>();
         ladder = FindObjectOfType<LadderTrigger>();
-        
     }
     private void Update()
     {
