@@ -18,7 +18,7 @@ public class PlayerHealth : MonoBehaviour
     private float lerpTimer;
     public float maxHealth = 100f;
     public float chipSpeed = 2f;
-    private bool isAlive = true;
+    public bool isAlive = true;
 
     [Header("Armor")]
     public float currentArmor = 0;
@@ -163,6 +163,9 @@ public class PlayerHealth : MonoBehaviour
         PlayerInteract interact = GetComponent<PlayerInteract>();
         interact.enabled = false;
         PlayerInventory inventory = GetComponent<PlayerInventory>();
+        PlayerStamina stamina = GetComponent<PlayerStamina>();
+        stamina.staminaBarFill.transform.parent.gameObject.SetActive(false);
+        stamina.enabled = false;
 
         foreach (Gun weapon in inventory.weapons)
         {

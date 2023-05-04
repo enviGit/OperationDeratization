@@ -185,7 +185,7 @@ public class PlayerShoot : MonoBehaviour
                         if (hit.rigidbody.GetComponent<Grenade>())
                             hit.rigidbody.GetComponent<Grenade>().Explode();
                         if (hit.rigidbody.GetComponent<Flashbang>() && currentWeapon.gunStyle != GunStyle.Melee)
-                            hit.rigidbody.GetComponent<Flashbang>().shouldFlash = true;
+                            hit.rigidbody.GetComponent<Flashbang>().Flash();
                         if (hit.rigidbody.GetComponent<Smoke>() && currentWeapon.gunStyle != GunStyle.Melee)
                             hit.rigidbody.GetComponent<Smoke>().shouldSmoke = true;
                     }
@@ -276,7 +276,7 @@ public class PlayerShoot : MonoBehaviour
                         }
                         if (hitBox != null)
                         {
-                            hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);//
+                            hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);
                             GameObject blood = Instantiate(bloodSpread, hit.point, impactRotation);
                             blood.transform.SetParent(hit.collider.transform);
                         }
@@ -287,7 +287,7 @@ public class PlayerShoot : MonoBehaviour
                             if (hit.rigidbody.GetComponent<Grenade>() && currentWeapon.gunStyle != GunStyle.Melee)
                                 hit.rigidbody.GetComponent<Grenade>().Explode();
                             if (hit.rigidbody.GetComponent<Flashbang>() && currentWeapon.gunStyle != GunStyle.Melee)
-                                hit.rigidbody.GetComponent<Flashbang>().shouldFlash = true;
+                                hit.rigidbody.GetComponent<Flashbang>().Flash();
                             if (hit.rigidbody.GetComponent<Smoke>() && currentWeapon.gunStyle != GunStyle.Melee)
                                 hit.rigidbody.GetComponent<Smoke>().shouldSmoke = true;
                         } 

@@ -48,7 +48,18 @@ public class HitBox : MonoBehaviour
         string boneName = hitBoxObject.name;
 
         if (damageMultiplier.ContainsKey(boneName))
-            return Mathf.RoundToInt(Random.Range(gun.minimumDamage, gun.maximumDamage) * damageMultiplier[boneName]);
+        {
+            float distance = Vector3.Distance(hitBoxObject.transform.position, Camera.main.transform.position);
+            float damageMultiplierAtDistance = 0;
+
+            if (gun.gunType == GunType.Shotgun)
+                damageMultiplierAtDistance = 1 / (1 + 0.1f * distance * distance);
+            else
+               damageMultiplierAtDistance = 1 / (1 + 0.05f * distance);
+
+            float damageMultiplierAtHitbox = damageMultiplier[boneName];
+            return Mathf.RoundToInt(Random.Range(gun.minimumDamage, gun.maximumDamage) * damageMultiplierAtDistance * damageMultiplierAtHitbox);
+        }
 
         return Random.Range(gun.minimumDamage, gun.maximumDamage);
     }

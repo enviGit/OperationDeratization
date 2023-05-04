@@ -1,40 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUI;
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (GameIsPaused) 
-            {
                 Resume();
-            } else
-            {
+            else
                 Pause();
-            }
         }
     }
-
     public void Resume()
     {
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
         Cursor.lockState = CursorLockMode.Locked;
-        PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
-        pointer.enabled = true;
+        PlayerHealth playerStatus = FindObjectOfType<PlayerHealth>();
+       
+        if (playerStatus.isAlive)
+        {
+            PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
+            pointer.enabled = true;
+        }
     }
-
-    void Pause()
+    private void Pause()
     {
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
@@ -43,14 +38,13 @@ public class PauseMenu : MonoBehaviour
         PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
         pointer.enabled = false;
     }
-
     public void LoadMenu()
     {
         Debug.Log("Loading Menu...");
     }
-
     public void QuitGame()
     {
+        Application.Quit();
         Debug.Log("Quitting game...");
     }
 }

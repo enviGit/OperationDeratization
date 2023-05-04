@@ -38,7 +38,7 @@ public class Flashbang : MonoBehaviour
             }
         }
     }
-    private void Flash()
+    public void Flash()
     {
         Transform playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         Vector3 grenadeDirection = transform.position - playerTransform.position;
