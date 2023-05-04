@@ -55,6 +55,12 @@ public class PlayerHealth : MonoBehaviour
             percentComplete = percentComplete * percentComplete;
             frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete);
         }
+        if (!isAlive)
+        {
+            armorBar.gameObject.SetActive(false);
+            backArmorBar.fillAmount = 0;
+            return;
+        }
 
         float fillAF = frontArmorBar.fillAmount;
         float fillAB = backArmorBar.fillAmount;

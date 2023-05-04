@@ -29,7 +29,6 @@ public class AiWeapons : MonoBehaviour
             Rigidbody rb = currentWeapon.AddComponent<Rigidbody>();
             rb.mass = 2f;
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            //Here I can turn on collider if we decide to change interacting with weapon
             currentWeapon.GetComponent<Weapon>().enabled = true;
             currentWeapon = null;
         }

@@ -128,15 +128,4 @@ public class Weapon : Interactable
             Destroy(gameObject);
         }
     }
-    /*private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("Weapon"))
-        {
-            Destroy(GetComponent<Rigidbody>());
-            Collider collider = GetComponent<Collider>();
-
-            if (collider != null)
-                collider.isTrigger = true;
-        }
-    }*/
 }

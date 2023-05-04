@@ -184,6 +184,10 @@ public class PlayerShoot : MonoBehaviour
 
                         if (hit.rigidbody.GetComponent<Grenade>())
                             hit.rigidbody.GetComponent<Grenade>().Explode();
+                        if (hit.rigidbody.GetComponent<Flashbang>() && currentWeapon.gunStyle != GunStyle.Melee)
+                            hit.rigidbody.GetComponent<Flashbang>().shouldFlash = true;
+                        if (hit.rigidbody.GetComponent<Smoke>() && currentWeapon.gunStyle != GunStyle.Melee)
+                            hit.rigidbody.GetComponent<Smoke>().shouldSmoke = true;
                     }
                 }
 
@@ -282,6 +286,10 @@ public class PlayerShoot : MonoBehaviour
 
                             if (hit.rigidbody.GetComponent<Grenade>() && currentWeapon.gunStyle != GunStyle.Melee)
                                 hit.rigidbody.GetComponent<Grenade>().Explode();
+                            if (hit.rigidbody.GetComponent<Flashbang>() && currentWeapon.gunStyle != GunStyle.Melee)
+                                hit.rigidbody.GetComponent<Flashbang>().shouldFlash = true;
+                            if (hit.rigidbody.GetComponent<Smoke>() && currentWeapon.gunStyle != GunStyle.Melee)
+                                hit.rigidbody.GetComponent<Smoke>().shouldSmoke = true;
                         } 
                     }
                 }

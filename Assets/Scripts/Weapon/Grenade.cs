@@ -10,7 +10,7 @@ public class Grenade : MonoBehaviour
     [Header("Grenade")]
     public float delay = 3f;
     public float radius = 5f;
-    public float force = 700f;
+    public float force = 100f;
     public bool shouldExplode = false;
     bool hasExploded = false;
     float countdown;
@@ -56,7 +56,9 @@ public class Grenade : MonoBehaviour
 
             if (rb != null)
             {
-                rb.AddExplosionForce(force, transform.position, radius);
+                if (!nearbyObject.CompareTag("Enemy"))
+                    rb.AddExplosionForce(force, transform.position, radius);
+
                 Grenade grenade = nearbyObject.GetComponent<Grenade>();
 
                 if (grenade != null)
@@ -64,9 +66,9 @@ public class Grenade : MonoBehaviour
                     grenade.countdown = 0.1f;
                     grenade.shouldExplode = true;
 
-                    if(distance < radius)
-                        foreach(Gun weapon in FindObjectOfType<PlayerInventory>().weapons)
-                            if(weapon != null && weapon.gunStyle == GunStyle.Grenade)
+                    if (distance < radius)
+                        foreach (Gun weapon in FindObjectOfType<PlayerInventory>().weapons)
+                            if (weapon != null && weapon.gunStyle == GunStyle.Grenade)
                                 FindObjectOfType<PlayerInventory>().CurrentWeapon.currentAmmoCount = 0;
                 }
             }
@@ -93,9 +95,27 @@ public class Grenade : MonoBehaviour
             int damageInt = Mathf.RoundToInt(damage);
 
             if (hitBox != null)
+            {
+                RaycastHit hit;
+
+                if (Physics.Raycast(transform.position, nearbyObject.transform.position - transform.position, out hit, radius))
+                {
+                    if (hit.collider != nearbyObject)
+                        continue;
+                }
+
                 hitBox.OnRaycastHit(grenade, new Vector3(0, 0, 0));
-            else if (hitBox == null && nearbyObject.CompareTag("Player"))
-                FindObjectOfType<PlayerHealth>().TakeDamage(damageInt);
+            }
+            if (nearbyObject.CompareTag("Player"))
+            {
+                RaycastHit hit;
+
+                if (Physics.Raycast(transform.position, nearbyObject.transform.position - transform.position, out hit, radius))
+                {
+                    if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))
+                        FindObjectOfType<PlayerHealth>().TakeDamage(damageInt);
+                }
+            }
         }
 
         Destroy(gameObject);
