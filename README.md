@@ -16,10 +16,10 @@ The game features simple and intuitive controls, including WASD movement and mou
 - Arena mode where players can face off against waves of enemies or individual opponents.
 
 ## Authors
-- **Graphic Designer:** Filip Krawiec ([@alwarez](https://www.github.com/alwarez))
-- **Level Designer:** Jakub Molek ([@JacobDeMolay](https://github.com/JacobDeMolay))
-- **Tester / Innovation strategist:** Dawid Mucha ([@BzykuuDM](https://github.com/BzykuuDM))
-- **Developer:** Paweł Trojański ([@enviGit](https://github.com/enviGit))
+- Filip Krawiec ([@alwarez](https://www.github.com/alwarez))
+- Jakub Molek ([@JacobDeMolay](https://github.com/JacobDeMolay))
+- Dawid Mucha ([@BzykuuDM](https://github.com/BzykuuDM))
+- Paweł Trojański ([@enviGit](https://github.com/enviGit))
 
 ## Copyrights Information
 **All rights are reserved for the authors of Operation Deratization. Unauthorized distribution, reproduction, or modification of this game is strictly prohibited.**
