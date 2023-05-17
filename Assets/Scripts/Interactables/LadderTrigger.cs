@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class LadderTrigger : Interactable
 {
-    [SerializeField] 
-    private float climbSpeed = 3f;
-    private bool isClimbing;
-    private Vector3 ladderTop;
-    private Vector3 ladderBottom;
+    [Header("References")]
     private Transform playerTransform;
     private CharacterController characterController;
+
+    [Header("Ladder")]
+    [SerializeField] private float climbSpeed = 3f;
+    public bool isClimbing = false;
+    private Vector3 ladderTop;
+    private Vector3 ladderBottom;
 
     protected override void Interact()
     {
@@ -19,7 +21,6 @@ public class LadderTrigger : Interactable
         else
             AttachToLadder();
     }
-
     private void AttachToLadder()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
@@ -27,17 +28,14 @@ public class LadderTrigger : Interactable
         isClimbing = true;
         ladderTop = transform.GetChild(0).position;
         ladderBottom = transform.GetChild(1).position;
-        playerTransform.position = new Vector3(transform.position.x, playerTransform.position.y, transform.position.z + -0.5f); //-0.5f is to change, we don't know how the ladder will be rotated
-        playerTransform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+        playerTransform.position = new Vector3(ladderBottom.x, playerTransform.position.y, ladderBottom.z + 0.3f);
         characterController.enabled = false;
     }
-
-    private void DetachFromLadder()
+    public void DetachFromLadder()
     {
         characterController.enabled = true;
         isClimbing = false;
     }
-
     private void FixedUpdate()
     {
         if (isClimbing)
@@ -45,7 +43,15 @@ public class LadderTrigger : Interactable
             float verticalInput = Input.GetAxis("Vertical");
 
             if (verticalInput > 0 && playerTransform.position.y < ladderTop.y)
+            {
                 playerTransform.Translate(Vector3.up * climbSpeed * Time.deltaTime);
+
+                if (playerTransform.position.y >= ladderTop.y)
+                {
+                    Vector3 targetPosition = new Vector3(playerTransform.position.x, playerTransform.position.y, ladderTop.z);
+                    playerTransform.position = Vector3.Lerp(playerTransform.position, targetPosition, 25f * Time.deltaTime);
+                }
+            }
             else if (verticalInput < 0 && playerTransform.position.y > ladderBottom.y)
                 playerTransform.Translate(Vector3.down * climbSpeed * Time.deltaTime);
             else if (verticalInput == 0)

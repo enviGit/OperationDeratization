@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class Container : Interactable
 {
-    [SerializeField]
-    private GameObject container;
+    [Header("References")]
+    [SerializeField] private GameObject container;
+
+    [Header("Container")]
     private bool containerOpen;
 
     protected override void Interact()

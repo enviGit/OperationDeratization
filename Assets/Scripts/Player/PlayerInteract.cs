@@ -2,27 +2,26 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
+    [Header("References")]
     private Camera cam;
-    [SerializeField]
-    private float distance = 3f;
-    [SerializeField]
-    private LayerMask mask;
     private PlayerUI playerUI;
+
+    [Header("Raycast")]
+    public float distance = 2f;
     public Ray ray;
     public RaycastHit hitInfo;
 
     private void Start()
     {
-        cam = GetComponent<PlayerMotor>().cam;
+        cam = GetComponent<PlayerShoot>().cam;
         playerUI = GetComponent<PlayerUI>();
     }
     private void Update()
     {
         playerUI.UpdateText(string.Empty);
         ray = new Ray(cam.transform.position, cam.transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * distance);
 
-        if (Physics.Raycast(ray, out hitInfo, distance, mask))
+        if (Physics.Raycast(ray, out hitInfo, distance))
         {
             if (hitInfo.collider.GetComponent<Interactable>() != null)
             {

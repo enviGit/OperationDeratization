@@ -2,18 +2,24 @@ using UnityEngine;
 
 public class WeaponRecoil : MonoBehaviour
 {
-    [SerializeField]
-    private PlayerMotor playerMot;
-    [SerializeField]
+    [Header("References")]
     private PlayerInventory playerInv;
+    private PlayerShoot playerShoot;
     private Gun gun;
+
+    [Header("Recoil")]
     private bool isAiming;
     private Vector3 currentRotation;
     private Vector3 targetRotation;
 
+    private void Start()
+    {
+        playerInv = FindObjectOfType<PlayerInventory>();
+        playerShoot = FindObjectOfType<PlayerShoot>();
+    }
     private void Update()
     {
-        isAiming = playerMot.isAiming;
+        isAiming = playerShoot.isAiming;
         gun = playerInv.CurrentWeapon;
         targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, gun.returnSpeed * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, targetRotation, gun.snappiness * Time.fixedDeltaTime);

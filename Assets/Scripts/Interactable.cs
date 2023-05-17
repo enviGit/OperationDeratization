@@ -1,11 +1,10 @@
 using UnityEngine;
-using UnityEditor;
 
 public abstract class Interactable : MonoBehaviour
 {
+    [Header("Interactables")]
     public bool useEvents;
-    [SerializeField]
-    public string prompt;
+    [SerializeField] public string prompt;
 
     public virtual string OnLook()
     {

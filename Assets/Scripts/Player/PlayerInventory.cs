@@ -4,16 +4,24 @@ using UnityEngine.UI;
 
 public class PlayerInventory : MonoBehaviour
 {
-    [SerializeField]
-    private Gun[] weaponTypes;
+    [Header("Weapon images")]
+    [SerializeField] private Image meleeWeaponImage;
+    [SerializeField] private Image primaryWeaponImage;
+    [SerializeField] private Image secondaryWeaponImage;
+    public Image grenadeWeaponImage;
+    public Image flashbangWeaponImage;
+    public Image smokeWeaponImage;
+
+    [Header("Bool checks")]
+    public bool isGrenadePickable = false;
+    public bool isFlashbangPickable = false;
+    public bool isSmokePickable = false;
+
+    [Header("Weapon")]
+    [SerializeField] private Gun melee;
     public Gun[] weapons;
-    private int currentWeaponIndex = -1;
-    [SerializeField]
-    private Image meleeWeaponImage;
-    [SerializeField]
-    private Image primaryWeaponImage;
-    [SerializeField]
-    private Image secondaryWeaponImage;
+    public int currentWeaponIndex = -1;
+    private int currentItemIndex = 0;
     public Gun CurrentWeapon
     {
         get
@@ -31,10 +39,13 @@ public class PlayerInventory : MonoBehaviour
         MeshRenderer meshRenderer = mesh.GetComponent<MeshRenderer>();
         meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
         meshRenderer.receiveShadows = false;
-        weapons = new Gun[3];
-        weapons[0] = weaponTypes[0];
+        weapons = new Gun[6];
+        weapons[0] = melee;
         weapons[1] = null;
         weapons[2] = null;
+        weapons[3] = null;
+        weapons[4] = null;
+        weapons[5] = null;
         currentWeaponIndex = 0;
         UpdateWeaponImages();
     }
@@ -50,37 +61,100 @@ public class PlayerInventory : MonoBehaviour
 
         if (weapons[newItemIndex] != null)
         {
-            if (newItem.gunStyle == GunStyle.Primary)
-            {
-                Transform pistol = transform.Find("Camera/Main Camera/WeaponHolder/Pistol_00(Clone)");
-
-                if (pistol != null)
-                    Destroy(pistol.gameObject);
-            }
-            else if (newItem.gunStyle == GunStyle.Secondary)
-            {
-                Transform rifle = transform.Find("Camera/Main Camera/WeaponHolder/Rifle_00(Clone)");
-
-                if (rifle != null)
-                    Destroy(rifle.gameObject);
-            }
-            else if (newItem.gunStyle == GunStyle.Melee)
+            if (newItem.gunStyle == GunStyle.Melee)
             {
                 Transform melee = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
 
                 if (melee != null)
                     Destroy(melee.gameObject);
             }
+            else if (newItem.gunStyle == GunStyle.Primary)
+            {
+                Transform pistol = transform.Find("Camera/Main Camera/WeaponHolder/Pistol_00(Clone)");
+                Transform revolver = transform.Find("Camera/Main Camera/WeaponHolder/Revolver_00(Clone)");
 
-            Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
-            GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
-            newWeapon.layer = LayerMask.NameToLayer("Interactable");
-            SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
-            Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
-            weaponRigidbody.mass = 5f;
-            weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
-            Quaternion randomRotation = Random.rotation;
-            newWeapon.transform.rotation = randomRotation;
+                if (pistol != null)
+                    Destroy(pistol.gameObject);
+                if (revolver != null)
+                    Destroy(revolver.gameObject);
+            }
+            else if (newItem.gunStyle == GunStyle.Secondary)
+            {
+                Transform shotgun = transform.Find("Camera/Main Camera/WeaponHolder/Shotgun_00(Clone)");
+                Transform rifle = transform.Find("Camera/Main Camera/WeaponHolder/Rifle_00(Clone)");
+                Transform sniper = transform.Find("Camera/Main Camera/WeaponHolder/Sniper_00(Clone)");
+
+                if (shotgun != null)
+                    Destroy(shotgun.gameObject);
+                if (rifle != null)
+                    Destroy(rifle.gameObject);
+                if (sniper != null)
+                    Destroy(sniper.gameObject);
+            }
+            else if (newItem.gunStyle == GunStyle.Grenade)
+            {
+                Transform grenade = transform.Find("Camera/Main Camera/WeaponHolder/Grenade_00(Clone)");
+
+                if (grenade != null)
+                    Destroy(grenade.gameObject);
+                if (newItem.currentAmmoCount < newItem.maxAmmoCount)
+                {
+                    newItem.currentAmmoCount++;
+                    isGrenadePickable = true;
+                }
+                else
+                {
+                    FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
+                    isGrenadePickable = false;
+                }
+            }
+            else if (newItem.gunStyle == GunStyle.Flashbang)
+            {
+                Transform flashbang = transform.Find("Camera/Main Camera/WeaponHolder/Flashbang_00(Clone)");
+
+                if (flashbang != null)
+                    Destroy(flashbang.gameObject);
+                if (newItem.currentAmmoCount < newItem.maxAmmoCount)
+                {
+                    newItem.currentAmmoCount++;
+                    isFlashbangPickable = true;
+                }
+                else
+                {
+                    FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
+                    isFlashbangPickable = false;
+                }
+            }
+            else if (newItem.gunStyle == GunStyle.Smoke)
+            {
+                Transform smoke = transform.Find("Camera/Main Camera/WeaponHolder/Smoke_00(Clone)");
+
+                if (smoke != null)
+                    Destroy(smoke.gameObject);
+                if (newItem.currentAmmoCount < newItem.maxAmmoCount)
+                {
+                    newItem.currentAmmoCount++;
+                    isSmokePickable = true;
+                }
+                else
+                {
+                    FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
+                    isSmokePickable = false;
+                }
+            }
+            if (newItem.gunStyle != GunStyle.Grenade && newItem.gunStyle != GunStyle.Flashbang && newItem.gunStyle != GunStyle.Smoke)
+            {
+                Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
+                GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
+                newWeapon.layer = LayerMask.NameToLayer("Interactable");
+                SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
+                Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
+                weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
+                weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                weaponRigidbody.mass = 2f;
+                Quaternion randomRotation = Random.rotation;
+                newWeapon.transform.rotation = randomRotation;
+            }
         }
 
         weapons[newItemIndex] = newItem;
@@ -88,24 +162,26 @@ public class PlayerInventory : MonoBehaviour
     }
     public void SwitchItem()
     {
-        int scrollDelta = (int)Input.mouseScrollDelta.y;
-
-        if (scrollDelta != 0)
+        if (GetComponent<PlayerShoot>().isAiming == false)
         {
-            int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
+            int scrollDelta = (int)Input.mouseScrollDelta.y;
 
-            if (newWeaponIndex < 0)
-                newWeaponIndex += weapons.Length;
+            if (scrollDelta != 0)
+            {
+                int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
 
-            SetCurrentWeapon(newWeaponIndex);
-            UpdateWeaponImages();
+                if (newWeaponIndex < 0)
+                    newWeaponIndex += weapons.Length;
+
+                SetCurrentWeapon(newWeaponIndex);
+                UpdateWeaponImages();
+            }
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SetCurrentWeapon(0);
             UpdateWeaponImages();
         }
-
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             SetCurrentWeapon(1);
@@ -116,10 +192,21 @@ public class PlayerInventory : MonoBehaviour
             SetCurrentWeapon(2);
             UpdateWeaponImages();
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            currentItemIndex++;
+            if (currentItemIndex > 2)
+                currentItemIndex = 0;
+
+            int newWeaponIndex = currentItemIndex + 3;
+
+            SetCurrentWeapon(newWeaponIndex);
+            UpdateWeaponImages();
+        }
     }
     public void RemoveItem()
     {
-        if (Input.GetKeyDown(KeyCode.G) && currentWeaponIndex != 0)
+        if (Input.GetKeyDown(KeyCode.G) && CurrentWeapon.gunStyle != GunStyle.Melee && CurrentWeapon.gunStyle != GunStyle.Grenade && CurrentWeapon.gunStyle != GunStyle.Flashbang && CurrentWeapon.gunStyle != GunStyle.Smoke)
         {
             Gun droppedWeapon = CurrentWeapon;
             weapons[currentWeaponIndex] = null;
@@ -139,7 +226,17 @@ public class PlayerInventory : MonoBehaviour
                     case GunStyle.Secondary:
                         weaponImage = secondaryWeaponImage;
                         break;
+                    case GunStyle.Grenade:
+                        weaponImage = grenadeWeaponImage;
+                        break;
+                    case GunStyle.Flashbang:
+                        weaponImage = flashbangWeaponImage;
+                        break;
+                    case GunStyle.Smoke:
+                        weaponImage = smokeWeaponImage;
+                        break;
                 }
+
                 if (weaponImage != null)
                     weaponImage.gameObject.SetActive(false);
 
@@ -149,7 +246,8 @@ public class PlayerInventory : MonoBehaviour
                 SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
                 Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
                 weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
-                weaponRigidbody.mass = 5f;
+                weaponRigidbody.mass = 2f;
+                weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 Quaternion randomRotation = Random.rotation;
                 newWeapon.transform.rotation = randomRotation;
                 Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
@@ -197,7 +295,7 @@ public class PlayerInventory : MonoBehaviour
         if (meleeWeaponImage != null)
         {
             if (CurrentWeapon.gunStyle != GunStyle.Melee)
-                meleeWeaponImage.sprite = weaponTypes[0].gunIcon;
+                meleeWeaponImage.sprite = weapons[0].gunIcon;
             else
             {
                 meleeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
@@ -207,7 +305,10 @@ public class PlayerInventory : MonoBehaviour
         if (primaryWeaponImage != null)
         {
             if (CurrentWeapon.gunStyle != GunStyle.Primary)
-                primaryWeaponImage.sprite = weaponTypes[1].gunIcon;
+            {
+                if (weapons[1] != null)
+                    primaryWeaponImage.sprite = weapons[1].gunIcon;
+            }
             else
             {
                 primaryWeaponImage.sprite = CurrentWeapon.activeGunIcon;
@@ -217,27 +318,64 @@ public class PlayerInventory : MonoBehaviour
         if (secondaryWeaponImage != null)
         {
             if (CurrentWeapon.gunStyle != GunStyle.Secondary)
-                secondaryWeaponImage.sprite = weaponTypes[2].gunIcon;
+            {
+                if (weapons[2] != null)
+                    secondaryWeaponImage.sprite = weapons[2].gunIcon;
+            }
             else
             {
                 secondaryWeaponImage.sprite = CurrentWeapon.activeGunIcon;
                 secondaryWeaponImage.gameObject.SetActive(true);
             }
         }
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        GameObject collidedObject = collision.gameObject;
-
-        if (collidedObject.layer == LayerMask.NameToLayer("Interactable"))
+        if (grenadeWeaponImage != null)
         {
-            Rigidbody collidedRigidbody = collidedObject.GetComponent<Rigidbody>();
-
-            if (collidedRigidbody != null)
-                Destroy(collidedRigidbody);
-
-            collidedObject.transform.position = collision.contacts[0].point;
-            collidedObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, collision.contacts[0].normal);
+            if (CurrentWeapon.gunStyle != GunStyle.Grenade)
+            {
+                if (weapons[3] != null)
+                    grenadeWeaponImage.sprite = weapons[3].gunIcon;
+            }
+            else
+            {
+                grenadeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                grenadeWeaponImage.gameObject.SetActive(true);
+            }
         }
+        if (flashbangWeaponImage != null)
+        {
+            if (CurrentWeapon.gunStyle != GunStyle.Flashbang)
+            {
+                if (weapons[4] != null)
+                    flashbangWeaponImage.sprite = weapons[4].gunIcon;
+            }
+            else
+            {
+                flashbangWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                flashbangWeaponImage.gameObject.SetActive(true);
+            }
+        }
+        if (smokeWeaponImage != null)
+        {
+            if (CurrentWeapon.gunStyle != GunStyle.Smoke)
+            {
+                if (weapons[5] != null)
+                    smokeWeaponImage.sprite = weapons[5].gunIcon;
+            }
+            else
+            {
+                smokeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                smokeWeaponImage.gameObject.SetActive(true);
+            }
+        }
+    }
+    public bool HasWeaponOfSameCategory(Gun newGun)
+    {
+        foreach (Gun gun in weapons)
+        {
+            if (gun != null && gun.gunStyle == newGun.gunStyle)
+                return true;
+        }
+
+        return false;
     }
 }
