@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 448293092485410916}
   - component: {fileID: 3523285066575365216}
   - component: {fileID: 8196550221092671390}
-  - component: {fileID: 8173719146952067332}
+  - component: {fileID: 5814610951155647174}
+  - component: {fileID: 7907038730106071619}
   m_Layer: 0
   m_Name: gate-graveyard-body
   m_TagString: Untagged
@@ -29,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8567072719342825206}
   m_RootOrder: 0
@@ -52,10 +54,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,8 +84,9 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &8173719146952067332
-MeshCollider:
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5814610951155647174
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -90,10 +95,25 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8644174661647678513, guid: eab25d0fbde50624694d6a47f3a5dbe7, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 5.262778, y: 1.7808785, z: 0.40761155}
+  m_Center: {x: -2.4584525, y: 0.84502673, z: -0.00061846524}
+--- !u!208 &7907038730106071619
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065869707845004349}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2.631, y: 0.89000005, z: 0.20400001}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -2.4580002, y: 0.845, z: -0.001}
+  m_TimeToStationary: 0.5
 --- !u!1 &3063275692165079344
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,7 +125,8 @@ GameObject:
   - component: {fileID: 370686448807418637}
   - component: {fileID: 7751439678792900764}
   - component: {fileID: 7886210033795239037}
-  - component: {fileID: 8173719146952067331}
+  - component: {fileID: 3181465214470078124}
+  - component: {fileID: 6262564315514007171}
   m_Layer: 0
   m_Name: gate-graveyard-door-l
   m_TagString: Untagged
@@ -123,6 +144,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.4413595, y: 0.68109876, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8567072719342825206}
   m_RootOrder: 1
@@ -146,10 +168,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -174,8 +198,9 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &8173719146952067331
-MeshCollider:
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3181465214470078124
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -184,10 +209,25 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8390118871094833361, guid: eab25d0fbde50624694d6a47f3a5dbe7, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.9549656, y: 1.6156695, z: 0.090294525}
+  m_Center: {x: 0.462268, y: 0.22095558, z: -0.000000022351742}
+--- !u!208 &6262564315514007171
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3063275692165079344}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.47700003, y: 0.808, z: 0.045}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.462, y: 0.22100002, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &3743882122135537935
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +239,8 @@ GameObject:
   - component: {fileID: 3831420321170378458}
   - component: {fileID: 6182568435278641185}
   - component: {fileID: 6634564921272312685}
-  - component: {fileID: 8173719146952067330}
+  - component: {fileID: 8734835591803882233}
+  - component: {fileID: 6182627650734724165}
   m_Layer: 0
   m_Name: gate-graveyard-door-r
   m_TagString: Untagged
@@ -217,6 +258,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.5586405, y: 0.68109876, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8567072719342825206}
   m_RootOrder: 2
@@ -240,10 +282,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -268,8 +312,25 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &8173719146952067330
-MeshCollider:
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!208 &8734835591803882233
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3743882122135537935}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.476, y: 0.808, z: 0.045}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.46400002, y: 0.22100002, z: 0}
+  m_TimeToStationary: 0.5
+--- !u!65 &6182627650734724165
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -278,10 +339,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8718099643969501646, guid: eab25d0fbde50624694d6a47f3a5dbe7, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.9520964, y: 1.6156695, z: 0.09029454}
+  m_Center: {x: -0.4637026, y: 0.22095564, z: 0.000000014901161}
 --- !u!1 &9056610842965849164
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,6 +368,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 448293092485410916}
   - {fileID: 370686448807418637}

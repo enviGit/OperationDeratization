@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 5396394681957174530}
   - component: {fileID: 9028595521032438439}
   - component: {fileID: 6532740105558472301}
-  - component: {fileID: 5578096413396445930}
+  - component: {fileID: 2368651308643785853}
+  - component: {fileID: 422539202433968309}
   m_Layer: 0
   m_Name: gravestone-old-cross
   m_TagString: Untagged
@@ -29,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -52,10 +54,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,8 +84,9 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &5578096413396445930
-MeshCollider:
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2368651308643785853
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -90,7 +95,22 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3170528872962223610, guid: 14aeba4054e1354408fc8b497eae6d75, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.37678367, y: 0.6142789, z: 0.26075745}
+  m_Center: {x: -0.00089179724, y: 0.29598796, z: 0.025419958}
+--- !u!208 &422539202433968309
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4731041251265943480}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.18800001, y: 0.307, z: 0.13000001}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.001, y: 0.296, z: 0.025}
+  m_TimeToStationary: 0.5

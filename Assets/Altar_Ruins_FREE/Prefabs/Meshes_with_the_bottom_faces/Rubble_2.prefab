@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4756522413038557167}
   - component: {fileID: 7342688901418984229}
   - component: {fileID: 5380085046366247522}
+  - component: {fileID: 7118423722108761819}
   m_Layer: 0
   m_Name: Rubble_2
   m_TagString: Untagged
@@ -29,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -52,6 +54,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -95,3 +98,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.42662126, y: 0.4215647, z: 0.42156494}
   m_Center: {x: -0.0025283545, y: 0.20055825, z: -0.0000003054738}
+--- !u!208 &7118423722108761819
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9144142153044689648}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.21300001, y: 0.21100001, z: 0.21100001}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.002, y: 0.201, z: 0}
+  m_TimeToStationary: 0.5
