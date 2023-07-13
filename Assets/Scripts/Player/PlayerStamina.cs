@@ -9,12 +9,8 @@ public class PlayerStamina : MonoBehaviour
     public float jumpStaminaCost = 15f;
     public float attackStaminaCost = 15f;
     public float staminaRegenRate = 25f;
-    public float currentStamina;
-
-    [Header("Stamina bar images")]
+    public float currentStamina = 100f;
     public Image staminaBarFill;
-
-    [Header("Bool checks")]
     public bool isStaminaRegenBlocked = false;
 
     private void Start()

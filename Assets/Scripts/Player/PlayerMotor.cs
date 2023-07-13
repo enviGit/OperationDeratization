@@ -44,7 +44,10 @@ public class PlayerMotor : MonoBehaviour
     {
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         isGrounded = controller.isGrounded;
-        _isClimbing = ladder.isClimbing;
+
+        if(ladder != null)
+            _isClimbing = ladder.isClimbing;
+
         Move();
         Crouch();
         CrouchToggle();

@@ -8,7 +8,6 @@ public class AiDeathState : AiState
     {
         return AiStateId.Death;
     }
-
     public void Enter(AiAgent agent)
     {
         agent.ragdoll.ActivateRagdoll();

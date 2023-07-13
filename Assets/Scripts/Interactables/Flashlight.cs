@@ -3,6 +3,7 @@ using UnityEngine;
 public class Flashlight : MonoBehaviour
 {
     Light flashlight;
+    public PlayerHealth playerHealth;
 
     private void Start()
     {
@@ -10,7 +11,12 @@ public class Flashlight : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-            flashlight.enabled = !flashlight.enabled;
+        if (playerHealth.isAlive)
+        {
+            if (Input.GetKeyDown(KeyCode.T))
+                flashlight.enabled = !flashlight.enabled;
+        }
+        else
+            gameObject.SetActive(false);
     }
 }

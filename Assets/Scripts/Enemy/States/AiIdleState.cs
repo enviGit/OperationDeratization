@@ -6,13 +6,16 @@ public class AiIdleState : AiState
     {
         return AiStateId.Idle;
     }
-
     public void Enter(AiAgent agent)
     {
-        
+        agent.weapons.DeactiveWeapon();
+        agent.navMeshAgent.ResetPath();
     }
     public void Update(AiAgent agent)
     {
+        if (agent.playerTransform.GetComponent<PlayerHealth>().isAlive == false)
+            return;
+
         Vector3 playerDirection = agent.playerTransform.position - agent.transform.position;
 
         if (playerDirection.magnitude > agent.config.maxSightDistance)

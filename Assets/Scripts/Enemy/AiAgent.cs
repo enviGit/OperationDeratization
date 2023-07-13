@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
 
 public class AiAgent : MonoBehaviour
 {
@@ -29,6 +27,7 @@ public class AiAgent : MonoBehaviour
         stateMachine.RegisterState(new AiDeathState());
         stateMachine.RegisterState(new AiIdleState());
         stateMachine.RegisterState(new AiFindWeaponState());
+        stateMachine.RegisterState(new AiAttackPlayerState());
         stateMachine.ChangeState(initialState);
     }
     private void Update()

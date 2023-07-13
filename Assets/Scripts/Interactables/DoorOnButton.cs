@@ -16,6 +16,7 @@ public class DoorOnButton : Interactable
     public float doorScaleTime = 0.5f;
     private Vector3 originalLeftDoorScale;
     private Vector3 originalRightDoorScale;
+    private float enemyDetectionRadius = 2f;
 
     [Header("Bool checks")]
     public static bool doorsOpen = false;
@@ -28,6 +29,26 @@ public class DoorOnButton : Interactable
         originalRightDoorScale = rightDoor1.transform.localScale;
         originalLeftDoorScale = leftDoor2.transform.localScale;
         originalRightDoorScale = rightDoor2.transform.localScale;
+    }
+    private void Update()
+    {
+        if (DetectEnemyNearby())
+        {
+            if (!doorsMoving)
+            {
+                if (!doorsOpen)
+                {
+                    SlideDoors(doorSlideAmount);
+                    ScaleDoors(doorScaleAmount, true);
+                    doorsOpen = true;
+
+                    if (closeDoorCoroutine != null)
+                        StopCoroutine(closeDoorCoroutine);
+
+                    closeDoorCoroutine = StartCoroutine(CloseDoorAfterDelay());
+                }
+            }
+        }
     }
     protected override void Interact()
     {
@@ -148,5 +169,17 @@ public class DoorOnButton : Interactable
             ScaleDoors(-doorScaleAmount, false);
             doorsOpen = false;
         }
+    }
+    private bool DetectEnemyNearby()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, enemyDetectionRadius);
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
+                return true;
+        }
+
+        return false;
     }
 }

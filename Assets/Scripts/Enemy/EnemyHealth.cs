@@ -9,6 +9,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private Slider healthBarSlider;
     [SerializeField] private Image healthBarSliderImage;
     List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
+    WeaponIk weaponIk;
     AiAgent agent;
     
     [Header("Enemy health bar")]
@@ -21,11 +22,14 @@ public class EnemyHealth : MonoBehaviour
     [Header("Enemy health")]
     public float blinkIntensity = 10f;
     public float blinkDuration = 0.05f;
+    public bool isAlive = true;
+    public bool isMarkedAsDead = false;
     float blinkTimer;
 
     private void Start()
     {
         agent = GetComponent<AiAgent>();
+        weaponIk = GetComponent<WeaponIk>();
         currentHealth = enemyStats.maxHealth;
         SetHealthBarUI();
         lastDamageTime = Time.time;
@@ -36,6 +40,9 @@ public class EnemyHealth : MonoBehaviour
         {
             HitBox hitBox = rigidBody.gameObject.AddComponent<HitBox>();
             hitBox.health = this;
+
+            if (hitBox.gameObject != gameObject)
+                hitBox.gameObject.layer = LayerMask.NameToLayer("Hitbox");
         }
         foreach (Transform child in transform)
         {
@@ -47,7 +54,7 @@ public class EnemyHealth : MonoBehaviour
     }
     private void Update()
     {
-        if (Time.time - lastDamageTime > 3f)
+        if (Time.time - lastDamageTime > 3f || currentHealth <= 0)
             showHealthBar = false;
 
         healthBarSlider.gameObject.SetActive(showHealthBar);
@@ -72,6 +79,8 @@ public class EnemyHealth : MonoBehaviour
     }
     private void Die(Vector3 direction)
     {
+        isAlive = false;
+        weaponIk.enabled = false;
         AiDeathState deathState = agent.stateMachine.GetState(AiStateId.Death) as AiDeathState;
         deathState.direction = direction;
         agent.stateMachine.ChangeState(AiStateId.Death);

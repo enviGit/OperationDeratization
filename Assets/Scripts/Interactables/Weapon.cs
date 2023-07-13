@@ -112,9 +112,13 @@ public class Weapon : Interactable
             childIndex = 5;
 
         weaponObject.transform.SetSiblingIndex(childIndex);
-        Destroy(gameObject);
         inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
         inventory.UpdateWeaponImages();
+
+        if ((interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade && inventory.grenadeCount < 3) || (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang && inventory.flashbangCount < 3) || (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && inventory.smokeCount < 3))
+            Destroy(gameObject);
+        else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Primary || interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Secondary)
+            Destroy(gameObject);
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -123,9 +127,12 @@ public class Weapon : Interactable
 
         if (weapons != null && weapons.GetComponent<AiAgent>().stateMachine.currentState != AiStateId.Death)
         {
-            GameObject newWeapon = Instantiate(gun.gunPrefab);
-            weapons.Equip(newWeapon, sockets);
-            Destroy(gameObject);
+            if (gun.gunStyle != GunStyle.Grenade && gun.gunStyle != GunStyle.Flashbang && gun.gunStyle != GunStyle.Smoke && weapons.currentWeapon == null)
+            {
+                GameObject newWeapon = Instantiate(gun.gunPrefab);
+                weapons.Equip(newWeapon, sockets);
+                Destroy(gameObject);
+            }
         }
     }
 }

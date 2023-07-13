@@ -12,16 +12,14 @@ public class PlayerInventory : MonoBehaviour
     public Image flashbangWeaponImage;
     public Image smokeWeaponImage;
 
-    [Header("Bool checks")]
-    public bool isGrenadePickable = false;
-    public bool isFlashbangPickable = false;
-    public bool isSmokePickable = false;
-
     [Header("Weapon")]
     [SerializeField] private Gun melee;
     public Gun[] weapons;
     public int currentWeaponIndex = -1;
     private int currentItemIndex = 0;
+    public int grenadeCount = 0;
+    public int flashbangCount = 0;
+    public int smokeCount = 0;
     public Gun CurrentWeapon
     {
         get
@@ -49,7 +47,6 @@ public class PlayerInventory : MonoBehaviour
         currentWeaponIndex = 0;
         UpdateWeaponImages();
     }
-
     private void Update()
     {
         SwitchItem();
@@ -100,13 +97,10 @@ public class PlayerInventory : MonoBehaviour
                 if (newItem.currentAmmoCount < newItem.maxAmmoCount)
                 {
                     newItem.currentAmmoCount++;
-                    isGrenadePickable = true;
+                    Debug.Log(newItem.currentAmmoCount);
                 }
                 else
-                {
-                    FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
-                    isGrenadePickable = false;
-                }
+                    FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
             }
             else if (newItem.gunStyle == GunStyle.Flashbang)
             {
@@ -117,13 +111,10 @@ public class PlayerInventory : MonoBehaviour
                 if (newItem.currentAmmoCount < newItem.maxAmmoCount)
                 {
                     newItem.currentAmmoCount++;
-                    isFlashbangPickable = true;
+                    Debug.Log(newItem.currentAmmoCount);
                 }
                 else
-                {
-                    FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
-                    isFlashbangPickable = false;
-                }
+                    FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
             }
             else if (newItem.gunStyle == GunStyle.Smoke)
             {
@@ -134,13 +125,10 @@ public class PlayerInventory : MonoBehaviour
                 if (newItem.currentAmmoCount < newItem.maxAmmoCount)
                 {
                     newItem.currentAmmoCount++;
-                    isSmokePickable = true;
+                    Debug.Log(newItem.currentAmmoCount);
                 }
                 else
-                {
-                    FindObjectOfType<Ammo>().ShowGrenadePrompt(newItem.gunName);
-                    isSmokePickable = false;
-                }
+                    FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
             }
             if (newItem.gunStyle != GunStyle.Grenade && newItem.gunStyle != GunStyle.Flashbang && newItem.gunStyle != GunStyle.Smoke)
             {
@@ -195,6 +183,7 @@ public class PlayerInventory : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             currentItemIndex++;
+
             if (currentItemIndex > 2)
                 currentItemIndex = 0;
 

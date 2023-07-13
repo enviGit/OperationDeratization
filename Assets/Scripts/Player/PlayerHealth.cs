@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class PlayerHealth : MonoBehaviour
     public Ragdoll ragdoll;
     public Transform inventoryUI;
     public Camera deathCamera;
+    public VolumeProfile postProcessing;
 
     [Header("Health")]
     private float currentHealth;
@@ -34,7 +37,15 @@ public class PlayerHealth : MonoBehaviour
         {
             HitBox hitBox = rigidBody.gameObject.AddComponent<HitBox>();
             hitBox.playerHealth = this;
+
+            if (hitBox.gameObject != gameObject)
+                hitBox.gameObject.layer = LayerMask.NameToLayer("Hitbox");
         }
+
+        Vignette vignette;
+
+        if (postProcessing.TryGet(out vignette))
+            vignette.intensity.value = 0f;
     }
     private void Update()
     {
@@ -125,6 +136,13 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damageToHealth;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         lerpTimer = 0f;
+        Vignette vignette;
+
+        if(postProcessing.TryGet(out vignette))
+        { 
+            float percent = 1f - (currentHealth / maxHealth);
+            vignette.intensity.value = percent * 0.5f;
+        }
 
         if (currentHealth <= 0)
             Die();
@@ -136,6 +154,13 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth -= damage;
         lerpTimer = 0f;
+        Vignette vignette;
+
+        if (postProcessing.TryGet(out vignette))
+        {
+            float percent = 1f - (currentHealth / maxHealth);
+            vignette.intensity.value = percent * 0.5f;
+        }
 
         if (currentHealth <= 0)
             Die();
