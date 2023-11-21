@@ -15,6 +15,12 @@ public class PlayerHealth : MonoBehaviour
     public Transform inventoryUI;
     public Camera deathCamera;
     public VolumeProfile postProcessing;
+    public AudioSource heartbeatSound;
+    public AudioSource deathSound;
+    public AudioSource impactSound;
+    public AudioClip[] impactClips;
+    public AudioSource gasSound;
+    public AudioClip[] gasClips;
 
     [Header("Health")]
     private float currentHealth;
@@ -26,6 +32,10 @@ public class PlayerHealth : MonoBehaviour
     [Header("Armor")]
     public float currentArmor = 0;
     public float maxArmor = 100f;
+
+    [Header("Heartbeat")]
+    private float heartbeatMultiplier = 1.2f;
+    private float initialMultiplier = 0.05f;
 
     private void Start()
     {
@@ -52,6 +62,20 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
         UpdateHealthUI();
+        float healthPercentage = currentHealth / maxHealth;
+
+        if (healthPercentage <= 0.3f && isAlive == true)
+        {
+            if (!heartbeatSound.isPlaying)
+                heartbeatSound.Play();
+
+            float pitchJumpMultiplier = Mathf.Lerp(initialMultiplier, 1f, 1f - healthPercentage);
+            float volumeMultiplier = Mathf.Lerp(initialMultiplier, 1f, 1f - healthPercentage);
+            heartbeatSound.volume = Mathf.Lerp(0.5f, 0.75f, 1f - healthPercentage) * heartbeatMultiplier * volumeMultiplier;
+            heartbeatSound.pitch = Mathf.Lerp(1f, 1.5f, 1f - healthPercentage) * heartbeatMultiplier * pitchJumpMultiplier;
+        }
+        else
+            heartbeatSound.Stop();
     }
     public void UpdateHealthUI()
     {
@@ -138,14 +162,19 @@ public class PlayerHealth : MonoBehaviour
         lerpTimer = 0f;
         Vignette vignette;
 
-        if(postProcessing.TryGet(out vignette))
-        { 
+        if (postProcessing.TryGet(out vignette))
+        {
             float percent = 1f - (currentHealth / maxHealth);
             vignette.intensity.value = percent * 0.5f;
         }
-
         if (currentHealth <= 0)
             Die();
+        if(impactClips.Length > 0)
+        {
+            int randomIndex = Random.Range(0, Mathf.Min(2, impactClips.Length));
+            impactSound.clip = impactClips[randomIndex];
+            impactSound.Play();
+        }
     }
     public void TakeFallingDamage(float damage)
     {
@@ -162,6 +191,35 @@ public class PlayerHealth : MonoBehaviour
             vignette.intensity.value = percent * 0.5f;
         }
 
+        if (currentHealth <= 0)
+            Die();
+    }
+    public void TakeGasDamage(float damage)
+    {
+        if (!isAlive)
+            return;
+
+        currentHealth -= damage;
+        lerpTimer = 0f;
+        Vignette vignette;
+
+        if (postProcessing.TryGet(out vignette))
+        {
+            float percent = 1f - (currentHealth / maxHealth);
+            vignette.intensity.value = percent * 0.5f;
+        }
+        if (gasClips.Length > 0)
+        {
+            int clipIndex = Random.Range(0, gasClips.Length - 2);
+
+            if (currentHealth <= 10)
+                clipIndex = 3;
+            if (!gasSound.isPlaying)
+            {
+                gasSound.clip = gasClips[clipIndex];
+                gasSound.Play();
+            }
+        }
         if (currentHealth <= 0)
             Die();
     }
@@ -233,6 +291,7 @@ public class PlayerHealth : MonoBehaviour
 
         ragdoll.ActivateRagdoll();
         inventoryUI.gameObject.SetActive(false);
+        deathSound.Play();
     }
     public void RestoreHealth(float healAmount)
     {
@@ -241,6 +300,13 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth += healAmount;
         lerpTimer = 0f;
+        Vignette vignette;
+
+        if (postProcessing.TryGet(out vignette))
+        {
+            float percent = 1f - (currentHealth / maxHealth);
+            vignette.intensity.value = percent * 0.5f;
+        }
     }
     public void PickupArmor()
     {

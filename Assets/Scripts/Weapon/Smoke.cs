@@ -5,6 +5,7 @@ public class Smoke : MonoBehaviour
     [Header("References")]
     public GameObject smokeEffect;
     private AudioSource bang;
+    private GameObject parentObject;
 
     [Header("Grenade")]
     public float delay = 2f;
@@ -18,6 +19,7 @@ public class Smoke : MonoBehaviour
 
     private void Start()
     {
+        parentObject = GameObject.Find("3D");
         countdown = delay;
         bang = GameObject.FindGameObjectWithTag("Bang").GetComponent<AudioSource>();
     }
@@ -45,7 +47,7 @@ public class Smoke : MonoBehaviour
         if (bang.clip != null)
             bang.Play();
 
-        Instantiate(smokeEffect, transform.position, transform.rotation);
+        Instantiate(smokeEffect, transform.position, transform.rotation, parentObject.transform);
         Destroy(gameObject);
     }
 }

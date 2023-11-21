@@ -4,6 +4,7 @@ public class Container : Interactable
 {
     [Header("References")]
     [SerializeField] private GameObject container;
+    [SerializeField] private AudioSource sound;
 
     [Header("Container")]
     private bool containerOpen;
@@ -15,6 +16,7 @@ public class Container : Interactable
         {
             containerOpen = true;
             container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
+            sound.Play();
         }
         if (container.GetComponent<Animator>().GetBool("IsOpen"))
             prompt = "Close container";
@@ -25,6 +27,7 @@ public class Container : Interactable
     {
         containerOpen = !containerOpen;
         container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
+        sound.Play();
     }
     private bool DetectEnemyNearby()
     {

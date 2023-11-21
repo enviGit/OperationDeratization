@@ -6,6 +6,7 @@ public class Grenade : MonoBehaviour
     public GameObject explosionEffect;
     public Gun grenade;
     private AudioSource bang;
+    private GameObject parentObject;
 
     [Header("Grenade")]
     public float delay = 3f;
@@ -20,6 +21,7 @@ public class Grenade : MonoBehaviour
 
     private void Start()
     {
+        parentObject = GameObject.Find("3D");
         countdown = delay;
         bang = GameObject.FindGameObjectWithTag("Bang").GetComponent<AudioSource>();
     }
@@ -47,7 +49,7 @@ public class Grenade : MonoBehaviour
         if (bang.clip != null)
             bang.Play();
 
-        Instantiate(explosionEffect, transform.position, transform.rotation);
+        Instantiate(explosionEffect, transform.position, transform.rotation, parentObject.transform);
         Collider[] collidersToMove = Physics.OverlapSphere(transform.position, radius);
 
         foreach (Collider nearbyObject in collidersToMove)

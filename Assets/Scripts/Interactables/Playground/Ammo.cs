@@ -12,6 +12,7 @@ public class Ammo : Interactable
     public TextMeshProUGUI sliderValue;
     private PlayerInventory inventory;
     private PlayerUI ui;
+    public AudioSource lootingSound;
 
     [Header("Ammo")]
     public bool isFilling = false;
@@ -29,7 +30,10 @@ public class Ammo : Interactable
         if (isFilling)
             prompt = "";
         else
+        {
+            lootingSound.Stop();
             prompt = "Refill ammo";
+        }
     }
     protected override void Interact()
     {
@@ -56,7 +60,11 @@ public class Ammo : Interactable
             return;
         }
         if (!isFilling)
+        {
+            lootingSound.Play();
             StartCoroutine(ui.RefillAmmo());
+        }
+            
 
         allWeapons = 0;
         weaponsFullAmmo = 0;

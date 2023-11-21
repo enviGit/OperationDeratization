@@ -6,6 +6,7 @@ public class AiWeapons : MonoBehaviour
     [Header("References")]
     public GameObject currentWeapon;
     private EnemyShoot weapon;
+    private GameObject parentObject;
 
     [Header("Weapons")]
     Animator animator;
@@ -20,6 +21,7 @@ public class AiWeapons : MonoBehaviour
         animator = GetComponent<Animator>();
         weaponIk = GetComponent<WeaponIk>();
         weapon = GetComponent<EnemyShoot>();
+        parentObject = GameObject.Find("3D");
     }
     private void Update()
     {
@@ -41,6 +43,7 @@ public class AiWeapons : MonoBehaviour
     {
         weaponSockets = sockets;
         currentWeapon = weapon;
+        currentWeapon.GetComponent<Weapon>().prompt = "";
         currentWeapon.GetComponent<Weapon>().enabled = false;
         sockets.Attach(currentWeapon.transform, MeshSockets.SocketId.Spine);
     }
@@ -80,7 +83,7 @@ public class AiWeapons : MonoBehaviour
     {
         if (currentWeapon)
         {
-            currentWeapon.transform.SetParent(null);
+            currentWeapon.transform.SetParent(parentObject.transform);
             Rigidbody rb = currentWeapon.AddComponent<Rigidbody>();
             rb.mass = 2f;
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerMotor : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class PlayerMotor : MonoBehaviour
     public float gravity = -9.8f;
     public float jumpHeight = 0.7f;
     public float moveSpeed = 4f;
+    public AudioSource movementSound;
+    public AudioClip[] movementClips;
 
     [Header("Fall damage")]
     public float fallDamageMultiplier = 1.5f;
@@ -45,7 +48,7 @@ public class PlayerMotor : MonoBehaviour
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         isGrounded = controller.isGrounded;
 
-        if(ladder != null)
+        if (ladder != null)
             _isClimbing = ladder.isClimbing;
 
         Move();
@@ -84,9 +87,32 @@ public class PlayerMotor : MonoBehaviour
             isMoving = true;
 
             if (isCrouching)
+            {
                 currentState.playerStance = PlayerStance.Stance.Crouching;
+                movementSound.pitch = 0.5f;
+                movementSound.clip = movementClips[0];
+            }
             else
-                currentState.playerStance = PlayerStance.Stance.Walking;
+            {
+                currentState.playerStance = isRunning ? PlayerStance.Stance.Running : PlayerStance.Stance.Walking;
+
+                if (isGrounded)
+                {
+                    if (isRunning)
+                    {
+                        movementSound.pitch = 1.3f;
+                        movementSound.clip = movementClips[1];
+
+                    }
+                    else
+                    {
+                        movementSound.pitch = 1f;
+                        movementSound.clip = movementClips[0];
+                    }
+                }
+            }
+            if (!movementSound.isPlaying)
+                movementSound.Play();
         }
         else
         {
@@ -96,6 +122,8 @@ public class PlayerMotor : MonoBehaviour
                 currentState.playerStance = PlayerStance.Stance.Crouching;
             else
                 currentState.playerStance = PlayerStance.Stance.Idle;
+
+            movementSound.Stop();
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && stamina.currentStamina > 0f)
@@ -112,6 +140,7 @@ public class PlayerMotor : MonoBehaviour
 
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
+
     private void Gravity()
     {
         playerVelocity.y += gravity * Time.deltaTime;
@@ -197,7 +226,7 @@ public class PlayerMotor : MonoBehaviour
     }
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && stamina.HasStamina(stamina.jumpStaminaCost / 2))
+        if (Input.GetKey(KeyCode.Space) && isGrounded && stamina.HasStamina(stamina.jumpStaminaCost / 2))
         {
             RaycastHit hit;
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
@@ -217,6 +246,9 @@ public class PlayerMotor : MonoBehaviour
             fallDamageMultiplier = 0.6f;
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             stamina.UseStamina(stamina.jumpStaminaCost);
+            movementSound.clip = movementClips[2];
+            movementSound.pitch = 1f;
+            movementSound.Play();
         }
         else
         {
