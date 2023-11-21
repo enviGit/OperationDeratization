@@ -167,14 +167,14 @@ public class PlayerHealth : MonoBehaviour
             float percent = 1f - (currentHealth / maxHealth);
             vignette.intensity.value = percent * 0.5f;
         }
-        if (currentHealth <= 0)
-            Die();
         if(impactClips.Length > 0)
         {
-            int randomIndex = Random.Range(0, Mathf.Min(2, impactClips.Length));
+            int randomIndex = Random.Range(0, impactClips.Length - 1);
             impactSound.clip = impactClips[randomIndex];
             impactSound.Play();
         }
+        if (currentHealth <= 0)
+            Die();
     }
     public void TakeFallingDamage(float damage)
     {
@@ -190,7 +190,12 @@ public class PlayerHealth : MonoBehaviour
             float percent = 1f - (currentHealth / maxHealth);
             vignette.intensity.value = percent * 0.5f;
         }
-
+        if (impactClips.Length > 0)
+        {
+            impactSound.clip = impactClips[2];
+            impactSound.volume = 0.5f;
+            impactSound.Play();
+        }
         if (currentHealth <= 0)
             Die();
     }
@@ -210,7 +215,7 @@ public class PlayerHealth : MonoBehaviour
         }
         if (gasClips.Length > 0)
         {
-            int clipIndex = Random.Range(0, gasClips.Length - 2);
+            int clipIndex = Random.Range(0, gasClips.Length - 1);
 
             if (currentHealth <= 10)
                 clipIndex = 3;
