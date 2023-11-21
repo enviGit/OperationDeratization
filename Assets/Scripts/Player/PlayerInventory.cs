@@ -20,6 +20,7 @@ public class PlayerInventory : MonoBehaviour
     public int grenadeCount = 0;
     public int flashbangCount = 0;
     public int smokeCount = 0;
+    private GameObject parentObject;
     public Gun CurrentWeapon
     {
         get
@@ -33,6 +34,7 @@ public class PlayerInventory : MonoBehaviour
 
     private void Start()
     {
+        parentObject = GameObject.Find("3D");
         Transform mesh = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
         MeshRenderer meshRenderer = mesh.GetComponent<MeshRenderer>();
         meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
@@ -133,7 +135,7 @@ public class PlayerInventory : MonoBehaviour
             if (newItem.gunStyle != GunStyle.Grenade && newItem.gunStyle != GunStyle.Flashbang && newItem.gunStyle != GunStyle.Smoke)
             {
                 Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
-                GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
+                GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity, parentObject.transform);
                 newWeapon.layer = LayerMask.NameToLayer("Interactable");
                 SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
                 Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
@@ -230,7 +232,7 @@ public class PlayerInventory : MonoBehaviour
                     weaponImage.gameObject.SetActive(false);
 
                 Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
-                GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity);
+                GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity, parentObject.transform);
                 newWeapon.layer = LayerMask.NameToLayer("Interactable");
                 SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
                 Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();

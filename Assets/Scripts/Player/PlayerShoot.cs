@@ -17,6 +17,7 @@ public class PlayerShoot : MonoBehaviour
     private PlayerMotor playerMotor;
     private LadderTrigger ladder;
     private PlayerStamina stamina;
+    private GameObject parentObject;
 
     [Header("Weapon")]
     private Gun currentWeapon;
@@ -38,6 +39,7 @@ public class PlayerShoot : MonoBehaviour
     [Header("Bool checks")]
     private bool isReloading = false;
     public bool isAiming = false;
+    public bool _isClimbing = false;
 
     private void Start()
     {
@@ -47,6 +49,7 @@ public class PlayerShoot : MonoBehaviour
         cam = Camera.main;
         previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
+        parentObject = GameObject.Find("3D");
     }
     private void Awake()
     {
@@ -66,6 +69,8 @@ public class PlayerShoot : MonoBehaviour
         previousWeapon = currentWeapon;
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
 
+        if (ladder != null)
+            _isClimbing = ladder.isClimbing;
         if (previousWeapon != null && previousWeapon.gunStyle != currentWeapon.gunStyle)
         {
             if (currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke)
@@ -86,7 +91,6 @@ public class PlayerShoot : MonoBehaviour
             }
         }
 
-        
         PointerPosition();
         Shoot();
 
@@ -202,12 +206,12 @@ public class PlayerShoot : MonoBehaviour
             {
                 if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
                 {
-                    //gunAudio.clip = currentWeapon.gunAudioClips[0];
-                    //gunAudio.Play();
+                    gunFireAudio.clip = currentWeapon.gunAudioClips[0];
+                    gunFireAudio.Play();
                     currentWeapon.currentAmmoCount--;
                     Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
                     Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
-                    GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation);
+                    GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation, parentObject.transform);
                     grenade.AddComponent<GrenadeIndicator>();
                     Rigidbody rb = grenade.GetComponent<Rigidbody>();
                     Weapon weaponScript = grenade.GetComponent<Weapon>();
@@ -216,7 +220,6 @@ public class PlayerShoot : MonoBehaviour
                     rb.angularVelocity = Vector3.zero;
                     rb.isKinematic = false;
                     rb.freezeRotation = false;
-                    rb.transform.SetParent(null, true);
 
                     if (isAiming)
                         rb.AddForce(weaponHolder.transform.forward * throwForce, ForceMode.Impulse);
@@ -444,11 +447,19 @@ public class PlayerShoot : MonoBehaviour
 
         if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee && !playerMotor.isRunning)
         {
-            if (ladder != null)
+            if (!_isClimbing)
             {
-                if (!ladder.isClimbing)
+                isAiming = true;
+                weapon.localPosition = aimingPosition;
+                weapon.localRotation = Quaternion.Euler(aimingRotation);
+
+                if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
+                    playerMotor.moveSpeed = 2f;
+                else
+                    playerMotor.moveSpeed = 1f;
+                if (currentWeapon.gunType == GunType.Sniper)
                 {
-                    isAiming = true;
+                    cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
                     weapon.localPosition = aimingPosition;
                     weapon.localRotation = Quaternion.Euler(aimingRotation);
 
@@ -456,33 +467,22 @@ public class PlayerShoot : MonoBehaviour
                         playerMotor.moveSpeed = 2f;
                     else
                         playerMotor.moveSpeed = 1f;
-                    if (currentWeapon.gunType == GunType.Sniper)
-                    {
-                        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-                        weapon.localPosition = aimingPosition;
-                        weapon.localRotation = Quaternion.Euler(aimingRotation);
 
-                        if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
-                            playerMotor.moveSpeed = 2f;
-                        else
-                            playerMotor.moveSpeed = 1f;
-
-                        xSensitivity = 1f;
-                        ySensitivity = 1f;
-                        Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
-                        Camera zoomCamera = zoom.GetComponent<Camera>();
-                        float newFieldOfView = zoomCamera.fieldOfView - Input.GetAxis("Mouse ScrollWheel") * 25f;
-                        newFieldOfView = Mathf.Clamp(newFieldOfView, 1f, 6f);
-                        zoomCamera.fieldOfView = newFieldOfView;
-                    }
-                    else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke)
-                        DrawTrajectory();
-                    else
-                    {
-                        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-                        xSensitivity = 3f;
-                        ySensitivity = 3f;
-                    }
+                    xSensitivity = 1f;
+                    ySensitivity = 1f;
+                    Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
+                    Camera zoomCamera = zoom.GetComponent<Camera>();
+                    float newFieldOfView = zoomCamera.fieldOfView - Input.GetAxis("Mouse ScrollWheel") * 25f;
+                    newFieldOfView = Mathf.Clamp(newFieldOfView, 1f, 6f);
+                    zoomCamera.fieldOfView = newFieldOfView;
+                }
+                else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke)
+                    DrawTrajectory();
+                else
+                {
+                    cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
+                    xSensitivity = 3f;
+                    ySensitivity = 3f;
                 }
             }
         }

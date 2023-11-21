@@ -38,6 +38,7 @@ public class Tracker : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(direction);
             float angle = Vector3.SignedAngle(player.forward, direction, player.up);
             Vector3 eulerRotation = rotation.eulerAngles;
+
             if (Mathf.Abs(angle) < 90f)
                 eulerRotation.z = angle;
             else if (angle >= 90f)

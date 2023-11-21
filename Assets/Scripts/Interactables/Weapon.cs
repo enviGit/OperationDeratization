@@ -19,6 +19,13 @@ public class Weapon : Interactable
         interact = FindObjectOfType<PlayerInteract>();
         inventory = FindObjectOfType<PlayerInventory>();
         shoot = FindObjectOfType<PlayerShoot>();
+        GameObject upperImageObject = GameObject.FindGameObjectWithTag("UpperImage");
+        GameObject bottomImageObject = GameObject.FindGameObjectWithTag("BottomImage");
+
+        if (upperImageObject != null)
+            upperImage = upperImageObject.GetComponent<Image>();
+        if (bottomImageObject != null)
+            bottomImage = bottomImageObject.GetComponent<Image>();
     }
     private void Update()
     {
@@ -70,6 +77,16 @@ public class Weapon : Interactable
     }
     protected override void Interact()
     {
+        Transform parent = transform.parent;
+
+        while (parent != null)
+        {
+            if (parent.CompareTag("Enemy"))
+                return;
+
+            parent = parent.parent;
+        }
+
         inventory.AddItem(gun);
         GameObject weaponObject = Instantiate(gun.gunPrefab, Vector3.zero, Quaternion.identity, Camera.main.transform.Find("WeaponHolder"));
         weaponObject.layer = LayerMask.NameToLayer("Player");

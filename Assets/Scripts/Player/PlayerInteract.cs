@@ -43,16 +43,17 @@ public class PlayerInteract : MonoBehaviour
                 {
                     playerUI.UpdateText("Mark opponent as dead");
                     playerUI.promptText.color = Color.red;
-                }
-                if (Input.GetKeyDown(KeyCode.F))
-                {
-                    tracker.MarkOpponentAsDead(hitInfo.collider.gameObject);
-                    playerUI.UpdateText(string.Empty);
 
-                    if(!enemy.isMarkedAsDead)
-                        StartCoroutine(FadeOutPromptText());
+                    if (Input.GetKeyDown(KeyCode.F))
+                    {
+                        tracker.MarkOpponentAsDead(hitInfo.collider.gameObject);
+                        playerUI.UpdateText(string.Empty);
 
-                    enemy.isMarkedAsDead = true;
+                        if (!enemy.isMarkedAsDead)
+                            StartCoroutine(FadeOutPromptText());
+
+                        enemy.isMarkedAsDead = true;
+                    }
                 }
             }
         }

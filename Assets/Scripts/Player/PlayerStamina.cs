@@ -12,6 +12,7 @@ public class PlayerStamina : MonoBehaviour
     public float currentStamina = 100f;
     public Image staminaBarFill;
     public bool isStaminaRegenBlocked = false;
+    public AudioSource heavyBreathingSound;
 
     private void Start()
     {
@@ -52,12 +53,14 @@ public class PlayerStamina : MonoBehaviour
         if (currentStamina == 0)
         {
             isStaminaRegenBlocked = true;
+            heavyBreathingSound.Play();
             Invoke("UnblockStaminaRegen", 4f);
         }
     }
     private void UnblockStaminaRegen()
     {
         isStaminaRegenBlocked = false;
+        heavyBreathingSound.Stop();
     }
     public void BlockStaminaOnAttack()
     {
