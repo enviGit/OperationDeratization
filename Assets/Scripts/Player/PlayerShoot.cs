@@ -453,21 +453,9 @@ public class PlayerShoot : MonoBehaviour
                 weapon.localPosition = aimingPosition;
                 weapon.localRotation = Quaternion.Euler(aimingRotation);
 
-                if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
-                    playerMotor.moveSpeed = 2f;
-                else
-                    playerMotor.moveSpeed = 1f;
                 if (currentWeapon.gunType == GunType.Sniper)
                 {
                     cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-                    weapon.localPosition = aimingPosition;
-                    weapon.localRotation = Quaternion.Euler(aimingRotation);
-
-                    if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
-                        playerMotor.moveSpeed = 2f;
-                    else
-                        playerMotor.moveSpeed = 1f;
-
                     xSensitivity = 1f;
                     ySensitivity = 1f;
                     Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");

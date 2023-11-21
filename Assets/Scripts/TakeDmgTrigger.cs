@@ -25,6 +25,6 @@ public class TakeDmgTrigger : MonoBehaviour
         PlayerHealth playerHealth = obj.gameObject.GetComponent<PlayerHealth>();
 
         if (playerHealth != null)
-            playerHealth.TakeGasDamage(Random.Range(5, 18));
+            playerHealth.TakeGasDamage(Random.Range(11, 24));
     }
 }

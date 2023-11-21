@@ -1,15 +1,14 @@
 using UnityEngine;
-using System.Collections;
 
 public class PlayerMotor : MonoBehaviour
 {
     [Header("References")]
     private CharacterController controller;
     private PlayerStance currentState = new PlayerStance();
-    private Gun currentWeapon;
     private LadderTrigger ladder;
     private PlayerStamina stamina;
     private PlayerHealth health;
+    private PlayerShoot aiming;
 
     [Header("Movement")]
     private Vector3 playerVelocity;
@@ -31,6 +30,7 @@ public class PlayerMotor : MonoBehaviour
     public bool isCrouching = false;
     public bool isMoving = false;
     public bool isRunning = false;
+    private bool _isAiming = false;
 
     private void Start()
     {
@@ -42,11 +42,12 @@ public class PlayerMotor : MonoBehaviour
         stamina = GetComponent<PlayerStamina>();
         health = GetComponent<PlayerHealth>();
         ladder = FindObjectOfType<LadderTrigger>();
+        aiming = GetComponent<PlayerShoot>();
     }
     private void Update()
     {
-        currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         isGrounded = controller.isGrounded;
+        _isAiming = aiming.isAiming;
 
         if (ladder != null)
             _isClimbing = ladder.isClimbing;
@@ -56,25 +57,6 @@ public class PlayerMotor : MonoBehaviour
         CrouchToggle();
         Jump();
         Gravity();
-
-        switch (currentWeapon.gunType)
-        {
-            case GunType.Pistol:
-                moveSpeed *= 0.9f;
-                break;
-            case GunType.Revolver:
-                moveSpeed *= 0.9f;
-                break;
-            case GunType.Rifle:
-                moveSpeed *= 0.75f;
-                break;
-            case GunType.Sniper:
-                moveSpeed *= 0.6f;
-                break;
-            default:
-                moveSpeed *= 1f;
-                break;
-        }
     }
     private void Move()
     {
@@ -89,6 +71,12 @@ public class PlayerMotor : MonoBehaviour
             if (isCrouching)
             {
                 currentState.playerStance = PlayerStance.Stance.Crouching;
+
+                if (!_isAiming)
+                    moveSpeed = 2f;
+                else
+                    moveSpeed = 1f;
+                
                 movementSound.pitch = 0.5f;
                 movementSound.clip = movementClips[0];
             }
@@ -96,6 +84,10 @@ public class PlayerMotor : MonoBehaviour
             {
                 currentState.playerStance = isRunning ? PlayerStance.Stance.Running : PlayerStance.Stance.Walking;
 
+                if (!_isAiming)
+                    moveSpeed = 4f;
+                else
+                    moveSpeed = 2f;
                 if (isGrounded)
                 {
                     if (isRunning)
@@ -135,7 +127,6 @@ public class PlayerMotor : MonoBehaviour
         {
             isRunning = false;
             moveSpeed /= 1.3f;
-            moveSpeed = Mathf.Clamp(moveSpeed, 1f, 4f);
         }
 
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
@@ -182,14 +173,12 @@ public class PlayerMotor : MonoBehaviour
             float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 1f, Time.deltaTime * 5f);
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
             controller.height = 1f;
-            moveSpeed = 2f;
         }
         else
         {
             float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 2f, Time.deltaTime * 5f);
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
             controller.height = 2f;
-            moveSpeed = 4f;
         }
     }
     private void CrouchToggle()
