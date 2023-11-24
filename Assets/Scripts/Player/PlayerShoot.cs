@@ -9,9 +9,9 @@ public class PlayerShoot : MonoBehaviour
     public GameObject impactEffect;
     public GameObject impactRicochet;
     public GameObject bloodSpread;
-    public AudioSource gunFireAudio;
-    public AudioSource gunReloadAudio;
-    public AudioSource gunSwitchAudio;
+    private AudioSource gunFireAudio;
+    private AudioSource gunReloadAudio;
+    private AudioSource gunSwitchAudio;
     private PlayerStance currentState = new PlayerStance();
     public Camera cam;
     private PlayerMotor playerMotor;
@@ -50,6 +50,9 @@ public class PlayerShoot : MonoBehaviour
         previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
         parentObject = GameObject.Find("3D");
+        gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
+        gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
+        gunSwitchAudio = transform.Find("Sounds/WeaponSwitch").GetComponent<AudioSource>();
     }
     private void Awake()
     {

@@ -15,11 +15,11 @@ public class PlayerHealth : MonoBehaviour
     public Transform inventoryUI;
     public Camera deathCamera;
     public VolumeProfile postProcessing;
-    public AudioSource heartbeatSound;
-    public AudioSource deathSound;
-    public AudioSource impactSound;
+    private AudioSource heartbeatSound;
+    private AudioSource deathSound;
+    private AudioSource impactSound;
     public AudioClip[] impactClips;
-    public AudioSource gasSound;
+    private AudioSource gasSound;
     public AudioClip[] gasClips;
 
     [Header("Health")]
@@ -40,6 +40,10 @@ public class PlayerHealth : MonoBehaviour
     private void Start()
     {
         currentHealth = maxHealth;
+        heartbeatSound = transform.Find("Sounds/Heartbeat").GetComponent<AudioSource>();
+        deathSound = transform.Find("Sounds/Death").GetComponent<AudioSource>();
+        impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
+        gasSound = transform.Find("Sounds/Gas").GetComponent<AudioSource>();
         ragdoll = GetComponent<Ragdoll>();
         var rigidBodies = GetComponentsInChildren<Rigidbody>();
 

@@ -12,12 +12,13 @@ public class PlayerStamina : MonoBehaviour
     public float currentStamina = 100f;
     public Image staminaBarFill;
     public bool isStaminaRegenBlocked = false;
-    public AudioSource heavyBreathingSound;
+    private AudioSource heavyBreathingSound;
 
     private void Start()
     {
         currentStamina = maxStamina;
         staminaBarFill.transform.parent.gameObject.SetActive(false);
+        heavyBreathingSound = transform.Find("Sounds/HeavyBreathing").GetComponent<AudioSource>();
     }
     private void Update()
     {

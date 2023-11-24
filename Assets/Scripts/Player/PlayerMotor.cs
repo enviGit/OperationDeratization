@@ -15,7 +15,7 @@ public class PlayerMotor : MonoBehaviour
     public float gravity = -9.8f;
     public float jumpHeight = 0.7f;
     public float moveSpeed = 4f;
-    public AudioSource movementSound;
+    private AudioSource movementSound;
     public AudioClip[] movementClips;
 
     [Header("Fall damage")]
@@ -43,6 +43,7 @@ public class PlayerMotor : MonoBehaviour
         health = GetComponent<PlayerHealth>();
         ladder = FindObjectOfType<LadderTrigger>();
         aiming = GetComponent<PlayerShoot>();
+        movementSound = transform.Find("Sounds/Movement").GetComponent<AudioSource>();
     }
     private void Update()
     {

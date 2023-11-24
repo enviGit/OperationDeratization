@@ -8,9 +8,8 @@ public class EnemyShoot : MonoBehaviour
     public GameObject impactEffect;
     public GameObject impactRicochet;
     public GameObject bloodSpread;
-    public AudioSource gunFireAudio;
-    public AudioSource gunReloadAudio;
-    public AudioSource gunSwitchAudio;
+    private AudioSource gunFireAudio;
+    private AudioSource gunReloadAudio;
     public AiWeapons aiWeapons;
     public Gun[] availableGuns = new Gun[5];
     public Gun currentWeapon;
@@ -24,6 +23,8 @@ public class EnemyShoot : MonoBehaviour
     private void Start()
     {
         aiWeapons = GetComponent<AiWeapons>();
+        gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
+        gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
     }
     private void Update()
     {
