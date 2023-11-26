@@ -60,6 +60,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (postProcessing.TryGet(out vignette))
             vignette.intensity.value = 0f;
+
     }
     private void Update()
     {

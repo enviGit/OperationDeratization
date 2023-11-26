@@ -78,7 +78,14 @@ public class EnemyShoot : MonoBehaviour
                     }
                 }
                 else
+                {
                     hitBox.OnRaycastHitPlayer(currentWeapon);
+
+                    if (hitBox.damageToPlayer > 0)
+                        if (DISystem.CheckIfObjectInSight(this.transform))
+                            DISystem.CreateIndicator(this.transform);
+
+                }
                 if (hit.rigidbody != null)
                     hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
             }

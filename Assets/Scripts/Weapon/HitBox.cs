@@ -5,6 +5,7 @@ public class HitBox : MonoBehaviour
 {
     public EnemyHealth health;
     private Gun gun;
+    public int damageToPlayer = 0;
     public PlayerHealth playerHealth;
     private Dictionary<string, float> damageMultiplier = new Dictionary<string, float>()
     {
@@ -38,10 +39,10 @@ public class HitBox : MonoBehaviour
         if(gun == null) 
             gun = weapon;
 
-        int damage = GetDamageFromHitBox(gameObject);
+        damageToPlayer = GetDamageFromHitBox(gameObject);
 
-        if(damage != null)
-            playerHealth.TakeDamage(damage);
+        if(damageToPlayer != null)
+            playerHealth.TakeDamage(damageToPlayer);
 
         //Debug.Log(gameObject);
     }
