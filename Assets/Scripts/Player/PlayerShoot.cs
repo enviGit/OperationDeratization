@@ -417,8 +417,8 @@ public class PlayerShoot : MonoBehaviour
                 aimingRotation = new Vector3(5f, 0.5f, 0);
                 break;
             case GunType.Rifle:
-                originalPosition = new Vector3(0.12f, -0.15f, 0.4f);
-                originalRotation = new Vector3(2.5f, 0, 0);
+                originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
+                originalRotation = new Vector3(3f, 0, 0);
                 aimingPosition = new Vector3(0, -0.17f, 0.24f);
                 aimingRotation = new Vector3(0, 0, 0);
                 break;

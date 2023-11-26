@@ -35,6 +35,10 @@ public class PlayerInventory : MonoBehaviour
     private void Start()
     {
         parentObject = GameObject.Find("3D");
+        Transform mesh = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
+        MeshRenderer meshRenderer = mesh.GetComponent<MeshRenderer>();
+        meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+        meshRenderer.receiveShadows = false;
         weapons = new Gun[6];
         weapons[0] = melee;
         weapons[1] = null;
