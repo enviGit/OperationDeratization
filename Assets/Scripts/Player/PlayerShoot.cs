@@ -53,6 +53,8 @@ public class PlayerShoot : MonoBehaviour
         gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
         gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
         gunSwitchAudio = transform.Find("Sounds/WeaponSwitch").GetComponent<AudioSource>();
+        xSensitivity = PlayerPrefs.GetFloat("SensitivityMultiplier", 0.5f);
+        ySensitivity = PlayerPrefs.GetFloat("SensitivityMultiplier", 0.5f);
     }
     private void Awake()
     {
