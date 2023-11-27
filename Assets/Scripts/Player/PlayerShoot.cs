@@ -53,6 +53,8 @@ public class PlayerShoot : MonoBehaviour
         gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
         gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
         gunSwitchAudio = transform.Find("Sounds/WeaponSwitch").GetComponent<AudioSource>();
+        xSensitivity *= Settings.Sensitivity;
+        ySensitivity *= Settings.Sensitivity;
     }
     private void Awake()
     {
@@ -445,8 +447,6 @@ public class PlayerShoot : MonoBehaviour
                 if (currentWeapon.gunType == GunType.Sniper)
                 {
                     cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-                    xSensitivity = 1f;
-                    ySensitivity = 1f;
                     Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
                     Camera zoomCamera = zoom.GetComponent<Camera>();
                     float newFieldOfView = zoomCamera.fieldOfView - Input.GetAxis("Mouse ScrollWheel") * 25f;
@@ -456,11 +456,7 @@ public class PlayerShoot : MonoBehaviour
                 else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke)
                     DrawTrajectory();
                 else
-                {
                     cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-                    xSensitivity = 3f;
-                    ySensitivity = 3f;
-                }
             }
         }
         else
@@ -479,9 +475,6 @@ public class PlayerShoot : MonoBehaviour
                 playerMotor.moveSpeed = 4f;
             else
                 playerMotor.moveSpeed = 2f;
-
-            xSensitivity = 3f;
-            ySensitivity = 3f;
         }
     }
     private void DrawTrajectory()
