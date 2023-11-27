@@ -53,8 +53,6 @@ public class PlayerShoot : MonoBehaviour
         gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
         gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
         gunSwitchAudio = transform.Find("Sounds/WeaponSwitch").GetComponent<AudioSource>();
-        xSensitivity = PlayerPrefs.GetFloat("SensitivityMultiplier", 0.5f);
-        ySensitivity = PlayerPrefs.GetFloat("SensitivityMultiplier", 0.5f);
     }
     private void Awake()
     {
@@ -79,21 +77,11 @@ public class PlayerShoot : MonoBehaviour
         if (previousWeapon != null && previousWeapon.gunStyle != currentWeapon.gunStyle)
         {
             if (currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke)
-            {
-                gunSwitchAudio.clip = currentWeapon.gunAudioClips[3];
-                gunSwitchAudio.Play();
-            }
+                gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[3]);
             else if (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke)
-            {
-                //
-
-                //
-            }
+                gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
             else
-            {
-                gunSwitchAudio.clip = currentWeapon.gunAudioClips[0];
-                gunSwitchAudio.Play();
-            }
+                gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
         }
 
         PointerPosition();
@@ -113,8 +101,7 @@ public class PlayerShoot : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && (Time.time > shotTimer || Time.time > autoShotTimer) && currentWeapon.currentAmmoCount == 0 && !isReloading &&
             (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke))
         {
-            gunFireAudio.clip = currentWeapon.gunAudioClips[1];
-            gunFireAudio.Play();
+            gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
             return;
         }
         if (Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !stamina.HasStamina(stamina.attackStaminaCost / 2))
@@ -154,8 +141,7 @@ public class PlayerShoot : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                gunFireAudio.clip = currentWeapon.gunAudioClips[0];
-                gunFireAudio.Play();
+                gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
                 recoil.RecoilFire();
                 currentWeapon.currentAmmoCount--;
                 Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
@@ -211,8 +197,7 @@ public class PlayerShoot : MonoBehaviour
             {
                 if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
                 {
-                    gunFireAudio.clip = currentWeapon.gunAudioClips[0];
-                    gunFireAudio.Play();
+                    gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
                     currentWeapon.currentAmmoCount--;
                     Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
                     Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
@@ -248,8 +233,7 @@ public class PlayerShoot : MonoBehaviour
                 }
                 else
                 {
-                    gunFireAudio.clip = currentWeapon.gunAudioClips[0];
-                    gunFireAudio.Play();
+                    gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
 
                     if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
                     {

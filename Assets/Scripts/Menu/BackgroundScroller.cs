@@ -7,12 +7,11 @@ public class BackgroundScroller : MonoBehaviour
     private float offset;
     private Material mat;
 
-    void Start()
+    private void Start()
     {
         mat = GetComponent<Renderer>().material;
     }
-    
-    void Update()
+    private void Update()
     {
         offset += (Time.deltaTime * scrollSpeed) / 10f;
         mat.SetTextureOffset("_MainTex", new Vector2(offset, 0));

@@ -13,8 +13,6 @@ public class Flashbang : MonoBehaviour
     public bool shouldFlash = false;
     bool hasFlashed = false;
     float countdown;
-    private float maxDistance = 20f;
-    private float volume;
 
     private void Start()
     {
@@ -44,12 +42,9 @@ public class Flashbang : MonoBehaviour
         Vector3 grenadeDirection = transform.position - playerTransform.position;
         float angle = Vector3.Angle(grenadeDirection, playerTransform.forward);
         float distanceComparision = Vector3.Distance(transform.position, playerTransform.position);
-        volume = Mathf.Clamp(1 - (distanceComparision / maxDistance), 0, 1);
-        bang.clip = bang.GetComponent<ProjectileSound>().audioClips[1];
-        bang.volume = volume;
 
-        if (bang.clip != null)
-            bang.Play();
+        bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[1]);
+
         if (angle < 60f && distanceComparision <= distance)
         {
             RaycastHit hit;

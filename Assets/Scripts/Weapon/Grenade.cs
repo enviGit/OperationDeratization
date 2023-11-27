@@ -15,9 +15,7 @@ public class Grenade : MonoBehaviour
     public bool shouldExplode = false;
     bool hasExploded = false;
     float countdown;
-    private float maxDistance = 50f;
     private float distance;
-    private float volume;
 
     private void Start()
     {
@@ -39,16 +37,10 @@ public class Grenade : MonoBehaviour
         }
 
         distance = Vector3.Distance(transform.position, Camera.main.transform.position);
-        volume = Mathf.Clamp(1 - (distance / maxDistance), 0, 1);
     }
     public void Explode()
     {
-        bang.clip = bang.GetComponent<ProjectileSound>().audioClips[0];
-        bang.volume = volume;
-
-        if (bang.clip != null)
-            bang.Play();
-
+        bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[0]);
         Instantiate(explosionEffect, transform.position, transform.rotation, parentObject.transform);
         Collider[] collidersToMove = Physics.OverlapSphere(transform.position, radius);
 

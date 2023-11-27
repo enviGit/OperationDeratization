@@ -175,8 +175,7 @@ public class PlayerHealth : MonoBehaviour
         if(impactClips.Length > 0)
         {
             int randomIndex = Random.Range(0, impactClips.Length - 1);
-            impactSound.clip = impactClips[randomIndex];
-            impactSound.Play();
+            impactSound.PlayOneShot(impactClips[randomIndex]);
         }
         if (currentHealth <= 0)
             Die();
@@ -196,11 +195,7 @@ public class PlayerHealth : MonoBehaviour
             vignette.intensity.value = percent * 0.5f;
         }
         if (impactClips.Length > 0)
-        {
-            impactSound.clip = impactClips[2];
-            impactSound.volume = 0.5f;
-            impactSound.Play();
-        }
+            impactSound.PlayOneShot(impactClips[2], 0.5f);
         if (currentHealth <= 0)
             Die();
     }
@@ -225,10 +220,7 @@ public class PlayerHealth : MonoBehaviour
             if (currentHealth <= 10)
                 clipIndex = 3;
             if (!gasSound.isPlaying)
-            {
-                gasSound.clip = gasClips[clipIndex];
-                gasSound.Play();
-            }
+                gasSound.PlayOneShot(gasClips[clipIndex]);
         }
         if (currentHealth <= 0)
             Die();
@@ -237,16 +229,7 @@ public class PlayerHealth : MonoBehaviour
     {
         isAlive = false;
         deathCamera.gameObject.SetActive(true);
-        Vector3 playerPosition = transform.position;
-        Ray cameraRay = new Ray(playerPosition, Vector3.back);
-        RaycastHit hit;
-
-        if (Physics.Raycast(cameraRay, out hit))
-            deathCamera.transform.position = hit.point;
-        else
-            deathCamera.transform.position = playerPosition - transform.forward * 5f + Vector3.up * 2f;
-
-        deathCamera.transform.LookAt(playerPosition);
+        deathCamera.transform.SetParent(null);
         CharacterController controller = GetComponent<CharacterController>();
         controller.enabled = false;
         PlayerMotor playerMotor = GetComponent<PlayerMotor>();

@@ -8,13 +8,12 @@ public class Sensitivity : MonoBehaviour
     void Start()
     {
         sensitivitySlider.value = 0.5f;
-
     }
 
     void Update()
     {
         float sensitivityMultiplier = sensitivitySlider.value;
-        PlayerPrefs.SetFloat("SensitivityMultiplier", sensitivitySlider.value);
-        PlayerPrefs.Save();
+        //PlayerPrefs.SetFloat("SensitivityMultiplier", sensitivitySlider.value);
+        //PlayerPrefs.Save();
     }
 }

@@ -82,7 +82,6 @@ public class EnemyShoot : MonoBehaviour
                     hitBox.OnRaycastHitPlayer(currentWeapon);
 
                     if (hitBox.damageToPlayer > 0)
-                        //if (DISystem.CheckIfObjectInSight(this.transform))
                             DISystem.CreateIndicator(this.transform);
 
                 }
