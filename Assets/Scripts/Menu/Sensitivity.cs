@@ -3,17 +3,24 @@ using UnityEngine.UI;
 
 public class Sensitivity : MonoBehaviour
 {
-    public Slider sensitivitySlider;
+    Slider sensitivitySlider;
 
-    void Start()
+    private void Start()
     {
-        sensitivitySlider.value = 0.5f;
+        sensitivitySlider = GetComponent<Slider>();
+        SetSensitivity(Settings.Sensitivity);
     }
-
-    void Update()
+    public void SetSensitivity(float _value)
     {
-        float sensitivityMultiplier = sensitivitySlider.value;
-        //PlayerPrefs.SetFloat("SensitivityMultiplier", sensitivitySlider.value);
-        //PlayerPrefs.Save();
+        RefreshSlider(_value);
+        Settings.Sensitivity = _value;
+    }
+    public void SetVolumeFromSensitivitySlider()
+    {
+        SetSensitivity(sensitivitySlider.value);
+    }
+    public void RefreshSlider(float _value)
+    {
+        sensitivitySlider.value = _value;
     }
 }
