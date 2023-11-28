@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class EnemyHealth : MonoBehaviour
     List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
     WeaponIk weaponIk;
     AiAgent agent;
-    
+
     [Header("Enemy health bar")]
     [SerializeField] private Color maxHealthColour;
     [SerializeField] private Color noHealthColour;
@@ -87,6 +88,7 @@ public class EnemyHealth : MonoBehaviour
     private IEnumerator HandleDeathEffects()
     {
         isMarkedAsDead = true;
+        StartCoroutine(FadeOutPromptText());
         Tracker tracker = FindObjectOfType<Tracker>();
         tracker.MarkOpponentAsDead(gameObject);
         SetShaderParameters(0, 0);
@@ -100,8 +102,27 @@ public class EnemyHealth : MonoBehaviour
 
             yield return null;
         }
-        
+
         Destroy(gameObject);
+    }
+    private IEnumerator FadeOutPromptText()
+    {
+        float fadeDuration = 2f;
+        float elapsedTime = 0f;
+        Color initialColor = Color.green;
+        GameObject promptTextClone = Instantiate(player.GetComponent<PlayerUI>().promptText.gameObject, player.GetComponent<PlayerUI>().promptText.transform.parent);
+        TextMeshProUGUI promptText = promptTextClone.GetComponent<TextMeshProUGUI>();
+        promptText.text = "Opponent marked as dead";
+
+        while (elapsedTime < fadeDuration)
+        {
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+            promptText.color = new Color(initialColor.r, initialColor.g, initialColor.b, alpha);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(promptTextClone);
     }
 
     private void SetShaderParameters(float disappearIntensity, float colorIntensity)
@@ -112,7 +133,6 @@ public class EnemyHealth : MonoBehaviour
 
             foreach (var material in materials)
             {
-
                 material.SetFloat("_dissolve", disappearIntensity);
                 material.SetFloat("_dissolveIntensity", colorIntensity);
             }
