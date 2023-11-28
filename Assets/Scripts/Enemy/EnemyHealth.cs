@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private EnemyStats enemyStats;
     [SerializeField] private Slider healthBarSlider;
     [SerializeField] private Image healthBarSliderImage;
+    private GameObject player;
     List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
     WeaponIk weaponIk;
     AiAgent agent;
@@ -30,6 +32,7 @@ public class EnemyHealth : MonoBehaviour
     {
         agent = GetComponent<AiAgent>();
         weaponIk = GetComponent<WeaponIk>();
+        player = GameObject.FindGameObjectWithTag("Player");
         currentHealth = enemyStats.maxHealth;
         SetHealthBarUI();
         lastDamageTime = Time.time;
@@ -64,6 +67,9 @@ public class EnemyHealth : MonoBehaviour
 
         foreach (var item in skinnedMeshRenderers)
             item.material.color = Color.white * intensity;
+
+        if (!isAlive && !isMarkedAsDead && Vector3.Distance(transform.position, player.transform.position) < 2f)
+            StartCoroutine(HandleDeathEffects());
     }
     public void DealDamage(int damage, Vector3 direction)
     {
@@ -79,11 +85,49 @@ public class EnemyHealth : MonoBehaviour
     }
     private void Die(Vector3 direction)
     {
-        isAlive = false;
-        weaponIk.enabled = false;
-        AiDeathState deathState = agent.stateMachine.GetState(AiStateId.Death) as AiDeathState;
-        deathState.direction = direction;
-        agent.stateMachine.ChangeState(AiStateId.Death);
+        if (isAlive)
+        {
+            isAlive = false;
+            weaponIk.enabled = false;
+            AiDeathState deathState = agent.stateMachine.GetState(AiStateId.Death) as AiDeathState;
+            deathState.direction = direction;
+            agent.stateMachine.ChangeState(AiStateId.Death);
+        }
+    }
+    private IEnumerator HandleDeathEffects()
+    {
+        isMarkedAsDead = true;
+        Tracker tracker = FindObjectOfType<Tracker>();
+        tracker.MarkOpponentAsDead(gameObject);
+        SetShaderParameters(0, new Color(1, 0, 0, 0), 0);
+        float elapsedTime = 0f;
+        float duration = 5f;
+
+        while (elapsedTime < duration)
+        {
+            Color currentColor = Color.Lerp(new Color(1, 0, 0, 0), Color.gray, elapsedTime / (duration / 4f));
+            SetShaderParameters(elapsedTime / duration, currentColor, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+        
+        Destroy(gameObject);
+    }
+
+    private void SetShaderParameters(float disappearIntensity, Color color, float lightIntensity)
+    {
+        foreach (var skinnedMeshRenderer in skinnedMeshRenderers)
+        {
+            Material[] materials = skinnedMeshRenderer.materials;
+
+            foreach (var material in materials)
+            {
+                material.SetFloat("_disappearIntensity", disappearIntensity);
+                material.SetColor("_lightColor", color);
+                material.SetFloat("_lightIntensity", lightIntensity);
+            }
+        }
     }
     private void SetHealthBarUI()
     {

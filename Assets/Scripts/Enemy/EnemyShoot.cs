@@ -53,7 +53,17 @@ public class EnemyShoot : MonoBehaviour
             gunFireAudio.clip = currentWeapon.gunAudioClips[0];
             gunFireAudio.Play();
             currentWeapon.currentAmmoCount--;
-            Transform muzzle = transform.Find("Armature/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/socketRightHand/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+            Transform muzzle = null;
+            string[] bonePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig10:", "mixamorig:" };
+
+            foreach (string prefix in bonePrefixes)
+            {
+                muzzle = transform.Find($"{prefix}Hips/{prefix}Spine/{prefix}Spine1/{prefix}Spine2/{prefix}RightShoulder/{prefix}RightArm/{prefix}RightForeArm/{prefix}RightHand/socketRightHand/{currentWeapon.gunPrefab.name}(Clone)/muzzle");
+
+                if (muzzle != null)
+                    break;
+            }
+
             ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
             flash.transform.SetParent(muzzle);
             flash.Play();
@@ -82,7 +92,7 @@ public class EnemyShoot : MonoBehaviour
                     hitBox.OnRaycastHitPlayer(currentWeapon);
 
                     if (hitBox.damageToPlayer > 0)
-                            DISystem.CreateIndicator(this.transform);
+                        DISystem.CreateIndicator(this.transform);
 
                 }
                 if (hit.rigidbody != null)
