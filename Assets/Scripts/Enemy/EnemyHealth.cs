@@ -22,11 +22,8 @@ public class EnemyHealth : MonoBehaviour
     public bool showHealthBar;
 
     [Header("Enemy health")]
-    public float blinkIntensity = 10f;
-    public float blinkDuration = 0.05f;
     public bool isAlive = true;
     public bool isMarkedAsDead = false;
-    float blinkTimer;
 
     private void Start()
     {
@@ -61,12 +58,6 @@ public class EnemyHealth : MonoBehaviour
             showHealthBar = false;
 
         healthBarSlider.gameObject.SetActive(showHealthBar);
-        blinkTimer -= Time.deltaTime;
-        float lerp = Mathf.Clamp01(blinkTimer / blinkDuration);
-        float intensity = (lerp * blinkIntensity) + 1f;
-
-        foreach (var item in skinnedMeshRenderers)
-            item.material.color = Color.white * intensity;
 
         if (!isAlive && !isMarkedAsDead && Vector3.Distance(transform.position, player.transform.position) < 2f)
             StartCoroutine(HandleDeathEffects());
@@ -78,7 +69,6 @@ public class EnemyHealth : MonoBehaviour
         if (currentHealth <= 0)
             Die(direction);
 
-        blinkTimer = blinkDuration;
         SetHealthBarUI();
         lastDamageTime = Time.time;
         showHealthBar = true;
