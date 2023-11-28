@@ -99,14 +99,13 @@ public class EnemyHealth : MonoBehaviour
         isMarkedAsDead = true;
         Tracker tracker = FindObjectOfType<Tracker>();
         tracker.MarkOpponentAsDead(gameObject);
-        SetShaderParameters(0, new Color(1, 0, 0, 0), 0);
+        SetShaderParameters(0, 0);
         float elapsedTime = 0f;
         float duration = 5f;
 
         while (elapsedTime < duration)
         {
-            Color currentColor = Color.Lerp(new Color(1, 0, 0, 0), Color.gray, elapsedTime / (duration / 4f));
-            SetShaderParameters(elapsedTime / duration, currentColor, elapsedTime / duration);
+            SetShaderParameters(elapsedTime / duration, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
 
             yield return null;
@@ -115,7 +114,7 @@ public class EnemyHealth : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void SetShaderParameters(float disappearIntensity, Color color, float lightIntensity)
+    private void SetShaderParameters(float disappearIntensity, float colorIntensity)
     {
         foreach (var skinnedMeshRenderer in skinnedMeshRenderers)
         {
@@ -123,9 +122,9 @@ public class EnemyHealth : MonoBehaviour
 
             foreach (var material in materials)
             {
-                material.SetFloat("_disappearIntensity", disappearIntensity);
-                material.SetColor("_lightColor", color);
-                material.SetFloat("_lightIntensity", lightIntensity);
+
+                material.SetFloat("_dissolve", disappearIntensity);
+                material.SetFloat("_dissolveIntensity", colorIntensity);
             }
         }
     }

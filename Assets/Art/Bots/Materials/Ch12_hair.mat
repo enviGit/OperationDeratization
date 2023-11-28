@@ -41,6 +41,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DissolveTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -63,6 +67,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _normalka:
+        m_Texture: {fileID: 2800000, guid: 6c493bfd15e3bfd48a86f04ba4ea1f21, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texturka:
@@ -92,11 +100,16 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DissolveBand: 0.25
+    - _DissolveScale: 0
     - _DstBlend: 10
     - _EnvironmentReflections: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.4472136
     - _GlossyReflections: 1
+    - _GlowColFac: 0.75
+    - _GlowIntensity: 0.05
+    - _GlowScale: 1
     - _Metallic: 0
     - _Mode: 3
     - _OcclusionStrength: 1
@@ -112,12 +125,21 @@ Material:
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZWrite: 0
+    - _disappearIntensity: 0
     - _dissapearIntensity: 0
+    - _dissolve: 0
+    - _dissolveIntensity: 0
+    - _lightIntensity: 0
     - _light_intensity: 0
+    - _noiseScale: 500
     m_Colors:
     - _BaseColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
-    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _Color: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
+    - _DissolveEnd: {r: 0, g: 0, b: 0, a: 1}
+    - _DissolveStart: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Glow: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowEnd: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _lightColor: {r: 0.16102767, g: 0.8867924, b: 0.15477037, a: 0}
   m_BuildTextureStacks: []
