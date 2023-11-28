@@ -109,20 +109,15 @@ public class EnemyHealth : MonoBehaviour
     {
         float fadeDuration = 2f;
         float elapsedTime = 0f;
-        Color initialColor = Color.green;
-        GameObject promptTextClone = Instantiate(player.GetComponent<PlayerUI>().promptText.gameObject, player.GetComponent<PlayerUI>().promptText.transform.parent);
-        TextMeshProUGUI promptText = promptTextClone.GetComponent<TextMeshProUGUI>();
-        promptText.text = "Opponent marked as dead";
+        player.GetComponent<PlayerUI>().markText.text = "Opponent marked as dead";
 
         while (elapsedTime < fadeDuration)
         {
-            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
-            promptText.color = new Color(initialColor.r, initialColor.g, initialColor.b, alpha);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        Destroy(promptTextClone);
+        player.GetComponent<PlayerUI>().markText.text = "";
     }
 
     private void SetShaderParameters(float disappearIntensity, float colorIntensity)

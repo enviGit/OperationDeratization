@@ -5,7 +5,7 @@ using TMPro;
 public class Tracker : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI trackerCooldownText;
-    public float trackingCooldown = 60f;
+    public float trackingCooldown = 65f;
     public float trackingDuration = 5f;
     public Transform indicator;
     public Transform player;

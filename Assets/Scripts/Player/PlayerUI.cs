@@ -12,6 +12,7 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Player UI")]
     public TextMeshProUGUI promptText;
+    public TextMeshProUGUI markText;
     [SerializeField] private TextMeshProUGUI ammoText;
     [SerializeField] private TextMeshProUGUI ammoRefillPrompt;
     private float fadeDuration = 1.5f;
