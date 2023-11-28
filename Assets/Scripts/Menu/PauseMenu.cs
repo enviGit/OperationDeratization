@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
+        AudioListener.pause = false;
         Cursor.lockState = CursorLockMode.Locked;
         PlayerHealth playerStatus = FindObjectOfType<PlayerHealth>();
        
@@ -35,6 +37,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
+        AudioListener.pause = true;
         Cursor.lockState = CursorLockMode.None;
         PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
         pointer.enabled = false;
