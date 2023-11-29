@@ -368,8 +368,20 @@ public class PlayerShoot : MonoBehaviour
     }
     private void PointerPosition()
     {
-        float mouseX = Input.GetAxis("Mouse X") * xSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * ySensitivity;
+        float mouseX;
+        float mouseY;
+
+        if (isAiming && currentWeapon.gunType == GunType.Sniper)
+        {
+            mouseX = Input.GetAxis("Mouse X") * (xSensitivity / 3);
+            mouseY = Input.GetAxis("Mouse Y") * (ySensitivity / 3);
+        }
+        else
+        {
+            mouseX = Input.GetAxis("Mouse X") * xSensitivity;
+            mouseY = Input.GetAxis("Mouse Y") * ySensitivity;
+        }
+        
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
         transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
