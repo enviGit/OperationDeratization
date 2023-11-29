@@ -1,10 +1,19 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class GasParticleTrigger : MonoBehaviour
 {
     private PlayerHealth playerHealth;
+    private bool playerCollision = false;
 
+    private void Update()
+    {
+        if (!playerCollision)
+            CancelInvoke("DealGasDamage");
+    }
+    private void LateUpdate()
+    {
+        playerCollision = false;
+    }
     private void OnParticleCollision(GameObject other)
     {
         if (other.CompareTag("Player"))
@@ -12,12 +21,14 @@ public class GasParticleTrigger : MonoBehaviour
             playerHealth = other.GetComponent<PlayerHealth>();
 
             if (playerHealth != null)
+            {
+                playerCollision = true;
                 InvokeRepeating("DealGasDamage", 0f, 0.5f);
+            }
         }
     }
     private void DealGasDamage()
     {
-        if (playerHealth != null)
-            playerHealth.TakeGasDamage(Random.Range(3, 15));
+        playerHealth.TakeGasDamage(Random.Range(5, 10));
     }
 }

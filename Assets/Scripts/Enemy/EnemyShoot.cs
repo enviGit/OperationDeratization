@@ -50,8 +50,7 @@ public class EnemyShoot : MonoBehaviour
         }
         if (Time.time > autoShotTimer && currentWeapon != null && currentWeapon.currentAmmoCount > 0 && !isReloading && isFiring)
         {
-            gunFireAudio.clip = currentWeapon.gunAudioClips[0];
-            gunFireAudio.Play();
+            gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
             currentWeapon.currentAmmoCount--;
             Transform muzzle = null;
             string[] bonePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig10:", "mixamorig:" };

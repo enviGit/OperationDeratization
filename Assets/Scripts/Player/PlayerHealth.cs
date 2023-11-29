@@ -19,8 +19,6 @@ public class PlayerHealth : MonoBehaviour
     private AudioSource deathSound;
     private AudioSource impactSound;
     public AudioClip[] impactClips;
-    private AudioSource gasSound;
-    public AudioClip[] gasClips;
 
     [Header("Health")]
     private float currentHealth;
@@ -43,7 +41,6 @@ public class PlayerHealth : MonoBehaviour
         heartbeatSound = transform.Find("Sounds/Heartbeat").GetComponent<AudioSource>();
         deathSound = transform.Find("Sounds/Death").GetComponent<AudioSource>();
         impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
-        gasSound = transform.Find("Sounds/Gas").GetComponent<AudioSource>();
         ragdoll = GetComponent<Ragdoll>();
         var rigidBodies = GetComponentsInChildren<Rigidbody>();
 
@@ -213,14 +210,10 @@ public class PlayerHealth : MonoBehaviour
             float percent = 1f - (currentHealth / maxHealth);
             vignette.intensity.value = percent * 0.5f;
         }
-        if (gasClips.Length > 0)
+        if (impactClips.Length > 0)
         {
-            int clipIndex = Random.Range(0, gasClips.Length - 1);
-
-            if (currentHealth <= 10)
-                clipIndex = 3;
-            if (!gasSound.isPlaying)
-                gasSound.PlayOneShot(gasClips[clipIndex]);
+            int randomIndex = Random.Range(0, impactClips.Length - 1);
+            impactSound.PlayOneShot(impactClips[randomIndex]);
         }
         if (currentHealth <= 0)
             Die();
@@ -270,11 +263,10 @@ public class PlayerHealth : MonoBehaviour
         {
             if (child.gameObject.name == "Knife_00(Clone)")
             {
-                child.gameObject.SetActive(false);
+                //child.gameObject.SetActive(false);
+                Destroy(child.gameObject);
                 continue;
             }
-
-            Destroy(child.gameObject);
         }
 
         Transform mesh = transform.Find("Mesh");
