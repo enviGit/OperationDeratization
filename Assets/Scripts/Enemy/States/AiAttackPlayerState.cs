@@ -20,6 +20,6 @@ public class AiAttackPlayerState : AiState
     }
     public void Exit(AiAgent agent)
     {
-        agent.navMeshAgent.stoppingDistance = 0;
+        //agent.navMeshAgent.stoppingDistance = 0;
     }
 }

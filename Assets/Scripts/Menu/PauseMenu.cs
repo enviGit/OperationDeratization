@@ -6,7 +6,12 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUI;
+    private PlayerHealth playerStatus;
 
+    private void Start()
+    {
+        playerStatus = FindObjectOfType<PlayerHealth>();
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -16,6 +21,8 @@ public class PauseMenu : MonoBehaviour
             else
                 Pause();
         }
+        if (!playerStatus.isAlive)
+            gameObject.SetActive(false);
     }
     public void Resume()
     {
@@ -24,7 +31,6 @@ public class PauseMenu : MonoBehaviour
         GameIsPaused = false;
         AudioListener.pause = false;
         Cursor.lockState = CursorLockMode.Locked;
-        PlayerHealth playerStatus = FindObjectOfType<PlayerHealth>();
        
         if (playerStatus.isAlive)
         {
@@ -47,7 +53,6 @@ public class PauseMenu : MonoBehaviour
         Debug.Log("Loading Menu...");
         Time.timeScale = 1f;
         SceneManager.LoadScene(0);
-
     }
     public void QuitGame()
     {

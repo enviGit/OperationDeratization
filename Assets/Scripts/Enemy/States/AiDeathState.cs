@@ -10,6 +10,7 @@ public class AiDeathState : AiState
     }
     public void Enter(AiAgent agent)
     {
+        agent.navMeshAgent.isStopped = true;
         agent.ragdoll.ActivateRagdoll();
         direction.y = 1;
         agent.ragdoll.ApplyForce(direction * agent.config.dieForce);

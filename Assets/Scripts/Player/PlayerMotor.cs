@@ -119,7 +119,7 @@ public class PlayerMotor : MonoBehaviour
             movementSound.Stop();
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && stamina.currentStamina > 0f)
+        if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && stamina.currentStamina > 0f && !_isAiming)
         {
             isRunning = true;
             moveSpeed *= 1.3f;
@@ -132,7 +132,6 @@ public class PlayerMotor : MonoBehaviour
 
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
-
     private void Gravity()
     {
         playerVelocity.y += gravity * Time.deltaTime;

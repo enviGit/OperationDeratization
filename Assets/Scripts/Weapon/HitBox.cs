@@ -39,10 +39,6 @@ public class HitBox : MonoBehaviour
     {
         if(gun == null) 
             gun = weapon;
-        /*if (damageMultiplier.ContainsKey(gameObject.name) || ContainsAnyPrefix(gameObject.name))
-            damageToPlayer = GetDamageFromHitBox(gameObject);
-        if (damageToPlayer != 0)
-            playerHealth.TakeDamage(damageToPlayer);*/
         if (playerHealth != null && (damageMultiplier.ContainsKey(gameObject.name) || ContainsAnyPrefix(gameObject.name)))
         {
             damageToPlayer = GetDamageFromHitBox(gameObject);

@@ -10,6 +10,7 @@ public class Ragdoll : MonoBehaviour
         rigidBodies = GetComponentsInChildren<Rigidbody>();
         animator = GetComponent<Animator>();
         DeactivateRagdoll();
+        //Physics.IgnoreLayerCollision(10, 13); //Ignore collision between Player and Hitbox layers
     }
     public void DeactivateRagdoll()
     {

@@ -30,15 +30,14 @@ public class AiFindWeaponState : AiState
         if (agent.weapons.HasWeapon())
         {
             agent.stateMachine.ChangeState(AiStateId.AttackPlayer);
+
             return;
         }
-
         if (currentWeapon != null && Vector3.Distance(agent.transform.position, currentDestination) <= agent.navMeshAgent.stoppingDistance)
         {
             agent.navMeshAgent.isStopped = true;
             currentWeapon = null;
         }
-
         if (currentWeapon == null)
         {
             currentWeapon = FindClosestWeapon(agent);
