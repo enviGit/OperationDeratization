@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DamageIndicator : MonoBehaviour
 {
-    private const float maxTimer = 8f;
+    private const float maxTimer = 4f;
     private float timer = maxTimer;
     private CanvasGroup canvasGroup;
     protected CanvasGroup CanvasGroup
@@ -92,16 +92,19 @@ public class DamageIndicator : MonoBehaviour
         while(CanvasGroup.alpha < 1f)
         {
             CanvasGroup.alpha += 4 * Time.deltaTime;
+
             yield return null;
         }
         while(timer > 0)
         {
             timer--;
+
             yield return new WaitForSeconds(1f);
         }
         while(CanvasGroup.alpha > 0f)
         {
             CanvasGroup.alpha -= 2 * Time.deltaTime;
+
             yield return null;
         }
 

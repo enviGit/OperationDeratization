@@ -154,7 +154,7 @@ public class PlayerShoot : MonoBehaviour
 
                 if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                 {
-                    //Debug.Log("Hit: " + hit.collider.name);
+                    // Debug.Log("Hit: " + hit.collider.name);
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                     var hitBox = hit.collider.GetComponent<HitBox>();
 

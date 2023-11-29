@@ -100,7 +100,10 @@ public class Grenade : MonoBehaviour
                 if (nearbyObject.CompareTag("Enemy"))
                     hitBox.OnExplosion(damageInt);
                 if (nearbyObject.CompareTag("Player"))
+                {
                     hitBox.OnExplosionPlayer(damageInt);
+                    DISystem.CreateIndicator(this.transform);
+                }
             }
         }
 

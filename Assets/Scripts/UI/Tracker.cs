@@ -144,7 +144,7 @@ public class Tracker : MonoBehaviour
         if (isTracking)
             trackerCooldownText.text = "Tracking...";
         else if (isOnCooldown)
-            trackerCooldownText.text = Mathf.CeilToInt(currentCooldownTime).ToString() + " s";
+            trackerCooldownText.text = Mathf.CeilToInt(currentCooldownTime - 1).ToString() + " s";
         else
             trackerCooldownText.text = "Ready";
     }

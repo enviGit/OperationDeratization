@@ -23,6 +23,7 @@ public class HitBox : MonoBehaviour
         { "RightArm", 0.75f },
         { "RightForeArm", 0.7f },
     };
+    private string[] bonePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig10:", "mixamorig:" };
 
     public void OnRaycastHit(Gun weapon, Vector3 direction)
     {
@@ -38,10 +39,15 @@ public class HitBox : MonoBehaviour
     {
         if(gun == null) 
             gun = weapon;
-        if (damageMultiplier.ContainsKey(gameObject.name))
+        /*if (damageMultiplier.ContainsKey(gameObject.name) || ContainsAnyPrefix(gameObject.name))
             damageToPlayer = GetDamageFromHitBox(gameObject);
-        if(damageToPlayer != 0)
+        if (damageToPlayer != 0)
+            playerHealth.TakeDamage(damageToPlayer);*/
+        if (playerHealth != null && (damageMultiplier.ContainsKey(gameObject.name) || ContainsAnyPrefix(gameObject.name)))
+        {
+            damageToPlayer = GetDamageFromHitBox(gameObject);
             playerHealth.TakeDamage(damageToPlayer);
+        }
 
         //Debug.Log(gameObject);
     }
@@ -51,7 +57,7 @@ public class HitBox : MonoBehaviour
     }
     private int GetDamageFromHitBox(GameObject hitBoxObject)
     {
-        string boneName = hitBoxObject.name;
+        string boneName = GetCleanBoneName(hitBoxObject.name);
 
         if (damageMultiplier.ContainsKey(boneName))
         {
@@ -64,9 +70,30 @@ public class HitBox : MonoBehaviour
                 damageMultiplierAtDistance = 1 / (1 + 0.05f * distance);
 
             float damageMultiplierAtHitbox = damageMultiplier[boneName];
+
             return Mathf.RoundToInt(Random.Range(gun.minimumDamage, gun.maximumDamage) * damageMultiplierAtDistance * damageMultiplierAtHitbox);
         }
         else
             return Random.Range(gun.minimumDamage, gun.maximumDamage);
+    }
+    private string GetCleanBoneName(string fullName)
+    {
+        foreach (string prefix in bonePrefixes)
+        {
+            if (fullName.StartsWith(prefix))
+                return fullName.Substring(prefix.Length);
+        }
+
+        return fullName;
+    }
+    private bool ContainsAnyPrefix(string fullName)
+    {
+        foreach (string prefix in bonePrefixes)
+        {
+            if (fullName.StartsWith(prefix))
+                return true;
+        }
+
+        return false;
     }
 }
