@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 448293092485410916}
   - component: {fileID: 3523285066575365216}
   - component: {fileID: 8196550221092671390}
-  - component: {fileID: 5814610951155647174}
-  m_Layer: 6
+  - component: {fileID: 1460193632544990545}
+  m_Layer: 0
   m_Name: gate-graveyard-body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5814610951155647174
-BoxCollider:
+--- !u!64 &1460193632544990545
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -94,9 +94,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5.262778, y: 1.7808785, z: 0.40761155}
-  m_Center: {x: -2.4584525, y: 0.84502673, z: -0.00061846524}
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8644174661647678513, guid: eab25d0fbde50624694d6a47f3a5dbe7, type: 3}
 --- !u!1 &3063275692165079344
 GameObject:
   m_ObjectHideFlags: 0

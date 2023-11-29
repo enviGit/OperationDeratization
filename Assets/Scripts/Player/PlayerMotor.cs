@@ -118,7 +118,6 @@ public class PlayerMotor : MonoBehaviour
 
             movementSound.Stop();
         }
-
         if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && stamina.currentStamina > 0f && !_isAiming)
         {
             isRunning = true;
@@ -156,7 +155,6 @@ public class PlayerMotor : MonoBehaviour
         {
             if (!_isClimbing)
                 fallTime += Time.deltaTime;
-
             if (fallTime > fallTimeCalc)
             {
                 float fallDamage = fallTime * fallDamageMultiplier;
