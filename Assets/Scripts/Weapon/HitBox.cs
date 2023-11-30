@@ -30,6 +30,19 @@ public class HitBox : MonoBehaviour
         gun = weapon;
         int damage = GetDamageFromHitBox(gameObject);
         health.DealDamage(damage, direction);
+
+        //Displaying dmg taken by bots
+        string gameObjectName = gameObject.name;
+        foreach (string prefix in bonePrefixes)
+        {
+            if (gameObjectName.StartsWith(prefix))
+            {
+                gameObjectName = gameObjectName.Substring(prefix.Length);
+                break;
+            }
+        }
+        Debug.Log("You dealt " + damage + " damage to the " + gameObjectName);
+        //Displaying dmg taken by bots
     }
     public void OnExplosion(int damage)
     {
