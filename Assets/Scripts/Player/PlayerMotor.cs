@@ -63,7 +63,12 @@ public class PlayerMotor : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        Vector3 moveDirection = transform.right * x + transform.forward * z;
+        Vector3 right = transform.right;
+        Vector3 forward = transform.forward;
+        right.y = 0;
+        forward.y = 0;
+
+        Vector3 moveDirection = (right * x + forward * z).normalized;
 
         if (moveDirection.magnitude > 0)
         {
