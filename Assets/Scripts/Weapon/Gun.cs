@@ -13,6 +13,7 @@ public class Gun : ScriptableObject
     public AudioClip[] gunAudioClips;
 
     [Header("Stats")]
+    [SerializeField] private int editorAmmoValue;
     public int magazineSize;
     public int currentAmmoCount;
     public int maxAmmoCount;
@@ -32,6 +33,13 @@ public class Gun : ScriptableObject
     public float aimRecoilZ;
     public float snappiness;
     public float returnSpeed;
+
+    private void OnEnable()
+    {
+        magazineSize = editorAmmoValue;
+        currentAmmoCount = editorAmmoValue;
+        maxAmmoCount = editorAmmoValue * 3;
+    }
 }
 
 public enum GunType { Melee, Pistol, Revolver, Shotgun, Rifle, Sniper, Grenade, Flashbang, Smoke }
