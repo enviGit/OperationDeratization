@@ -16,7 +16,6 @@ public class Coffin : Interactable
         {
             coffinOpen = true;
             coffin.GetComponent<Animator>().SetBool("IsOpen", coffinOpen);
-            sound.Play();
         }
         if (coffin.GetComponent<Animator>().GetBool("IsOpen"))
             prompt = "Close coffin";
@@ -36,7 +35,12 @@ public class Coffin : Interactable
         foreach (Collider collider in colliders)
         {
             if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
+            {
+                if (!coffinOpen)
+                    collider.transform.Find("Sounds/Chest").GetComponent<AudioSource>().Play();
+
                 return true;
+            }
         }
 
         return false;

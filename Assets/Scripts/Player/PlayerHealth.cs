@@ -214,6 +214,9 @@ public class PlayerHealth : MonoBehaviour
         {
             int randomIndex = Random.Range(0, impactClips.Length - 1);
             impactSound.PlayOneShot(impactClips[randomIndex]);
+
+            if(currentHealth <= 3)
+                impactSound.PlayOneShot(impactClips[3], 0.5f);
         }
         if (currentHealth <= 0)
             Die();
@@ -263,7 +266,6 @@ public class PlayerHealth : MonoBehaviour
         {
             if (child.gameObject.name == "Knife_00(Clone)")
             {
-                //child.gameObject.SetActive(false);
                 Destroy(child.gameObject);
                 continue;
             }
@@ -275,8 +277,8 @@ public class PlayerHealth : MonoBehaviour
             child.gameObject.SetActive(true);
 
         ragdoll.ActivateRagdoll();
-        inventoryUI.gameObject.SetActive(false);
         deathSound.Play();
+        GetComponent<Rigidbody>().freezeRotation = true;
     }
     public void RestoreHealth(float healAmount)
     {
