@@ -158,13 +158,13 @@ public class PlayerInventory : MonoBehaviour
 
             if (scrollDelta != 0)
             {
-                int newWeaponIndex = (currentWeaponIndex + scrollDelta) % weapons.Length;
+                int newWeaponIndex = FindNextWeaponIndex(scrollDelta);
 
-                if (newWeaponIndex < 0)
-                    newWeaponIndex += weapons.Length;
-
-                SetCurrentWeapon(newWeaponIndex);
-                UpdateWeaponImages();
+                if (newWeaponIndex != currentWeaponIndex)
+                {
+                    SetCurrentWeapon(newWeaponIndex);
+                    UpdateWeaponImages();
+                }
             }
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -194,6 +194,21 @@ public class PlayerInventory : MonoBehaviour
                 UpdateWeaponImages();
             }
         }
+    }
+    private int FindNextWeaponIndex(int scrollDelta)
+    {
+        int newIndex = currentWeaponIndex;
+
+        do
+        {
+            newIndex = (newIndex + scrollDelta) % weapons.Length;
+
+            if (newIndex < 0)
+                newIndex += weapons.Length;
+        }
+        while (weapons[newIndex] == null && newIndex != currentWeaponIndex);
+
+        return newIndex;
     }
     public void RemoveItem()
     {

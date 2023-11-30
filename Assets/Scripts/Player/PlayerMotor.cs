@@ -15,7 +15,6 @@ public class PlayerMotor : MonoBehaviour
     public float gravity = -9.8f;
     public float jumpHeight = 0.7f;
     public float moveSpeed = 4f;
-    private float stopSpeed = 500f;
     private AudioSource movementSound;
     public AudioClip[] movementClips;
 
@@ -64,11 +63,7 @@ public class PlayerMotor : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        Vector3 right = transform.right;
-        Vector3 forward = transform.forward;
-        right.y = 0;
-        forward.y = 0;
-        Vector3 moveDirection = (right * x + forward * z).normalized;
+        Vector3 moveDirection = transform.right * x + transform.forward * z;
 
         if (moveDirection.magnitude > 0)
         {
@@ -122,7 +117,6 @@ public class PlayerMotor : MonoBehaviour
                 currentState.playerStance = PlayerStance.Stance.Idle;
 
             movementSound.Stop();
-            moveDirection = Vector3.Lerp(moveDirection, Vector3.zero, stopSpeed * Time.deltaTime);
         }
         if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && stamina.currentStamina > 0f && !_isAiming)
         {
