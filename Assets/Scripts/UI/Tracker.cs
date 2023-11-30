@@ -1,11 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 
 public class Tracker : MonoBehaviour
 {
+    [SerializeField] private Image cooldownFillImage;
     [SerializeField] private TextMeshProUGUI trackerCooldownText;
-    public float trackingCooldown = 65f;
+    public float trackingCooldown = 61f;
     public float trackingDuration = 5f;
     public Transform indicator;
     public Transform player;
@@ -20,8 +22,8 @@ public class Tracker : MonoBehaviour
     {
         indicator.GetChild(0).gameObject.SetActive(false);
         currentCooldownTime = trackingCooldown;
-        UpdateTrackerCooldownText();
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z))
@@ -53,18 +55,18 @@ public class Tracker : MonoBehaviour
 
         RotateIndicator();
     }
+
     private void RotateIndicator()
     {
         indicator.rotation = Quaternion.RotateTowards(indicator.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
+
     private void StartTracking()
     {
         isTracking = true;
+        indicator.GetChild(0).gameObject.SetActive(true);
 
-        if (isTracking)
-            trackerCooldownText.text = "Tracking...";
-
-        StartCoroutine(UpdateTrackingRoutine());
+        StartCoroutine(DelayedTrackingRoutine());
         Invoke("StopTracking", trackingDuration);
         StartCoroutine(StartCooldownRoutine());
     }
@@ -73,8 +75,43 @@ public class Tracker : MonoBehaviour
         isTracking = false;
         nearestOpponent = null;
         indicator.GetChild(0).gameObject.SetActive(false);
-        UpdateTrackerCooldownText();
     }
+    private IEnumerator DelayedTrackingRoutine()
+    {
+        // Poczekaj 5 sekund przed rozpoczêciem pe³nej aktualizacji œledzenia
+        yield return new WaitForSeconds(trackingDuration);
+
+        StartCoroutine(UpdateTrackingRoutine());
+    }
+
+    private IEnumerator UpdateTrackingRoutine()
+    {
+        while (isTracking)
+        {
+            UpdateTracking();
+            yield return new WaitForSeconds(trackingCooldown);
+        }
+    }
+
+    private IEnumerator StartCooldownRoutine()
+    {
+        isOnCooldown = true;
+        currentCooldownTime = trackingCooldown;
+
+        // Poczekaj 5 sekund przed rozpoczêciem pe³nej aktualizacji cooldownu
+        yield return new WaitForSeconds(trackingDuration);
+
+        while (currentCooldownTime > 0f)
+        {
+            yield return new WaitForSeconds(1f);
+            currentCooldownTime--;
+            UpdateCooldownFillAmount();
+        }
+
+        isOnCooldown = false;
+        UpdateCooldownFillAmount();
+    }
+
     private void UpdateTracking()
     {
         GameObject[] opponents = GameObject.FindGameObjectsWithTag("Enemy");
@@ -100,35 +137,14 @@ public class Tracker : MonoBehaviour
         else if (newNearestOpponent == null && nearestOpponent != null)
             nearestOpponent = null;
     }
-    private IEnumerator UpdateTrackingRoutine()
-    {
-        while (isTracking)
-        {
-            indicator.GetChild(0).gameObject.SetActive(true);
-            UpdateTracking();
-            yield return new WaitForSeconds(trackingCooldown);
-        }
-    }
-    private IEnumerator StartCooldownRoutine()
-    {
-        isOnCooldown = true;
-        currentCooldownTime = trackingCooldown;
 
-        while (currentCooldownTime > 0f)
-        {
-            yield return new WaitForSeconds(1f);
-            currentCooldownTime--;
-            UpdateTrackerCooldownText();
-        }
 
-        isOnCooldown = false;
-        UpdateTrackerCooldownText();
-    }
-    private IEnumerator UpdateTrackingDelayRoutine()
+    private void UpdateCooldownFillAmount()
     {
-        yield return new WaitForSeconds(trackingCooldown);
-        UpdateTracking();
+        cooldownFillImage.fillAmount = 1 - (currentCooldownTime / trackingCooldown);
+        trackerCooldownText.text = Mathf.CeilToInt(currentCooldownTime).ToString() != "0" ? Mathf.CeilToInt(currentCooldownTime).ToString() : "";
     }
+
     public void MarkOpponentAsDead(GameObject opponent)
     {
         if (opponent == nearestOpponent)
@@ -136,16 +152,7 @@ public class Tracker : MonoBehaviour
             nearestOpponent = null;
 
             if (isTracking)
-                StartCoroutine(UpdateTrackingDelayRoutine());
+                StartCoroutine(UpdateTrackingRoutine());
         }
-    }
-    private void UpdateTrackerCooldownText()
-    {
-        if (isTracking)
-            trackerCooldownText.text = "Tracking...";
-        else if (isOnCooldown)
-            trackerCooldownText.text = Mathf.CeilToInt(currentCooldownTime - 1).ToString() + " s";
-        else
-            trackerCooldownText.text = "Ready";
     }
 }
