@@ -15,6 +15,7 @@ public class PlayerMotor : MonoBehaviour
     public float gravity = -9.8f;
     public float jumpHeight = 0.7f;
     public float moveSpeed = 4f;
+    private float stopSpeed = 500f;
     private AudioSource movementSound;
     public AudioClip[] movementClips;
 
@@ -67,7 +68,6 @@ public class PlayerMotor : MonoBehaviour
         Vector3 forward = transform.forward;
         right.y = 0;
         forward.y = 0;
-
         Vector3 moveDirection = (right * x + forward * z).normalized;
 
         if (moveDirection.magnitude > 0)
@@ -122,6 +122,7 @@ public class PlayerMotor : MonoBehaviour
                 currentState.playerStance = PlayerStance.Stance.Idle;
 
             movementSound.Stop();
+            moveDirection = Vector3.Lerp(moveDirection, Vector3.zero, stopSpeed * Time.deltaTime);
         }
         if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && stamina.currentStamina > 0f && !_isAiming)
         {
@@ -186,7 +187,7 @@ public class PlayerMotor : MonoBehaviour
     }
     private void CrouchToggle()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.LeftControl))
         {
             if (!isGrounded)
                 return;
