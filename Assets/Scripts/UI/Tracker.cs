@@ -23,7 +23,6 @@ public class Tracker : MonoBehaviour
         indicator.GetChild(0).gameObject.SetActive(false);
         currentCooldownTime = trackingCooldown;
     }
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z))
@@ -59,13 +58,12 @@ public class Tracker : MonoBehaviour
     private void RotateIndicator()
     {
         indicator.rotation = Quaternion.RotateTowards(indicator.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        //indicator.rotation = Quaternion.Slerp(indicator.rotation, Quaternion.LookRotation(nearestOpponent.transform.position - player.position) * Quaternion.Euler(-15, 1, 60), rotationSpeed * Time.deltaTime);
     }
-
     private void StartTracking()
     {
         isTracking = true;
         indicator.GetChild(0).gameObject.SetActive(true);
-
         StartCoroutine(DelayedTrackingRoutine());
         Invoke("StopTracking", trackingDuration);
         StartCoroutine(StartCooldownRoutine());
@@ -78,32 +76,30 @@ public class Tracker : MonoBehaviour
     }
     private IEnumerator DelayedTrackingRoutine()
     {
-        // Poczekaj 5 sekund przed rozpoczêciem pe³nej aktualizacji œledzenia
         yield return new WaitForSeconds(trackingDuration);
 
         StartCoroutine(UpdateTrackingRoutine());
     }
-
     private IEnumerator UpdateTrackingRoutine()
     {
         while (isTracking)
         {
             UpdateTracking();
+
             yield return new WaitForSeconds(trackingCooldown);
         }
     }
-
     private IEnumerator StartCooldownRoutine()
     {
         isOnCooldown = true;
         currentCooldownTime = trackingCooldown;
 
-        // Poczekaj 5 sekund przed rozpoczêciem pe³nej aktualizacji cooldownu
         yield return new WaitForSeconds(trackingDuration);
 
         while (currentCooldownTime > 0f)
         {
             yield return new WaitForSeconds(1f);
+
             currentCooldownTime--;
             UpdateCooldownFillAmount();
         }
@@ -111,7 +107,6 @@ public class Tracker : MonoBehaviour
         isOnCooldown = false;
         UpdateCooldownFillAmount();
     }
-
     private void UpdateTracking()
     {
         GameObject[] opponents = GameObject.FindGameObjectsWithTag("Enemy");
@@ -137,14 +132,11 @@ public class Tracker : MonoBehaviour
         else if (newNearestOpponent == null && nearestOpponent != null)
             nearestOpponent = null;
     }
-
-
     private void UpdateCooldownFillAmount()
     {
         cooldownFillImage.fillAmount = 1 - (currentCooldownTime / trackingCooldown);
         trackerCooldownText.text = Mathf.CeilToInt(currentCooldownTime).ToString() != "0" ? Mathf.CeilToInt(currentCooldownTime).ToString() : "";
     }
-
     public void MarkOpponentAsDead(GameObject opponent)
     {
         if (opponent == nearestOpponent)
