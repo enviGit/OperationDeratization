@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AdjustObjectsPosition : MonoBehaviour
 {
@@ -8,18 +9,22 @@ public class AdjustObjectsPosition : MonoBehaviour
 
     private void Start()
     {
-        //playerStartPosition = transform.position;
-        //transform.position = Vector3.zero;
         targetObject = GameObject.Find("3D");
 
         if (targetObject == null)
             Debug.LogError("Object with name not found: 3D");
-
-        //AdjustObjectPosition();
+        if (transform.position != Vector3.zero)
+        {
+            playerStartPosition = transform.position;
+            transform.position = Vector3.zero;
+            AdjustObjectPosition();
+        }
     }
-    private void Update()
+    private void LateUpdate()
     {
-        if (Mathf.Abs(transform.position.x) > threshold || Mathf.Abs(transform.position.z) > threshold || Mathf.Abs(transform.position.x) < -threshold || Mathf.Abs(transform.position.z) < -threshold)
+        float distanceToZero = Vector3.Distance(transform.position, Vector3.zero);
+
+        if (distanceToZero > threshold || distanceToZero < -threshold)
         {
             playerStartPosition = transform.position;
             transform.position = Vector3.zero;
@@ -32,6 +37,14 @@ public class AdjustObjectsPosition : MonoBehaviour
         {
             Vector3 positionDifference = targetObject.transform.position - playerStartPosition;
             targetObject.transform.position = transform.position + positionDifference;
+
+            foreach (Transform child in targetObject.transform.GetChild(0))
+            {
+                NavMeshAgent navMeshAgent = child.GetComponent<NavMeshAgent>();
+
+                if (navMeshAgent != null)
+                    navMeshAgent.Warp(child.position);
+            }
         }
     }
 }

@@ -278,7 +278,7 @@ public class PlayerHealth : MonoBehaviour
 
         ragdoll.ActivateRagdoll();
         deathSound.Play();
-        GetComponent<Rigidbody>().freezeRotation = true;
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
     }
     public void RestoreHealth(float healAmount)
     {
