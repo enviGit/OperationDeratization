@@ -15,7 +15,7 @@ public class Sensitivity : MonoBehaviour
         RefreshSlider(_value);
         Settings.Sensitivity = _value;
     }
-    public void SetVolumeFromSensitivitySlider()
+    public void SetFromSensitivitySlider()
     {
         SetSensitivity(sensitivitySlider.value);
     }

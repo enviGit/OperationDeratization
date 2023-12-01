@@ -5,6 +5,7 @@ public class Settings
     private static string mouseSens = "mouseSens";
     private static string sfxMixer = "sfxMixer";
     private static string musicMixer = "musicMixer";
+    private static string brightness = "brightness";
 
     public static float Sensitivity
     {
@@ -37,6 +38,17 @@ public class Settings
         set
         {
             PlayerPrefs.SetFloat(musicMixer, value);
+        }
+    }
+    public static float Brightness
+    {
+        get
+        {
+            return PlayerPrefs.GetFloat(brightness, 0);
+        }
+        set
+        {
+            PlayerPrefs.SetFloat(brightness, value);
         }
     }
     //Function with bool type example

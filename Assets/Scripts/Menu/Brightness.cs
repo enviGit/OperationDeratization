@@ -6,21 +6,32 @@ using UnityEngine.UI;
 public class Brightness : MonoBehaviour
 {
     public VolumeProfile postProcessing;
-    public Slider brightnessSlider;
+    private Slider brightnessSlider;
     private ColorAdjustments colorAdj;
+    private Vignette vignette;
 
     private void Start()
     {
-        if (!postProcessing.TryGet<ColorAdjustments>(out colorAdj))
-            return;
+        brightnessSlider = GetComponent<Slider>();
+        SetBrightness(Settings.Brightness);
 
-        brightnessSlider.value = 0f;
-        colorAdj.postExposure.value = brightnessSlider.value;
-        brightnessSlider.onValueChanged.AddListener(OnBrightnessSliderChanged);
+        if (postProcessing.TryGet<Vignette>(out vignette))
+            vignette.intensity.value = 0f;
+        if (postProcessing.TryGet<ColorAdjustments>(out colorAdj))
+            SetBrightness(Settings.Brightness);
     }
-    private void OnBrightnessSliderChanged(float value)
+    public void SetBrightness(float _value)
     {
-        if (colorAdj != null)
-            colorAdj.postExposure.value = Mathf.Clamp(value, -4f, 2f);
+        RefreshSlider(_value);
+        Settings.Brightness = _value;
+        //colorAdj.postExposure.value = _value;
+    }
+    public void SetFromBrightnessSlider()
+    {
+        SetBrightness(brightnessSlider.value);
+    }
+    public void RefreshSlider(float _value)
+    {
+        brightnessSlider.value = _value;
     }
 }

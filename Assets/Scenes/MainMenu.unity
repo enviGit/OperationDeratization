@@ -2716,8 +2716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d6fa66737203e84480c0a130151b76f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessing: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
-  brightnessSlider: {fileID: 780176648}
+  postProcessing: {fileID: 11400000, guid: 31c41187e3a59134a910fbf6322ea664, type: 2}
 --- !u!114 &780176648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2768,7 +2767,19 @@ MonoBehaviour:
   m_Value: -0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 780176647}
+        m_TargetAssemblyTypeName: Brightness, Assembly-CSharp
+        m_MethodName: SetFromBrightnessSlider
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &780176649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8100,7 +8111,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1919239735}
         m_TargetAssemblyTypeName: Sensitivity, Assembly-CSharp
-        m_MethodName: SetVolumeFromSensitivitySlider
+        m_MethodName: SetFromSensitivitySlider
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8221,7 +8232,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1926758431}
   m_Layer: 0
-  m_Name: postpro
+  m_Name: Postpro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
