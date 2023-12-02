@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.036
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1690297989}
-  m_IndirectSpecularColor: {r: 0.005292889, g: 0.0131019335, b: 0.020876613, a: 0.036}
+  m_IndirectSpecularColor: {r: 0.005292639, g: 0.013131515, b: 0.020878522, a: 0.036}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13962,6 +13962,50 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 654685502}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &660431866
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 660431867}
+  - component: {fileID: 660431868}
+  m_Layer: 0
+  m_Name: FPS_Counter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &660431867
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660431866}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 708819850}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &660431868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660431866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe646fa59a35d99459895fbf95b46259, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &669367388
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15182,6 +15226,7 @@ Transform:
   m_Children:
   - {fileID: 6906794791751578977}
   - {fileID: 1408769947386334014}
+  - {fileID: 660431867}
   m_Father: {fileID: 59973397}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
