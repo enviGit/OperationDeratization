@@ -22,7 +22,29 @@ public class PauseMenu : MonoBehaviour
                 Pause();
         }
         if (!playerStatus.isAlive)
-            gameObject.SetActive(false);
+        {
+            Transform[] children = transform.GetComponentsInChildren<Transform>(true);
+
+            foreach (Transform child in children)
+            {
+                if (child != transform && !child.name.Contains("Menu") && !IsPartOfMenu(child))
+                    child.gameObject.SetActive(false);
+            }
+        }
+    }
+    private bool IsPartOfMenu(Transform obj)
+    {
+        Transform parent = obj.parent;
+
+        while (parent != null)
+        {
+            if (parent.name.Contains("Menu"))
+                return true;
+
+            parent = parent.parent;
+        }
+
+        return false;
     }
     public void Resume()
     {

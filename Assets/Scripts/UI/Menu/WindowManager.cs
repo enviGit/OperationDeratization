@@ -9,9 +9,17 @@ public class WindowManager : MonoBehaviour
     [SerializeField] private Slider resolutionSlider;
     private Resolution[] resolutions;
     private int currentResolutionIndex = 0;
+    private Fullscreen fullscreen;
+    private SoundSettings soundSettings;
+    private Brightness brightness;
+    private Sensitivity sensitivity;
 
     private void Start()
     {
+        fullscreen = FindObjectOfType<Fullscreen>();
+        soundSettings = FindObjectOfType<SoundSettings>();
+        brightness = FindObjectOfType<Brightness>();
+        sensitivity = FindObjectOfType<Sensitivity>();
         resolutions = Screen.resolutions;
         currentResolutionIndex = PlayerPrefs.GetInt(RESOLUTION_PREF_KEY, 0);
         SetResolution(currentResolutionIndex);
@@ -36,7 +44,7 @@ public class WindowManager : MonoBehaviour
     private void ApplyResolution(Resolution resolution)
     {
         SetResolutionText(resolution);
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen); //Settings.FullScreen
         PlayerPrefs.SetInt(RESOLUTION_PREF_KEY, currentResolutionIndex);
     }
     private void ApplyCurrentResolution()
@@ -48,8 +56,25 @@ public class WindowManager : MonoBehaviour
         currentResolutionIndex = newResolutionIndex;
         ApplyCurrentResolution();
     }
-    public void ApplyChanges()
+    public void ApplyAllChanges()
     {
         SetAndApplyResolution(currentResolutionIndex);
+        fullscreen.ApplyChanges();
+        soundSettings.ApplyChanges();
+        brightness.ApplyChanges();
+        sensitivity.ApplyChanges();
+        PlayerPrefs.Save();
+    }
+    public void AbortChanges()
+    {
+        fullscreen.RestoreOriginalState();
+        soundSettings.RestoreOriginalValues();
+        brightness.RestoreOriginalValues();
+        sensitivity.RestoreOriginalValues();
+        PlayerPrefs.Save();
+    }
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

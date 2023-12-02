@@ -6,6 +6,7 @@ public class Settings
     private static string sfxMixer = "sfxMixer";
     private static string musicMixer = "musicMixer";
     private static string brightness = "brightness";
+    private static string fullScreen = "fullScreen";
 
     public static float Sensitivity
     {
@@ -51,18 +52,16 @@ public class Settings
             PlayerPrefs.SetFloat(brightness, value);
         }
     }
-    //Function with bool type example
-    /*
-    private static string turboMode = "turboMode";
-    public static bool EnableTurboMode
+    
+    public static bool FullScreen
     {
         get
         {
-            return PlayerPrefs.GetInt(turboMode, 1) != 0;
+            return PlayerPrefs.GetInt(fullScreen, 1) != 0;
         }
         set
         {
-            PlayerPrefs.SetInt(turboMode, value ? 1 : 0);
+            PlayerPrefs.SetInt(fullScreen, value ? 1 : 0);
         }
-    }*/
+    }
 }

@@ -54,10 +54,12 @@ public class PlayerHealth : MonoBehaviour
         }
 
         Vignette vignette;
+        ColorAdjustments colorAdj;
 
         if (postProcessing.TryGet(out vignette))
             vignette.intensity.value = 0f;
-
+        if (postProcessing.TryGet(out colorAdj))
+            colorAdj.postExposure.value = Settings.Brightness;
     }
     private void Update()
     {
