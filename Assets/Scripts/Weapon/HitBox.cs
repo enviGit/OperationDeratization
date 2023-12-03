@@ -29,7 +29,7 @@ public class HitBox : MonoBehaviour
     {
         gun = weapon;
         int damage = GetDamageFromHitBox(gameObject);
-        health.DealDamage(damage, direction);
+        health.TakeDamage(damage, direction, true);
 
         //Displaying dmg taken by bots
         string gameObjectName = gameObject.name;
@@ -44,9 +44,9 @@ public class HitBox : MonoBehaviour
         Debug.Log("You dealt " + damage + " damage to the " + gameObjectName);
         //Displaying dmg taken by bots
     }
-    public void OnExplosion(int damage)
+    public void OnExplosion(int damage, Vector3 direction)
     {
-        health.DealDamage(damage, new Vector3(0, 0, 0));
+        health.TakeDamage(damage, direction, false);
     }
     public void OnRaycastHitPlayer(Gun weapon)
     {

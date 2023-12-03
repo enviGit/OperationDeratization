@@ -8,21 +8,18 @@ public class EnemyHealth : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private EnemyStats enemyStats;
-    [SerializeField] private Slider healthBarSlider;
-    [SerializeField] private Image healthBarSliderImage;
     private GameObject player;
     List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
     WeaponIk weaponIk;
     AiAgent agent;
 
-    [Header("Enemy health bar")]
-    [SerializeField] private Color maxHealthColour;
-    [SerializeField] private Color noHealthColour;
-    private int currentHealth;
-    private float lastDamageTime;
-    public bool showHealthBar;
+    [Header("Dmg popup")]
+    [SerializeField] private GameObject damageTextPrefab;
+    private string textToDisplay;
+    private GameObject damageTextInstance;
 
     [Header("Enemy health")]
+    private int currentHealth;
     public bool isAlive = true;
     public bool isMarkedAsDead = false;
 
@@ -32,9 +29,6 @@ public class EnemyHealth : MonoBehaviour
         weaponIk = GetComponent<WeaponIk>();
         player = GameObject.FindGameObjectWithTag("Player");
         currentHealth = enemyStats.maxHealth;
-        SetHealthBarUI();
-        lastDamageTime = Time.time;
-        showHealthBar = false;
         var rigidBodies = GetComponentsInChildren<Rigidbody>();
 
         foreach (var rigidBody in rigidBodies)
@@ -55,24 +49,21 @@ public class EnemyHealth : MonoBehaviour
     }
     private void Update()
     {
-        if (Time.time - lastDamageTime > 3f || currentHealth <= 0)
-            showHealthBar = false;
-
-        healthBarSlider.gameObject.SetActive(showHealthBar);
-
         if (!isAlive && !isMarkedAsDead && Vector3.Distance(transform.position, player.transform.position) < 2f)
             StartCoroutine(HandleDeathEffects());
     }
-    public void DealDamage(int damage, Vector3 direction)
+    public void TakeDamage(int damage, Vector3 direction, bool isAttackedByPlayer)
     {
         currentHealth -= damage;
 
         if (currentHealth <= 0)
             Die(direction);
-
-        SetHealthBarUI();
-        lastDamageTime = Time.time;
-        showHealthBar = true;
+        if (isAttackedByPlayer && isAlive)
+        {
+            damageTextInstance = Instantiate(damageTextPrefab, transform.position + new Vector3(0f, 1.5f, 0f), Camera.main.transform.rotation, transform);
+            textToDisplay = damage.ToString("0");
+            damageTextInstance.transform.GetChild(0).GetComponent<TextMeshPro>().text = textToDisplay;
+        }
     }
     private void Die(Vector3 direction)
     {
@@ -119,7 +110,6 @@ public class EnemyHealth : MonoBehaviour
 
         player.GetComponent<PlayerUI>().markText.text = "";
     }
-
     private void SetShaderParameters(float disappearIntensity, float colorIntensity)
     {
         foreach (var skinnedMeshRenderer in skinnedMeshRenderers)
@@ -132,15 +122,5 @@ public class EnemyHealth : MonoBehaviour
                 material.SetFloat("_dissolveIntensity", colorIntensity);
             }
         }
-    }
-    private void SetHealthBarUI()
-    {
-        float healthPercentage = CalculateHealthPercentage();
-        healthBarSlider.value = healthPercentage;
-        healthBarSliderImage.color = Color.Lerp(noHealthColour, maxHealthColour, healthPercentage / 100);
-    }
-    private float CalculateHealthPercentage()
-    {
-        return ((float)currentHealth / (float)enemyStats.maxHealth) * 100;
     }
 }

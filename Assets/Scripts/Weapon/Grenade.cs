@@ -98,7 +98,7 @@ public class Grenade : MonoBehaviour
                         continue;
                 }
                 if (nearbyObject.CompareTag("Enemy"))
-                    hitBox.OnExplosion(damageInt);
+                    hitBox.OnExplosion(damageInt, transform.forward);
                 if (nearbyObject.CompareTag("Player"))
                 {
                     hitBox.OnExplosionPlayer(damageInt);
