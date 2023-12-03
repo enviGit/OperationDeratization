@@ -19,6 +19,7 @@ public class PlayerHealth : MonoBehaviour
     private AudioSource deathSound;
     private AudioSource impactSound;
     public AudioClip[] impactClips;
+    public Material vignetteMaterial;
 
     [Header("Health")]
     private float currentHealth;
@@ -53,13 +54,15 @@ public class PlayerHealth : MonoBehaviour
                 hitBox.gameObject.layer = LayerMask.NameToLayer("Hitbox");
         }
 
-        Vignette vignette;
         ColorAdjustments colorAdj;
 
-        if (postProcessing.TryGet(out vignette))
-            vignette.intensity.value = 0f;
         if (postProcessing.TryGet(out colorAdj))
             colorAdj.postExposure.value = Settings.Brightness;
+        if (vignetteMaterial != null)
+        {
+            vignetteMaterial.SetFloat("_VoronoiIntensity", 0);
+            vignetteMaterial.SetFloat("_VignetteRadiusPower", 10);
+        }
     }
     private void Update()
     {
@@ -164,14 +167,16 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damageToHealth;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         lerpTimer = 0f;
-        Vignette vignette;
 
-        if (postProcessing.TryGet(out vignette))
+        if(vignetteMaterial != null)
         {
-            float percent = 1f - (currentHealth / maxHealth);
-            vignette.intensity.value = percent * 0.5f;
+            float percent = currentHealth / maxHealth;
+            float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
+            float vignetteRadiusPower = Mathf.Lerp(10f, 5f, 1 - percent);
+            vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
+            vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
         }
-        if(impactClips.Length > 0)
+        if (impactClips.Length > 0)
         {
             int randomIndex = Random.Range(0, impactClips.Length - 1);
             impactSound.PlayOneShot(impactClips[randomIndex]);
@@ -186,12 +191,14 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth -= damage;
         lerpTimer = 0f;
-        Vignette vignette;
 
-        if (postProcessing.TryGet(out vignette))
+        if (vignetteMaterial != null)
         {
-            float percent = 1f - (currentHealth / maxHealth);
-            vignette.intensity.value = percent * 0.5f;
+            float percent = currentHealth / maxHealth;
+            float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
+            float vignetteRadiusPower = Mathf.Lerp(10f, 5f, 1 - percent);
+            vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
+            vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
         }
         if (impactClips.Length > 0)
             impactSound.PlayOneShot(impactClips[2], 0.5f);
@@ -205,12 +212,14 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth -= damage;
         lerpTimer = 0f;
-        Vignette vignette;
 
-        if (postProcessing.TryGet(out vignette))
+        if (vignetteMaterial != null)
         {
-            float percent = 1f - (currentHealth / maxHealth);
-            vignette.intensity.value = percent * 0.5f;
+            float percent = currentHealth / maxHealth;
+            float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
+            float vignetteRadiusPower = Mathf.Lerp(10f, 5f, 1 - percent);
+            vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
+            vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
         }
         if (impactClips.Length > 0)
         {
@@ -289,12 +298,14 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth += healAmount;
         lerpTimer = 0f;
-        Vignette vignette;
 
-        if (postProcessing.TryGet(out vignette))
+        if (vignetteMaterial != null)
         {
-            float percent = 1f - (currentHealth / maxHealth);
-            vignette.intensity.value = percent * 0.5f;
+            float percent = currentHealth / maxHealth;
+            float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
+            float vignetteRadiusPower = Mathf.Lerp(10f, 5f, 1 - percent);
+            vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
+            vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
         }
     }
     public void PickupArmor()
@@ -306,5 +317,10 @@ public class PlayerHealth : MonoBehaviour
 
         currentArmor = 100;
         UpdateHealthUI();
+    }
+    private void OnDisable()
+    {
+        if (vignetteMaterial != null)
+            vignetteMaterial.SetFloat("_VoronoiIntensity", 0);
     }
 }
