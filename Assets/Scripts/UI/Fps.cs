@@ -12,7 +12,7 @@ public class Fps : MonoBehaviour
         while (true)
         {
             count = 1f / Time.unscaledDeltaTime;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(1f);
         }
     }
     private void OnGUI()
