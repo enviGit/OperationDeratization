@@ -14,14 +14,6 @@ public class AiAgent : MonoBehaviour
 
     private void Start()
     {
-        ragdoll = GetComponent<Ragdoll>();
-        healthBar = GetComponent<EnemyHealth>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        weapons = GetComponent<AiWeapons>();
-
-        if (playerTransform == null)
-            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-
         stateMachine = new AiStateMachine(this);
         stateMachine.RegisterState(new AiChasePlayerState());
         stateMachine.RegisterState(new AiDeathState());

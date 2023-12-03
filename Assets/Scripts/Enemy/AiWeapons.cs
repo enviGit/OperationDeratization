@@ -4,7 +4,7 @@ using UnityEngine;
 public class AiWeapons : MonoBehaviour
 {
     [Header("References")]
-    public GameObject currentWeapon;
+    [HideInInspector] public GameObject currentWeapon;
     private EnemyShoot weapon;
     private GameObject parentObject;
 

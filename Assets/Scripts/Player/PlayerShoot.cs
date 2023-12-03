@@ -147,8 +147,7 @@ public class PlayerShoot : MonoBehaviour
                 recoil.RecoilFire();
                 currentWeapon.currentAmmoCount--;
                 Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
-                flash.transform.SetParent(muzzle);
+                ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
                 flash.Play();
                 Destroy(flash, 1f);
 
@@ -174,8 +173,7 @@ public class PlayerShoot : MonoBehaviour
                     else
                     {
                         hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);
-                        GameObject blood = Instantiate(bloodSpread, hit.point, impactRotation);
-                        blood.transform.SetParent(hit.collider.transform);
+                        Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                     }
                     if (hit.rigidbody != null)
                     {
@@ -242,8 +240,7 @@ public class PlayerShoot : MonoBehaviour
                         recoil.RecoilFire();
                         currentWeapon.currentAmmoCount--;
                         Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                        ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
-                        flash.transform.SetParent(muzzle);
+                        ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
                         flash.Play();
                         Destroy(flash, 1f);
                     }
@@ -280,8 +277,7 @@ public class PlayerShoot : MonoBehaviour
                         if (hitBox != null)
                         {
                             hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);
-                            GameObject blood = Instantiate(bloodSpread, hit.point, impactRotation);
-                            blood.transform.SetParent(hit.collider.transform);
+                            Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                         }
                         if (hit.rigidbody != null)
                         {

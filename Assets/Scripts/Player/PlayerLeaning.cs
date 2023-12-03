@@ -24,9 +24,9 @@ public class PlayerLeaning : MonoBehaviour
     private void CalculateLeaning()
     {
         if (isLeaningLeft)
-            targetLean = Mathf.Clamp(targetLean + leanAngle * Time.deltaTime, -leanAngle, leanAngle);
+            targetLean = Mathf.Clamp(targetLean + leanAngle * Time.deltaTime * 2f, -leanAngle, leanAngle);
         else if (isLeaningRight)
-            targetLean = Mathf.Clamp(targetLean - leanAngle * Time.deltaTime, -leanAngle, leanAngle);
+            targetLean = Mathf.Clamp(targetLean - leanAngle * Time.deltaTime * 2f, -leanAngle, leanAngle);
         else
             targetLean = 0f;
 

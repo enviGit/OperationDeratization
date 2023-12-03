@@ -63,8 +63,7 @@ public class EnemyShoot : MonoBehaviour
                     break;
             }
 
-            ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation);
-            flash.transform.SetParent(muzzle);
+            ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
             flash.Play();
             Destroy(flash, 1f);
 

@@ -9,8 +9,8 @@ public class HumanBone
 }
 public class WeaponIk : MonoBehaviour
 {
-    public Transform targetTransform;
-    public Transform aimTransform;
+    private Transform targetTransform;
+    private Transform aimTransform;
     public Vector3 targetOffset = new Vector3(0, 0.65f, 0);
     public int iterations = 10;
     [Range(0, 1)] public float weight = 1f;
