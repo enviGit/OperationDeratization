@@ -168,11 +168,11 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         lerpTimer = 0f;
 
-        if(vignetteMaterial != null)
+        if (vignetteMaterial != null)
         {
             float percent = currentHealth / maxHealth;
             float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
-            float vignetteRadiusPower = Mathf.Lerp(10f, 5f, 1 - percent);
+            float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
             vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
             vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
         }
@@ -196,7 +196,7 @@ public class PlayerHealth : MonoBehaviour
         {
             float percent = currentHealth / maxHealth;
             float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
-            float vignetteRadiusPower = Mathf.Lerp(10f, 5f, 1 - percent);
+            float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
             vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
             vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
         }
@@ -217,7 +217,7 @@ public class PlayerHealth : MonoBehaviour
         {
             float percent = currentHealth / maxHealth;
             float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
-            float vignetteRadiusPower = Mathf.Lerp(10f, 5f, 1 - percent);
+            float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
             vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
             vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
         }
@@ -226,7 +226,7 @@ public class PlayerHealth : MonoBehaviour
             int randomIndex = Random.Range(0, impactClips.Length - 1);
             impactSound.PlayOneShot(impactClips[randomIndex]);
 
-            if(currentHealth <= 3)
+            if (currentHealth <= 3)
                 impactSound.PlayOneShot(impactClips[3], 0.5f);
         }
         if (currentHealth <= 0)
@@ -303,7 +303,7 @@ public class PlayerHealth : MonoBehaviour
         {
             float percent = currentHealth / maxHealth;
             float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
-            float vignetteRadiusPower = Mathf.Lerp(10f, 5f, 1 - percent);
+            float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
             vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
             vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
         }
@@ -321,6 +321,9 @@ public class PlayerHealth : MonoBehaviour
     private void OnDisable()
     {
         if (vignetteMaterial != null)
+        {
             vignetteMaterial.SetFloat("_VoronoiIntensity", 0);
+            vignetteMaterial.SetFloat("_VignetteRadiusPower", 10f);
+        }
     }
 }
