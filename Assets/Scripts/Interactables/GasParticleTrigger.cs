@@ -8,7 +8,7 @@ public class GasParticleTrigger : MonoBehaviour
     private void Update()
     {
         if (!playerCollision)
-            CancelInvoke("DealGasDamage");
+            CancelInvoke("DealGasDamageToPlayer");
     }
     private void LateUpdate()
     {
@@ -23,11 +23,11 @@ public class GasParticleTrigger : MonoBehaviour
             if (playerHealth != null)
             {
                 playerCollision = true;
-                InvokeRepeating("DealGasDamage", 0f, 0.5f);
+                InvokeRepeating("DealGasDamageToPlayer", 0f, 0.5f);
             }
         }
     }
-    private void DealGasDamage()
+    private void DealGasDamageToPlayer()
     {
         playerHealth.TakeGasDamage(Random.Range(5, 10));
     }

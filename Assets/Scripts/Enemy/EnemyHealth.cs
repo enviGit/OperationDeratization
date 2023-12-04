@@ -16,10 +16,9 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private GameObject damageTextPrefab;
     private TextMeshPro textToDisplay;
     private GameObject damageTextInstance;
-    private OnAnimation onTextAnimation;
 
     [Header("Enemy health")]
-    private int currentHealth;
+    [SerializeField] private int currentHealth;
     public bool isAlive = true;
     public bool isMarkedAsDead = false;
 

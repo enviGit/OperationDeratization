@@ -173,7 +173,7 @@ public class PlayerShoot : MonoBehaviour
                     }
                     else
                     {
-                        hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);
+                        hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
                         Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                     }
                     if (hit.rigidbody != null)
@@ -277,7 +277,7 @@ public class PlayerShoot : MonoBehaviour
                         }
                         if (hitBox != null)
                         {
-                            hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward);
+                            hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
                             Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                         }
                         if (hit.rigidbody != null)

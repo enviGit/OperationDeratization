@@ -25,10 +25,10 @@ public class HitBox : MonoBehaviour
     };
     private string[] bonePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig10:", "mixamorig:" };
 
-    public void OnRaycastHit(Gun weapon, Vector3 direction)
+    public void OnRaycastHit(Gun weapon, Vector3 direction, GameObject shooter)
     {
         gun = weapon;
-        int damage = GetDamageFromHitBox(gameObject);
+        int damage = GetDamageFromHitBox(gameObject, shooter);
         health.TakeDamage(damage, direction, true);
 
         //Displaying dmg taken by bots
@@ -48,13 +48,13 @@ public class HitBox : MonoBehaviour
     {
         health.TakeDamage(damage, direction, false);
     }
-    public void OnRaycastHitPlayer(Gun weapon)
+    public void OnRaycastHitPlayer(Gun weapon, GameObject shooter)
     {
         if(gun == null) 
             gun = weapon;
         if (playerHealth != null && (damageMultiplier.ContainsKey(gameObject.name) || ContainsAnyPrefix(gameObject.name)))
         {
-            damageToPlayer = GetDamageFromHitBox(gameObject);
+            damageToPlayer = GetDamageFromHitBox(gameObject, shooter);
             playerHealth.TakeDamage(damageToPlayer);
         }
 
@@ -64,13 +64,13 @@ public class HitBox : MonoBehaviour
     {
         playerHealth.TakeDamage(damage);
     }
-    private int GetDamageFromHitBox(GameObject hitBoxObject)
+    private int GetDamageFromHitBox(GameObject hitBoxObject, GameObject shooter)
     {
         string boneName = GetCleanBoneName(hitBoxObject.name);
 
         if (damageMultiplier.ContainsKey(boneName))
         {
-            float distance = Vector3.Distance(hitBoxObject.transform.position, transform.position);
+            float distance = Vector3.Distance(hitBoxObject.transform.position, shooter.transform.position);
             float damageMultiplierAtDistance = 0;
 
             if (gun.gunType == GunType.Shotgun)
