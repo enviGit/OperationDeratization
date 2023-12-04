@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class EnemyHealth : MonoBehaviour
@@ -15,8 +14,9 @@ public class EnemyHealth : MonoBehaviour
 
     [Header("Dmg popup")]
     [SerializeField] private GameObject damageTextPrefab;
-    private string textToDisplay;
+    private TextMeshPro textToDisplay;
     private GameObject damageTextInstance;
+    private OnAnimation onTextAnimation;
 
     [Header("Enemy health")]
     private int currentHealth;
@@ -60,10 +60,55 @@ public class EnemyHealth : MonoBehaviour
             Die(direction);
         if (isAttackedByPlayer && isAlive)
         {
-            damageTextInstance = Instantiate(damageTextPrefab, transform.position + new Vector3(0f, 1.5f, 0f), Camera.main.transform.rotation, transform);
-            textToDisplay = damage.ToString("0");
-            damageTextInstance.transform.GetChild(0).GetComponent<TextMeshPro>().text = textToDisplay;
+            float distance = Vector3.Distance(Camera.main.transform.position, transform.position);
+            damageTextInstance = Instantiate(damageTextPrefab, transform.position + new Vector3(0f, 1f, 0f), Camera.main.transform.rotation, transform);
+            textToDisplay = damageTextInstance.transform.GetChild(0).GetComponent<TextMeshPro>();
+            float minScale = 0.2f;
+            float midScale = 1f;
+            float maxScale = 5f;
+            float t = Mathf.Clamp01((distance - 2f) / (30f - 2f));
+            damageTextInstance.transform.localScale = Vector3.Lerp(new Vector3(minScale, minScale, minScale), new Vector3(midScale, midScale, midScale), t);
+            damageTextInstance.transform.localScale = Vector3.Lerp(new Vector3(minScale, minScale, minScale), new Vector3(maxScale, maxScale, maxScale), t);
+            textToDisplay.text = damage.ToString("0");
+
+            if (!IsObjectVisible(damageTextInstance.transform.GetChild(0).gameObject) && distance < 5f)
+            {
+                Vector3 directionToTarget = (transform.position - Camera.main.transform.position).normalized;
+                float xOffset = 0f;
+                float zOffset = 0f;
+                float angle = Mathf.Atan2(directionToTarget.x, directionToTarget.z) * Mathf.Rad2Deg;
+
+                if (angle > -45f && angle <= 45f)
+                    xOffset = 0.45f;
+                else if (angle > 45f && angle <= 135f)
+                    zOffset = -0.45f;
+                else if (angle > -135f && angle <= -45f)
+                    zOffset = 0.45f;
+                else
+                    xOffset = -0.45f;
+
+                float cameraAngle = Camera.main.transform.rotation.eulerAngles.x;
+                float offsetY;
+
+                if (cameraAngle > 0f && cameraAngle <= 180f)
+                    offsetY = Mathf.Lerp(-0.7f, -1f, cameraAngle / 180f);
+                else
+                    offsetY = Mathf.Lerp(-0.7f, -0.5f, (360f - cameraAngle) / 180f);
+
+                damageTextInstance.transform.position += new Vector3(xOffset, offsetY, zOffset);
+            }
+
+            damageTextInstance.transform.GetChild(0).GetComponent<Animator>().enabled = true;
         }
+    }
+    private bool IsObjectVisible(GameObject obj)
+    {
+        Renderer renderer = obj.GetComponent<Renderer>();
+
+        if (renderer == null)
+            return false;
+
+        return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), renderer.bounds);
     }
     private void Die(Vector3 direction)
     {

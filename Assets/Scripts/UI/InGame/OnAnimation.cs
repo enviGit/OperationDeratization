@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DestroyOnAnimationEnd : MonoBehaviour
+public class OnAnimation : MonoBehaviour
 {
     public void DestroyParent()
     {

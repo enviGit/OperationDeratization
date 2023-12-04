@@ -30,6 +30,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] [Range(10, 100)] private int linePoints = 25;
     [SerializeField] [Range(0.01f, 0.25f)] private float timeBetweenPoints = 0.1f;
     private LayerMask grenadeCollisionMask;
+    private float dynamicFieldOfView;
 
     [Header("Movement")]
     private float xRotation = 0f;
@@ -369,8 +370,26 @@ public class PlayerShoot : MonoBehaviour
 
         if (isAiming && currentWeapon.gunType == GunType.Sniper)
         {
-            mouseX = Input.GetAxis("Mouse X") * (xSensitivity / 3);
-            mouseY = Input.GetAxis("Mouse Y") * (ySensitivity / 3);
+            float sensitivityModifier = 1f;
+
+            switch (dynamicFieldOfView)
+            {
+                case 1f:
+                    sensitivityModifier = 0.2f;
+                    break;
+                case 3.5f:
+                    sensitivityModifier = 0.5f;
+                    break;
+                case 6f:
+                    sensitivityModifier = 1f;
+                    break;
+                default:
+                    sensitivityModifier = 1f;
+                    break;
+            }
+
+            mouseX = Input.GetAxis("Mouse X") * (xSensitivity * sensitivityModifier);
+            mouseY = Input.GetAxis("Mouse Y") * (ySensitivity * sensitivityModifier);
         }
         else
         {
@@ -457,9 +476,9 @@ public class PlayerShoot : MonoBehaviour
                     cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
                     Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
                     Camera zoomCamera = zoom.GetComponent<Camera>();
-                    float newFieldOfView = zoomCamera.fieldOfView - Input.GetAxis("Mouse ScrollWheel") * 25f;
-                    newFieldOfView = Mathf.Clamp(newFieldOfView, 1f, 6f);
-                    zoomCamera.fieldOfView = newFieldOfView;
+                    dynamicFieldOfView = zoomCamera.fieldOfView - Input.GetAxis("Mouse ScrollWheel") * 25f;
+                    dynamicFieldOfView = Mathf.Clamp(dynamicFieldOfView, 1f, 6f);
+                    zoomCamera.fieldOfView = dynamicFieldOfView;
                 }
                 else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke)
                     DrawTrajectory();
