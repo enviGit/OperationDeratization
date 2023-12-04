@@ -1,10 +1,14 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Flashlight : MonoBehaviour
 {
     [SerializeField] private Light flashlight;
-    public PlayerHealth playerHealth;
-    public LayerMask layerMask;
+    [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private LayerMask layerMask;
+    [SerializeField] Image flashlightImg;
+    [SerializeField] Sprite onImg;
+    [SerializeField] Sprite offImg;
 
     private void Update()
     {
@@ -12,8 +16,9 @@ public class Flashlight : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.T))
                 flashlight.enabled = !flashlight.enabled;
-            if(flashlight.enabled)
+            if (flashlight.enabled)
             {
+                flashlightImg.sprite = onImg;
                 float targetIntensity;
 
                 if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit, 5f, layerMask))
@@ -23,14 +28,15 @@ public class Flashlight : MonoBehaviour
                     else if (hit.distance <= 1f)
                         targetIntensity = 10f;
                     else
-                    targetIntensity = 50f;
-                }    
+                        targetIntensity = 50f;
+                }
                 else
                     targetIntensity = 150f;
 
                 flashlight.intensity = Mathf.Lerp(flashlight.intensity, targetIntensity, Time.deltaTime);
             }
-            
+            else
+                flashlightImg.sprite = offImg;
         }
         else
             gameObject.SetActive(false);

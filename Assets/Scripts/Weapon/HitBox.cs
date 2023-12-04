@@ -17,6 +17,7 @@ public class HitBox : MonoBehaviour
         { "RightLeg", 0.5f },
         { "RightFoot", 0.2f },
         { "Spine2", 1f }, //Upper Chest
+        { "Spine1", 1f },
         { "LeftArm", 0.75f },
         { "LeftForeArm", 0.7f },
         { "Head", 2.5f },
@@ -75,6 +76,8 @@ public class HitBox : MonoBehaviour
 
             if (gun.gunType == GunType.Shotgun)
                 damageMultiplierAtDistance = 1 / (1 + 0.1f * distance * distance);
+            else if(gun.gunType == GunType.Rifle)
+                damageMultiplierAtDistance = 1 / (1 + 0.01f * distance);
             else
                 damageMultiplierAtDistance = 1 / (1 + 0.05f * distance);
 
