@@ -13,14 +13,14 @@ public class AdjustObjectsPosition : MonoBehaviour
 
         if (targetObject == null)
             Debug.LogError("Object with name not found: 3D");
-        if (transform.position != Vector3.zero)
-        {
-            playerStartPosition = transform.position;
-            transform.position = Vector3.zero;
-            AdjustObjectPosition();
-        }
+
+        SetPlayerPosition();
     }
     private void LateUpdate()
+    {
+        SetPlayerPosition();
+    }
+    private void SetPlayerPosition()
     {
         float distanceToZero = Vector3.Distance(transform.position, Vector3.zero);
 
@@ -38,12 +38,17 @@ public class AdjustObjectsPosition : MonoBehaviour
             Vector3 positionDifference = targetObject.transform.position - playerStartPosition;
             targetObject.transform.position = transform.position + positionDifference;
 
-            foreach (Transform child in targetObject.transform.GetChild(0))
+           foreach (Transform child in targetObject.transform.GetChild(0))
             {
                 NavMeshAgent navMeshAgent = child.GetComponent<NavMeshAgent>();
 
                 if (navMeshAgent != null)
+                {
                     navMeshAgent.Warp(child.position);
+
+                    if (navMeshAgent.hasPath)
+                        navMeshAgent.SetDestination(navMeshAgent.destination);
+                }
             }
         }
     }

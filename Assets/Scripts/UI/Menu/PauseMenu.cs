@@ -58,6 +58,8 @@ public class PauseMenu : MonoBehaviour
         {
             PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
             pointer.enabled = true;
+            PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
+            inventory.enabled = true;
         }
     }
     private void Pause()
@@ -69,6 +71,8 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
         pointer.enabled = false;
+        PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
+        inventory.enabled = false;
     }
     public void LoadMenu()
     {
