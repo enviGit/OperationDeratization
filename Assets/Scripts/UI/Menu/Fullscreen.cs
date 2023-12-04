@@ -24,14 +24,12 @@ public class Fullscreen : MonoBehaviour
     }
     public void RestoreOriginalState()
     {
-        Screen.fullScreen = originalFullScreen;
         toggle.isOn = originalFullScreen;
-        Settings.FullScreen = originalFullScreen;
+        Settings.FullScreen = toggle.isOn;
     }
     public void ApplyChanges()
     {
-        originalFullScreen = Screen.fullScreen;
-        toggle.isOn = originalFullScreen;
+        originalFullScreen = toggle.isOn;
         Settings.FullScreen = originalFullScreen;
     }
 }

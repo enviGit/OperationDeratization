@@ -4,11 +4,11 @@ using TMPro;
 
 public class WindowManager : MonoBehaviour
 {
-    private const string RESOLUTION_PREF_KEY = "resolution";
     [SerializeField] private TextMeshProUGUI resolutionText;
     [SerializeField] private Slider resolutionSlider;
     private Resolution[] resolutions;
     private int currentResolutionIndex = 0;
+    private int originalResolutionIndex = 0;
     private Fullscreen fullscreen;
     private SoundSettings soundSettings;
     private Brightness brightness;
@@ -21,8 +21,11 @@ public class WindowManager : MonoBehaviour
         brightness = FindObjectOfType<Brightness>();
         sensitivity = FindObjectOfType<Sensitivity>();
         resolutions = Screen.resolutions;
-        currentResolutionIndex = PlayerPrefs.GetInt(RESOLUTION_PREF_KEY, 0);
+        originalResolutionIndex = Settings.ResolutionIndex;
+        currentResolutionIndex = originalResolutionIndex;
         SetResolution(currentResolutionIndex);
+        resolutionSlider.value = (float)currentResolutionIndex / (resolutions.Length - 1);
+        resolutionSlider.onValueChanged.AddListener(OnResolutionSliderChanged);
     }
     private void SetResolutionText(Resolution resolution)
     {
@@ -32,11 +35,10 @@ public class WindowManager : MonoBehaviour
     {
         currentResolutionIndex = index;
         SetResolutionText(resolutions[currentResolutionIndex]);
-        resolutionSlider.value = (float)currentResolutionIndex / (resolutions.Length - 1);
     }
-    public void OnResolutionSliderChanged()
+    public void OnResolutionSliderChanged(float value)
     {
-        int newIndex = Mathf.RoundToInt(resolutionSlider.value * (resolutions.Length - 1));
+        int newIndex = Mathf.RoundToInt(value * (resolutions.Length - 1));
 
         if (newIndex != currentResolutionIndex)
             SetResolution(newIndex);
@@ -44,17 +46,19 @@ public class WindowManager : MonoBehaviour
     private void ApplyResolution(Resolution resolution)
     {
         SetResolutionText(resolution);
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen); //Settings.FullScreen
-        PlayerPrefs.SetInt(RESOLUTION_PREF_KEY, currentResolutionIndex);
-    }
-    private void ApplyCurrentResolution()
-    {
-        ApplyResolution(resolutions[currentResolutionIndex]);
+        Screen.SetResolution(resolution.width, resolution.height, Settings.FullScreen);
+        originalResolutionIndex = currentResolutionIndex;
+        Settings.ResolutionIndex = originalResolutionIndex;
     }
     private void SetAndApplyResolution(int newResolutionIndex)
     {
         currentResolutionIndex = newResolutionIndex;
-        ApplyCurrentResolution();
+        ApplyResolution(resolutions[currentResolutionIndex]);
+    }
+    private void RestoreOriginalValues()
+    {
+        SetAndApplyResolution(originalResolutionIndex);
+        resolutionSlider.value = (float)originalResolutionIndex / (resolutions.Length - 1);
     }
     public void ApplyAllChanges()
     {
@@ -67,6 +71,7 @@ public class WindowManager : MonoBehaviour
     }
     public void AbortChanges()
     {
+        RestoreOriginalValues();
         fullscreen.RestoreOriginalState();
         soundSettings.RestoreOriginalValues();
         brightness.RestoreOriginalValues();

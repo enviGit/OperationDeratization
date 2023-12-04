@@ -30,26 +30,17 @@ public class Brightness : MonoBehaviour
     }
     private void OnBrightnessSliderChanged(float value)
     {
-        if (colorAdj != null)
-        {
-            colorAdj.postExposure.value = Mathf.Clamp(value, -4f, 2f);
-            sliderText.text = (value + 1).ToString("0");
-        }
+        colorAdj.postExposure.value = Mathf.Clamp(value, -4f, 2f);
+        sliderText.text = (value + 1).ToString("0");
     }
     public void RestoreOriginalValues()
     {
-        if (colorAdj != null)
-        {
-            brightnessSlider.value = originalBrightness;
-            Settings.Brightness = brightnessSlider.value;
-        }
+        brightnessSlider.value = originalBrightness;
+        Settings.Brightness = brightnessSlider.value;
     }
     public void ApplyChanges()
     {
-        if (colorAdj != null)
-        {
-            originalBrightness = brightnessSlider.value;
-            Settings.Brightness = originalBrightness;
-        }
+        originalBrightness = brightnessSlider.value;
+        Settings.Brightness = originalBrightness;
     }
 }
