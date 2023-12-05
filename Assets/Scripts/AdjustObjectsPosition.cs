@@ -38,6 +38,8 @@ public class AdjustObjectsPosition : MonoBehaviour
             Vector3 positionDifference = targetObject.transform.position - playerStartPosition;
             targetObject.transform.position = transform.position + positionDifference;
 
+            //Also we would need to bake NavMeshSurface realtime
+
            foreach (Transform child in targetObject.transform.GetChild(0))
             {
                 NavMeshAgent navMeshAgent = child.GetComponent<NavMeshAgent>();

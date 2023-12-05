@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -14,12 +12,11 @@ public class PlayerHealth : MonoBehaviour
     public Ragdoll ragdoll;
     public Transform inventoryUI;
     public Camera deathCamera;
-    public VolumeProfile postProcessing;
+    public Material vignetteMaterial;
     private AudioSource heartbeatSound;
     private AudioSource deathSound;
     private AudioSource impactSound;
     public AudioClip[] impactClips;
-    public Material vignetteMaterial;
 
     [Header("Health")]
     private float currentHealth;
@@ -53,11 +50,7 @@ public class PlayerHealth : MonoBehaviour
             if (hitBox.gameObject != gameObject)
                 hitBox.gameObject.layer = LayerMask.NameToLayer("Hitbox");
         }
-
-        ColorAdjustments colorAdj;
-
-        if (postProcessing.TryGet(out colorAdj))
-            colorAdj.postExposure.value = Settings.Brightness;
+        
         if (vignetteMaterial != null)
         {
             vignetteMaterial.SetFloat("_VoronoiIntensity", 0);
