@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4949102920698896}
   - component: {fileID: 33724035445000968}
   - component: {fileID: 23677683614741284}
-  - component: {fileID: 64196321901010654}
   - component: {fileID: 5184081970714537508}
+  - component: {fileID: 5552707127832392830}
   m_Layer: 6
   m_Name: Lid
   m_TagString: Untagged
@@ -85,20 +85,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64196321901010654
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1255753972800672}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300002, guid: 066266dd97c98fb4480c89021d8935ef, type: 3}
 --- !u!114 &5184081970714537508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +100,20 @@ MonoBehaviour:
   useEvents: 0
   prompt: Open container
   container: {fileID: 1451690081028556}
+  sound: {fileID: 0}
+--- !u!65 &5552707127832392830
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255753972800672}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.49999994, y: 0.050000113, z: 0.99999994}
+  m_Center: {x: 0.24999997, y: 0.024999997, z: -0.000000029802322}
 --- !u!1 &1451690081028556
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,7 +127,6 @@ GameObject:
   - component: {fileID: 23379441245647812}
   - component: {fileID: 64284856666757166}
   - component: {fileID: 7785570077882862804}
-  - component: {fileID: 4079627074414822713}
   m_Layer: 0
   m_Name: PTK_Chest
   m_TagString: Untagged
@@ -235,19 +234,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!208 &4079627074414822713
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451690081028556}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.25, y: 0.25, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0.25, z: 0}
-  m_TimeToStationary: 0.5

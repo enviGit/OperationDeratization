@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 5953317577179738959}
   - component: {fileID: 7291808687439232234}
   - component: {fileID: 4815828047170947104}
-  - component: {fileID: 2571134054387011230}
-  - component: {fileID: 9014867117576492715}
+  - component: {fileID: 1052367404764091191}
   m_Layer: 0
   m_Name: lantern-street-fixed-halloween
   m_TagString: Untagged
@@ -86,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2571134054387011230
-BoxCollider:
+--- !u!64 &1052367404764091191
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -96,22 +95,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.95598227, y: 3.2354257, z: 0.73}
-  m_Center: {x: 0.012208912, y: 1.5810481, z: -0.04}
---- !u!208 &9014867117576492715
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6473289392299665909}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.455, y: 1.618, z: 0.365}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0.012, y: 1.5810001, z: -0.04}
-  m_TimeToStationary: 0.5
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5066841580029693849, guid: 8e204af8681eb324b9231b09940ee91b, type: 3}

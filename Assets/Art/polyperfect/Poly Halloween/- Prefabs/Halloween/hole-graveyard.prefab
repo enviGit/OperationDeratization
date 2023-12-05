@@ -94,8 +94,7 @@ GameObject:
   - component: {fileID: 8865334416721586068}
   - component: {fileID: 4130064688431872015}
   - component: {fileID: 6650353655356419076}
-  - component: {fileID: 6834130380814585322}
-  - component: {fileID: 4773859666181405671}
+  - component: {fileID: 8201444724016601281}
   m_Layer: 0
   m_Name: hole-graveyard-base
   m_TagString: Untagged
@@ -168,24 +167,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!208 &6834130380814585322
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5275871615487290675}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 1.033, y: 0.44400004, z: 1.692}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0.09900001, y: -0.19600001, z: 0.80200005}
-  m_TimeToStationary: 0.5
---- !u!65 &4773859666181405671
-BoxCollider:
+--- !u!64 &8201444724016601281
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -194,9 +177,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.0659132, y: 0.88753784, z: 3.3832705}
-  m_Center: {x: 0.09939459, y: -0.19638711, z: 0.8021015}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 89038899512328991, guid: d7e5348ac2214844895c967f1b088fc3, type: 3}
 --- !u!1 &8506530406277262289
 GameObject:
   m_ObjectHideFlags: 0

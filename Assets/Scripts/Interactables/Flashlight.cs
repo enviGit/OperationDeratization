@@ -26,14 +26,14 @@ public class Flashlight : MonoBehaviour
                     if (hit.distance <= 2.5f && hit.distance > 1f)
                         targetIntensity = 20f;
                     else if (hit.distance <= 1f)
-                        targetIntensity = 10f;
+                        targetIntensity = 5f;
                     else
                         targetIntensity = 50f;
                 }
                 else
                     targetIntensity = 150f;
 
-                flashlight.intensity = Mathf.Lerp(flashlight.intensity, targetIntensity, Time.deltaTime);
+                flashlight.intensity = Mathf.Lerp(flashlight.intensity, targetIntensity, Time.deltaTime / 2);
             }
             else
                 flashlightImg.sprite = offImg;
