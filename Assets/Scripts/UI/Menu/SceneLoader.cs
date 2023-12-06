@@ -1,45 +1,39 @@
-using System.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SceneLoader : MonoBehaviour
 {
-    public static SceneLoader instance;
-    [SerializeField] private GameObject loaderCanvas;
-    [SerializeField] private Slider progressBar;
-    private float target;
+    [SerializeField] private GameObject LoaderUI;
+    [SerializeField] private Slider progressSlider;
+    [SerializeField] private GameObject attentionCanvas;
 
-    private void Awake()
+    public void LoadScene(int index)
     {
-        if (instance == null)
+        StartCoroutine(LoadScene_Coroutine(index));
+    }
+    public IEnumerator LoadScene_Coroutine(int index)
+    {
+        attentionCanvas.SetActive(false);
+        progressSlider.value = 0;
+        LoaderUI.SetActive(true);
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(index);
+        asyncOperation.allowSceneActivation = false;
+        float progress = 0;
+
+        while (!asyncOperation.isDone)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
+            progress = Mathf.MoveTowards(progress, asyncOperation.progress, Time.deltaTime);
+            progressSlider.value = progress;
+
+            if (progress >= 0.9f)
+            {
+                progressSlider.value = 1;
+                asyncOperation.allowSceneActivation = true;
+            }
+
+            yield return null;
         }
-        else
-            Destroy(gameObject);
-    }
-    public async void LoadScene(int sceneID)
-    {
-        target = 0;
-        progressBar.value = 0;
-        var scene = SceneManager.LoadSceneAsync(sceneID);
-        scene.allowSceneActivation = false;
-        loaderCanvas.SetActive(true);
-
-        do
-        {
-            await Task.Delay(100);
-            target = scene.progress;
-        } while (scene.progress < 0.9f);
-
-        await Task.Delay(1000);
-        scene.allowSceneActivation = true;
-        loaderCanvas.SetActive(false);
-    }
-    private void Update()
-    {
-        progressBar.value = Mathf.MoveTowards(progressBar.value, target, 3 * Time.deltaTime);
     }
 }
