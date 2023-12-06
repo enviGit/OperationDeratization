@@ -77,7 +77,8 @@ public class AiWeapons : MonoBehaviour
         while (animator.GetCurrentAnimatorStateInfo(1).normalizedTime < 1f)
             yield return null;
 
-        weaponIk.SetAimTransform(currentWeapon.transform.Find("muzzle"));
+        if(currentWeapon != null)
+            weaponIk.SetAimTransform(currentWeapon.transform.Find("muzzle"));
     }
     public void DropWeapon()
     {

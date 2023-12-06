@@ -163,7 +163,7 @@ public class PlayerShoot : MonoBehaviour
                         GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                         Destroy(ricochet, 2f);
 
-                        if (!hit.collider.gameObject.GetComponent<Weapon>())
+                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall"))
                         {
                             GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
@@ -262,12 +262,12 @@ public class PlayerShoot : MonoBehaviour
                         Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                         var hitBox = hit.collider.GetComponent<HitBox>();
 
-                        if (hitBox == null && currentWeapon.gunStyle != GunStyle.Melee) //Here the line that can be replaced in the future
+                        if (hitBox == null && currentWeapon.gunStyle != GunStyle.Melee) //Here the line that can be replaced in the future if I will find proper knife melee attack on surface particle
                         {
                             GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                             Destroy(ricochet, 2f);
 
-                            if (!hit.collider.gameObject.GetComponent<Weapon>() /*&& currentWeapon.gunStyle != GunStyle.Melee*/) //For the future if I will find proper knife melee attack on surface particle
+                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall")) //&& currentWeapon.gunStyle != GunStyle.Melee //For the future 
                             {
                                 GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
@@ -396,7 +396,7 @@ public class PlayerShoot : MonoBehaviour
             mouseX = Input.GetAxis("Mouse X") * xSensitivity;
             mouseY = Input.GetAxis("Mouse Y") * ySensitivity;
         }
-        
+
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
         transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;

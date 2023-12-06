@@ -77,7 +77,7 @@ public class EnemyShoot : MonoBehaviour
                     GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                     Destroy(ricochet, 2f);
 
-                    if (!hit.collider.gameObject.GetComponent<Weapon>())
+                    if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall"))
                     {
                         GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
@@ -87,14 +87,14 @@ public class EnemyShoot : MonoBehaviour
                 }
                 else
                 {
+                    //Here will be changes so that AI can hit another AI
                     hitBox.OnRaycastHitPlayer(currentWeapon, gameObject);
 
                     if (hitBox.damageToPlayer > 0)
                         DISystem.CreateIndicator(this.transform);
-
                 }
-                if (hit.rigidbody != null)
-                    hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
+                //if (hit.rigidbody != null)
+                //hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
             }
 
             autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
