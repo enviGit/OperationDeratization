@@ -4,12 +4,16 @@ public class Coffin : Interactable
 {
     [Header("References")]
     [SerializeField] private GameObject coffin;
-    [SerializeField] private AudioSource sound;
+    private AudioSource sound;
 
     [Header("Door")]
     private bool coffinOpen;
     private float enemyDetectionRadius = 2f;
 
+    private void Start()
+    {
+        sound = GetComponent<AudioSource>();
+    }
     private void Update()
     {
         if (DetectEnemyNearby())
@@ -26,7 +30,7 @@ public class Coffin : Interactable
     {
         coffinOpen = !coffinOpen;
         coffin.GetComponent<Animator>().SetBool("IsOpen", coffinOpen);
-        sound.Play();
+        sound.PlayOneShot(sound.clip);
     }
     private bool DetectEnemyNearby()
     {
@@ -37,7 +41,7 @@ public class Coffin : Interactable
             if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
             {
                 if (!coffinOpen)
-                    collider.transform.Find("Sounds/Chest").GetComponent<AudioSource>().Play();
+                    sound.PlayOneShot(sound.clip);
 
                 return true;
             }

@@ -5,18 +5,16 @@ using UnityEngine;
 public class DoorMotionSensor : Interactable
 {
     [Header("References")]
-    [SerializeField] private GameObject leftDoor1;
-    [SerializeField] private GameObject rightDoor1;
-    [SerializeField] private GameObject leftDoor2;
-    [SerializeField] private GameObject rightDoor2;
+    [SerializeField] private GameObject leftDoor;
+    [SerializeField] private GameObject rightDoor;
     private CharacterController playerController;
     private AudioSource doorSound;
     public AudioClip[] soundClips;
 
     [Header("Door")]
-    public float doorSlideAmount = 1.35f;
+    public float doorSlideAmount = 1.75f;
     public float doorSlideTime = 1f;
-    public float doorScaleAmount = 0.5f;
+    public float doorScaleAmount = 1f;
     public float doorScaleTime = 0.5f;
     public float activationDistance = 3f;
     private Vector3 originalLeftDoorScale;
@@ -33,10 +31,8 @@ public class DoorMotionSensor : Interactable
     }
     private void Awake()
     {
-        originalLeftDoorScale = leftDoor1.transform.localScale;
-        originalRightDoorScale = rightDoor1.transform.localScale;
-        originalLeftDoorScale = leftDoor2.transform.localScale;
-        originalRightDoorScale = rightDoor2.transform.localScale;
+        originalLeftDoorScale = leftDoor.transform.localScale;
+        originalRightDoorScale = rightDoor.transform.localScale;
     }
     private void Update()
     {
@@ -80,54 +76,34 @@ public class DoorMotionSensor : Interactable
     }
     private void SlideDoors(float amount)
     {
-        Vector3 leftDoorPos1 = leftDoor1.transform.position;
-        Vector3 rightDoorPos1 = rightDoor1.transform.position;
-        leftDoorPos1.z += amount;
-        rightDoorPos1.z -= amount;
-        StartCoroutine(LerpDoorPosition(leftDoor1.transform, leftDoorPos1, doorSlideTime));
-        StartCoroutine(LerpDoorPosition(rightDoor1.transform, rightDoorPos1, doorSlideTime));
-        Vector3 leftDoorPos2 = leftDoor2.transform.position;
-        Vector3 rightDoorPos2 = rightDoor2.transform.position;
-        leftDoorPos2.z += amount;
-        rightDoorPos2.z -= amount;
-        StartCoroutine(LerpDoorPosition(leftDoor2.transform, leftDoorPos2, doorSlideTime));
-        StartCoroutine(LerpDoorPosition(rightDoor2.transform, rightDoorPos2, doorSlideTime));
+        Vector3 leftDoorPos = leftDoor.transform.position;
+        Vector3 rightDoorPos = rightDoor.transform.position;
+        leftDoorPos.z += amount;
+        rightDoorPos.z -= amount;
+        StartCoroutine(LerpDoorPosition(leftDoor.transform, leftDoorPos, doorSlideTime));
+        StartCoroutine(LerpDoorPosition(rightDoor.transform, rightDoorPos, doorSlideTime));
         doorsMoving = true;
     }
     private void ScaleDoors(float amount, bool opening)
     {
-        Vector3 leftDoorScale1 = leftDoor1.transform.localScale;
-        Vector3 rightDoorScale1 = rightDoor1.transform.localScale;
+        if (doorScaleAmount == 1f) return;
+
+        Vector3 leftDoorScale = leftDoor.transform.localScale;
+        Vector3 rightDoorScale = rightDoor.transform.localScale;
 
         if (opening)
         {
-            leftDoorScale1.x *= amount;
-            rightDoorScale1.x *= amount;
+            leftDoorScale.x *= amount;
+            rightDoorScale.x *= amount;
         }
         else
         {
-            leftDoorScale1.x /= amount;
-            rightDoorScale1.x /= amount;
+            leftDoorScale.x /= amount;
+            rightDoorScale.x /= amount;
         }
 
-        StartCoroutine(LerpDoorScale(leftDoor1.transform, leftDoorScale1, doorScaleTime));
-        StartCoroutine(LerpDoorScale(rightDoor1.transform, rightDoorScale1, doorScaleTime));
-        Vector3 leftDoorScale2 = leftDoor2.transform.localScale;
-        Vector3 rightDoorScale2 = rightDoor2.transform.localScale;
-
-        if (opening)
-        {
-            leftDoorScale2.x *= amount;
-            rightDoorScale2.x *= amount;
-        }
-        else
-        {
-            leftDoorScale2.x /= amount;
-            rightDoorScale2.x /= amount;
-        }
-
-        StartCoroutine(LerpDoorScale(leftDoor2.transform, leftDoorScale2, doorScaleTime));
-        StartCoroutine(LerpDoorScale(rightDoor2.transform, rightDoorScale2, doorScaleTime));
+        StartCoroutine(LerpDoorScale(leftDoor.transform, leftDoorScale, doorScaleTime));
+        StartCoroutine(LerpDoorScale(rightDoor.transform, rightDoorScale, doorScaleTime));
     }
     IEnumerator LerpDoorPosition(Transform door, Vector3 targetPos, float slideTime)
     {

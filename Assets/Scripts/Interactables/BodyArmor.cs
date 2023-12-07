@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class BodyArmor : Interactable
@@ -5,6 +6,8 @@ public class BodyArmor : Interactable
     [Header("References")]
     public PlayerHealth playerArmor;
     private AudioSource pickingArmorSound;
+    private float delayBeforeDestroy = 1f;
+    private bool used = false;
 
     private void Start()
     {
@@ -12,11 +15,19 @@ public class BodyArmor : Interactable
     }
     protected override void Interact()
     {
-        if (playerArmor.currentArmor <= 99)
+        if (!used && playerArmor.currentArmor <= 99)
         {
             playerArmor.PickupArmor();
-            pickingArmorSound.Play();
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterSound());
+            used = true;
         }
+    }
+    private IEnumerator DestroyAfterSound()
+    {
+        pickingArmorSound.Play();
+
+        yield return new WaitForSeconds(delayBeforeDestroy);
+
+        Destroy(gameObject);
     }
 }

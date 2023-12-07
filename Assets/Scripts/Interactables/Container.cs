@@ -4,12 +4,16 @@ public class Container : Interactable
 {
     [Header("References")]
     [SerializeField] private GameObject container;
-    [SerializeField] private AudioSource sound;
+    private AudioSource sound;
 
     [Header("Container")]
     private bool containerOpen;
     private float enemyDetectionRadius = 2f;
 
+    private void Start()
+    {
+        sound = GetComponent<AudioSource>();
+    }
     private void Update()
     {
         if (DetectEnemyNearby())
@@ -26,7 +30,7 @@ public class Container : Interactable
     {
         containerOpen = !containerOpen;
         container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
-        sound.Play();
+        sound.PlayOneShot(sound.clip);
     }
     private bool DetectEnemyNearby()
     {
@@ -37,7 +41,7 @@ public class Container : Interactable
             if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
             {
                 if (!containerOpen)
-                    collider.transform.Find("Sounds/Chest").GetComponent<AudioSource>().Play();
+                    sound.PlayOneShot(sound.clip);
 
                 return true;
             }
