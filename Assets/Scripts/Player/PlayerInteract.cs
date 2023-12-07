@@ -32,6 +32,8 @@ public class PlayerInteract : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.F))
                     interactable.BaseInteract();
             }
+            if (hitInfo.collider.GetComponent<AmmoBox>() != null)
+                playerUI.ammoRefill = hitInfo.collider.gameObject.GetComponent<AmmoBox>();
         }
     }
 }

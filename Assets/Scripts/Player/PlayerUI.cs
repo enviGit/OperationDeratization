@@ -8,7 +8,7 @@ public class PlayerUI : MonoBehaviour
     private Gun currentWeapon;
     private PlayerInventory inventory;
     private PlayerInteract interact;
-    [SerializeField] private Ammo ammoRefill;
+    [HideInInspector] public AmmoBox ammoRefill;
 
     [Header("Player UI")]
     public TextMeshProUGUI promptText;
@@ -23,7 +23,6 @@ public class PlayerUI : MonoBehaviour
     {
         inventory = FindObjectOfType<PlayerInventory>();
         interact = FindObjectOfType<PlayerInteract>();
-        ammoRefill = FindObjectOfType<Ammo>();
     }
     private void Update()
     {
@@ -73,7 +72,7 @@ public class PlayerUI : MonoBehaviour
             ammoRefill.loadingSlider.SetActive(true);
             float startTime = Time.time;
 
-            while (Time.time - startTime < 3.0f)
+            while (Time.time - startTime < 2.0f)
             {
                 if (!Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance))
                 {
@@ -82,9 +81,9 @@ public class PlayerUI : MonoBehaviour
                     yield break;
                 }
 
-                float progress = (Time.time - startTime) / 3.0f;
+                float progress = (Time.time - startTime) / 2.0f;
                 ammoRefill.slider.value = progress;
-                ammoRefill.sliderValue.text = string.Format("{0:F1}", progress * 3.0f);
+                ammoRefill.sliderValue.text = string.Format("{0:F1}", progress * 2.0f);
                 yield return new WaitForSeconds(0.1f);
             }
 

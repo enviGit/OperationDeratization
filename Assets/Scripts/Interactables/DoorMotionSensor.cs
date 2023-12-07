@@ -10,6 +10,8 @@ public class DoorMotionSensor : Interactable
     [SerializeField] private GameObject leftDoor2;
     [SerializeField] private GameObject rightDoor2;
     private CharacterController playerController;
+    private AudioSource doorSound;
+    public AudioClip[] soundClips;
 
     [Header("Door")]
     public float doorSlideAmount = 1.35f;
@@ -26,6 +28,7 @@ public class DoorMotionSensor : Interactable
 
     private void Start()
     {
+        doorSound = GetComponent<AudioSource>();
         playerController = FindObjectOfType<CharacterController>();
     }
     private void Awake()
@@ -61,12 +64,16 @@ public class DoorMotionSensor : Interactable
     }
     private void OpenDoors()
     {
+        doorSound.pitch = 1.2f;
+        doorSound.PlayOneShot(soundClips[0]);
         SlideDoors(doorSlideAmount);
         ScaleDoors(doorScaleAmount, true);
         doorsOpen = true;
     }
     private void CloseDoors()
     {
+        doorSound.pitch = 2f;
+        doorSound.PlayOneShot(soundClips[1]);
         SlideDoors(-doorSlideAmount);
         ScaleDoors(-doorScaleAmount, false);
         doorsOpen = false;

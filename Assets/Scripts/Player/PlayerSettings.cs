@@ -20,27 +20,40 @@ public class PlayerSettings : MonoBehaviour
         resolutions = Screen.resolutions;
         resolutionIndex = Settings.ResolutionIndex;
         ApplyResolution(resolutionIndex);
-        Screen.fullScreen = Settings.FullScreen;
+        ApplyFullscreen();
         musicVolume = Settings.MusicMixer;
-
-        if (musicVolume < 1)
-            musicVolume = .001f;
-
-        musicMixer.SetFloat("MusicVolume", Mathf.Log10(musicVolume / 100) * 20f);
-        bgMusic = GetComponent<AudioSource>();
-        bgMusic.Play();
+        ApplyMusicVolume(musicVolume);
         sfxVolume = Settings.SfxMixer;
-
-        if (sfxVolume < 1)
-            sfxVolume = .001f;
-
-        sfxMixer.SetFloat("SfxVolume", Mathf.Log10(sfxVolume / 100) * 20f);
-
-        if (postProcessing.TryGet(out colorAdj))
-            colorAdj.postExposure.value = Settings.Brightness;
+        ApplySfxVolume(musicVolume);
+        ApplyBrightness();
     }
     private void ApplyResolution(int resolution)
     {
         Screen.SetResolution(resolutions[resolution].width, resolutions[resolution].height, Settings.FullScreen);
+    }
+    private void ApplyFullscreen()
+    {
+        Screen.fullScreen = Settings.FullScreen;
+    }
+    private void ApplyMusicVolume(float volume)
+    {
+        if (volume < 1)
+            volume = .001f;
+
+        musicMixer.SetFloat("MusicVolume", Mathf.Log10(volume / 100) * 20f);
+        bgMusic = GetComponent<AudioSource>();
+        bgMusic.Play();
+    }
+    private void ApplySfxVolume(float volume)
+    {
+        if (sfxVolume < 1)
+            sfxVolume = .001f;
+
+        sfxMixer.SetFloat("SfxVolume", Mathf.Log10(sfxVolume / 100) * 20f);
+    }
+    private void ApplyBrightness()
+    {
+        if (postProcessing.TryGet(out colorAdj))
+            colorAdj.postExposure.value = Settings.Brightness;
     }
 }

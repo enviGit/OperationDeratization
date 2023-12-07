@@ -19,7 +19,7 @@ public class PlayerHealth : MonoBehaviour
     public AudioClip[] impactClips;
 
     [Header("Health")]
-    private float currentHealth;
+    public float currentHealth;
     private float lerpTimer;
     public float maxHealth = 100f;
     public float chipSpeed = 2f;
