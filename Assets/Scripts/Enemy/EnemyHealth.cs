@@ -156,7 +156,7 @@ public class EnemyHealth : MonoBehaviour
     }
     private void SetShaderParameters(float disappearIntensity, float colorIntensity)
     {
-        foreach (var skinnedMeshRenderer in skinnedMeshRenderers)
+        foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
         {
             Material[] materials = skinnedMeshRenderer.materials;
 
