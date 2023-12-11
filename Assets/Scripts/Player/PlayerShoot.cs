@@ -114,7 +114,7 @@ public class PlayerShoot : MonoBehaviour
             if (currentWeapon.currentAmmoCount == 0)
             {
                 Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
-                currentWeapon.currentAmmoCount = currentWeapon.magazineSize;
+                currentWeapon.currentAmmoCount = currentWeapon.editorAmmoValue;
 
                 if (weapon != null)
                     Destroy(weapon.gameObject);

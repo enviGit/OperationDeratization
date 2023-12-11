@@ -8,7 +8,7 @@ public class Flashbang : MonoBehaviour
     private Image whiteImage;
     private AudioSource whiteNoise;
     private AudioSource bang;
-    public float delay = 1.5f;
+    public float delay = 2f;
     public float distance = 10f;
     public bool shouldFlash = false;
     bool hasFlashed = false;
@@ -42,7 +42,6 @@ public class Flashbang : MonoBehaviour
         Vector3 grenadeDirection = transform.position - playerTransform.position;
         float angle = Vector3.Angle(grenadeDirection, playerTransform.forward);
         float distanceComparision = Vector3.Distance(transform.position, playerTransform.position);
-
         bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[1]);
 
         if (angle < 60f && distanceComparision <= distance)
@@ -68,19 +67,18 @@ public class Flashbang : MonoBehaviour
         whiteImage.color = new Vector4(1, 1, 1, 1);
         whiteNoise.Play();
 
-        //Collider[] collidersToAffect = Physics.OverlapSphere(transform.position, distance);
+        /*Collider[] collidersToAffect = Physics.OverlapSphere(transform.position, distance);
 
-        //foreach (Collider nearbyObject in collidersToAffect)
-        //{
-        //  Enemy enemy = nearbyObject.GetComponent<Enemy>();
+        foreach (Collider nearbyObject in collidersToAffect)
+        {
+          Enemy enemy = nearbyObject.GetComponent<Enemy>();
 
-        //  if (enemy != null)
-        //  {
-        //      float enemyDistance = Vector3.Distance(transform.position, enemy.transform.position);
-        //      float effect = Mathf.Clamp01((distance - enemyDistance) / distance);
-        //      enemy.ApplyStun(/*???*/);
-        //  }
-        //
+          if (enemy != null)
+          {
+              float enemyDistance = Vector3.Distance(transform.position, enemy.transform.position);
+              float effect = Mathf.Clamp01((distance - enemyDistance) / distance);
+              enemy.ApplyStun();
+          }*/
 
         foreach (Transform child in transform)
             child.gameObject.SetActive(false);

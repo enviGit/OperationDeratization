@@ -56,10 +56,16 @@ public class PlayerInventory : MonoBehaviour
 
         if (weapons[3] != null)
             grenadeCount = weapons[3].currentAmmoCount;
+        else
+            grenadeCount = 0;
         if (weapons[4] != null)
             flashbangCount = weapons[4].currentAmmoCount;
+        else
+            flashbangCount = 0;
         if (weapons[5] != null)
             smokeCount = weapons[5].currentAmmoCount;
+        else
+            smokeCount = 0;
     }
     public void AddItem(Gun newItem)
     {
@@ -103,8 +109,8 @@ public class PlayerInventory : MonoBehaviour
 
                 if (grenade != null)
                     Destroy(grenade.gameObject);
-                if (newItem.currentAmmoCount < newItem.maxAmmoCount)
-                    newItem.currentAmmoCount++;
+                if (newItem.currentAmmoCount < newItem.editorAmmoValue)
+                    newItem.currentAmmoCount = newItem.editorAmmoValue;
                 else
                     FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
             }
@@ -114,8 +120,8 @@ public class PlayerInventory : MonoBehaviour
 
                 if (flashbang != null)
                     Destroy(flashbang.gameObject);
-                if (newItem.currentAmmoCount < newItem.maxAmmoCount)
-                    newItem.currentAmmoCount++;
+                if (newItem.currentAmmoCount < newItem.editorAmmoValue)
+                    newItem.currentAmmoCount = newItem.editorAmmoValue;
                 else
                     FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
             }
@@ -125,8 +131,8 @@ public class PlayerInventory : MonoBehaviour
 
                 if (smoke != null)
                     Destroy(smoke.gameObject);
-                if (newItem.currentAmmoCount < newItem.maxAmmoCount)
-                    newItem.currentAmmoCount++;
+                if (newItem.currentAmmoCount < newItem.editorAmmoValue)
+                    newItem.currentAmmoCount = newItem.editorAmmoValue;
                 else
                     FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
             }

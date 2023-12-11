@@ -13,7 +13,7 @@ public class Gun : ScriptableObject
     public AudioClip[] gunAudioClips;
 
     [Header("Stats")]
-    [SerializeField] private int editorAmmoValue;
+    public int editorAmmoValue;
     public int magazineSize;
     public int currentAmmoCount;
     public int maxAmmoCount;
