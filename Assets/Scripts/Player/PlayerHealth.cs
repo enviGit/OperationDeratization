@@ -50,12 +50,9 @@ public class PlayerHealth : MonoBehaviour
             if (hitBox.gameObject != gameObject)
                 hitBox.gameObject.layer = LayerMask.NameToLayer("Hitbox");
         }
-        
-        if (vignetteMaterial != null)
-        {
-            vignetteMaterial.SetFloat("_VoronoiIntensity", 0);
-            vignetteMaterial.SetFloat("_VignetteRadiusPower", 10);
-        }
+
+        vignetteMaterial.SetFloat("_VoronoiIntensity", 0);
+        vignetteMaterial.SetFloat("_VignetteRadiusPower", 10);
     }
     private void Update()
     {

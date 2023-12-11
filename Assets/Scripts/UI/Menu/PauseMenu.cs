@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -16,7 +15,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameIsPaused) 
+            if (GameIsPaused)
                 Resume();
             else
                 Pause();
@@ -53,7 +52,7 @@ public class PauseMenu : MonoBehaviour
         GameIsPaused = false;
         AudioListener.pause = false;
         Cursor.lockState = CursorLockMode.Locked;
-       
+
         if (playerStatus.isAlive)
         {
             PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
@@ -76,13 +75,22 @@ public class PauseMenu : MonoBehaviour
     }
     public void LoadMenu()
     {
-        Debug.Log("Loading Menu...");
         Time.timeScale = 1f;
+        AudioListener.pause = false;
         SceneManager.LoadScene(0);
+    }
+    public void RestartLevel()
+    {
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+        SceneManager.LoadScene(3);
     }
     public void QuitGame()
     {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
-        Debug.Log("Quitting game...");
+#endif
     }
 }
