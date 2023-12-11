@@ -94,7 +94,7 @@ public class EnemyShoot : MonoBehaviour
                         DISystem.CreateIndicator(this.transform);
                 }
                 //if (hit.rigidbody != null)
-                //hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
+                    //hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
             }
 
             autoShotTimer = Time.time + currentWeapon.timeBetweenShots;

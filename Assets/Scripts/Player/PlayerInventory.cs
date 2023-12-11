@@ -53,6 +53,13 @@ public class PlayerInventory : MonoBehaviour
     {
         SwitchItem();
         RemoveItem();
+
+        if (weapons[3] != null)
+            grenadeCount = weapons[3].currentAmmoCount;
+        if (weapons[4] != null)
+            flashbangCount = weapons[4].currentAmmoCount;
+        if (weapons[5] != null)
+            smokeCount = weapons[5].currentAmmoCount;
     }
     public void AddItem(Gun newItem)
     {
@@ -97,10 +104,7 @@ public class PlayerInventory : MonoBehaviour
                 if (grenade != null)
                     Destroy(grenade.gameObject);
                 if (newItem.currentAmmoCount < newItem.maxAmmoCount)
-                {
                     newItem.currentAmmoCount++;
-                    Debug.Log(newItem.currentAmmoCount);
-                }
                 else
                     FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
             }
@@ -111,10 +115,7 @@ public class PlayerInventory : MonoBehaviour
                 if (flashbang != null)
                     Destroy(flashbang.gameObject);
                 if (newItem.currentAmmoCount < newItem.maxAmmoCount)
-                {
                     newItem.currentAmmoCount++;
-                    Debug.Log(newItem.currentAmmoCount);
-                }
                 else
                     FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
             }
@@ -125,10 +126,7 @@ public class PlayerInventory : MonoBehaviour
                 if (smoke != null)
                     Destroy(smoke.gameObject);
                 if (newItem.currentAmmoCount < newItem.maxAmmoCount)
-                {
                     newItem.currentAmmoCount++;
-                    Debug.Log(newItem.currentAmmoCount);
-                }
                 else
                     FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
             }

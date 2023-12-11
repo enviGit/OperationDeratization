@@ -42,14 +42,16 @@ public class Weapon : Interactable
                 }
 
             }
-            if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade)
+            if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade && interact.hitInfo.transform.childCount != 0)
                 prompt = "Refill Explosive Grenades";
-            else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang)
+            else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang && interact.hitInfo.transform.childCount != 0)
                 prompt = "Refill Flashbang Grenades";
-            else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke)
+            else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && interact.hitInfo.transform.childCount != 0)
                 prompt = "Refill Smoke Grenades";
-            else
+            else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Primary || interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Secondary)
                 prompt = "Pick up " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
+            else
+                prompt = "";
             if (inventory.HasWeaponOfSameCategory(interact.hitInfo.transform.GetComponent<Weapon>().gun) && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade &&
                 interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke)
             {
@@ -98,6 +100,58 @@ public class Weapon : Interactable
             parent = parent.parent;
         }
 
+        if ((interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade && inventory.grenadeCount < 3) ||
+    (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang && inventory.flashbangCount < 3) ||
+    (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && inventory.smokeCount < 3))
+        {
+            List<Transform> grenadeObjects = new List<Transform>();
+
+            foreach (Transform child in interact.hitInfo.transform)
+                grenadeObjects.Add(child);
+
+            if (grenadeObjects.Count == 0)
+                return;
+            if (grenadeObjects.Count >= 3)
+            {
+                List<Transform> selectedGrenades = new List<Transform>();
+                List<Transform> usedGrenades = new List<Transform>();
+                grenadeObjects.Shuffle();
+
+                foreach (Transform grenade in grenadeObjects)
+                {
+                    if (selectedGrenades.Count >= 3)
+                        break;
+                    if (!usedGrenades.Contains(grenade))
+                    {
+                        bool dissolveSet = false;
+
+                        foreach (Transform child in grenade.GetChild(0))
+                        {
+                            MeshRenderer renderer = child.GetComponent<MeshRenderer>();
+
+                            if (renderer != null)
+                            {
+                                float dissolveValue = renderer.material.GetFloat("_dissolve");
+
+                                if (dissolveValue < 1f)
+                                {
+                                    StartCoroutine(DestroyAfterPickup(renderer));
+                                    dissolveSet = true;
+                                }
+                            }
+                        }
+                        if (dissolveSet)
+                        {
+                            selectedGrenades.Add(grenade);
+                            usedGrenades.Add(grenade);
+                        }
+                    }
+                }
+            }
+        }
+        else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Primary || interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Secondary)
+            Destroy(gameObject);
+
         inventory.AddItem(gun);
         GameObject weaponObject = Instantiate(gun.gunPrefab, Vector3.zero, Quaternion.identity, Camera.main.transform.Find("WeaponHolder"));
         weaponObject.layer = LayerMask.NameToLayer("Player");
@@ -142,58 +196,6 @@ public class Weapon : Interactable
         weaponObject.transform.SetSiblingIndex(childIndex);
         inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
         inventory.UpdateWeaponImages();
-
-        if ((interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade && inventory.grenadeCount < 3) ||
-    (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang && inventory.flashbangCount < 3) ||
-    (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && inventory.smokeCount < 3))
-        {
-            List<Transform> grenadeObjects = new List<Transform>();
-
-            foreach (Transform child in interact.hitInfo.transform)
-                grenadeObjects.Add(child);
-
-            if (grenadeObjects.Count >= 3)
-            {
-                List<Transform> selectedGrenades = new List<Transform>();
-                List<Transform> usedGrenades = new List<Transform>();
-                grenadeObjects.Shuffle();
-
-                foreach (Transform grenade in grenadeObjects)
-                {
-                    if (selectedGrenades.Count >= 3)
-                        break;
-                    if (!usedGrenades.Contains(grenade))
-                    {
-                        bool dissolveSet = false;
-
-                        foreach (Transform child in grenade.GetChild(0))
-                        {
-                            MeshRenderer renderer = child.GetComponent<MeshRenderer>();
-
-                            if (renderer != null)
-                            {
-                                float dissolveValue = renderer.material.GetFloat("_dissolve");
-
-                                if (dissolveValue < 1f)
-                                {
-                                    StartCoroutine(DestroyAfterPickup(renderer));
-                                    dissolveSet = true;
-                                }
-                            }
-                        }
-                        if (dissolveSet)
-                        {
-                            selectedGrenades.Add(grenade);
-                            usedGrenades.Add(grenade);
-                        }
-                    }
-                }
-            }
-        }
-        else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Primary || interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Secondary)
-        {
-            Destroy(gameObject);
-        }
     }
     private IEnumerator DestroyAfterPickup(MeshRenderer mesh)
     {
@@ -209,7 +211,7 @@ public class Weapon : Interactable
             yield return null;
         }
 
-        if(mesh != null)
+        if (mesh != null)
             Destroy(mesh.transform.parent.parent.gameObject);
     }
     private void SetShaderParameters(float disappearIntensity, MeshRenderer mesh)

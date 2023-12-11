@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class Grenade : MonoBehaviour
@@ -53,7 +52,10 @@ public class Grenade : MonoBehaviour
             Grenade grenade = nearbyObject.GetComponent<Grenade>();
 
             if (grenade != null)
-                Destroy(grenade);
+            {
+                grenade.countdown = 0.1f;
+                grenade.shouldExplode = true;
+            }
         }
 
         Collider[] collidersToDestroy = Physics.OverlapSphere(transform.position, radius);
