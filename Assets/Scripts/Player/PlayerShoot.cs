@@ -177,16 +177,7 @@ public class PlayerShoot : MonoBehaviour
                         Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                     }
                     if (hit.rigidbody != null)
-                    {
                         hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
-
-                        if (hit.rigidbody.GetComponent<Grenade>() && currentWeapon.gunStyle != GunStyle.Melee)
-                            hit.rigidbody.GetComponent<Grenade>().Explode();
-                        if (hit.rigidbody.GetComponent<Flashbang>())
-                            hit.rigidbody.GetComponent<Flashbang>().Flash();
-                        if (hit.rigidbody.GetComponent<Smoke>())
-                            hit.rigidbody.GetComponent<Smoke>().shouldSmoke = true;
-                    }
                 }
 
                 autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
@@ -281,16 +272,7 @@ public class PlayerShoot : MonoBehaviour
                             Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                         }
                         if (hit.rigidbody != null)
-                        {
                             hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
-
-                            if (hit.rigidbody.GetComponent<Grenade>() && currentWeapon.gunStyle != GunStyle.Melee)
-                                hit.rigidbody.GetComponent<Grenade>().Explode();
-                            if (hit.rigidbody.GetComponent<Flashbang>())
-                                hit.rigidbody.GetComponent<Flashbang>().Flash();
-                            if (hit.rigidbody.GetComponent<Smoke>())
-                                hit.rigidbody.GetComponent<Smoke>().shouldSmoke = true;
-                        }
                     }
                 }
 

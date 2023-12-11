@@ -52,9 +52,9 @@ public class BodyArmor : Interactable
     }
     private void SetShaderParameters(float disappearIntensity)
     {
-        foreach (MeshRenderer skinnedMeshRenderer in meshes)
+        foreach (MeshRenderer meshRenderer in meshes)
         {
-            Material[] materials = skinnedMeshRenderer.materials;
+            Material[] materials = meshRenderer.materials;
 
             foreach (var material in materials)
                 material.SetFloat("_dissolve", disappearIntensity);

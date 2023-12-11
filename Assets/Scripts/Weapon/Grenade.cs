@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Grenade : MonoBehaviour
@@ -15,7 +16,6 @@ public class Grenade : MonoBehaviour
     public bool shouldExplode = false;
     bool hasExploded = false;
     float countdown;
-    private float distance;
 
     private void Start()
     {
@@ -35,8 +35,6 @@ public class Grenade : MonoBehaviour
                 hasExploded = true;
             }
         }
-
-        distance = Vector3.Distance(transform.position, Camera.main.transform.position);
     }
     public void Explode()
     {
@@ -49,23 +47,13 @@ public class Grenade : MonoBehaviour
             Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
 
             if (rb != null)
-            {
                 if (!nearbyObject.CompareTag("Enemy"))
                     rb.AddExplosionForce(force, transform.position, radius);
 
-                Grenade grenade = nearbyObject.GetComponent<Grenade>();
+            Grenade grenade = nearbyObject.GetComponent<Grenade>();
 
-                if (grenade != null)
-                {
-                    grenade.countdown = 0.1f;
-                    grenade.shouldExplode = true;
-
-                    if (distance < radius)
-                        foreach (Gun weapon in FindObjectOfType<PlayerInventory>().weapons)
-                            if (weapon != null && weapon.gunStyle == GunStyle.Grenade)
-                                FindObjectOfType<PlayerInventory>().CurrentWeapon.currentAmmoCount = 0;
-                }
-            }
+            if (grenade != null)
+                Destroy(grenade);
         }
 
         Collider[] collidersToDestroy = Physics.OverlapSphere(transform.position, radius);

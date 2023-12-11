@@ -11,6 +11,10 @@ public class PlayerInteract : MonoBehaviour
     public Ray ray;
     public RaycastHit hitInfo;
 
+    [Header("Cooldown")]
+    public float interactCooldown = 0.5f;
+    private float lastInteractTime = 0f;
+
     private void Start()
     {
         cam = GetComponent<PlayerShoot>().cam;
@@ -29,8 +33,11 @@ public class PlayerInteract : MonoBehaviour
                 playerUI.UpdateText(interactable.prompt);
                 playerUI.promptText.color = Color.white;
 
-                if (Input.GetKeyDown(KeyCode.F))
+                if (Input.GetKeyDown(KeyCode.F) && Time.time - lastInteractTime >= interactCooldown)
+                {
                     interactable.BaseInteract();
+                    lastInteractTime = Time.time;
+                }
             }
             if (hitInfo.collider.GetComponent<AmmoBox>() != null)
                 playerUI.ammoRefill = hitInfo.collider.gameObject.GetComponent<AmmoBox>();
