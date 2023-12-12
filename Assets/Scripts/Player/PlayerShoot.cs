@@ -59,15 +59,12 @@ public class PlayerShoot : MonoBehaviour
     }
     private void Awake()
     {
-        int grenadeLayer = FindObjectOfType<Grenade>().gameObject.layer;
+        int grenadeLayer = 0;
 
-        if (FindObjectOfType<Grenade>() != null)
+        for (int i = 0; i < 32; i++)
         {
-            for (int i = 0; i < 32; i++)
-            {
-                if (!Physics.GetIgnoreLayerCollision(grenadeLayer, i))
-                    grenadeCollisionMask |= 1 << i;
-            }
+            if (!Physics.GetIgnoreLayerCollision(grenadeLayer, i))
+                grenadeCollisionMask |= 1 << i;
         }
     }
     private void Update()
