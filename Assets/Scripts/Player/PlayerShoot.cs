@@ -28,7 +28,7 @@ public class PlayerShoot : MonoBehaviour
     public float throwForce = 25f;
     public float throwUpForce = 10f;
     [SerializeField] [Range(10, 100)] private int linePoints = 25;
-    [SerializeField] [Range(0.01f, 0.25f)] private float timeBetweenPoints = 0.1f;
+    [SerializeField] [Range(0.01f, 0.25f)] private float timeBetweenPoints = 0.03f;
     private LayerMask grenadeCollisionMask;
     private float dynamicFieldOfView;
 
