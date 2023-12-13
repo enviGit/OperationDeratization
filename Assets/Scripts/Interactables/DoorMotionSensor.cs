@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorMotionSensor : Interactable
+public class DoorMotionSensor : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject leftDoor;

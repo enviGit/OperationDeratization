@@ -608,6 +608,7 @@ GameObject:
   - component: {fileID: 1827970761667310958}
   - component: {fileID: 1827970761667310954}
   - component: {fileID: 1827970761667310949}
+  - component: {fileID: 3456531348194022629}
   m_Layer: 10
   m_Name: Bot1
   m_TagString: Enemy
@@ -737,6 +738,7 @@ MonoBehaviour:
   healthBar: {fileID: 1827970761667310964}
   playerTransform: {fileID: 0}
   weapons: {fileID: 1827970761667310959}
+  sightSensor: {fileID: 0}
 --- !u!114 &1827970761667310959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -836,6 +838,29 @@ MonoBehaviour:
     type: 3}
   isReloading: 0
   isFiring: 0
+--- !u!114 &3456531348194022629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827970761667310968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4127d03f1d07dd349aee1b342cbe6cff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 25
+  angle: 45
+  height: 1
+  meshColor: {r: 0, g: 1, b: 1, a: 1}
+  scanFrequency: 30
+  layers:
+    serializedVersion: 2
+    m_Bits: 1088
+  occlusionLayers:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &1827970762532074744
 GameObject:
   m_ObjectHideFlags: 0
