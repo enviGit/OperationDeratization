@@ -18,6 +18,7 @@ public class PlayerShoot : MonoBehaviour
     private LadderTrigger ladder;
     private PlayerStamina stamina;
     private GameObject parentObject;
+    public GameObject trailPrefab;
 
     [Header("Weapon")]
     private Gun currentWeapon;
@@ -151,6 +152,9 @@ public class PlayerShoot : MonoBehaviour
 
                 if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                 {
+                    GameObject bulletTrail = Instantiate(trailPrefab, muzzle.position + muzzle.forward * 1.5f, trailPrefab.transform.rotation);
+                    bulletTrail.GetComponent<ProjectileMovement>().hitpoint = hit.point;
+
                     // Debug.Log("Hit: " + hit.collider.name);
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                     var hitBox = hit.collider.GetComponent<HitBox>();
@@ -246,16 +250,23 @@ public class PlayerShoot : MonoBehaviour
                     }
                     if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                     {
+                        if(currentWeapon.gunStyle != GunStyle.Melee)
+                        {
+                            Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
+                            GameObject bulletTrail = Instantiate(trailPrefab, muzzle.position + muzzle.forward * 1.5f, trailPrefab.transform.rotation);
+                            bulletTrail.GetComponent<ProjectileMovement>().hitpoint = hit.point;
+                        }
+
                         //Debug.Log("Hit: " + hit.collider.name);
                         Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                         var hitBox = hit.collider.GetComponent<HitBox>();
 
-                        if (hitBox == null && currentWeapon.gunStyle != GunStyle.Melee) //Here the line that can be replaced in the future if I will find proper knife melee attack on surface particle
+                        if (hitBox == null && currentWeapon.gunStyle != GunStyle.Melee)
                         {
                             GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                             Destroy(ricochet, 2f);
 
-                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall")) //&& currentWeapon.gunStyle != GunStyle.Melee //For the future 
+                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall"))
                             {
                                 GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 

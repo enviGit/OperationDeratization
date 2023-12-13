@@ -14,6 +14,7 @@ public class EnemyShoot : MonoBehaviour
     public Gun[] availableGuns = new Gun[5];
     public Gun currentWeapon;
     public LayerMask layerMask;
+    public GameObject trailPrefab;
 
     [Header("Weapon")]
     private float autoShotTimer = 0f;
@@ -69,6 +70,9 @@ public class EnemyShoot : MonoBehaviour
 
             if (Physics.Raycast(muzzle.transform.position, muzzle.transform.forward, out hit, currentWeapon.range, layerMask))
             {
+                GameObject bulletTrail = Instantiate(trailPrefab, muzzle.position + muzzle.forward * 1.5f, trailPrefab.transform.rotation);
+                bulletTrail.GetComponent<ProjectileMovement>().hitpoint = hit.point;
+
                 Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                 var hitBox = hit.collider.GetComponent<HitBox>();
 
