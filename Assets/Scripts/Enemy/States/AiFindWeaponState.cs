@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public class AiFindWeaponState : AiState
 {
     private GameObject pickup;
-    private GameObject[] pickups = new GameObject[1];
+    private GameObject[] pickups = new GameObject[3];
     private float wanderRadius = 100f;
 
     public AiStateId GetId()
@@ -58,7 +58,7 @@ public class AiFindWeaponState : AiState
     }
     private GameObject FindPickup(AiAgent agent)
     {
-        int count = agent.sightSensor.Filter(pickups, "Interactable");
+        int count = agent.sightSensor.Filter(pickups, "Interactable", "Weapon");
 
         if (count > 0)
             return pickups[0];

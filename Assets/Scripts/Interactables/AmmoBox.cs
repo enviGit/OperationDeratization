@@ -68,10 +68,23 @@ public class AmmoBox : Interactable
             lootingSound.Play();
             StartCoroutine(ui.RefillAmmo());
         }
-            
 
         allWeapons = 0;
         weaponsFullAmmo = 0;
     }
-    
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Enemy"))
+        {
+            AiWeapons weapons = other.GetComponent<AiWeapons>();
+            weapons.RefillAmmo(weapons.currentWeapon.GetComponent<Weapon>().gun.magazineSize);
+
+            if(weapons.hasLootedAmmo)
+            {
+                ammoBoxAnimator.SetTrigger("isLooting");
+                lootingSound.Play();
+                weapons.hasLootedAmmo = false;
+            }
+        }
+    }
 }

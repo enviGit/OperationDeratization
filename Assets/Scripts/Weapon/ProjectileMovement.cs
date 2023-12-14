@@ -3,7 +3,7 @@ using DG.Tweening;
 
 public class ProjectileMovement : MonoBehaviour
 {
-    public Vector3 hitpoint;
+    [HideInInspector] public Vector3 hitpoint;
     public float maxDistance = 20f;
     public float maxTimeNeededToReach = 2f;
     public AnimationCurve curve;

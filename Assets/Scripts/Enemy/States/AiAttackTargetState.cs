@@ -25,6 +25,8 @@ public class AiAttackTargetState : AiState
         agent.weapons.SetTarget(agent.targeting.Target.transform);
         agent.navMeshAgent.destination = agent.targeting.TargetPosition;
         UpdateFiring(agent);
+        UpdateLowHealth(agent);
+        UpdateLowAmmo(agent);
     }
     private void UpdateFiring(AiAgent agent)
     {
@@ -56,6 +58,16 @@ public class AiAttackTargetState : AiState
         else
             return AiWeapons.WeaponSlotSecondary;
     }*/
+    private void UpdateLowHealth(AiAgent agent)
+    {
+        if (agent.health.IsLowHealth())
+            agent.stateMachine.ChangeState(AiStateId.FindFirstAidKit);
+    }
+    private void UpdateLowAmmo(AiAgent agent)
+    {
+        if (agent.weapons.IsLowAmmo())
+            agent.stateMachine.ChangeState(AiStateId.FindAmmo);
+    }
     public void Exit(AiAgent agent)
     {
         agent.weapons.DeactiveWeapon();

@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class HitBox : MonoBehaviour
 {
-    public EnemyHealth health;
+    [HideInInspector] public EnemyHealth health;
     private Gun gun;
-    public int damageToPlayer = 0;
-    public PlayerHealth playerHealth;
+    [HideInInspector] public int damageToPlayer = 0;
+    [HideInInspector] public PlayerHealth playerHealth;
     private Dictionary<string, float> damageMultiplier = new Dictionary<string, float>()
     {
         { "Hips", 1f },

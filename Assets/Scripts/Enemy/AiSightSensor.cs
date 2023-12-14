@@ -162,13 +162,15 @@ public class AiSightSensor : MonoBehaviour
         foreach (var obj in Objects)
             Gizmos.DrawSphere(obj.transform.position, 0.3f);
     }
-    public int Filter(GameObject[] buffer, string layerName)
+    public int Filter(GameObject[] buffer, string layerName, string tagName = null)
     {
         int layer = LayerMask.NameToLayer(layerName);
         int count = 0;
 
         foreach(var obj in Objects)
         {
+            if (tagName != null && !obj.CompareTag(tagName))
+                continue;
             if (obj.layer == layer)
                 buffer[count++] = obj;
             if (buffer.Length == count)

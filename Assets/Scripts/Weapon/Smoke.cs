@@ -10,8 +10,8 @@ public class Smoke : MonoBehaviour
     [Header("Grenade")]
     public float delay = 2f;
     public bool shouldSmoke = false;
-    bool hasSmoked = false;
-    float countdown;
+    private bool hasSmoked = false;
+    private float countdown;
 
     private void Start()
     {

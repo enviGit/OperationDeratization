@@ -20,6 +20,7 @@ public class AiStateMachine
     public AiState GetState(AiStateId stateId)
     {
         int index = (int)stateId;
+
         return states[index];
     }
     public void Update()

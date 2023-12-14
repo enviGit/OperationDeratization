@@ -3,17 +3,54 @@ using UnityEngine;
 
 public class AiWeapons : MonoBehaviour
 {
+    /*public enum WeaponState
+    {
+        Holstering,
+        Holstered,
+        Activating,
+        Active,
+        Reloading
+    }
+    public enum WeaponSlot
+    {
+        Primary,
+        Secondary
+    }
+    public Gun currentGun
+    {
+        get
+        {
+            return weapons[current];
+        }
+    }
+    public WeaponSlot currentWeaponSlot
+    {
+        get
+        {
+            return (WeaponSlot)current;
+        }
+    }
+    private Gun[] weapons = new Gun[2];
+    private int current = 0;
+    private WeaponState weaponState = WeaponState.Holstered
+    private GameObject magazineHand
+    public bool IsActive()
+    {
+        return weaponState == WeaponState.Active;
+    }*/
+
     [Header("References")]
     [HideInInspector] public GameObject currentWeapon;
     private EnemyShoot weapon;
     private GameObject parentObject;
+    public bool hasLootedAmmo = false;
 
     [Header("Weapons")]
-    Animator animator;
-    MeshSockets weaponSockets;
-    WeaponIk weaponIk;
-    Transform currentTarget;
-    bool weaponActive = false;
+    private Animator animator;
+    private MeshSockets weaponSockets;
+    private WeaponIk weaponIk;
+    private Transform currentTarget;
+    private bool weaponActive = false;
     public float inaccuracy = 0.4f;
 
     private void Start()
@@ -110,5 +147,24 @@ public class AiWeapons : MonoBehaviour
     {
         weaponIk.SetTargetTransform(target);
         currentTarget = target;
+    }
+    public void RefillAmmo(int magazineSize)
+    {
+        Gun weapon = currentWeapon.GetComponent<Weapon>().gun;
+
+        if (weapon && weapon.maxAmmoCount < weapon.editorAmmoValue * 3)
+        {
+            weapon.maxAmmoCount += magazineSize;
+            hasLootedAmmo = true;
+        }
+    }
+    public bool IsLowAmmo()
+    {
+        Gun weapon = currentWeapon.GetComponent<Weapon>().gun;
+        
+        if(weapon)
+            return weapon.currentAmmoCount == 0 && weapon.maxAmmoCount == 0;
+
+        return false;
     }
 }

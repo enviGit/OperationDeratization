@@ -5,7 +5,9 @@ public enum AiStateId
     Idle,
     FindWeapon,
     AttackTarget,
-    FindTarget
+    FindTarget,
+    FindFirstAidKit,
+    FindAmmo
 }
 public interface AiState
 {

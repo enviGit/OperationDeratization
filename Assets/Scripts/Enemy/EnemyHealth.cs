@@ -8,6 +8,7 @@ public class EnemyHealth : MonoBehaviour
     [Header("References")]
     [SerializeField] private EnemyStats enemyStats;
     private GameObject player;
+    public float lowHealth = 20f;
     private List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
     private WeaponIk weaponIk;
     private AiAgent agent;
@@ -57,7 +58,21 @@ public class EnemyHealth : MonoBehaviour
     }
     public void TakeDamage(int damage, Vector3 direction, bool isAttackedByPlayer)
     {
-        currentHealth -= damage;
+        if (!isAlive)
+            return;
+
+        float damageToHealth = damage;
+
+        if (currentArmor > 0)
+        {
+            float armorMultiplier = 0.5f;
+            damageToHealth = damage * armorMultiplier;
+            currentArmor -= damage;
+            currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
+        }
+
+        currentHealth -= damageToHealth;
+        currentHealth = Mathf.Clamp(currentHealth, 0, enemyStats.maxHealth);
 
         if (currentHealth <= 0)
             Die(direction);
@@ -104,41 +119,6 @@ public class EnemyHealth : MonoBehaviour
             damageTextInstance.transform.GetChild(0).GetComponent<Animator>().enabled = true;
         }
     }
-    /*public void TakeDamage(float damage)
-    {
-        if (!isAlive)
-            return;
-
-        float damageToHealth = damage;
-
-        if (currentArmor > 0)
-        {
-            float armorMultiplier = 0.5f;
-            damageToHealth = damage * armorMultiplier;
-            currentArmor -= damage;
-            currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
-        }
-
-        currentHealth -= damageToHealth;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        lerpTimer = 0f;
-
-        if (vignetteMaterial != null)
-        {
-            float percent = currentHealth / maxHealth;
-            float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
-            float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
-            vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
-            vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
-        }
-        if (impactClips.Length > 0)
-        {
-            int randomIndex = Random.Range(0, impactClips.Length - 1);
-            impactSound.PlayOneShot(impactClips[randomIndex]);
-        }
-        if (currentHealth <= 0)
-            Die();
-    }*/
     private bool IsObjectVisible(GameObject obj)
     {
         Renderer renderer = obj.GetComponent<Renderer>();
@@ -147,6 +127,12 @@ public class EnemyHealth : MonoBehaviour
             return false;
 
         return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), renderer.bounds);
+    }
+    public bool IsLowHealth()
+    {
+        float randomThreshold = Random.Range(lowHealth, lowHealth + 10);
+
+        return currentHealth < randomThreshold;
     }
     private void Die(Vector3 direction)
     {

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Ragdoll : MonoBehaviour
 {
-    Rigidbody[] rigidBodies;
-    Animator animator;
+    private Rigidbody[] rigidBodies;
+    private Animator animator;
 
     private void Start()
     {

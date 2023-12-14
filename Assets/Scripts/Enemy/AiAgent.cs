@@ -5,6 +5,7 @@ public class AiAgent : MonoBehaviour
 {
     [HideInInspector] public AiStateMachine stateMachine;
     public AiStateId initialState;
+    public AiStateId currentState;
     [HideInInspector] public NavMeshAgent navMeshAgent;
     public AiAgentConfig config;
     [HideInInspector] public Ragdoll ragdoll;
@@ -13,6 +14,7 @@ public class AiAgent : MonoBehaviour
     [HideInInspector] public AiWeapons weapons;
     [HideInInspector] public AiSightSensor sightSensor;
     [HideInInspector] public AiTargetingSystem targeting;
+    [HideInInspector] public EnemyHealth health;
 
     private void Start()
     {
@@ -22,6 +24,7 @@ public class AiAgent : MonoBehaviour
         healthBar = GetComponent<EnemyHealth>();
         sightSensor = GetComponent<AiSightSensor>();
         targeting = GetComponent<AiTargetingSystem>();
+        health = GetComponent<EnemyHealth>();
         stateMachine = new AiStateMachine(this);
         stateMachine.RegisterState(new AiChasePlayerState());
         stateMachine.RegisterState(new AiDeathState());
@@ -29,10 +32,13 @@ public class AiAgent : MonoBehaviour
         stateMachine.RegisterState(new AiFindWeaponState());
         stateMachine.RegisterState(new AiAttackTargetState());
         stateMachine.RegisterState(new AiFindTargetState());
+        stateMachine.RegisterState(new AiFindFirstAidKitState());
+        stateMachine.RegisterState(new AiFindAmmoState());
         stateMachine.ChangeState(initialState);
     }
     private void Update()
     {
         stateMachine.Update();
+        currentState = stateMachine.currentState;
     }
 }
