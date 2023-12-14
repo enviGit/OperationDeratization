@@ -14,7 +14,8 @@ public class Weapon : Interactable
     private PlayerInteract interact;
     private PlayerInventory inventory;
     private PlayerShoot shoot;
-    MeshSockets sockets;
+    private MeshSockets sockets;
+    public RuntimeAnimatorController animator;
 
     private void Start()
     {

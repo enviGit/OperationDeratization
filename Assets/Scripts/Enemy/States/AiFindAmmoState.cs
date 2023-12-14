@@ -5,7 +5,9 @@ public class AiFindAmmoState : AiState
 {
     private GameObject pickup;
     private GameObject[] pickups = new GameObject[3];
-    private float wanderRadius = 100f;
+    private float wanderRadius = 10f;
+    private float stopDistance = 5f;
+    private float distanceCounter = 0f;
 
     public AiStateId GetId()
     {
@@ -15,6 +17,7 @@ public class AiFindAmmoState : AiState
     {
         pickup = null;
         agent.navMeshAgent.speed = agent.config.findWeaponSpeed;
+        distanceCounter = 0f;
     }
     public void Exit(AiAgent agent)
     {
@@ -36,6 +39,14 @@ public class AiFindAmmoState : AiState
             Vector3 randomPoint = RandomNavmeshLocation(wanderRadius, agent);
             agent.navMeshAgent.SetDestination(randomPoint);
         }
+
+        distanceCounter += agent.navMeshAgent.velocity.magnitude * Time.deltaTime;
+
+        if (distanceCounter >= stopDistance)
+        {
+            agent.navMeshAgent.ResetPath();
+            distanceCounter = 0f;
+        }
         if (!agent.weapons.IsLowAmmo())
             agent.stateMachine.ChangeState(AiStateId.FindTarget);
     }
@@ -45,7 +56,7 @@ public class AiFindAmmoState : AiState
         randomDirection += agent.transform.position;
         RaycastHit hit;
 
-        if (Physics.Raycast(agent.transform.position, randomDirection - agent.transform.position, out hit, radius))
+        if (Physics.Raycast(agent.transform.position, randomDirection - agent.transform.position, out hit, radius * 20f))
         {
             if (hit.collider.CompareTag("GasParticles"))
                 return RandomNavmeshLocation(radius, agent);

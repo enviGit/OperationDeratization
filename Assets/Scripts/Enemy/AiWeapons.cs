@@ -82,6 +82,8 @@ public class AiWeapons : MonoBehaviour
         currentWeapon = weapon;
         currentWeapon.GetComponent<Weapon>().prompt = "";
         currentWeapon.GetComponent<Weapon>().enabled = false;
+        currentWeapon.layer = LayerMask.NameToLayer("Default");
+        SetLayerRecursively(currentWeapon, LayerMask.NameToLayer("Default"));
         sockets.Attach(currentWeapon.transform, MeshSockets.SocketId.Spine);
     }
     public void ActiveWeapon()
@@ -90,7 +92,9 @@ public class AiWeapons : MonoBehaviour
     }
     IEnumerator EquipWeapon()
     {
+        animator.runtimeAnimatorController = currentWeapon.GetComponent<Weapon>().animator;
         animator.SetBool("Equip", true);
+
         yield return new WaitForSeconds(0.5f);
 
         while (animator.GetCurrentAnimatorStateInfo(1).normalizedTime < 1f)
@@ -126,6 +130,8 @@ public class AiWeapons : MonoBehaviour
             rb.mass = 2f;
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             currentWeapon.GetComponent<Weapon>().enabled = true;
+            currentWeapon.layer = LayerMask.NameToLayer("Interactable");
+            SetLayerRecursively(currentWeapon, LayerMask.NameToLayer("Interactable"));
             currentWeapon = null;
         }
     }
@@ -166,5 +172,12 @@ public class AiWeapons : MonoBehaviour
             return weapon.currentAmmoCount == 0 && weapon.maxAmmoCount == 0;
 
         return false;
+    }
+    public static void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+
+        foreach (Transform child in obj.transform)
+            SetLayerRecursively(child.gameObject, layer);
     }
 }

@@ -3,7 +3,9 @@ using UnityEngine.AI;
 
 public class AiFindTargetState : AiState
 {
-    private float wanderRadius = 100f;
+    private float wanderRadius = 10f;
+    private float stopDistance = 5f;
+    private float distanceCounter = 0f;
 
     public AiStateId GetId()
     {
@@ -12,6 +14,7 @@ public class AiFindTargetState : AiState
     public void Enter(AiAgent agent)
     {
         agent.navMeshAgent.speed = agent.config.findTargetSpeed;
+        distanceCounter = 0f;
     }
     public void Update(AiAgent agent)
     {
@@ -20,6 +23,13 @@ public class AiFindTargetState : AiState
         {
             Vector3 randomPoint = RandomNavmeshLocation(wanderRadius, agent);
             agent.navMeshAgent.SetDestination(randomPoint);
+        }
+        distanceCounter += agent.navMeshAgent.velocity.magnitude * Time.deltaTime;
+
+        if (distanceCounter >= stopDistance)
+        {
+            agent.navMeshAgent.ResetPath();
+            distanceCounter = 0f;
         }
         if (agent.targeting.HasTarget)
             agent.stateMachine.ChangeState(AiStateId.AttackTarget);
@@ -34,7 +44,7 @@ public class AiFindTargetState : AiState
         randomDirection += agent.transform.position;
         RaycastHit hit;
 
-        if (Physics.Raycast(agent.transform.position, randomDirection - agent.transform.position, out hit, radius))
+        if (Physics.Raycast(agent.transform.position, randomDirection - agent.transform.position, out hit, radius * 20f))
         {
             if (hit.collider.CompareTag("GasParticles"))
                 return RandomNavmeshLocation(radius, agent);

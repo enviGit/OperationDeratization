@@ -68,7 +68,7 @@ public class EnemyShoot : MonoBehaviour
             flash.Play();
             Destroy(flash, 1f);
 
-            if (Physics.Raycast(muzzle.transform.position, muzzle.transform.forward, out hit, currentWeapon.range, layerMask))
+            if (Physics.Raycast(muzzle.transform.position, muzzle.forward, out hit, currentWeapon.range, layerMask))
             {
                 GameObject bulletTrail = Instantiate(trailPrefab, muzzle.position + muzzle.forward * 1.5f, trailPrefab.transform.rotation);
                 bulletTrail.GetComponent<ProjectileMovement>().hitpoint = hit.point;
@@ -91,11 +91,15 @@ public class EnemyShoot : MonoBehaviour
                 }
                 else
                 {
-                    //Here will be changes so that AI can hit another AI
-                    hitBox.OnRaycastHitPlayer(currentWeapon, gameObject);
+                    if(hitBox.health != null)
+                        hitBox.OnRaycastHit(currentWeapon, muzzle.forward, gameObject); //Or transform.forward
+                    if (hitBox.playerHealth != null)
+                    {
+                        hitBox.OnRaycastHitPlayer(currentWeapon, gameObject);
 
-                    if (hitBox.damageToPlayer > 0)
-                        DISystem.CreateIndicator(this.transform);
+                        if (hitBox.damageToPlayer > 0)
+                            DISystem.CreateIndicator(this.transform);
+                    }
                 }
                 if (hit.rigidbody != null)
                     hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
