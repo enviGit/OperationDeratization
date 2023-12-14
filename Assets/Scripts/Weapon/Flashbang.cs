@@ -43,6 +43,7 @@ public class Flashbang : MonoBehaviour
         float angle = Vector3.Angle(grenadeDirection, playerTransform.forward);
         float distanceComparision = Vector3.Distance(transform.position, playerTransform.position);
         bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[1]);
+        whiteNoise.Play();
 
         if (angle < 60f && distanceComparision <= distance)
         {
@@ -65,7 +66,6 @@ public class Flashbang : MonoBehaviour
     private IEnumerator FlashCoroutine()
     {
         whiteImage.color = new Vector4(1, 1, 1, 1);
-        whiteNoise.Play();
 
         /*Collider[] collidersToAffect = Physics.OverlapSphere(transform.position, distance);
 
