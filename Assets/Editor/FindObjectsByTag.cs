@@ -24,6 +24,8 @@ public class FindObjectsByTag : EditorWindow
         GUILayout.Label("Find Objects with Tag", EditorStyles.boldLabel);
         targetTag = EditorGUILayout.TagField("Target Tag:", targetTag);
         EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
         GUILayout.Label("Sort Assets by Layer", EditorStyles.boldLabel);
         selectedLayerIndex = EditorGUILayout.Popup("Select Layer:", selectedLayerIndex, layerNames);
         EditorGUILayout.Space();
@@ -42,7 +44,6 @@ public class FindObjectsByTag : EditorWindow
         if (selectedLayerIndex > 0)
         {
             int selectedLayer = selectedLayerIndex - 1;
-            string selectedLayerName = layerNames[selectedLayer];
             filteredObjects = objectsWithTag
                 .Where(obj => obj.layer == selectedLayer)
                 .OrderBy(obj => obj.name)
@@ -51,15 +52,21 @@ public class FindObjectsByTag : EditorWindow
         else
             filteredObjects = objectsWithTag.OrderBy(obj => obj.name).ToList();
 
+        foreach (var obj in objectsWithTag)
+        {
+            if (!string.IsNullOrEmpty(targetTag) && obj.CompareTag(targetTag) == false)
+                continue;
+        }
+
         Selection.objects = filteredObjects.ToArray();
 
         foreach (var obj in filteredObjects)
-            Debug.Log($"Object {obj.name} with tag {targetTag} and on layer {LayerMask.LayerToName(obj.layer)}");
+            Debug.Log($"Object {obj.name} with tag {obj.tag} and on layer {LayerMask.LayerToName(obj.layer)}");
     }
     private string[] GetLayerNames()
     {
         string[] layerNames = new string[33];
-        layerNames[0] = "None";
+        layerNames[0] = "All Layers";
 
         for (int i = 0; i < 32; i++)
             layerNames[i + 1] = LayerMask.LayerToName(i);
