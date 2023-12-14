@@ -9,7 +9,7 @@ public class PlayerSettings : MonoBehaviour
     private int resolutionIndex;
     public AudioMixer musicMixer;
     private float musicVolume;
-    public AudioSource bgMusic;
+    private AudioSource bgMusic;
     public AudioMixer sfxMixer;
     private float sfxVolume;
     public VolumeProfile globalVolume;
@@ -20,11 +20,11 @@ public class PlayerSettings : MonoBehaviour
 
     private void Start()
     {
-        bgMusic = GetComponent<AudioSource>();
         resolutions = Screen.resolutions;
         resolutionIndex = Settings.ResolutionIndex;
         ApplyResolution(resolutionIndex);
         ApplyFullscreen();
+        bgMusic = GetComponent<AudioSource>();
         musicVolume = Settings.MusicMixer;
         ApplyMusicVolume(musicVolume);
         sfxVolume = Settings.SfxMixer;
