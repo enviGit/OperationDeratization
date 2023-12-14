@@ -47,4 +47,18 @@ public class FirstAidKit : Interactable
     {
         mesh.material.SetFloat("_dissolve", disappearIntensity);
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            EnemyHealth health = other.GetComponent<EnemyHealth>();
+
+            if (!used && health.currentHealth <= 99f && health.isAlive)
+            {
+                health.RestoreHealth(hpToRestore);
+                StartCoroutine(DestroyAfterSound());
+                used = true;
+            }
+        }
+    }
 }

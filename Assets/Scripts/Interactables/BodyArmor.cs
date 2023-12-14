@@ -60,4 +60,18 @@ public class BodyArmor : Interactable
                 material.SetFloat("_dissolve", disappearIntensity);
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            EnemyHealth health = other.GetComponent<EnemyHealth>();
+
+            if(!used && health.currentArmor <= 99f && health.isAlive)
+            {
+                health.PickupArmor();
+                StartCoroutine(DestroyAfterSound());
+                used = true;
+            }
+        }
+    }
 }

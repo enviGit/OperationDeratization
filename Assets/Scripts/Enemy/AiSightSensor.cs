@@ -7,7 +7,7 @@ public class AiSightSensor : MonoBehaviour
     public float distance = 10f;
     public float angle = 30f;
     public float height = 1f;
-    public Color meshColor = Color.cyan;
+    public Color meshColor = Color.red;
     public int scanFrequency = 30;
     public LayerMask layers;
     public LayerMask occlusionLayers;
@@ -15,7 +15,7 @@ public class AiSightSensor : MonoBehaviour
     {
         get
         {
-            objects.RemoveAll(obj => !obj || !IsValidTarget(obj)); //
+            objects.RemoveAll(obj => !obj || !IsValidTarget(obj));
             return objects;
         }
     }
@@ -49,7 +49,7 @@ public class AiSightSensor : MonoBehaviour
         {
             GameObject obj = colliders[i].gameObject;
 
-            if (IsInSight(obj) && IsValidTarget(obj)) //
+            if (IsInSight(obj) && IsValidTarget(obj))
                 objects.Add(obj);
         }
     }
@@ -160,7 +160,7 @@ public class AiSightSensor : MonoBehaviour
         Gizmos.color = Color.green;
 
         foreach (var obj in Objects)
-            Gizmos.DrawSphere(obj.transform.position, 0.2f);
+            Gizmos.DrawSphere(obj.transform.position, 0.3f);
     }
     public int Filter(GameObject[] buffer, string layerName)
     {

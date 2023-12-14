@@ -2657,18 +2657,19 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5716316549002154819}
-  - component: {fileID: 5716316549002154804}
-  - component: {fileID: 5716316549002154805}
-  - component: {fileID: 5716316549002154826}
-  - component: {fileID: 5716316549002154827}
-  - component: {fileID: 5716316549002154824}
-  - component: {fileID: 5716316549002154825}
-  - component: {fileID: 5716316549002154830}
-  - component: {fileID: 5716316549002154831}
   - component: {fileID: 5716316549002154828}
-  - component: {fileID: 5716316549002154829}
+  - component: {fileID: 5716316549002154831}
+  - component: {fileID: 5716316549002154804}
+  - component: {fileID: 5716316549002154826}
+  - component: {fileID: 5716316549002154825}
+  - component: {fileID: 5716316549002154827}
+  - component: {fileID: 5716316549002154805}
+  - component: {fileID: 5716316549002154824}
   - component: {fileID: 5716316549002154818}
+  - component: {fileID: 5716316549002154830}
+  - component: {fileID: 5716316549002154829}
   - component: {fileID: -8143268394610020479}
+  - component: {fileID: 4191837285252939324}
   m_Layer: 10
   m_Name: Bot3
   m_TagString: Enemy
@@ -2695,6 +2696,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 172.257, z: 0}
+--- !u!135 &5716316549002154828
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5716316549002154816}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.9
+  m_Center: {x: 0, y: 0.8, z: 0}
+--- !u!54 &5716316549002154831
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5716316549002154816}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 2
 --- !u!95 &5716316549002154804
 Animator:
   serializedVersion: 5
@@ -2715,24 +2745,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &5716316549002154805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5716316549002154816}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96a01533564517f4f935f82c5adf5620, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyStats: {fileID: 11400000, guid: 9d8623d014b615a40a5c88edd09a5780, type: 2}
-  damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
-    type: 3}
-  currentHealth: 0
-  isAlive: 1
-  isMarkedAsDead: 0
 --- !u!195 &5716316549002154826
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2755,30 +2767,6 @@ NavMeshAgent:
   m_BaseOffset: 0.95
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5716316549002154827
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5716316549002154816}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca3a873d618b47442984d983b8c7e8f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5716316549002154824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5716316549002154816}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 953d7dc2e8c3a7c46ae4ebdca03fd3e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5716316549002154825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2799,7 +2787,7 @@ MonoBehaviour:
   playerTransform: {fileID: 0}
   weapons: {fileID: 5716316549002154830}
   sightSensor: {fileID: 0}
---- !u!114 &5716316549002154830
+--- !u!114 &5716316549002154827
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2808,41 +2796,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5716316549002154816}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed25df0eea59fef4684cb703dec66ea4, type: 3}
+  m_Script: {fileID: 11500000, guid: ca3a873d618b47442984d983b8c7e8f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWeapon: {fileID: 0}
-  inaccuracy: 0.4
---- !u!54 &5716316549002154831
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5716316549002154816}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 2
---- !u!135 &5716316549002154828
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5716316549002154816}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.9
-  m_Center: {x: 0, y: 0.8, z: 0}
---- !u!114 &5716316549002154829
+--- !u!114 &5716316549002154805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2851,21 +2808,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 5716316549002154816}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 148a8199b8b558440b9f38d9d269ef17, type: 3}
+  m_Script: {fileID: 11500000, guid: 96a01533564517f4f935f82c5adf5620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetOffset: {x: 0, y: 0.65, z: 0}
-  iterations: 10
-  weight: 0.8
-  angleLimit: 90
-  distanceLimit: 1.5
-  humanBones:
-  - bone: 7
-    weight: 0.2
-  - bone: 8
-    weight: 0.5
-  - bone: 54
-    weight: 1
+  enemyStats: {fileID: 11400000, guid: 9d8623d014b615a40a5c88edd09a5780, type: 2}
+  damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
+    type: 3}
+  currentHealth: 0
+  isAlive: 1
+  isMarkedAsDead: 0
+--- !u!114 &5716316549002154824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5716316549002154816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 953d7dc2e8c3a7c46ae4ebdca03fd3e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5716316549002154818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2898,6 +2861,44 @@ MonoBehaviour:
     type: 3}
   isReloading: 0
   isFiring: 0
+--- !u!114 &5716316549002154830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5716316549002154816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed25df0eea59fef4684cb703dec66ea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWeapon: {fileID: 0}
+  inaccuracy: 0.4
+--- !u!114 &5716316549002154829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5716316549002154816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 148a8199b8b558440b9f38d9d269ef17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetOffset: {x: 0, y: 0.65, z: 0}
+  iterations: 10
+  weight: 0.8
+  angleLimit: 90
+  distanceLimit: 1.5
+  humanBones:
+  - bone: 7
+    weight: 0.2
+  - bone: 8
+    weight: 0.5
+  - bone: 54
+    weight: 1
 --- !u!114 &-8143268394610020479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2912,8 +2913,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distance: 25
   angle: 45
-  height: 1
-  meshColor: {r: 0, g: 1, b: 1, a: 1}
+  height: 1.5
+  meshColor: {r: 1, g: 0, b: 0, a: 0.19607843}
   scanFrequency: 30
   layers:
     serializedVersion: 2
@@ -2921,6 +2922,18 @@ MonoBehaviour:
   occlusionLayers:
     serializedVersion: 2
     m_Bits: 1
+--- !u!114 &4191837285252939324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5716316549002154816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92b6901d017ae8345b21c98145cf68bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5716316549115594453
 GameObject:
   m_ObjectHideFlags: 0

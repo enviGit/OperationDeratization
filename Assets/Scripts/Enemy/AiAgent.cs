@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 public class AiAgent : MonoBehaviour
 {
-    public AiStateMachine stateMachine;
+    [HideInInspector] public AiStateMachine stateMachine;
     public AiStateId initialState;
     [HideInInspector] public NavMeshAgent navMeshAgent;
     public AiAgentConfig config;
@@ -12,6 +12,7 @@ public class AiAgent : MonoBehaviour
     public Transform playerTransform;
     [HideInInspector] public AiWeapons weapons;
     [HideInInspector] public AiSightSensor sightSensor;
+    [HideInInspector] public AiTargetingSystem targeting;
 
     private void Start()
     {
@@ -20,12 +21,14 @@ public class AiAgent : MonoBehaviour
         weapons = GetComponent<AiWeapons>();
         healthBar = GetComponent<EnemyHealth>();
         sightSensor = GetComponent<AiSightSensor>();
+        targeting = GetComponent<AiTargetingSystem>();
         stateMachine = new AiStateMachine(this);
         stateMachine.RegisterState(new AiChasePlayerState());
         stateMachine.RegisterState(new AiDeathState());
         stateMachine.RegisterState(new AiIdleState());
         stateMachine.RegisterState(new AiFindWeaponState());
-        stateMachine.RegisterState(new AiAttackPlayerState());
+        stateMachine.RegisterState(new AiAttackTargetState());
+        stateMachine.RegisterState(new AiFindTargetState());
         stateMachine.ChangeState(initialState);
     }
     private void Update()

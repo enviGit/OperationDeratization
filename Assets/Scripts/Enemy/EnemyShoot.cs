@@ -97,14 +97,14 @@ public class EnemyShoot : MonoBehaviour
                     if (hitBox.damageToPlayer > 0)
                         DISystem.CreateIndicator(this.transform);
                 }
-                //if (hit.rigidbody != null)
-                    //hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
+                if (hit.rigidbody != null)
+                    hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
             }
 
             autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
         }
     }
-    private IEnumerator ReloadCoroutine()
+    public IEnumerator ReloadCoroutine()
     {
         isReloading = true;
         gunReloadAudio.clip = currentWeapon.gunAudioClips[2];

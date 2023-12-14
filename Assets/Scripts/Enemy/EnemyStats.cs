@@ -5,5 +5,5 @@ public class EnemyStats : ScriptableObject
 {
     [Header("Enemy")]
     public string enemyName;
-    public int maxHealth;
+    public float maxHealth;
 }

@@ -8,9 +8,9 @@ public class EnemyHealth : MonoBehaviour
     [Header("References")]
     [SerializeField] private EnemyStats enemyStats;
     private GameObject player;
-    List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
-    WeaponIk weaponIk;
-    AiAgent agent;
+    private List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
+    private WeaponIk weaponIk;
+    private AiAgent agent;
 
     [Header("Dmg popup")]
     [SerializeField] private GameObject damageTextPrefab;
@@ -18,9 +18,13 @@ public class EnemyHealth : MonoBehaviour
     private GameObject damageTextInstance;
 
     [Header("Enemy health")]
-    [SerializeField] private int currentHealth;
+    public float currentHealth;
     public bool isAlive = true;
     public bool isMarkedAsDead = false;
+
+    [Header("Armor")]
+    public float currentArmor = 0;
+    public float maxArmor = 100f;
 
     private void Start()
     {
@@ -100,6 +104,41 @@ public class EnemyHealth : MonoBehaviour
             damageTextInstance.transform.GetChild(0).GetComponent<Animator>().enabled = true;
         }
     }
+    /*public void TakeDamage(float damage)
+    {
+        if (!isAlive)
+            return;
+
+        float damageToHealth = damage;
+
+        if (currentArmor > 0)
+        {
+            float armorMultiplier = 0.5f;
+            damageToHealth = damage * armorMultiplier;
+            currentArmor -= damage;
+            currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
+        }
+
+        currentHealth -= damageToHealth;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        lerpTimer = 0f;
+
+        if (vignetteMaterial != null)
+        {
+            float percent = currentHealth / maxHealth;
+            float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
+            float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
+            vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
+            vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
+        }
+        if (impactClips.Length > 0)
+        {
+            int randomIndex = Random.Range(0, impactClips.Length - 1);
+            impactSound.PlayOneShot(impactClips[randomIndex]);
+        }
+        if (currentHealth <= 0)
+            Die();
+    }*/
     private bool IsObjectVisible(GameObject obj)
     {
         Renderer renderer = obj.GetComponent<Renderer>();
@@ -166,5 +205,22 @@ public class EnemyHealth : MonoBehaviour
                 material.SetFloat("_dissolveIntensity", colorIntensity);
             }
         }
+    }
+    public void RestoreHealth(float healAmount)
+    {
+        if (!isAlive)
+            return;
+
+        currentHealth += healAmount;
+        currentHealth = Mathf.Min(currentHealth, enemyStats.maxHealth);
+    }
+    public void PickupArmor()
+    {
+        if (!isAlive)
+            return;
+        if (currentArmor > 99f)
+            return;
+
+        currentArmor = 100;
     }
 }

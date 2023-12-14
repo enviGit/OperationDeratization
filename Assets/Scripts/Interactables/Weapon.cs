@@ -223,8 +223,8 @@ public class Weapon : Interactable
     }
     private void OnTriggerEnter(Collider other)
     {
-        AiWeapons weapons = other.gameObject.GetComponent<AiWeapons>();
-        sockets = other.gameObject.GetComponentInChildren<MeshSockets>();
+        AiWeapons weapons = other.GetComponent<AiWeapons>();
+        sockets = other.GetComponentInChildren<MeshSockets>();
 
         if (weapons != null && weapons.GetComponent<AiAgent>().stateMachine.currentState != AiStateId.Death)
         {
