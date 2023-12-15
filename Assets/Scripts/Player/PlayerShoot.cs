@@ -60,13 +60,9 @@ public class PlayerShoot : MonoBehaviour
     }
     private void Awake()
     {
-        int grenadeLayer = 0;
-
-        for (int i = 0; i < 32; i++)
-        {
-            if (!Physics.GetIgnoreLayerCollision(grenadeLayer, i))
-                grenadeCollisionMask |= 1 << i;
-        }
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int grenadeLayer = LayerMask.NameToLayer("Ground");
+        Physics.IgnoreLayerCollision(grenadeLayer, playerLayer, true);
     }
     private void Update()
     {

@@ -13,8 +13,8 @@ public class Grenade : MonoBehaviour
     public float radius = 5f;
     public float force = 100f;
     public bool shouldExplode = false;
-    bool hasExploded = false;
-    float countdown;
+    private bool hasExploded = false;
+    private float countdown;
 
     private void Start()
     {
@@ -49,14 +49,6 @@ public class Grenade : MonoBehaviour
             if (rb != null)
                 if (!nearbyObject.CompareTag("Enemy"))
                     rb.AddExplosionForce(force, transform.position, radius);
-
-            Grenade grenade = nearbyObject.GetComponent<Grenade>();
-
-            if (grenade != null)
-            {
-                grenade.countdown = 0.1f;
-                grenade.shouldExplode = true;
-            }
         }
 
         Collider[] collidersToDestroy = Physics.OverlapSphere(transform.position, radius);

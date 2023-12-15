@@ -56,7 +56,7 @@ public class AiFindWeaponState : AiState
 
         return navHit.position;
     }
-    private GameObject FindPickup(AiAgent agent)
+    /*private GameObject FindPickup(AiAgent agent)
     {
         int count = agent.sightSensor.Filter(pickups, "Interactable", "Weapon");
 
@@ -75,10 +75,19 @@ public class AiFindWeaponState : AiState
         }
 
         return closestPickup;
+    }*/
+    private GameObject FindPickup(AiAgent agent)
+    {
+        int count = agent.sightSensor.Filter(pickups, "Interactable", "Weapon");
+
+        if (count > 0)
+            return pickups[0];
+
+        return null;
     }
     private void CollectPickup(AiAgent agent, GameObject pickup)
     {
-        if (agent.sightSensor.Objects.Contains(pickup))
+        //if (agent.sightSensor.Objects.Contains(pickup))
             agent.navMeshAgent.destination = pickup.transform.position;
     }
 }

@@ -37,7 +37,7 @@ public class HitBox : MonoBehaviour
             health.TakeDamage(damage, direction, false);
 
         //Displaying dmg taken by bots
-        if (shooter.CompareTag("Player"))
+        /*if (shooter.CompareTag("Player"))
         {
             string gameObjectName = gameObject.name;
 
@@ -51,8 +51,9 @@ public class HitBox : MonoBehaviour
                 }
             }
 
+
             Debug.Log("You dealt " + damage + " damage to the " + gameObjectName);
-        }
+        }*/
         //Displaying dmg taken by bots
     }
     public void OnExplosion(int damage, Vector3 direction)
