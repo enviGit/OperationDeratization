@@ -68,8 +68,6 @@ public class HitBox : MonoBehaviour
             damageToPlayer = GetDamageFromHitBox(gameObject, shooter);
             playerHealth.TakeDamage(damageToPlayer);
         }
-
-        //Debug.Log(gameObject);
     }
     public void OnExplosionPlayer(int damage)
     {

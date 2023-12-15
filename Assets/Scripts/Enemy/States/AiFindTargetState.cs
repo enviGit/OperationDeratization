@@ -4,7 +4,6 @@ using UnityEngine.AI;
 public class AiFindTargetState : AiState
 {
     private float wanderRadius = 10f;
-    private float stopDistance = 5f;
 
     public AiStateId GetId()
     {

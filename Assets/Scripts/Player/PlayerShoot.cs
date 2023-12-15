@@ -302,10 +302,12 @@ public class PlayerShoot : MonoBehaviour
             weapon.localPosition = interpolatedPosition;
             weapon.localRotation = interpolatedRotation;
             elapsedTime += Time.deltaTime;
+
             yield return null;
         }
 
         yield return new WaitForSeconds(transitionTime - elapsedTime);
+
         weapon.localPosition = originalPosition;
         weapon.localRotation = originalRotationQuaternion;
     }

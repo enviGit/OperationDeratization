@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [System.Serializable]
 public class HumanBone
@@ -11,16 +12,25 @@ public class WeaponIk : MonoBehaviour
 {
     private Transform targetTransform;
     private Transform aimTransform;
-    public Vector3 targetOffset = new Vector3(0, 0.65f, 0);
+    private float minOffsetY = 0.6f;
+    private float maxOffsetY = 1.2f;
+    [HideInInspector] public float currentOffsetY;
+    private float offsetChangeProbability = 0.15f;
+    private float minOffsetZ = -0.3f;
+    private float maxOffsetZ = 0.3f;
+    [HideInInspector] public float currentOffsetZ;
+    private float maxOffsetZChange = 0.1f;
     public int iterations = 10;
     [Range(0, 1)] public float weight = 1f;
     public float angleLimit = 90f;
     public float distanceLimit = 1.5f;
     public HumanBone[] humanBones;
-    Transform[] boneTransforms;
+    private Transform[] boneTransforms;
 
     private void Start()
     {
+        currentOffsetY = Random.Range(minOffsetY, maxOffsetY);
+        currentOffsetZ = Random.Range(minOffsetZ, maxOffsetZ);
         Animator animator = GetComponent<Animator>();
         boneTransforms = new Transform[humanBones.Length];
 
@@ -54,6 +64,14 @@ public class WeaponIk : MonoBehaviour
     }
     private Vector3 GetTargetPosition()
     {
+        if (Random.Range(0f, 1f) < offsetChangeProbability)
+        {
+            float offsetZChange = Random.Range(-maxOffsetZChange, maxOffsetZChange);
+            currentOffsetZ = Mathf.Clamp(currentOffsetZ + offsetZChange, minOffsetZ, maxOffsetZ);
+            currentOffsetY = Random.Range(minOffsetY, maxOffsetY);
+        }
+
+        Vector3 targetOffset = new Vector3(0, currentOffsetY, currentOffsetZ);
         Vector3 targetDirection = (targetTransform.position + targetOffset) - aimTransform.position;
         Vector3 aimDirection = aimTransform.forward;
         float blendOut = 0;
@@ -68,6 +86,7 @@ public class WeaponIk : MonoBehaviour
             blendOut += distanceLimit - targetDistance;
 
         Vector3 direction = Vector3.Slerp(targetDirection, aimDirection, blendOut);
+
         return aimTransform.position + direction;
     }
     public void SetTargetTransform(Transform target)
