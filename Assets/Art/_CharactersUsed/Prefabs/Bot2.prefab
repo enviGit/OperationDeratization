@@ -3011,6 +3011,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialState: 3
+  currentState: 0
   navMeshAgent: {fileID: 4983504878113814630}
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 4983504878113814624}
@@ -3018,6 +3019,8 @@ MonoBehaviour:
   playerTransform: {fileID: 0}
   weapons: {fileID: 4983504878113814626}
   sightSensor: {fileID: 0}
+  targeting: {fileID: 0}
+  health: {fileID: 0}
 --- !u!114 &4983504878113814631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3043,11 +3046,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStats: {fileID: 11400000, guid: 9d8623d014b615a40a5c88edd09a5780, type: 2}
+  lowHealth: 20
   damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
     type: 3}
   currentHealth: 0
   isAlive: 1
   isMarkedAsDead: 0
+  currentArmor: 0
+  maxArmor: 100
 --- !u!114 &4983504878113814624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3105,6 +3111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 0}
+  hasLootedAmmo: 0
   inaccuracy: 0.4
 --- !u!114 &4983504878113814653
 MonoBehaviour:
@@ -3142,9 +3149,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4127d03f1d07dd349aee1b342cbe6cff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 25
-  angle: 45
-  height: 1.5
+  distance: 35
+  angle: 60
+  height: 2.5
   meshColor: {r: 1, g: 0, b: 0, a: 0.19607843}
   scanFrequency: 30
   layers:
@@ -3165,6 +3172,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b6901d017ae8345b21c98145cf68bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  memorySpan: 3
+  distanceWeight: 2
+  angleWeight: 1
+  ageWeight: 1
 --- !u!1 &4983504878141214344
 GameObject:
   m_ObjectHideFlags: 0

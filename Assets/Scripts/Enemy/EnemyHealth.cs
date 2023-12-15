@@ -8,7 +8,7 @@ public class EnemyHealth : MonoBehaviour
     [Header("References")]
     [SerializeField] private EnemyStats enemyStats;
     private GameObject player;
-    public float lowHealth = 20f;
+    private float lowHealth = 10f;
     private List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
     private WeaponIk weaponIk;
     private AiAgent agent;

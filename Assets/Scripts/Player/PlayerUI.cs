@@ -78,12 +78,14 @@ public class PlayerUI : MonoBehaviour
                 {
                     ammoRefill.isFilling = false;
                     ammoRefill.loadingSlider.SetActive(false);
+
                     yield break;
                 }
 
                 float progress = (Time.time - startTime) / 2.0f;
                 ammoRefill.slider.value = progress;
                 ammoRefill.sliderValue.text = string.Format("{0:F1}", progress * 2.0f);
+
                 yield return new WaitForSeconds(0.1f);
             }
 
@@ -135,6 +137,7 @@ public class PlayerUI : MonoBehaviour
             float t = (Time.time - startTime) / fadeDuration;
             textColor.a = Mathf.Lerp(1.0f, 0.0f, t);
             ammoRefillPrompt.color = textColor;
+
             yield return null;
         }
 

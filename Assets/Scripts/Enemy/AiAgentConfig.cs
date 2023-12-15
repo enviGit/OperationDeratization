@@ -11,7 +11,7 @@ public class AiAgentConfig : ScriptableObject
     public float findTargetSpeed = 3f;
 
     [Header("Attack State")]
-    public float attackStoppingDistance = 5f;
+    public float attackStoppingDistance = 15f;
     public float attackSpeed = 3f;
     public float attackCloseRange = 7f;
 }

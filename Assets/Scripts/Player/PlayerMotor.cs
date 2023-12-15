@@ -14,6 +14,8 @@ public class PlayerMotor : MonoBehaviour
     private Vector3 playerVelocity;
     public float gravity = -9.8f;
     public float jumpHeight = 0.7f;
+    public float playerHeight = 3.6f;
+    public float playerCrouchHeight = 2f;
     public float moveSpeed = 4f;
     private AudioSource movementSound;
     public AudioClip[] movementClips;
@@ -170,13 +172,15 @@ public class PlayerMotor : MonoBehaviour
         {
             float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 1f, Time.deltaTime * 5f);
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
-            controller.height = 1f;
+            controller.height = 2f;
+            controller.center = new Vector3(0, 1f, 0);
         }
         else
         {
             float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 2f, Time.deltaTime * 5f);
             Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
-            controller.height = 2f;
+            controller.height = 3.6f;
+            controller.center = new Vector3(0, 1.8f, 0);
         }
     }
     private void CrouchToggle()
@@ -190,7 +194,7 @@ public class PlayerMotor : MonoBehaviour
                 RaycastHit hit;
                 LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
-                if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
+                if (Physics.Raycast(transform.position, transform.up, out hit, playerHeight, obstacleMask))
                 {
                     isCrouching = true;
                     currentState.playerStance = PlayerStance.Stance.Crouching;
@@ -218,7 +222,9 @@ public class PlayerMotor : MonoBehaviour
             RaycastHit hit;
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
-            if (Physics.Raycast(transform.position, transform.up, out hit, controller.height, obstacleMask))
+            if (!isCrouching && Physics.Raycast(transform.position, transform.up, out hit, jumpHeight, obstacleMask))
+                return;
+            else if (isCrouching && Physics.Raycast(transform.position, transform.up, out hit, controller.height + jumpHeight, obstacleMask))
                 return;
             if (_isClimbing)
                 ladder.DetachFromLadder();

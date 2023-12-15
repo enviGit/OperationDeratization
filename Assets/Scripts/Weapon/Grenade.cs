@@ -40,6 +40,7 @@ public class Grenade : MonoBehaviour
         bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[0]);
         Instantiate(explosionEffect, transform.position, transform.rotation, parentObject.transform);
         Collider[] collidersToMove = Physics.OverlapSphere(transform.position, radius);
+        LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
         foreach (Collider nearbyObject in collidersToMove)
         {
@@ -82,7 +83,7 @@ public class Grenade : MonoBehaviour
             {
                 RaycastHit hit;
 
-                if (Physics.Raycast(transform.position, nearbyObject.transform.position - transform.position, out hit, radius))
+                if (Physics.Raycast(transform.position, nearbyObject.transform.position - transform.position, out hit, radius, obstacleMask))
                 {
                     if (hit.collider != nearbyObject)
                         continue;

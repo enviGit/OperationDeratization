@@ -30,19 +30,29 @@ public class HitBox : MonoBehaviour
     {
         gun = weapon;
         int damage = GetDamageFromHitBox(gameObject, shooter);
-        health.TakeDamage(damage, direction, true);
+
+        if (shooter.CompareTag("Player"))
+            health.TakeDamage(damage, direction, true);
+        else
+            health.TakeDamage(damage, direction, false);
 
         //Displaying dmg taken by bots
-        string gameObjectName = gameObject.name;
-        foreach (string prefix in bonePrefixes)
+        if (shooter.CompareTag("Player"))
         {
-            if (gameObjectName.StartsWith(prefix))
+            string gameObjectName = gameObject.name;
+
+            foreach (string prefix in bonePrefixes)
             {
-                gameObjectName = gameObjectName.Substring(prefix.Length);
-                break;
+                if (gameObjectName.StartsWith(prefix))
+                {
+                    gameObjectName = gameObjectName.Substring(prefix.Length);
+
+                    break;
+                }
             }
+
+            Debug.Log("You dealt " + damage + " damage to the " + gameObjectName);
         }
-        Debug.Log("You dealt " + damage + " damage to the " + gameObjectName);
         //Displaying dmg taken by bots
     }
     public void OnExplosion(int damage, Vector3 direction)

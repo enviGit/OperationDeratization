@@ -24,8 +24,9 @@ public class PlayerInteract : MonoBehaviour
     {
         playerUI.UpdateText(string.Empty);
         ray = new Ray(cam.transform.position, cam.transform.forward);
+        LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
-        if (Physics.Raycast(ray, out hitInfo, distance))
+        if (Physics.Raycast(ray, out hitInfo, distance, obstacleMask))
         {
             if (hitInfo.collider.GetComponent<Interactable>() != null)
             {

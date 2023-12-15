@@ -32,7 +32,9 @@ public class Weapon : Interactable
     }
     private void Update()
     {
-        if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance) && interact.hitInfo.transform.GetComponent<Weapon>() && shoot.isAiming == false)
+        LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
+
+        if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance, obstacleMask) && interact.hitInfo.transform.GetComponent<Weapon>() && shoot.isAiming == false)
         {
             if (upperImage != null)
             {

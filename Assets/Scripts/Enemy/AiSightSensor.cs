@@ -4,9 +4,9 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class AiSightSensor : MonoBehaviour
 {
-    public float distance = 10f;
-    public float angle = 30f;
-    public float height = 1f;
+    public float distance = 35f;
+    public float angle = 60f;
+    public float height = 2.5f;
     public Color meshColor = Color.red;
     public int scanFrequency = 30;
     public LayerMask layers;
@@ -16,11 +16,12 @@ public class AiSightSensor : MonoBehaviour
         get
         {
             objects.RemoveAll(obj => !obj || !IsValidTarget(obj));
+
             return objects;
         }
     }
     private List<GameObject> objects = new List<GameObject>();
-    private Collider[] colliders = new Collider[50];
+    private Collider[] colliders = new Collider[150];
     private Mesh mesh;
     private int count;
     private float scanInterval;
@@ -42,7 +43,7 @@ public class AiSightSensor : MonoBehaviour
     }
     private void Scan()
     {
-        count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layers, QueryTriggerInteraction.Collide);
+        count = Physics.OverlapSphereNonAlloc(transform.position + Vector3.down * 0.5f, distance, colliders, layers, QueryTriggerInteraction.Collide);
         objects.Clear();
 
         for (int i = 0; i < count; ++i)
@@ -55,11 +56,11 @@ public class AiSightSensor : MonoBehaviour
     }
     private bool IsValidTarget(GameObject obj)
     {
-        return obj != gameObject && (obj.CompareTag("Weapon") || obj.CompareTag("FirstAidKit") || obj.CompareTag("Armor") || obj.CompareTag("Enemy") || obj.CompareTag("Player"));
+        return obj != gameObject;
     }
     public bool IsInSight(GameObject obj)
     {
-        Vector3 origin = transform.position;
+        Vector3 origin = transform.position + Vector3.down * 0.5f;
         Vector3 dest = obj.transform.position;
         Vector3 direction = dest - origin;
 
@@ -91,9 +92,9 @@ public class AiSightSensor : MonoBehaviour
         Vector3 bottomCenter = Vector3.zero;
         Vector3 bottomLeft = Quaternion.Euler(0, -angle, 0) * Vector3.forward * distance;
         Vector3 bottomRight = Quaternion.Euler(0, angle, 0) * Vector3.forward * distance;
-        Vector3 topCenter = bottomCenter + Vector3.up * height;
-        Vector3 topRight = bottomRight + Vector3.up * height;
-        Vector3 topLeft = bottomLeft + Vector3.up * height;
+        Vector3 topCenter = bottomCenter + Vector3.up * height + Vector3.down * 0.5f;
+        Vector3 topRight = bottomRight + Vector3.up * height + Vector3.down * 0.5f;
+        Vector3 topLeft = bottomLeft + Vector3.up * height + Vector3.down * 0.5f;
         int vert = 0;
         //LeftSide
         vertices[vert++] = bottomCenter;
@@ -116,8 +117,8 @@ public class AiSightSensor : MonoBehaviour
         {
             bottomLeft = Quaternion.Euler(0, currentAngle, 0) * Vector3.forward * distance;
             bottomRight = Quaternion.Euler(0, currentAngle + deltaAngle, 0) * Vector3.forward * distance;
-            topLeft = bottomLeft + Vector3.up * height;
-            topRight = bottomRight + Vector3.up * height;
+            topLeft = bottomLeft + Vector3.up * height + Vector3.down * 0.5f;
+            topRight = bottomRight + Vector3.up * height + Vector3.down * 0.5f;
             //FarSide
             vertices[vert++] = bottomLeft;
             vertices[vert++] = bottomRight;
@@ -154,7 +155,7 @@ public class AiSightSensor : MonoBehaviour
         if (mesh)
         {
             Gizmos.color = meshColor;
-            Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
+            Gizmos.DrawMesh(mesh, transform.position + Vector3.down * 0.5f, transform.rotation);
         }
 
         Gizmos.color = Color.green;
