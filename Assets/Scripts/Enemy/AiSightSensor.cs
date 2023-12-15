@@ -21,7 +21,7 @@ public class AiSightSensor : MonoBehaviour
         }
     }
     private List<GameObject> objects = new List<GameObject>();
-    private Collider[] colliders = new Collider[150];
+    private Collider[] colliders = new Collider[50];
     private Mesh mesh;
     private int count;
     private float scanInterval;
@@ -56,7 +56,7 @@ public class AiSightSensor : MonoBehaviour
     }
     private bool IsValidTarget(GameObject obj)
     {
-        return obj != gameObject;
+        return obj != gameObject && (obj.CompareTag("Weapon") || obj.CompareTag("AmmoBox") || obj.CompareTag("FirstAidKit") || obj.CompareTag("Armor") || obj.CompareTag("Enemy") || obj.CompareTag("Player"));
     }
     public bool IsInSight(GameObject obj)
     {
@@ -168,7 +168,7 @@ public class AiSightSensor : MonoBehaviour
         int layer = LayerMask.NameToLayer(layerName);
         int count = 0;
 
-        foreach(var obj in Objects)
+        foreach (var obj in Objects)
         {
             if (tagName != null && !obj.CompareTag(tagName))
                 continue;

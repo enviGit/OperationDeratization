@@ -6,8 +6,6 @@ public class AiFindWeaponState : AiState
     private GameObject pickup;
     private GameObject[] pickups = new GameObject[3];
     private float wanderRadius = 10f;
-    private float stopDistance = 5f;
-    private float distanceCounter = 0f;
 
     public AiStateId GetId()
     {
@@ -17,7 +15,6 @@ public class AiFindWeaponState : AiState
     {
         pickup = null;
         agent.navMeshAgent.speed = agent.config.findWeaponSpeed;
-        distanceCounter = 0f;
     }
     public void Exit(AiAgent agent)
     {
@@ -25,27 +22,19 @@ public class AiFindWeaponState : AiState
     }
     public void Update(AiAgent agent)
     {
-        //Find pickup
-        if (!pickup)
-        {
-            pickup = FindPickup(agent);
+        // Find pickup
+        pickup = FindPickup(agent);
 
-            if (pickup)
-                CollectPickup(agent, pickup);
-        }
-        //Wander
-        if (!agent.navMeshAgent.hasPath)
+        if (pickup)
+            CollectPickup(agent, pickup);
+        else
         {
-            Vector3 randomPoint = RandomNavmeshLocation(wanderRadius, agent);
-            agent.navMeshAgent.SetDestination(randomPoint);
-        }
-
-        distanceCounter += agent.navMeshAgent.velocity.magnitude * Time.deltaTime;
-
-        if (distanceCounter >= stopDistance)
-        {
-            agent.navMeshAgent.ResetPath();
-            distanceCounter = 0f;
+            // Wander if no pickup is found
+            if (!agent.navMeshAgent.hasPath)
+            {
+                Vector3 randomPoint = RandomNavmeshLocation(wanderRadius, agent);
+                agent.navMeshAgent.SetDestination(randomPoint);
+            }
         }
         if (agent.weapons.HasWeapon())
             agent.stateMachine.ChangeState(AiStateId.FindTarget);
@@ -71,13 +60,25 @@ public class AiFindWeaponState : AiState
     {
         int count = agent.sightSensor.Filter(pickups, "Interactable", "Weapon");
 
-        if (count > 0)
-            return pickups[0];
+        GameObject closestPickup = null;
+        float closestDistance = float.MaxValue;
 
-        return null;
+        for (int i = 0; i < count; i++)
+        {
+            float distance = Vector3.Distance(agent.transform.position, pickups[i].transform.position);
+
+            if (distance < closestDistance)
+            {
+                closestPickup = pickups[i];
+                closestDistance = distance;
+            }
+        }
+
+        return closestPickup;
     }
     private void CollectPickup(AiAgent agent, GameObject pickup)
     {
-        agent.navMeshAgent.destination = pickup.transform.position;
+        if (agent.sightSensor.Objects.Contains(pickup))
+            agent.navMeshAgent.destination = pickup.transform.position;
     }
 }
