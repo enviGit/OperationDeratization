@@ -35,10 +35,26 @@ public class Settings
         get => PlayerPrefs.GetInt(fullScreen, 1) != 0;
         set => PlayerPrefs.SetInt(fullScreen, value ? 1 : 0);
     }
-
     public static int ResolutionIndex
     {
-        get => PlayerPrefs.GetInt(resolutionIndex, 0);
+        get
+        {
+            int defaultResolutionIndex = GetResolutionIndex(Screen.currentResolution);
+
+            return PlayerPrefs.GetInt(resolutionIndex, defaultResolutionIndex);
+        }
         set => PlayerPrefs.SetInt(resolutionIndex, value);
+    }
+    private static int GetResolutionIndex(Resolution resolution)
+    {
+        Resolution[] resolutions = Screen.resolutions;
+
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            if (resolutions[i].width == resolution.width && resolutions[i].height == resolution.height)
+                return i;
+        }
+
+        return Screen.resolutions.Length - 1;
     }
 }
