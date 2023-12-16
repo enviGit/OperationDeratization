@@ -160,11 +160,11 @@ public class PlayerShoot : MonoBehaviour
                         GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                         Destroy(ricochet, 2f);
 
-                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall"))
+                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("MovingDoors"))
                         {
                             GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
-                            if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
+                            if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
                                 impact.transform.SetParent(hit.collider.transform);
                         }
                     }
@@ -262,11 +262,11 @@ public class PlayerShoot : MonoBehaviour
                             GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                             Destroy(ricochet, 2f);
 
-                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall"))
+                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("MovingDoors"))
                             {
                                 GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
-                                if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.CompareTag("MovingDoors"))
+                                if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
                                     impact.transform.SetParent(hit.collider.transform);
                             }
                         }

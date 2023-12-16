@@ -26,6 +26,7 @@ public class WindowManager : MonoBehaviour
         SetResolution(currentResolutionIndex);
         resolutionSlider.value = (float)currentResolutionIndex / (resolutions.Length - 1);
         resolutionSlider.onValueChanged.AddListener(OnResolutionSliderChanged);
+        SetResolutionText(resolutions[currentResolutionIndex]);
     }
     private void SetResolutionText(Resolution resolution)
     {
