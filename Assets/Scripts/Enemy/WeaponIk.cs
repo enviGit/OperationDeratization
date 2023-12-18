@@ -12,14 +12,7 @@ public class WeaponIk : MonoBehaviour
 {
     private Transform targetTransform;
     private Transform aimTransform;
-    private float minOffsetY = 0.6f;
-    private float maxOffsetY = 1.2f;
-    [HideInInspector] public float currentOffsetY;
-    private float offsetChangeProbability = 0.15f;
-    private float minOffsetZ = -0.3f;
-    private float maxOffsetZ = 0.3f;
-    [HideInInspector] public float currentOffsetZ;
-    private float maxOffsetZChange = 0.1f;
+    private Vector3 targetOffset = new Vector3(0, 0.65f, 0);
     public int iterations = 10;
     [Range(0, 1)] public float weight = 1f;
     public float angleLimit = 90f;
@@ -29,8 +22,6 @@ public class WeaponIk : MonoBehaviour
 
     private void Start()
     {
-        currentOffsetY = Random.Range(minOffsetY, maxOffsetY);
-        currentOffsetZ = Random.Range(minOffsetZ, maxOffsetZ);
         Animator animator = GetComponent<Animator>();
         boneTransforms = new Transform[humanBones.Length];
 
@@ -64,14 +55,6 @@ public class WeaponIk : MonoBehaviour
     }
     private Vector3 GetTargetPosition()
     {
-        if (Random.Range(0f, 1f) < offsetChangeProbability)
-        {
-            float offsetZChange = Random.Range(-maxOffsetZChange, maxOffsetZChange);
-            currentOffsetZ = Mathf.Clamp(currentOffsetZ + offsetZChange, minOffsetZ, maxOffsetZ);
-            currentOffsetY = Random.Range(minOffsetY, maxOffsetY);
-        }
-
-        Vector3 targetOffset = new Vector3(0, currentOffsetY, currentOffsetZ);
         Vector3 targetDirection = (targetTransform.position + targetOffset) - aimTransform.position;
         Vector3 aimDirection = aimTransform.forward;
         float blendOut = 0;

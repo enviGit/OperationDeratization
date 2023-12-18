@@ -18,7 +18,6 @@ public class PlayerShoot : MonoBehaviour
     private LadderTrigger ladder;
     private PlayerStamina stamina;
     private GameObject parentObject;
-    public GameObject trailPrefab;
 
     [Header("Weapon")]
     private Gun currentWeapon;
@@ -32,6 +31,9 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] [Range(0.01f, 0.25f)] private float timeBetweenPoints = 0.03f;
     private LayerMask grenadeCollisionMask;
     private float dynamicFieldOfView;
+    private Animator weaponAnimator;
+    private Transform activeWeapon = null;
+    private Transform weaponHolderActive;
 
     [Header("Movement")]
     private float xRotation = 0f;
@@ -57,6 +59,7 @@ public class PlayerShoot : MonoBehaviour
         gunSwitchAudio = transform.Find("Sounds/WeaponSwitch").GetComponent<AudioSource>();
         xSensitivity *= Settings.Sensitivity;
         ySensitivity *= Settings.Sensitivity;
+        weaponHolderActive = transform.Find("Camera/Main Camera/WeaponHolder");
     }
     private void Awake()
     {
@@ -89,6 +92,18 @@ public class PlayerShoot : MonoBehaviour
             weaponReload = currentWeapon;
             StartCoroutine(ReloadCoroutine());
         }
+
+        foreach (Transform child in weaponHolderActive)
+        {
+            if (child.gameObject.activeSelf)
+            {
+                activeWeapon = child;
+
+                break;
+            }
+        }
+
+        weaponAnimator = activeWeapon.GetComponent<Animator>();
     }
     private void Shoot()
     {
@@ -148,9 +163,6 @@ public class PlayerShoot : MonoBehaviour
 
                 if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                 {
-                    GameObject bulletTrail = Instantiate(trailPrefab, muzzle.position + muzzle.forward * 1.5f, trailPrefab.transform.rotation);
-                    bulletTrail.GetComponent<ProjectileMovement>().hitpoint = hit.point;
-
                     // Debug.Log("Hit: " + hit.collider.name);
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                     var hitBox = hit.collider.GetComponent<HitBox>();
@@ -237,22 +249,10 @@ public class PlayerShoot : MonoBehaviour
                     {
                         stamina.UseStamina(stamina.attackStaminaCost);
                         stamina.BlockStaminaOnAttack();
-                        Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
-                        Vector3 originalPosition = new Vector3(0.05f, -0.08f, 0.2f);
-                        Vector3 originalRotation = new Vector3(5.2f, -125f, 101f);
-                        Vector3 attackPosition = new Vector3(0.05f, -0.08f, 0.3f);
-                        Vector3 attackRotation = new Vector3(-60f, -125f, 131f);
-                        StartCoroutine(TransitionKnifePosition(weapon, originalPosition, attackPosition, originalRotation, attackRotation, 0.35f));
+                        weaponAnimator.SetTrigger("Attack");
                     }
                     if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                     {
-                        if(currentWeapon.gunStyle != GunStyle.Melee)
-                        {
-                            Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                            GameObject bulletTrail = Instantiate(trailPrefab, muzzle.position + muzzle.forward * 1.5f, trailPrefab.transform.rotation);
-                            bulletTrail.GetComponent<ProjectileMovement>().hitpoint = hit.point;
-                        }
-
                         //Debug.Log("Hit: " + hit.collider.name);
                         Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                         var hitBox = hit.collider.GetComponent<HitBox>();
@@ -283,29 +283,6 @@ public class PlayerShoot : MonoBehaviour
                 shotTimer = Time.time + currentWeapon.timeBetweenShots;
             }
         }
-    }
-    private IEnumerator TransitionKnifePosition(Transform weapon, Vector3 originalPosition, Vector3 attackPosition, Vector3 originalRotation, Vector3 attackRotation, float transitionTime)
-    {
-        float elapsedTime = 0f;
-        Quaternion originalRotationQuaternion = Quaternion.Euler(originalRotation);
-        Quaternion attackRotationQuaternion = Quaternion.Euler(attackRotation);
-
-        while (elapsedTime < transitionTime)
-        {
-            float t = elapsedTime / transitionTime;
-            Vector3 interpolatedPosition = Vector3.Lerp(originalPosition, attackPosition, t);
-            Quaternion interpolatedRotation = Quaternion.Slerp(originalRotationQuaternion, attackRotationQuaternion, t);
-            weapon.localPosition = interpolatedPosition;
-            weapon.localRotation = interpolatedRotation;
-            elapsedTime += Time.deltaTime;
-
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(transitionTime - elapsedTime);
-
-        weapon.localPosition = originalPosition;
-        weapon.localRotation = originalRotationQuaternion;
     }
     private IEnumerator ReloadCoroutine()
     {
@@ -344,6 +321,7 @@ public class PlayerShoot : MonoBehaviour
             weaponReload.currentAmmoCount = startingAmmoCount;
             weaponReload.maxAmmoCount = startingMaxAmmoCount;
             isReloading = false;
+
             yield break;
         }
 
@@ -390,16 +368,16 @@ public class PlayerShoot : MonoBehaviour
         transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
-        Vector3 originalPosition = new Vector3(0.05f, -0.08f, 0.2f);
-        Vector3 originalRotation = new Vector3(5.2f, -125, 101);
+        Vector3 originalPosition = new Vector3(0.0866f, -0.02f, 0.1845f);
+        Vector3 originalRotation = new Vector3(20.84f, 198.13f, 129.6f);
         Vector3 aimingPosition = new Vector3(0.05f, -0.08f, 0.2f);
         Vector3 aimingRotation = new Vector3(5.2f, -125, 101);
 
         switch (currentWeapon.gunType)
         {
             case GunType.Melee:
-                originalPosition = new Vector3(0.05f, -0.08f, 0.2f);
-                originalRotation = new Vector3(5.2f, -125, 101);
+                originalPosition = new Vector3(0.0866f, -0.02f, 0.1845f);
+                originalRotation = new Vector3(20.84f, 198.13f, 129.6f);
                 break;
             case GunType.Pistol:
                 originalPosition = new Vector3(0.16f, -0.15f, 0.3f);

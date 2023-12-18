@@ -102,6 +102,7 @@ public class PlayerHealth : MonoBehaviour
         {
             armorBar.gameObject.SetActive(false);
             backArmorBar.fillAmount = 0;
+
             return;
         }
 
@@ -156,12 +157,13 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth -= damageToHealth;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        float percentMultiplier = 1.5f;
+        float percent = (currentHealth * percentMultiplier) / maxHealth;
         lerpTimer = 0f;
 
         if (vignetteMaterial != null)
         {
-            float percent = currentHealth / maxHealth;
-            float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
+            float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
             float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
             vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
             vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
@@ -180,12 +182,13 @@ public class PlayerHealth : MonoBehaviour
             return;
 
         currentHealth -= damage;
+        float percentMultiplier = 1.5f;
+        float percent = (currentHealth * percentMultiplier) / maxHealth;
         lerpTimer = 0f;
 
         if (vignetteMaterial != null)
         {
-            float percent = currentHealth / maxHealth;
-            float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
+            float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
             float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
             vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
             vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
@@ -201,12 +204,13 @@ public class PlayerHealth : MonoBehaviour
             return;
 
         currentHealth -= damage;
+        float percentMultiplier = 1.5f;
+        float percent = (currentHealth * percentMultiplier) / maxHealth;
         lerpTimer = 0f;
 
         if (vignetteMaterial != null)
         {
-            float percent = currentHealth / maxHealth;
-            float voronoiIntensity = Mathf.Lerp(0f, 0.8f, 1 - percent);
+            float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
             float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
             vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
             vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);

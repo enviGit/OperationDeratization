@@ -7,7 +7,7 @@ public class Tracker : MonoBehaviour
 {
     [SerializeField] private Image cooldownFillImage;
     [SerializeField] private TextMeshProUGUI trackerCooldownText;
-    public float trackingCooldown = 61f;
+    public float trackingCooldown = 31f;
     public float trackingDuration = 5f;
     public Transform indicator;
     public Transform player;

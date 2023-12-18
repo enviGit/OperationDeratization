@@ -51,8 +51,6 @@ public class AiWeapons : MonoBehaviour
     private WeaponIk weaponIk;
     private Transform currentTarget;
     private bool weaponActive = false;
-    private float currentOffsetY;
-    private float currentOffsetZ;
     public float inaccuracy = 0.4f;
 
     private void Start()
@@ -66,9 +64,7 @@ public class AiWeapons : MonoBehaviour
     {
         if (currentTarget && currentWeapon && weaponActive)
         {
-            currentOffsetY = weaponIk.currentOffsetY;
-            currentOffsetZ = weaponIk.currentOffsetZ;
-            Vector3 target = currentTarget.position + new Vector3(0, currentOffsetY, currentOffsetZ);
+            Vector3 target = currentTarget.position;
             target += Random.insideUnitSphere * inaccuracy;
             weapon.Shoot();
         }
