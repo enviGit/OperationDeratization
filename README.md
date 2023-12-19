@@ -24,4 +24,5 @@ The game features simple and intuitive controls, including WASD movement and mou
 ## Copyrights Information
 **All rights are reserved for the authors of Operation Deratization. Unauthorized distribution, reproduction, or modification of this game is strictly prohibited.**
 
+Please see [License](LICENSE.md) file for the full license agreement.
 <!-- If you have any questions or comments about the game, feel free to contact us at [tmp](mailto:tmp). -->
