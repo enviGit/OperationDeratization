@@ -32,7 +32,6 @@ public class PlayerShoot : MonoBehaviour
     private LayerMask grenadeCollisionMask;
     private float dynamicFieldOfView;
     private Animator weaponAnimator;
-    private Transform activeWeapon = null;
     private Transform weaponHolderActive;
 
     [Header("Movement")]
@@ -95,15 +94,14 @@ public class PlayerShoot : MonoBehaviour
 
         foreach (Transform child in weaponHolderActive)
         {
+            child.GetChild(0).gameObject.SetActive(true);
+
             if (child.gameObject.activeSelf)
             {
-                activeWeapon = child;
-
+                weaponAnimator = child.GetComponent<Animator>();
                 break;
             }
         }
-
-        weaponAnimator = activeWeapon.GetComponent<Animator>();
     }
     private void Shoot()
     {
@@ -380,32 +378,32 @@ public class PlayerShoot : MonoBehaviour
                 originalRotation = new Vector3(20.84f, 198.13f, 129.6f);
                 break;
             case GunType.Pistol:
-                originalPosition = new Vector3(0.16f, -0.15f, 0.3f);
-                originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0, -0.07f, 0.24f);
+                originalPosition = new Vector3(0.18f, -0.12f, 0.46f);
+                originalRotation = new Vector3(3f, 5f, 0);
+                aimingPosition = new Vector3(0, -0.07f, 0.52f);
                 aimingRotation = new Vector3(0, 0, 0);
                 break;
             case GunType.Revolver:
-                originalPosition = new Vector3(0.12f, -0.24f, 0.2f);
-                originalRotation = new Vector3(-90f, 0, 0);
-                aimingPosition = new Vector3(0, -0.173f, 0.2f);
+                originalPosition = new Vector3(0.19f, -0.22f, 0.35f);
+                originalRotation = new Vector3(-90f, 5f, 0);
+                aimingPosition = new Vector3(0, -0.173f, 0.4f);
                 aimingRotation = new Vector3(-87f, 0, 0);
                 break;
             case GunType.Shotgun:
-                originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
-                originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0.015f, -0.15f, 0.5f);
+                originalPosition = new Vector3(0.16f, -0.23f, 0.44f);
+                originalRotation = new Vector3(3f, 5f, 0);
+                aimingPosition = new Vector3(0.015f, -0.15f, 0.56f);
                 aimingRotation = new Vector3(5f, 0.5f, 0);
                 break;
             case GunType.Rifle:
-                originalPosition = new Vector3(0.16f, -0.25f, 0.5f);
-                originalRotation = new Vector3(3f, 0, 0);
-                aimingPosition = new Vector3(0, -0.17f, 0.24f);
+                originalPosition = new Vector3(0.16f, -0.27f, 0.25f);
+                originalRotation = new Vector3(3f, 5f, 0);
+                aimingPosition = new Vector3(0, -0.17f, 0.47f);
                 aimingRotation = new Vector3(0, 0, 0);
                 break;
             case GunType.Sniper:
-                originalPosition = new Vector3(0.16f, -0.2f, 0.6f);
-                originalRotation = new Vector3(3f, 0, 0);
+                originalPosition = new Vector3(0.12f, -0.23f, 0.45f);
+                originalRotation = new Vector3(3f, 5f, 0);
                 aimingPosition = new Vector3(0.0119f, -0.13355f, 0.42f);
                 aimingRotation = new Vector3(0, 0, 0);
                 break;

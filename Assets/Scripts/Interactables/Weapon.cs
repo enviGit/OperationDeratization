@@ -128,7 +128,7 @@ public class Weapon : Interactable
                     {
                         bool dissolveSet = false;
 
-                        foreach (Transform child in grenade.GetChild(0))
+                        foreach (Transform child in grenade.Find("Mesh"))
                         {
                             MeshRenderer renderer = child.GetComponent<MeshRenderer>();
 

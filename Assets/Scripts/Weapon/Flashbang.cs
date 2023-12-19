@@ -54,6 +54,7 @@ public class Flashbang : MonoBehaviour
                 if (hit.transform.gameObject != gameObject)
                 {
                     Destroy(gameObject);
+
                     return;
                 }
             }
@@ -98,6 +99,7 @@ public class Flashbang : MonoBehaviour
                 waitTime = 0.1f;
 
             whiteNoise.volume -= 0.05f;
+
             yield return new WaitForSeconds(waitTime);
         }
 
