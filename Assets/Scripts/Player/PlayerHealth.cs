@@ -28,6 +28,7 @@ public class PlayerHealth : MonoBehaviour
     [Header("Armor")]
     public float currentArmor = 0;
     public float maxArmor = 100f;
+    [SerializeField] private Transform armorSocket;
 
     [Header("Heartbeat")]
     private float heartbeatMultiplier = 1.2f;
@@ -229,6 +230,10 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         isAlive = false;
+
+        if(currentArmor > 0)
+            armorSocket.GetChild(0).gameObject.SetActive(true);
+
         deathCamera.gameObject.SetActive(true);
         deathCamera.transform.SetParent(null);
         CharacterController controller = GetComponent<CharacterController>();
@@ -272,6 +277,7 @@ public class PlayerHealth : MonoBehaviour
             if (child.gameObject.name == "Knife_00(Clone)")
             {
                 Destroy(child.gameObject);
+
                 continue;
             }
         }

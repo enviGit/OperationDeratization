@@ -26,6 +26,7 @@ public class EnemyHealth : MonoBehaviour
     [Header("Armor")]
     public float currentArmor = 0;
     public float maxArmor = 100f;
+    public Transform armorSocket;
 
     private void Start()
     {
@@ -70,6 +71,8 @@ public class EnemyHealth : MonoBehaviour
             currentArmor -= damage;
             currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
         }
+        else
+            armorSocket.GetChild(0).gameObject.SetActive(false);
 
         currentHealth -= damageToHealth;
         currentHealth = Mathf.Clamp(currentHealth, 0, enemyStats.maxHealth);

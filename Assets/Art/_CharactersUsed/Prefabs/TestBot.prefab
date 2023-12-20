@@ -91,7 +91,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7260659217707604033
 Transform:
   m_ObjectHideFlags: 0
@@ -237,6 +237,7 @@ MonoBehaviour:
   isMarkedAsDead: 0
   currentArmor: 0
   maxArmor: 100
+  armorSocket: {fileID: 7260659218191887236}
 --- !u!114 &7260659217707604030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,8 +278,6 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 8193
-  trailPrefab: {fileID: 2122679543000649686, guid: a48743209c8956941b2e696a8dd30fe1,
-    type: 3}
   isReloading: 0
   isFiring: 0
 --- !u!114 &7260659217707604028
@@ -308,8 +307,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148a8199b8b558440b9f38d9d269ef17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentOffsetY: 0
-  currentOffsetZ: 0
   iterations: 10
   weight: 0.8
   angleLimit: 90

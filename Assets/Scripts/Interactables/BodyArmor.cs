@@ -50,6 +50,22 @@ public class BodyArmor : Interactable
 
         Destroy(gameObject);
     }
+    private void TryDifferentBonePrefixes(Transform character)
+    {
+        string[] possiblePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig:", "mixamorig10:" };
+
+        foreach (var prefix in possiblePrefixes)
+        {
+            Transform armorSocket = character.transform.Find($"{prefix}Hips/{prefix}Spine/{prefix}Spine1/ArmorSocket");
+
+            if (armorSocket != null)
+            {
+                armorSocket.GetChild(0).gameObject.SetActive(true);
+
+                break;
+            }
+        }
+    }
     private void SetShaderParameters(float disappearIntensity)
     {
         foreach (MeshRenderer meshRenderer in meshes)
@@ -71,6 +87,7 @@ public class BodyArmor : Interactable
                 health.PickupArmor();
                 StartCoroutine(DestroyAfterSound());
                 used = true;
+                TryDifferentBonePrefixes(health.transform);
             }
         }
     }

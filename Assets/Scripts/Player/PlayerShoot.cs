@@ -64,7 +64,9 @@ public class PlayerShoot : MonoBehaviour
     {
         int playerLayer = LayerMask.NameToLayer("Player");
         int grenadeLayer = LayerMask.NameToLayer("Ground");
+        int hitboxLayer = LayerMask.NameToLayer("Hitbox");
         Physics.IgnoreLayerCollision(grenadeLayer, playerLayer, true);
+        Physics.IgnoreLayerCollision(hitboxLayer, playerLayer, true);
     }
     private void Update()
     {
