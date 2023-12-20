@@ -17,18 +17,25 @@ public class Tracker : MonoBehaviour
     private Quaternion targetRotation;
     private float rotationSpeed = 360f;
     private float currentCooldownTime;
+    public Material terrainScanMat;
+    private AudioSource trackerSound;
 
     private void Start()
     {
         indicator.GetChild(0).gameObject.SetActive(false);
         currentCooldownTime = trackingCooldown;
+        trackerSound = GetComponent<AudioSource>();
     }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
             if (!isTracking && !isOnCooldown)
+            {
                 StartTracking();
+                StartCoroutine(SceneScanning());
+                trackerSound.Play();
+            }
         }
 
         UpdateTracking();
@@ -145,6 +152,39 @@ public class Tracker : MonoBehaviour
 
             if (isTracking)
                 StartCoroutine(UpdateTrackingRoutine());
+        }
+    }
+    private void OnRenderImage(RenderTexture cameraView, RenderTexture shaderView)
+    {
+        Graphics.Blit(cameraView, shaderView, terrainScanMat, 0);
+    }
+    public IEnumerator SceneScanning()
+    {
+        int numScans = 4;
+        float timeBetweenScans = 0.5f;
+
+        for (int i = 0; i < numScans; i++)
+        {
+            float timer = 0f;
+            float scanRange = 0f;
+            float startOpacity = 1f;
+            float endOpacity = 0f;
+            terrainScanMat.SetVector("_Position", player.position);
+
+            while (timer <= 1f)
+            {
+                timer += Time.deltaTime;
+                scanRange = Mathf.Lerp(0f, 100f, timer);
+                float interpolatedOpacity = Mathf.Lerp(startOpacity, endOpacity, timer);
+                terrainScanMat.SetFloat("_Range", scanRange);
+                terrainScanMat.SetFloat("_Opacity", interpolatedOpacity);
+
+                yield return null;
+            }
+                
+            terrainScanMat.SetFloat("_Opacity", 0f);
+
+            yield return new WaitForSeconds(timeBetweenScans);
         }
     }
 }

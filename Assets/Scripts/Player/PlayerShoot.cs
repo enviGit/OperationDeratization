@@ -64,9 +64,7 @@ public class PlayerShoot : MonoBehaviour
     {
         int playerLayer = LayerMask.NameToLayer("Player");
         int grenadeLayer = LayerMask.NameToLayer("Ground");
-        int hitboxLayer = LayerMask.NameToLayer("Hitbox");
         Physics.IgnoreLayerCollision(grenadeLayer, playerLayer, true);
-        Physics.IgnoreLayerCollision(hitboxLayer, playerLayer, true);
     }
     private void Update()
     {
@@ -172,7 +170,7 @@ public class PlayerShoot : MonoBehaviour
                         GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                         Destroy(ricochet, 2f);
 
-                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("MovingDoors"))
+                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("MovingDoors") && hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
                         {
                             GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
@@ -262,7 +260,7 @@ public class PlayerShoot : MonoBehaviour
                             GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
                             Destroy(ricochet, 2f);
 
-                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("MovingDoors"))
+                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("MovingDoors") && hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
                             {
                                 GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
 
