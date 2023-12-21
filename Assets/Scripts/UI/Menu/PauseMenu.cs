@@ -52,6 +52,7 @@ public class PauseMenu : MonoBehaviour
         GameIsPaused = false;
         AudioListener.pause = false;
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         if (playerStatus.isAlive)
         {
@@ -68,6 +69,7 @@ public class PauseMenu : MonoBehaviour
         GameIsPaused = true;
         AudioListener.pause = true;
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
         pointer.enabled = false;
         PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
@@ -82,7 +84,10 @@ public class PauseMenu : MonoBehaviour
     public void RestartLevel()
     {
         Time.timeScale = 1f;
+        GameIsPaused = false;
         AudioListener.pause = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         SceneManager.LoadScene(3);
     }
     public void QuitGame()

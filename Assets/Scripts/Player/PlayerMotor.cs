@@ -37,6 +37,7 @@ public class PlayerMotor : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         controller = GetComponent<CharacterController>();
         currentState = new PlayerStance();
         currentState.playerStance = PlayerStance.Stance.Idle;
