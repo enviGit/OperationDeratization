@@ -177,6 +177,7 @@ public class EnemyHealth : MonoBehaviour
         while (elapsedTime < fadeDuration)
         {
             elapsedTime += Time.deltaTime;
+
             yield return null;
         }
 

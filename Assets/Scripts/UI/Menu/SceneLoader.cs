@@ -7,7 +7,7 @@ public class SceneLoader : MonoBehaviour
 {
     [SerializeField] private GameObject LoaderUI;
     [SerializeField] private Slider progressSlider;
-    [SerializeField] private GameObject attentionCanvas;
+    [SerializeField] private GameObject gOToDeactivate;
 
     public void LoadScene(int index)
     {
@@ -15,7 +15,7 @@ public class SceneLoader : MonoBehaviour
     }
     public IEnumerator LoadScene_Coroutine(int index)
     {
-        attentionCanvas.SetActive(false);
+        gOToDeactivate.SetActive(false);
         progressSlider.value = 0;
         LoaderUI.SetActive(true);
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(index);

@@ -6,6 +6,8 @@ public class DoorOnButton : Interactable
     [Header("References")]
     [SerializeField] private GameObject leftDoor;
     [SerializeField] private GameObject rightDoor;
+    private AudioSource doorSound;
+    public AudioClip[] soundClips;
 
     [Header("Door")]
     public float doorSlideAmount = 1.75f;
@@ -21,6 +23,10 @@ public class DoorOnButton : Interactable
     public static bool doorsMoving = false;
     private Coroutine closeDoorCoroutine;
 
+    private void Start()
+    {
+        doorSound = transform.parent.GetComponent<AudioSource>();
+    }
     private void Awake()
     {
         originalLeftDoorScale = leftDoor.transform.localScale;
@@ -54,6 +60,8 @@ public class DoorOnButton : Interactable
         {
             if (!doorsOpen)
             {
+                doorSound.pitch = 1.2f;
+                doorSound.PlayOneShot(soundClips[0]);
                 SlideDoors(doorSlideAmount);
                 ScaleDoors(doorScaleAmount, true);
                 doorsOpen = true;
@@ -65,6 +73,8 @@ public class DoorOnButton : Interactable
             }
             else
             {
+                doorSound.pitch = 2f;
+                doorSound.PlayOneShot(soundClips[1]);
                 SlideDoors(-doorSlideAmount);
                 ScaleDoors(doorScaleAmount, false);
                 doorsOpen = false;
@@ -86,7 +96,8 @@ public class DoorOnButton : Interactable
     }
     private void ScaleDoors(float amount, bool opening)
     {
-        if (doorScaleAmount == 1f) return;
+        if (doorScaleAmount == 1f) 
+            return;
 
         Vector3 leftDoorScale = leftDoor.transform.localScale;
         Vector3 rightDoorScale = rightDoor.transform.localScale;
@@ -105,7 +116,7 @@ public class DoorOnButton : Interactable
         StartCoroutine(LerpDoorScale(leftDoor.transform, leftDoorScale, doorScaleTime));
         StartCoroutine(LerpDoorScale(rightDoor.transform, rightDoorScale, doorScaleTime));
     }
-    IEnumerator LerpDoorPosition(Transform door, Vector3 targetPos, float slideTime)
+    private IEnumerator LerpDoorPosition(Transform door, Vector3 targetPos, float slideTime)
     {
         Vector3 start = door.position;
         float elapsedTime = 0f;
@@ -114,13 +125,14 @@ public class DoorOnButton : Interactable
         {
             door.position = Vector3.Lerp(start, targetPos, (elapsedTime / slideTime));
             elapsedTime += Time.deltaTime;
+
             yield return null;
         }
 
         door.position = targetPos;
         doorsMoving = false;
     }
-    IEnumerator LerpDoorScale(Transform door, Vector3 targetScale, float scaleTime)
+    private IEnumerator LerpDoorScale(Transform door, Vector3 targetScale, float scaleTime)
     {
         Vector3 start = door.localScale;
         float elapsedTime = 0f;
@@ -129,20 +141,24 @@ public class DoorOnButton : Interactable
         {
             door.localScale = Vector3.Lerp(start, targetScale, (elapsedTime / scaleTime));
             elapsedTime += Time.deltaTime;
+
             yield return null;
         }
 
         door.localScale = targetScale;
     }
-    IEnumerator CloseDoorAfterDelay()
+    private IEnumerator CloseDoorAfterDelay()
     {
         yield return new WaitForSeconds(10f);
 
         if (doorsOpen)
         {
+            doorSound.pitch = 2f;
+            doorSound.PlayOneShot(soundClips[1]);
             SlideDoors(-doorSlideAmount);
 
-            if(doorScaleAmount != 1f) ScaleDoors(-doorScaleAmount, false);
+            if(doorScaleAmount != 1f) 
+                ScaleDoors(-doorScaleAmount, false);
 
             doorsOpen = false;
         }

@@ -90,7 +90,7 @@ public class AiWeapons : MonoBehaviour
     {
         StartCoroutine(EquipWeapon());
     }
-    IEnumerator EquipWeapon()
+    private IEnumerator EquipWeapon()
     {
         animator.runtimeAnimatorController = currentWeapon.GetComponent<Weapon>().animator;
         animator.SetBool("Equip", true);
@@ -109,10 +109,11 @@ public class AiWeapons : MonoBehaviour
         SetFiring(false);
         StartCoroutine(HolsterWeapon());
     }
-    IEnumerator HolsterWeapon()
+    private IEnumerator HolsterWeapon()
     {
         weaponActive = false;
         animator.SetBool("Equip", false);
+
         yield return new WaitForSeconds(0.5f);
 
         while (animator.GetCurrentAnimatorStateInfo(1).normalizedTime < 1f)

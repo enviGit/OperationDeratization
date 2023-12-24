@@ -10,11 +10,14 @@ public class AiDeathState : AiState
     }
     public void Enter(AiAgent agent)
     {
-        agent.navMeshAgent.isStopped = true;
-        agent.ragdoll.ActivateRagdoll();
-        direction.y = 1;
-        agent.ragdoll.ApplyForce(direction * agent.config.dieForce);
-        agent.weapons.DropWeapon();
+        if (agent.navMeshAgent.enabled)
+        {
+            agent.navMeshAgent.isStopped = true;
+            agent.ragdoll.ActivateRagdoll();
+            direction.y = 1;
+            agent.ragdoll.ApplyForce(direction * agent.config.dieForce);
+            agent.weapons.DropWeapon();
+        }
     }
     public void Exit(AiAgent agent)
     {

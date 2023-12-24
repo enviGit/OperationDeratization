@@ -4,11 +4,17 @@ public class Door : Interactable
 {
     [Header("References")]
     [SerializeField] private GameObject door;
+    private AudioSource doorSound;
+    public AudioClip[] soundClips;
 
     [Header("Door")]
     private bool doorOpen;
     private float enemyDetectionRadius = 2f;
 
+    private void Start()
+    {
+        doorSound = GetComponent<AudioSource>();
+    }
     private void Update()
     {
         if (DetectEnemyNearby())
@@ -24,6 +30,8 @@ public class Door : Interactable
     protected override void Interact()
     {
         doorOpen = !doorOpen;
+        doorSound.pitch = 1.2f;
+        doorSound.PlayOneShot(soundClips[0]);
         door.GetComponent<Animator>().SetBool("IsOpen", doorOpen);
     }
     private bool DetectEnemyNearby()

@@ -105,7 +105,7 @@ public class DoorMotionSensor : MonoBehaviour
         StartCoroutine(LerpDoorScale(leftDoor.transform, leftDoorScale, doorScaleTime));
         StartCoroutine(LerpDoorScale(rightDoor.transform, rightDoorScale, doorScaleTime));
     }
-    IEnumerator LerpDoorPosition(Transform door, Vector3 targetPos, float slideTime)
+    private IEnumerator LerpDoorPosition(Transform door, Vector3 targetPos, float slideTime)
     {
         Vector3 start = door.position;
         float elapsedTime = 0f;
@@ -120,7 +120,7 @@ public class DoorMotionSensor : MonoBehaviour
         door.position = targetPos;
         doorsMoving = false;
     }
-    IEnumerator LerpDoorScale(Transform door, Vector3 targetScale, float scaleTime)
+    private IEnumerator LerpDoorScale(Transform door, Vector3 targetScale, float scaleTime)
     {
         Vector3 start = door.localScale;
         float elapsedTime = 0f;
