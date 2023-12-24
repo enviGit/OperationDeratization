@@ -154,13 +154,13 @@ public class EnemyHealth : MonoBehaviour
         StartCoroutine(FadeOutPromptText());
         Tracker tracker = FindObjectOfType<Tracker>();
         tracker.MarkOpponentAsDead(gameObject);
-        SetShaderParameters(0, 0);
+        SetShaderParameters(0);
         float elapsedTime = 0f;
         float duration = 5f;
 
         while (elapsedTime < duration)
         {
-            SetShaderParameters(elapsedTime / duration, elapsedTime / duration);
+            SetShaderParameters(elapsedTime / duration);
             elapsedTime += Time.deltaTime;
 
             yield return null;
@@ -183,16 +183,24 @@ public class EnemyHealth : MonoBehaviour
 
         player.GetComponent<PlayerUI>().markText.text = "";
     }
-    private void SetShaderParameters(float disappearIntensity, float colorIntensity)
+    private void SetShaderParameters(float disappearIntensity)
     {
+        float minDissolve = -0.75f;
+        float maxDissolve = 1.5f;
+        Color redColor = new Color(1f, 0f, 0f);
+        Color purpleColor = new Color(0.7f, 0.2f, 1f);
+
         foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
         {
             Material[] materials = skinnedMeshRenderer.materials;
 
             foreach (var material in materials)
             {
-                material.SetFloat("_dissolve", disappearIntensity);
-                material.SetFloat("_dissolveIntensity", colorIntensity);
+                float clampedDisapperIntensity = Mathf.Clamp(disappearIntensity, 0f, 1f);
+                float mappedDissolve = Mathf.Lerp(minDissolve, maxDissolve, clampedDisapperIntensity);
+                material.SetFloat("_dissolve", mappedDissolve);
+                Color currentColor = (clampedDisapperIntensity < 0.5f) ? redColor : purpleColor;
+                material.SetColor("_lightColor", currentColor);
             }
         }
     }

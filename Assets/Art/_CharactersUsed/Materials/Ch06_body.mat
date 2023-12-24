@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Ch06_body
-  m_Shader: {fileID: -6465566751694194690, guid: 9dafc20771f7be3419d0c07a2a962af7,
+  m_Shader: {fileID: -6465566751694194690, guid: 1abcb8705948af8469118ba60bebbe20,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -110,8 +110,24 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _albedo:
+        m_Texture: {fileID: 2800000, guid: f7ce4f7d135e1aa43ad2060508af9b2f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _metallic:
+        m_Texture: {fileID: 2800000, guid: d81ef04b8f4181a4faf3c06eb7e5abf1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _normal:
+        m_Texture: {fileID: 2800000, guid: f060f0b94649d9e468af307016dd8bfb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _normalka:
         m_Texture: {fileID: 2800000, guid: f060f0b94649d9e468af307016dd8bfb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _smoothness:
+        m_Texture: {fileID: 2800000, guid: 75e8d6bf81353e24fa724c5ecd6510bc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texturka:
@@ -215,13 +231,13 @@ Material:
     - _ZWriteControl: 0
     - _disappearIntensity: 0
     - _dissapearIntensity: 0
-    - _dissolve: 0
-    - _dissolveIntensity: 0
+    - _dissolve: -0.75
+    - _dissolveIntensity: 0.03
     - _edgeWidth: 0.05
     - _lightIntensity: 0
     - _light_intensity: 0
     - _noiseEdge: 25
-    - _noiseScale: 500
+    - _noiseScale: 150
     m_Colors:
     - Color_6DF76E71: {r: 0, g: 5.145098, b: 16, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
@@ -231,7 +247,8 @@ Material:
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _dissolveColor: {r: 11.313708, g: 0, b: 0, a: 1}
     - _edgeColor: {r: 16, g: 0.161652, b: 0, a: 0}
-    - _lightColor: {r: 0.16078432, g: 0.8862746, b: 0.15294118, a: 0}
+    - _lightColor: {r: 3.3243575, g: 0, b: 0, a: 0}
+    - _secondLightColor: {r: 0.7490196, g: 0.02269931, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &7245583170846537149
 MonoBehaviour:

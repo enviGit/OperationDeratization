@@ -160,7 +160,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 21.26, y: 36.88}
+  m_AnchoredPosition: {x: 22.54, y: 36.88}
   m_SizeDelta: {x: 12.56, y: 10.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3350778
@@ -183,7 +183,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "AI with hitboxes capable \nof receiving damage"
+  m_text: AI with hitboxes
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
@@ -2064,7 +2064,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 14.82, y: 37.17376}
+  m_AnchoredPosition: {x: 16.51, y: 37.17376}
   m_SizeDelta: {x: 12.56, y: 10.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &119381321
@@ -3344,7 +3344,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 10.44, y: 37.01}
+  m_AnchoredPosition: {x: 11.41, y: 37.01}
   m_SizeDelta: {x: 12.56, y: 10.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &230832750
@@ -9209,11 +9209,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.056
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.98
+      value: 10.28
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9244,10 +9244,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 4300000, guid: da35992fbe2e75d40b634d87d754fd41, type: 3}
-    - target: {fileID: 6400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: m_Convex
       value: 1
       objectReference: {fileID: 0}
@@ -9255,103 +9251,29 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 8200000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: OutputAudioMixerGroup
-      value: 
-      objectReference: {fileID: 24300002, guid: a0cf530a2af7fe3469e9902f72e7dc14,
-        type: 2}
-    - target: {fileID: 8200000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8200000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.data[1].time
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8200000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.data[0].value
-      value: 0.500824
-      objectReference: {fileID: 0}
-    - target: {fileID: 8200000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.data[1].value
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8200000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.data[1].inWeight
-      value: 0.33333334
-      objectReference: {fileID: 0}
-    - target: {fileID: 8200000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.data[1].outWeight
-      value: 0.33333334
-      objectReference: {fileID: 0}
     - target: {fileID: 8200002, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: OutputAudioMixerGroup
-      value: 
-      objectReference: {fileID: 24300002, guid: a0cf530a2af7fe3469e9902f72e7dc14,
-        type: 2}
-    - target: {fileID: 8200002, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8200002, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.data[1].time
-      value: 0.99998784
-      objectReference: {fileID: 0}
-    - target: {fileID: 8200002, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.data[0].value
-      value: 0.500824
-      objectReference: {fileID: 0}
-    - target: {fileID: 8200002, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: spreadCustomCurve.m_Curve.Array.data[1].value
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: objectTag
-      value: Player
+      propertyPath: m_Volume
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: sceneLoader
       value: 
       objectReference: {fileID: 1087031884}
-    - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: teleportTime
-      value: 1
+    - target: {fileID: 13600000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
+      propertyPath: m_Height
+      value: 0.75
       objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: randomTeleport
+    - target: {fileID: 13600000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
+      propertyPath: m_Radius
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 13600000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
+      propertyPath: m_Center.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: delayedTeleport
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: instantTeleport
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: destinationPad.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 19800000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: CollisionModule.type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 19800000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: CollisionModule.enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 19800000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: CollisionModule.collisionMessages
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 19800000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: CollisionModule.collidesWith.m_Bits
-      value: 1024
-      objectReference: {fileID: 0}
-    - target: {fileID: 19800000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
-      propertyPath: CollisionModule.multiplyColliderForceByParticleSpeed
-      value: 0
+    - target: {fileID: 13600000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
+      propertyPath: m_Center.z
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
@@ -9908,7 +9830,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: 0, z: 0, w: -1.1833549e-35}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -11772,6 +11694,11 @@ PrefabInstance:
       propertyPath: flashlightImg
       value: 
       objectReference: {fileID: 1849559888}
+    - target: {fileID: 5654677154976342565, guid: 73b41f3f8f15dda4782df6ad2c6f1142,
+        type: 3}
+      propertyPath: m_Lightmapping
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5654677156345867230, guid: 73b41f3f8f15dda4782df6ad2c6f1142,
         type: 3}
       propertyPath: m_CullingMask.m_Bits
@@ -28945,7 +28872,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.212, y: -0.08207893}
+  m_AnchoredPosition: {x: -0.2107, y: -0.08207893}
   m_SizeDelta: {x: 12.56, y: 10.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1241499326
@@ -28968,7 +28895,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Approach to\tmark dead \tenemies"
+  m_text: "Approach \t\tto mark\t \tenemies"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
@@ -30151,7 +30078,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 2
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 45
   m_InnerSpotAngle: 21.80208
@@ -33383,7 +33310,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.02, y: 37.17376}
+  m_AnchoredPosition: {x: 4.66, y: 37.17376}
   m_SizeDelta: {x: 12.56, y: 10.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1555677765
