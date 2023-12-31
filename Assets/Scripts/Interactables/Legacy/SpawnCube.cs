@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.Interactables.Playground
+namespace RatGamesStudios.OperationDeratization.Interactables.Legacy
 {
     public class SpawnCube : Interactable
     {

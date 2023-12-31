@@ -292,8 +292,6 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             ragdoll.ActivateRagdoll();
             deathSound.Play();
-            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
-            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
         }
         public void RestoreHealth(float healAmount)
         {

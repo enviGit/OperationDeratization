@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Interactables;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using RatGamesStudios.OperationDeratization.UI.InGame;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         public bool shouldExplode = false;
         private bool hasExploded = false;
         private float countdown;
+        private float minimalCollisionForceToBreakGlass = 10f;
 
         private void Start()
         {
@@ -51,11 +53,21 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                 Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
 
                 if (rb != null)
-                    if (!nearbyObject.CompareTag("Enemy"))
+                    //if (!nearbyObject.CompareTag("Enemy"))
                         rb.AddExplosionForce(force, transform.position, radius);
             }
 
-            Collider[] collidersToDestroy = Physics.OverlapSphere(transform.position, radius);
+            Collider[] glassColliders = Physics.OverlapSphere(transform.position, radius);
+
+            foreach (Collider nearbyObject in glassColliders)
+            {
+                Glass glass = nearbyObject.GetComponent<Glass>();
+
+                if (glass != null)
+                    glass.Break(transform.position);
+            }
+
+            /*Collider[] collidersToDestroy = Physics.OverlapSphere(transform.position, radius);
 
             foreach (Collider nearbyObject in collidersToDestroy)
             {
@@ -63,7 +75,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
 
                 if (dest != null)
                     dest.Destroy();
-            }
+            }*/
 
             Collider[] collidersToDamage = Physics.OverlapSphere(transform.position, radius);
 
@@ -95,6 +107,26 @@ namespace RatGamesStudios.OperationDeratization.Equipment
             }
 
             Destroy(gameObject);
+        }
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Glass"))
+            {
+                Glass glass = other.gameObject.GetComponent<Glass>();
+
+                if (glass != null)
+                {
+                    float collisionForce = other.impulse.magnitude;
+
+                    if (collisionForce >= minimalCollisionForceToBreakGlass)
+                        glass.Break(transform.position);
+                }
+            }
+            else
+            {
+                Rigidbody rb = GetComponent<Rigidbody>();
+                rb.velocity *= 1f;
+            }
         }
     }
 }

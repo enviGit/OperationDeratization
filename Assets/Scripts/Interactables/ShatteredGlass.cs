@@ -5,7 +5,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     public class ShatteredGlass : MonoBehaviour
     {
         [SerializeField] private float explosiveForce = 150f;
-        [SerializeField] private float explosiveRadius = 0.25f;
+        [SerializeField] private float explosiveRadius = 0.5f;
         [SerializeField] private float destructionDelay = 5f;
 
         public void ApplyForce(Vector3 projectilePosition)

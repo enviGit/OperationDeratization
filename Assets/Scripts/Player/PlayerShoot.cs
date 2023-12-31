@@ -280,7 +280,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                             else if(hitBox == null && currentWeapon.gunStyle == GunStyle.Melee)
                                 if (hit.collider.CompareTag("Glass"))
                                     hit.collider.GetComponent<Glass>().Break(hit.point);
-                            else if (hitBox != null)
+                            if (hitBox != null)
                             {
                                 hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
                                 Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
