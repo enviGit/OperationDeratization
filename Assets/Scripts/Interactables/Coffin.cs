@@ -1,52 +1,56 @@
+using RatGamesStudios.OperationDeratization.Enemy;
 using UnityEngine;
 
-public class Coffin : Interactable
+namespace RatGamesStudios.OperationDeratization.Interactables
 {
-    [Header("References")]
-    [SerializeField] private GameObject coffin;
-    private AudioSource sound;
-
-    [Header("Door")]
-    private bool coffinOpen;
-    private float enemyDetectionRadius = 2f;
-
-    private void Start()
+    public class Coffin : Interactable
     {
-        sound = GetComponent<AudioSource>();
-    }
-    private void Update()
-    {
-        if (DetectEnemyNearby())
+        [Header("References")]
+        [SerializeField] private GameObject coffin;
+        private AudioSource sound;
+
+        [Header("Door")]
+        private bool coffinOpen;
+        private float enemyDetectionRadius = 2f;
+
+        private void Start()
         {
-            coffinOpen = true;
-            coffin.GetComponent<Animator>().SetBool("IsOpen", coffinOpen);
+            sound = GetComponent<AudioSource>();
         }
-        if (coffin.GetComponent<Animator>().GetBool("IsOpen"))
-            prompt = "Close coffin";
-        else
-            prompt = "Open coffin";
-    }
-    protected override void Interact()
-    {
-        coffinOpen = !coffinOpen;
-        coffin.GetComponent<Animator>().SetBool("IsOpen", coffinOpen);
-        sound.PlayOneShot(sound.clip);
-    }
-    private bool DetectEnemyNearby()
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, enemyDetectionRadius);
-
-        foreach (Collider collider in colliders)
+        private void Update()
         {
-            if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
+            if (DetectEnemyNearby())
             {
-                if (!coffinOpen)
-                    sound.PlayOneShot(sound.clip);
-
-                return true;
+                coffinOpen = true;
+                coffin.GetComponent<Animator>().SetBool("IsOpen", coffinOpen);
             }
+            if (coffin.GetComponent<Animator>().GetBool("IsOpen"))
+                prompt = "Close coffin";
+            else
+                prompt = "Open coffin";
         }
+        protected override void Interact()
+        {
+            coffinOpen = !coffinOpen;
+            coffin.GetComponent<Animator>().SetBool("IsOpen", coffinOpen);
+            sound.PlayOneShot(sound.clip);
+        }
+        private bool DetectEnemyNearby()
+        {
+            Collider[] colliders = Physics.OverlapSphere(transform.position, enemyDetectionRadius);
 
-        return false;
+            foreach (Collider collider in colliders)
+            {
+                if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
+                {
+                    if (!coffinOpen)
+                        sound.PlayOneShot(sound.clip);
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

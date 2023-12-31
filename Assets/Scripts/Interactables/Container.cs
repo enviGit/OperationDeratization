@@ -1,52 +1,56 @@
+using RatGamesStudios.OperationDeratization.Enemy;
 using UnityEngine;
 
-public class Container : Interactable
+namespace RatGamesStudios.OperationDeratization.Interactables
 {
-    [Header("References")]
-    [SerializeField] private GameObject container;
-    private AudioSource sound;
-
-    [Header("Container")]
-    private bool containerOpen;
-    private float enemyDetectionRadius = 2f;
-
-    private void Start()
+    public class Container : Interactable
     {
-        sound = GetComponent<AudioSource>();
-    }
-    private void Update()
-    {
-        if (DetectEnemyNearby())
+        [Header("References")]
+        [SerializeField] private GameObject container;
+        private AudioSource sound;
+
+        [Header("Container")]
+        private bool containerOpen;
+        private float enemyDetectionRadius = 2f;
+
+        private void Start()
         {
-            containerOpen = true;
-            container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
+            sound = GetComponent<AudioSource>();
         }
-        if (container.GetComponent<Animator>().GetBool("IsOpen"))
-            prompt = "Close container";
-        else
-            prompt = "Open container";
-    }
-    protected override void Interact()
-    {
-        containerOpen = !containerOpen;
-        container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
-        sound.PlayOneShot(sound.clip);
-    }
-    private bool DetectEnemyNearby()
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, enemyDetectionRadius);
-
-        foreach (Collider collider in colliders)
+        private void Update()
         {
-            if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
+            if (DetectEnemyNearby())
             {
-                if (!containerOpen)
-                    sound.PlayOneShot(sound.clip);
-
-                return true;
+                containerOpen = true;
+                container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
             }
+            if (container.GetComponent<Animator>().GetBool("IsOpen"))
+                prompt = "Close container";
+            else
+                prompt = "Open container";
         }
+        protected override void Interact()
+        {
+            containerOpen = !containerOpen;
+            container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
+            sound.PlayOneShot(sound.clip);
+        }
+        private bool DetectEnemyNearby()
+        {
+            Collider[] colliders = Physics.OverlapSphere(transform.position, enemyDetectionRadius);
 
-        return false;
+            foreach (Collider collider in colliders)
+            {
+                if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
+                {
+                    if (!containerOpen)
+                        sound.PlayOneShot(sound.clip);
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

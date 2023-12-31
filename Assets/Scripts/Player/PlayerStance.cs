@@ -1,19 +1,22 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public class PlayerStance
+namespace RatGamesStudios.OperationDeratization.Player
 {
-    [Header("References")]
-    public Stance playerStance;
-
-    [Header("Player stance")]
-    public float camHeight;
-    public enum Stance
+    [Serializable]
+    public class PlayerStance
     {
-        Idle,
-        Walking,
-        Crouching,
-        Running
+        [Header("References")]
+        public Stance playerStance;
+
+        [Header("Player stance")]
+        public float camHeight;
+        public enum Stance
+        {
+            Idle,
+            Walking,
+            Crouching,
+            Running
+        }
     }
 }

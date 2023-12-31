@@ -1,114 +1,117 @@
-using System.Collections;
 using System;
+using System.Collections;
 using UnityEngine;
 
-public class DamageIndicator : MonoBehaviour
+namespace RatGamesStudios.OperationDeratization.UI.InGame
 {
-    private const float maxTimer = 4f;
-    private float timer = maxTimer;
-    private CanvasGroup canvasGroup;
-    protected CanvasGroup CanvasGroup
+    public class DamageIndicator : MonoBehaviour
     {
-        get
+        private const float maxTimer = 4f;
+        private float timer = maxTimer;
+        private CanvasGroup canvasGroup;
+        protected CanvasGroup CanvasGroup
         {
-            if (canvasGroup == null)
+            get
             {
-                canvasGroup = GetComponent<CanvasGroup>();
-
                 if (canvasGroup == null)
-                    canvasGroup = gameObject.AddComponent<CanvasGroup>();
+                {
+                    canvasGroup = GetComponent<CanvasGroup>();
+
+                    if (canvasGroup == null)
+                        canvasGroup = gameObject.AddComponent<CanvasGroup>();
+                }
+
+                return canvasGroup;
             }
-
-            return canvasGroup;
         }
-    }
-    private RectTransform rect;
-    protected RectTransform Rect
-    {
-        get
+        private RectTransform rect;
+        protected RectTransform Rect
         {
-            if (rect == null)
+            get
             {
-                rect = GetComponent<RectTransform>();
-
                 if (rect == null)
-                    rect = gameObject.AddComponent<RectTransform>();
+                {
+                    rect = GetComponent<RectTransform>();
+
+                    if (rect == null)
+                        rect = gameObject.AddComponent<RectTransform>();
+                }
+
+                return rect;
             }
-
-            return rect;
         }
-    }
-    public Transform Target { get; protected set; }
-    private Transform player;
-    private IEnumerator countdown;
-    private Action unRegister;
-    private Quaternion tRot = Quaternion.identity;
-    private Vector3 tPos = Vector3.zero;
+        public Transform Target { get; protected set; }
+        private Transform player;
+        private IEnumerator countdown;
+        private Action unRegister;
+        private Quaternion tRot = Quaternion.identity;
+        private Vector3 tPos = Vector3.zero;
 
-    public void Register(Transform target, Transform player, Action unRegister)
-    {
-        this.Target = target;
-        this.player = player;
-        this.unRegister = unRegister;
-        StartCoroutine(RotateToTheTarget());
-        StartTimer();
-    }
-    public void Restart()
-    {
-        timer = maxTimer;
-        StartTimer();
-    }
-    private void StartTimer()
-    {
-        if (countdown != null)
-            StopCoroutine(countdown);
-
-        countdown = Countdown();
-        StartCoroutine(countdown);
-    }
-    IEnumerator RotateToTheTarget()
-    {
-        while (enabled)
+        public void Register(Transform target, Transform player, Action unRegister)
         {
-            if (Target)
+            this.Target = target;
+            this.player = player;
+            this.unRegister = unRegister;
+            StartCoroutine(RotateToTheTarget());
+            StartTimer();
+        }
+        public void Restart()
+        {
+            timer = maxTimer;
+            StartTimer();
+        }
+        private void StartTimer()
+        {
+            if (countdown != null)
+                StopCoroutine(countdown);
+
+            countdown = Countdown();
+            StartCoroutine(countdown);
+        }
+        IEnumerator RotateToTheTarget()
+        {
+            while (enabled)
             {
-                tPos = Target.position;
-                tRot = Target.rotation;
+                if (Target)
+                {
+                    tPos = Target.position;
+                    tRot = Target.rotation;
+                }
+
+                Vector3 direction = player.position - tPos;
+                tRot = Quaternion.LookRotation(direction);
+                tRot.z = -tRot.y;
+                tRot.x = 0;
+                tRot.y = 0;
+                Vector3 northDirection = new Vector3(0, 0, player.eulerAngles.y + 180f);
+                Rect.localRotation = tRot * Quaternion.Euler(northDirection);
+
+                yield return null;
+            }
+        }
+        private IEnumerator Countdown()
+        {
+            while (CanvasGroup.alpha < 1f)
+            {
+                CanvasGroup.alpha += 4 * Time.deltaTime;
+
+                yield return null;
+            }
+            while (timer > 0)
+            {
+                timer--;
+
+                yield return new WaitForSeconds(1f);
+            }
+            while (CanvasGroup.alpha > 0f)
+            {
+                CanvasGroup.alpha -= 2 * Time.deltaTime;
+
+                yield return null;
             }
 
-            Vector3 direction = player.position - tPos;
-            tRot = Quaternion.LookRotation(direction);
-            tRot.z = -tRot.y;
-            tRot.x = 0;
-            tRot.y = 0;
-            Vector3 northDirection = new Vector3(0, 0, player.eulerAngles.y + 180f);
-            Rect.localRotation = tRot * Quaternion.Euler(northDirection);
-
-            yield return null;
+            unRegister();
+            Destroy(gameObject);
         }
-    }
-    private IEnumerator Countdown()
-    {
-        while(CanvasGroup.alpha < 1f)
-        {
-            CanvasGroup.alpha += 4 * Time.deltaTime;
-
-            yield return null;
-        }
-        while(timer > 0)
-        {
-            timer--;
-
-            yield return new WaitForSeconds(1f);
-        }
-        while(CanvasGroup.alpha > 0f)
-        {
-            CanvasGroup.alpha -= 2 * Time.deltaTime;
-
-            yield return null;
-        }
-
-        unRegister();
-        Destroy(gameObject);
     }
 }

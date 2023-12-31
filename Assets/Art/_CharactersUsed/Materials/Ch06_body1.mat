@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Ch06_body1
-  m_Shader: {fileID: -6465566751694194690, guid: 1abcb8705948af8469118ba60bebbe20,
+  m_Shader: {fileID: -6465566751694194690, guid: 48462817418c5874385ca8ba82f89cba,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -85,11 +85,27 @@ Material:
         m_Texture: {fileID: 2800000, guid: 11d9ef307f06c884db9da2cac1235e67, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _albedoTexture:
+        m_Texture: {fileID: 2800000, guid: 11d9ef307f06c884db9da2cac1235e67, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _glossinessTexture:
+        m_Texture: {fileID: 2800000, guid: 5d664f2c72d82fe41a3eee215971fcb2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _metallic:
         m_Texture: {fileID: 2800000, guid: e57c630ace810d94b9130ea1b86dd9c6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _metallicTexture:
+        m_Texture: {fileID: 2800000, guid: e57c630ace810d94b9130ea1b86dd9c6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _normal:
+        m_Texture: {fileID: 2800000, guid: 31328ec66923a084bbfe9b4aed426c09, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _normalMapTexture:
         m_Texture: {fileID: 2800000, guid: 31328ec66923a084bbfe9b4aed426c09, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -152,6 +168,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.4472136
     - _GlossyReflections: 1
+    - _INVERT: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -197,14 +214,20 @@ Material:
     - _ZTestGBuffer: 3
     - _ZTestTransparent: 4
     - _ZWrite: 1
+    - _brightness: 15
+    - _changeNoise: 1
     - _disappearIntensity: 0
     - _dissapearIntensity: 0
     - _dissolve: -0.75
+    - _dissolveAmount: -2
     - _dissolveIntensity: 0.03
-    - _edgeWidth: 0.01
+    - _edgeWidth: 0.015
     - _lightIntensity: 0
     - _light_intensity: 0
     - _noiseScale: 150
+    - _resize: 0.2
+    - _simpleNoiseScale: 50
+    - _voronoiNoiseScale: 250
     m_Colors:
     - Color_6DF76E71: {r: 0, g: 5.145098, b: 16, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
@@ -212,7 +235,7 @@ Material:
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _edgeColor: {r: 16, g: 0.161652, b: 0, a: 0}
+    - _edgeColor: {r: 0.16862746, g: 1, b: 0, a: 1}
     - _lightColor: {r: 3.3287086, g: 0, b: 0, a: 0}
     - _secondLightColor: {r: 0.7490196, g: 0.02269931, b: 0, a: 0}
   m_BuildTextureStacks: []

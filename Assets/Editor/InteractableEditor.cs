@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Interactables;
 using UnityEditor;
 
 [CustomEditor(typeof(Interactable), true)]

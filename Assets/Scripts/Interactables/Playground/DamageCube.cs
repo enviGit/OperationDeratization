@@ -1,17 +1,17 @@
+using RatGamesStudios.OperationDeratization.Player;
 using UnityEngine;
 
-public class DamageCube : Interactable
+namespace RatGamesStudios.OperationDeratization.Interactables.Playground
 {
-    [Header("References")]
-    private PlayerHealth hp;
+    public class DamageCube : Interactable
+    {
+        [Header("References")]
+        public PlayerHealth hp;
 
-    private void Start()
-    {
-        hp = FindObjectOfType<PlayerHealth>();
-    }
-    protected override void Interact()
-    {
-        if (hp != null)
-            hp.TakeDamage(Random.Range(5, 20));
+        protected override void Interact()
+        {
+            if (hp != null)
+                hp.TakeDamage(Random.Range(5, 20));
+        }
     }
 }

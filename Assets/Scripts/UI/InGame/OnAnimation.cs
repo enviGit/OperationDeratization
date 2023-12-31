@@ -1,10 +1,13 @@
 using UnityEngine;
 
-public class OnAnimation : MonoBehaviour
+namespace RatGamesStudios.OperationDeratization.UI.InGame
 {
-    public void DestroyParent()
+    public class OnAnimation : MonoBehaviour
     {
-        GameObject parent = gameObject.transform.parent.gameObject;
-        Destroy(parent);
+        public void DestroyParent()
+        {
+            GameObject parent = gameObject.transform.parent.gameObject;
+            Destroy(parent);
+        }
     }
 }

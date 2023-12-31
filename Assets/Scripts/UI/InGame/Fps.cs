@@ -1,38 +1,40 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
-
-public class Fps : MonoBehaviour
+namespace RatGamesStudios.OperationDeratization.UI.InGame
 {
-    private float count;
-    private float gpuUsage;
-    private long totalMemory;
-    private long freeMemory;
-
-    private IEnumerator Start()
+    public class Fps : MonoBehaviour
     {
-        GUI.depth = 2;
+        private float count;
+        private float gpuUsage;
+        private long totalMemory;
+        private long freeMemory;
 
-        while (true)
+        private IEnumerator Start()
         {
-            count = 1f / Time.unscaledDeltaTime;
-            MonitorMemoryUsage();
+            GUI.depth = 2;
 
-            yield return new WaitForSeconds(1f);
+            while (true)
+            {
+                count = 1f / Time.unscaledDeltaTime;
+                MonitorMemoryUsage();
+
+                yield return new WaitForSeconds(1f);
+            }
         }
-    }
-    private void OnGUI()
-    {
-        GUIStyle headStyle = new GUIStyle();
-        headStyle.fontSize = 30;
-        headStyle.normal.textColor = Color.white;
-        GUI.Label(new Rect(5, 5, 100, 25), "FPS: " + Mathf.Round(count), headStyle);
-        GUI.Label(new Rect(5, 35, 100, 25), $"Total Mem: {totalMemory} MB", headStyle);
-        GUI.Label(new Rect(5, 65, 100, 25), $"Free Mem: {freeMemory} MB", headStyle);
-    }
-    private void MonitorMemoryUsage()
-    {
-        totalMemory = SystemInfo.systemMemorySize;
-        freeMemory = System.GC.GetTotalMemory(false);
+        private void OnGUI()
+        {
+            GUIStyle headStyle = new GUIStyle();
+            headStyle.fontSize = 30;
+            headStyle.normal.textColor = Color.white;
+            GUI.Label(new Rect(5, 5, 100, 25), "FPS: " + Mathf.Round(count), headStyle);
+            GUI.Label(new Rect(5, 35, 100, 25), $"Total Mem: {totalMemory} MB", headStyle);
+            GUI.Label(new Rect(5, 65, 100, 25), $"Free Mem: {freeMemory} MB", headStyle);
+        }
+        private void MonitorMemoryUsage()
+        {
+            totalMemory = SystemInfo.systemMemorySize;
+            freeMemory = System.GC.GetTotalMemory(false);
+        }
     }
 }

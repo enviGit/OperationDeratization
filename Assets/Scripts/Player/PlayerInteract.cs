@@ -1,47 +1,51 @@
+using RatGamesStudios.OperationDeratization.Interactables;
 using UnityEngine;
 
-public class PlayerInteract : MonoBehaviour
+namespace RatGamesStudios.OperationDeratization.Player
 {
-    [Header("References")]
-    private Camera cam;
-    private PlayerUI playerUI;
-
-    [Header("Raycast")]
-    public float distance = 2f;
-    public Ray ray;
-    public RaycastHit hitInfo;
-
-    [Header("Cooldown")]
-    public float interactCooldown = 0.5f;
-    private float lastInteractTime = 0f;
-
-    private void Start()
+    public class PlayerInteract : MonoBehaviour
     {
-        cam = GetComponent<PlayerShoot>().cam;
-        playerUI = GetComponent<PlayerUI>();
-    }
-    private void Update()
-    {
-        playerUI.UpdateText(string.Empty);
-        ray = new Ray(cam.transform.position, cam.transform.forward);
-        LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
+        [Header("References")]
+        private Camera cam;
+        private PlayerUI playerUI;
 
-        if (Physics.Raycast(ray, out hitInfo, distance, obstacleMask))
+        [Header("Raycast")]
+        public float distance = 2f;
+        public Ray ray;
+        public RaycastHit hitInfo;
+
+        [Header("Cooldown")]
+        public float interactCooldown = 0.5f;
+        private float lastInteractTime = 0f;
+
+        private void Start()
         {
-            if (hitInfo.collider.GetComponent<Interactable>() != null)
-            {
-                Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
-                playerUI.UpdateText(interactable.prompt);
-                playerUI.promptText.color = Color.white;
+            cam = GetComponent<PlayerShoot>().cam;
+            playerUI = GetComponent<PlayerUI>();
+        }
+        private void Update()
+        {
+            playerUI.UpdateText(string.Empty);
+            ray = new Ray(cam.transform.position, cam.transform.forward);
+            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
-                if (Input.GetKeyDown(KeyCode.F) && Time.time - lastInteractTime >= interactCooldown)
+            if (Physics.Raycast(ray, out hitInfo, distance, obstacleMask))
+            {
+                if (hitInfo.collider.GetComponent<Interactable>() != null)
                 {
-                    interactable.BaseInteract();
-                    lastInteractTime = Time.time;
+                    Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
+                    playerUI.UpdateText(interactable.prompt);
+                    playerUI.promptText.color = Color.white;
+
+                    if (Input.GetKeyDown(KeyCode.F) && Time.time - lastInteractTime >= interactCooldown)
+                    {
+                        interactable.BaseInteract();
+                        lastInteractTime = Time.time;
+                    }
                 }
+                if (hitInfo.collider.GetComponent<AmmoBox>() != null)
+                    playerUI.ammoRefill = hitInfo.collider.gameObject.GetComponent<AmmoBox>();
             }
-            if (hitInfo.collider.GetComponent<AmmoBox>() != null)
-                playerUI.ammoRefill = hitInfo.collider.gameObject.GetComponent<AmmoBox>();
         }
     }
 }

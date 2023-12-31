@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace Cyan
+namespace RatGamesStudios.OperationDeratization.UI.InGame
 {
     //	[CreateAssetMenu(menuName = "Cyan/Blit")] 
     public class Blit : ScriptableRendererFeature

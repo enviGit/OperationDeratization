@@ -1,47 +1,50 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class Sensitivity : MonoBehaviour
+namespace RatGamesStudios.OperationDeratization.UI.Menu
 {
-    private Slider sensitivitySlider;
-    private TextMeshProUGUI sliderText;
-    private float originalSensitivity;
+    public class Sensitivity : MonoBehaviour
+    {
+        private Slider sensitivitySlider;
+        private TextMeshProUGUI sliderText;
+        private float originalSensitivity;
 
-    private void Start()
-    {
-        sensitivitySlider = GetComponent<Slider>();
-        sliderText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        originalSensitivity = Settings.Sensitivity;
-        SetSensitivity(originalSensitivity);
-        UpdateSliderText(sensitivitySlider.value);
-        sensitivitySlider.onValueChanged.AddListener(UpdateSliderText);
-    }
-    public void SetSensitivity(float _value)
-    {
-        RefreshSlider(_value);
-    }
-    public void SetFromSensitivitySlider()
-    {
-        SetSensitivity(sensitivitySlider.value);
-    }
-    public void RefreshSlider(float _value)
-    {
-        sensitivitySlider.value = _value;
-    }
-    private void UpdateSliderText(float value)
-    {
-        int intValue = Mathf.RoundToInt(Mathf.Clamp(value * 10, 1, 30));
-        sliderText.text = intValue.ToString();
-    }
-    public void RestoreOriginalValues()
-    {
-        SetSensitivity(originalSensitivity);
-        Settings.Sensitivity = originalSensitivity;
-    }
-    public void ApplyChanges()
-    {
-        originalSensitivity = sensitivitySlider.value;
-        Settings.Sensitivity = originalSensitivity;
+        private void Start()
+        {
+            sensitivitySlider = GetComponent<Slider>();
+            sliderText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            originalSensitivity = Settings.Sensitivity;
+            SetSensitivity(originalSensitivity);
+            UpdateSliderText(sensitivitySlider.value);
+            sensitivitySlider.onValueChanged.AddListener(UpdateSliderText);
+        }
+        public void SetSensitivity(float _value)
+        {
+            RefreshSlider(_value);
+        }
+        public void SetFromSensitivitySlider()
+        {
+            SetSensitivity(sensitivitySlider.value);
+        }
+        public void RefreshSlider(float _value)
+        {
+            sensitivitySlider.value = _value;
+        }
+        private void UpdateSliderText(float value)
+        {
+            int intValue = Mathf.RoundToInt(Mathf.Clamp(value * 10, 1, 30));
+            sliderText.text = intValue.ToString();
+        }
+        public void RestoreOriginalValues()
+        {
+            SetSensitivity(originalSensitivity);
+            Settings.Sensitivity = originalSensitivity;
+        }
+        public void ApplyChanges()
+        {
+            originalSensitivity = sensitivitySlider.value;
+            Settings.Sensitivity = originalSensitivity;
+        }
     }
 }

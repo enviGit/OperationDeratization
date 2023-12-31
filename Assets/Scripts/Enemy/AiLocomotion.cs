@@ -1,21 +1,24 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class AiLocomotion : MonoBehaviour
+namespace RatGamesStudios.OperationDeratization.Enemy
 {
-    NavMeshAgent agent;
-    Animator animator;
+    public class AiLocomotion : MonoBehaviour
+    {
+        NavMeshAgent agent;
+        Animator animator;
 
-    private void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
-    }
-    private void Update()
-    {
-        if (agent.hasPath)
-            animator.SetFloat("Speed", agent.velocity.magnitude);
-        else
-            animator.SetFloat("Speed", 0);
+        private void Start()
+        {
+            agent = GetComponent<NavMeshAgent>();
+            animator = GetComponent<Animator>();
+        }
+        private void Update()
+        {
+            if (agent.hasPath)
+                animator.SetFloat("Speed", agent.velocity.magnitude);
+            else
+                animator.SetFloat("Speed", 0);
+        }
     }
 }

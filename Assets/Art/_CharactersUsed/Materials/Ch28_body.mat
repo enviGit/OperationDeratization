@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Ch28_body
-  m_Shader: {fileID: -6465566751694194690, guid: 1abcb8705948af8469118ba60bebbe20,
+  m_Shader: {fileID: -6465566751694194690, guid: 48462817418c5874385ca8ba82f89cba,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -82,11 +82,27 @@ Material:
         m_Texture: {fileID: 2800000, guid: 7756ee29b53a00345a7e984a82b78239, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _albedoTexture:
+        m_Texture: {fileID: 2800000, guid: 7756ee29b53a00345a7e984a82b78239, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _glossinessTexture:
+        m_Texture: {fileID: 2800000, guid: 0dbf471f0586b5d41a32b4f67ee043b5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _metallic:
         m_Texture: {fileID: 2800000, guid: 44ef749939c20ad45bc46794a58b103d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _metallicTexture:
+        m_Texture: {fileID: 2800000, guid: 44ef749939c20ad45bc46794a58b103d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _normal:
+        m_Texture: {fileID: 2800000, guid: 3e72aa5a73ab6c94baae1eb677455587, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _normalMapTexture:
         m_Texture: {fileID: 2800000, guid: 3e72aa5a73ab6c94baae1eb677455587, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -130,6 +146,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.4472136
     - _GlossyReflections: 1
+    - _INVERT: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -145,17 +162,25 @@ Material:
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - _brightness: 15
+    - _changeNoise: 1
     - _disappearIntensity: 0
     - _dissapearIntensity: 0
     - _dissolve: -0.75
+    - _dissolveAmount: -2
     - _dissolveIntensity: 0.03
+    - _edgeWidth: 0.015
     - _lightIntensity: 0
     - _light_intensity: 0
     - _noiseScale: 150
+    - _resize: 0.2
+    - _simpleNoiseScale: 50
+    - _voronoiNoiseScale: 250
     m_Colors:
     - _BaseColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
     - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _edgeColor: {r: 0.16862746, g: 1, b: 0, a: 1}
     - _lightColor: {r: 3.3417625, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

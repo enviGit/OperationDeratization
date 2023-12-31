@@ -1,24 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeshSockets : MonoBehaviour
+namespace RatGamesStudios.OperationDeratization.Enemy
 {
-    public enum SocketId
+    public class MeshSockets : MonoBehaviour
     {
-        Spine,
-        RightHand
-    }
-    Dictionary<SocketId, MeshSocket> socketMap = new Dictionary<SocketId, MeshSocket>();
+        public enum SocketId
+        {
+            Spine,
+            RightHand
+        }
+        Dictionary<SocketId, MeshSocket> socketMap = new Dictionary<SocketId, MeshSocket>();
 
-    private void Start()
-    {
-        MeshSocket[] sockets = GetComponentsInChildren<MeshSocket>();
+        private void Start()
+        {
+            MeshSocket[] sockets = GetComponentsInChildren<MeshSocket>();
 
-        foreach (var socket in sockets)
-            socketMap[socket.socketId] = socket;
-    }
-    public void Attach(Transform objectTransform, SocketId socketId)
-    {
-        socketMap[socketId].Attach(objectTransform);
+            foreach (var socket in sockets)
+                socketMap[socket.socketId] = socket;
+        }
+        public void Attach(Transform objectTransform, SocketId socketId)
+        {
+            socketMap[socketId].Attach(objectTransform);
+        }
     }
 }

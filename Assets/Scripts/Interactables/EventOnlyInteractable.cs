@@ -1,6 +1,7 @@
-using UnityEngine;
-
-public class EventOnlyInteractable : Interactable
+namespace RatGamesStudios.OperationDeratization.Interactables
 {
+    public class EventOnlyInteractable : Interactable
+    {
 
+    }
 }

@@ -1,63 +1,68 @@
+using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.Player;
 using System.Collections;
 using UnityEngine;
 
-public class FirstAidKit : Interactable
+namespace RatGamesStudios.OperationDeratization.Interactables
 {
-    [Header("References")]
-    public PlayerHealth playerHealth;
-    public float hpToRestore = 15f;
-    private float delayBeforeDestroy = 3.5f;
-    private AudioSource restoreHealthSound;
-    private bool used = false;
-    private MeshRenderer mesh;
+    public class FirstAidKit : Interactable
+    {
+        [Header("References")]
+        public PlayerHealth playerHealth;
+        public float hpToRestore = 15f;
+        private float delayBeforeDestroy = 3.5f;
+        private AudioSource restoreHealthSound;
+        private bool used = false;
+        private MeshRenderer mesh;
 
-    private void Start()
-    {
-        restoreHealthSound = GetComponent<AudioSource>();
-        mesh = GetComponent<MeshRenderer>();
-    }
-    protected override void Interact()
-    {
-        if (!used && playerHealth.currentHealth < 99f)
+        private void Start()
         {
-            playerHealth.RestoreHealth(hpToRestore);
-            prompt = "";
-            StartCoroutine(DestroyAfterSound());
-            used = true;
+            restoreHealthSound = GetComponent<AudioSource>();
+            mesh = GetComponent<MeshRenderer>();
         }
-    }
-    private IEnumerator DestroyAfterSound()
-    {
-        restoreHealthSound.Play();
-        SetShaderParameters(0);
-        float elapsedTime = 0f;
-        float duration = delayBeforeDestroy;
-
-        while (elapsedTime < duration)
+        protected override void Interact()
         {
-            SetShaderParameters(elapsedTime / duration);
-            elapsedTime += Time.deltaTime;
-
-            yield return null;
-        }
-
-        Destroy(gameObject);
-    }
-    private void SetShaderParameters(float disappearIntensity)
-    {
-        mesh.material.SetFloat("_dissolve", disappearIntensity);
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            EnemyHealth health = other.GetComponent<EnemyHealth>();
-
-            if (!used && health.currentHealth <= 99f && health.isAlive)
+            if (!used && playerHealth.currentHealth < 99f)
             {
-                health.RestoreHealth(hpToRestore);
+                playerHealth.RestoreHealth(hpToRestore);
+                prompt = "";
                 StartCoroutine(DestroyAfterSound());
                 used = true;
+            }
+        }
+        private IEnumerator DestroyAfterSound()
+        {
+            restoreHealthSound.Play();
+            SetShaderParameters(0);
+            float elapsedTime = 0f;
+            float duration = delayBeforeDestroy;
+
+            while (elapsedTime < duration)
+            {
+                SetShaderParameters(elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            Destroy(gameObject);
+        }
+        private void SetShaderParameters(float disappearIntensity)
+        {
+            mesh.material.SetFloat("_dissolve", disappearIntensity);
+        }
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Enemy"))
+            {
+                EnemyHealth health = other.GetComponent<EnemyHealth>();
+
+                if (!used && health.currentHealth <= 99f && health.isAlive)
+                {
+                    health.RestoreHealth(hpToRestore);
+                    StartCoroutine(DestroyAfterSound());
+                    used = true;
+                }
             }
         }
     }
