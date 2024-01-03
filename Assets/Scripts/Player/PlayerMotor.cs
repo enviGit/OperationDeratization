@@ -191,7 +191,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 if (currentState.playerStance == PlayerStance.Stance.Crouching)
                 {
                     RaycastHit hit;
-                    LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
+                    LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
 
                     if (Physics.Raycast(transform.position, transform.up, out hit, playerHeight, obstacleMask))
                     {
@@ -219,7 +219,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (Input.GetKey(KeyCode.Space) && isGrounded && stamina.HasStamina(stamina.jumpStaminaCost / 2))
             {
                 RaycastHit hit;
-                LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
+                LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
 
                 if (!isCrouching && Physics.Raycast(transform.position, transform.up, out hit, jumpHeight, obstacleMask))
                     return;

@@ -27,7 +27,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             playerUI.UpdateText(string.Empty);
             ray = new Ray(cam.transform.position, cam.transform.forward);
-            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
+            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
 
             if (Physics.Raycast(ray, out hitInfo, distance, obstacleMask))
             {

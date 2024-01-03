@@ -112,7 +112,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Shoot()
         {
             RaycastHit hit;
-            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
+            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
 
             if (Input.GetMouseButtonDown(0) && (Time.time > shotTimer || Time.time > autoShotTimer) && currentWeapon.currentAmmoCount == 0 && !isReloading &&
                 (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke))
@@ -179,8 +179,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                             //Destroy(ricochet, 2f);
                             ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
-                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass") && 
-                                hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
+                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
                             {
                                 if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
                                     ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
@@ -276,7 +275,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                                 //Destroy(ricochet, 2f);
                                 ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
-                                if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass") && hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
+                                if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
                                 {
                                     if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
                                         ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);

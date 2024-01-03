@@ -6,7 +6,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     {
         [Header("Interactables")]
         public bool useEvents;
-        [SerializeField] public string prompt;
+        public string prompt;
 
         public virtual string OnLook()
         {

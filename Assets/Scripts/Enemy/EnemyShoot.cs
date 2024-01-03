@@ -86,8 +86,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                         //Destroy(ricochet, 2f);
                         ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
-                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass") && 
-                            hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
+                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
                         {
                             if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
                                 ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
