@@ -69,7 +69,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         }
         public void Exit(AiAgent agent)
         {
-            agent.weapons.DeactiveWeapon();
+            //agent.weapons.DeactiveWeapon();
             agent.navMeshAgent.stoppingDistance = 0;
         }
     }

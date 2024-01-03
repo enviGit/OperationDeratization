@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -111,7 +112,8 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             }
 
             unRegister();
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            ObjectPoolManager.ReturnObjectToPool(gameObject);
         }
     }
 }

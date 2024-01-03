@@ -130,10 +130,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 moveSpeed *= 1.3f;
             }
             else
-            {
                 isRunning = false;
-                moveSpeed /= 1.3f;
-            }
 
             controller.Move(moveDirection * moveSpeed * Time.deltaTime);
         }
@@ -176,15 +173,13 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 1f, Time.deltaTime * 5f);
                 Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
-                controller.height = 2f;
-                controller.center = new Vector3(0, 1f, 0);
+                controller.height = 2.5f;
             }
             else
             {
                 float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 2f, Time.deltaTime * 5f);
                 Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
                 controller.height = 3.6f;
-                controller.center = new Vector3(0, 1.8f, 0);
             }
         }
         private void CrouchToggle()
@@ -202,7 +197,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         isCrouching = true;
                         currentState.playerStance = PlayerStance.Stance.Crouching;
-                        currentState.camHeight = 1f;
+                        currentState.camHeight = 1.5f;
                     }
                     else
                     {
@@ -215,7 +210,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 {
                     isCrouching = true;
                     currentState.playerStance = PlayerStance.Stance.Crouching;
-                    currentState.camHeight = 1f;
+                    currentState.camHeight = 1.5f;
                 }
             }
         }

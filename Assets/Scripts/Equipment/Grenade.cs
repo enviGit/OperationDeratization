@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Interactables;
+using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using RatGamesStudios.OperationDeratization.UI.InGame;
 using UnityEngine;
@@ -11,12 +12,11 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         public GameObject explosionEffect;
         public Gun grenade;
         private AudioSource bang;
-        private GameObject parentObject;
 
         [Header("Grenade")]
         public float delay = 3f;
-        public float radius = 5f;
-        public float force = 100f;
+        public float radius = 6.5f;
+        public float force = 300f;
         public bool shouldExplode = false;
         private bool hasExploded = false;
         private float countdown;
@@ -24,7 +24,6 @@ namespace RatGamesStudios.OperationDeratization.Equipment
 
         private void Start()
         {
-            parentObject = GameObject.Find("3D");
             countdown = delay;
             bang = GameObject.FindGameObjectWithTag("Bang").GetComponent<AudioSource>();
         }
@@ -44,7 +43,8 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         public void Explode()
         {
             bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[0]);
-            Instantiate(explosionEffect, transform.position, transform.rotation, parentObject.transform);
+            //Instantiate(explosionEffect, transform.position, transform.rotation, parentObject.transform);
+            ObjectPoolManager.SpawnObject(explosionEffect, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);
             Collider[] collidersToMove = Physics.OverlapSphere(transform.position, radius);
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
@@ -54,7 +54,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
 
                 if (rb != null)
                     //if (!nearbyObject.CompareTag("Enemy"))
-                        rb.AddExplosionForce(force, transform.position, radius);
+                    rb.AddExplosionForce(force, transform.position, radius);
             }
 
             Collider[] glassColliders = Physics.OverlapSphere(transform.position, radius);
@@ -64,7 +64,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                 Glass glass = nearbyObject.GetComponent<Glass>();
 
                 if (glass != null)
-                    glass.Break(transform.position);
+                    glass.BreakFromGrenade(transform.position, force);
             }
 
             /*Collider[] collidersToDestroy = Physics.OverlapSphere(transform.position, radius);
@@ -97,7 +97,10 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                             continue;
                     }
                     if (nearbyObject.CompareTag("Enemy"))
+                    {
                         hitBox.OnExplosion(damageInt, transform.forward);
+                        //ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                    }
                     if (nearbyObject.CompareTag("Player"))
                     {
                         hitBox.OnExplosionPlayer(damageInt);
@@ -119,7 +122,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                     float collisionForce = other.impulse.magnitude;
 
                     if (collisionForce >= minimalCollisionForceToBreakGlass)
-                        glass.Break(transform.position);
+                        glass.BreakFromGrenade(transform.position, grenade.impactForce);
                 }
             }
             else

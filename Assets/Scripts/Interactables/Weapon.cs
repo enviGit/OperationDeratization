@@ -90,7 +90,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                 if (upperImage != null || bottomImage != null)
                 {
                     upperImage.gameObject.SetActive(false);
-                    bottomImage.gameObject.SetActive(false);
+
+                    if(bottomImage != null)
+                        bottomImage.gameObject.SetActive(false);
+
                     prompt = "";
                 }
             }

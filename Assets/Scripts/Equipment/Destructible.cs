@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Equipment
@@ -9,16 +10,20 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         public void Destroy()
         {
             if (destroyedVersion != null)
-                Instantiate(destroyedVersion, transform.position, transform.rotation);
+                ObjectPoolManager.SpawnObject(destroyedVersion, transform.position, transform.rotation, ObjectPoolManager.PoolType.Gameobject);
+            //Instantiate(destroyedVersion, transform.position, transform.rotation);
 
-            Destroy(gameObject);
+            ObjectPoolManager.ReturnObjectToPool(gameObject);
+            //Destroy(gameObject);
         }
-        public void DestroyFromBullet()
+        /*public void DestroyFromBullet()
         {
             if (destroyedVersion != null)
-                Instantiate(destroyedVersion, transform.position, transform.rotation);
+                ObjectPoolManager.SpawnObject(destroyedVersion, transform.position, transform.rotation, ObjectPoolManager.PoolType.Gameobject);
+            //Instantiate(destroyedVersion, transform.position, transform.rotation);
 
-            Destroy(gameObject);
-        }
+            ObjectPoolManager.ReturnObjectToPool(gameObject);
+            //Destroy(gameObject);
+        }*/
     }
 }

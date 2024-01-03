@@ -6,11 +6,18 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     {
         [SerializeField] private ShatteredGlass shatteredVersion;
 
-        public void Break(Vector3 projectilePosition)
+        public void Break(Vector3 projectilePosition, float explosionForce)
         {
             ShatteredGlass shatteredGlass = Instantiate(shatteredVersion, transform.position, transform.rotation);
             shatteredGlass.transform.localScale = transform.localScale;
-            shatteredGlass.ApplyForce(projectilePosition);
+            shatteredGlass.ApplyForce(projectilePosition, explosionForce);
+            Destroy(gameObject);
+        }
+        public void BreakFromGrenade(Vector3 projectilePosition, float explosionForce)
+        {
+            ShatteredGlass shatteredGlass = Instantiate(shatteredVersion, transform.position, transform.rotation);
+            shatteredGlass.transform.localScale = transform.localScale;
+            shatteredGlass.ApplyForce(projectilePosition, explosionForce);
             Destroy(gameObject);
         }
     }

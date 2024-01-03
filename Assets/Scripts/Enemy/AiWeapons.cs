@@ -1,4 +1,3 @@
-using RatGamesStudios.OperationDeratization.Equipment;
 using RatGamesStudios.OperationDeratization.Interactables;
 using System.Collections;
 using UnityEngine;
@@ -46,7 +45,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         [Header("References")]
         [HideInInspector] public GameObject currentWeapon;
         private EnemyShoot weapon;
-        private GameObject parentObject;
         public bool hasLootedAmmo = false;
 
         [Header("Weapons")]
@@ -62,7 +60,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             animator = GetComponent<Animator>();
             weaponIk = GetComponent<WeaponIk>();
             weapon = GetComponent<EnemyShoot>();
-            parentObject = GameObject.Find("3D");
         }
         private void Update()
         {
@@ -130,7 +127,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         {
             if (currentWeapon)
             {
-                currentWeapon.transform.SetParent(parentObject.transform);
+                currentWeapon.transform.SetParent(null);
                 Rigidbody rb = currentWeapon.AddComponent<Rigidbody>();
                 rb.mass = 2f;
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;

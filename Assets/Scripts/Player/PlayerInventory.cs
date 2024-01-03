@@ -22,7 +22,6 @@ namespace RatGamesStudios.OperationDeratization.Player
         public int grenadeCount = 0;
         public int flashbangCount = 0;
         public int smokeCount = 0;
-        private GameObject parentObject;
         public Gun CurrentWeapon
         {
             get
@@ -36,7 +35,6 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void Start()
         {
-            parentObject = GameObject.Find("3D");
             Transform mesh = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
             MeshRenderer meshRenderer = mesh.GetComponent<MeshRenderer>();
             meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
@@ -141,7 +139,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 if (newItem.gunStyle != GunStyle.Grenade && newItem.gunStyle != GunStyle.Flashbang && newItem.gunStyle != GunStyle.Smoke)
                 {
                     Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
-                    GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity, parentObject.transform);
+                    GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
                     newWeapon.layer = LayerMask.NameToLayer("Interactable");
                     SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
                     Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
@@ -253,7 +251,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         weaponImage.gameObject.SetActive(false);
 
                     Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
-                    GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity, parentObject.transform);
+                    GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity);
                     newWeapon.layer = LayerMask.NameToLayer("Interactable");
                     SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
                     Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
@@ -269,6 +267,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         if (child.gameObject.name == droppedWeapon.gunPrefab.name + "(Clone)")
                         {
                             Destroy(child.gameObject);
+
                             break;
                         }
                     }

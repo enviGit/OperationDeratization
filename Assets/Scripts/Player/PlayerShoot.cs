@@ -1,5 +1,6 @@
 using RatGamesStudios.OperationDeratization.Equipment;
 using RatGamesStudios.OperationDeratization.Interactables;
+using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using System.Collections;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace RatGamesStudios.OperationDeratization.Player
     {
         [Header("References")]
         [SerializeField] private WeaponRecoil recoil;
-        public ParticleSystem muzzleFlash;
+        public GameObject muzzleFlash;
         public GameObject impactEffect;
         public GameObject impactRicochet;
         public GameObject bloodSpread;
@@ -22,7 +23,6 @@ namespace RatGamesStudios.OperationDeratization.Player
         private PlayerMotor playerMotor;
         private LadderTrigger ladder;
         private PlayerStamina stamina;
-        private GameObject parentObject;
 
         [Header("Weapon")]
         private Gun currentWeapon;
@@ -57,7 +57,6 @@ namespace RatGamesStudios.OperationDeratization.Player
             cam = Camera.main;
             previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
             currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
-            parentObject = GameObject.Find("3D");
             gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
             gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
             gunSwitchAudio = transform.Find("Sounds/WeaponSwitch").GetComponent<AudioSource>();
@@ -104,6 +103,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 if (child.gameObject.activeSelf)
                 {
                     weaponAnimator = child.GetComponent<Animator>();
+
                     break;
                 }
             }
@@ -117,6 +117,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke))
             {
                 gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
+
                 return;
             }
             if (Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !stamina.HasStamina(stamina.attackStaminaCost / 2))
@@ -160,9 +161,10 @@ namespace RatGamesStudios.OperationDeratization.Player
                     recoil.RecoilFire();
                     currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                    ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
-                    flash.Play();
-                    Destroy(flash, 1f);
+                    //ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
+                    //flash.Play();
+                    //Destroy(flash, 1f);
+                    ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
 
                     if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                     {
@@ -172,23 +174,26 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                         if (hitBox == null)
                         {
-                            GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
-                            Destroy(ricochet, 2f);
+                            //GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+                            //Destroy(ricochet, 2f);
+                            ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
-                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("MovingDoors") && !hit.collider.CompareTag("Glass") && hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
+                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass") && 
+                                hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
                             {
-                                GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
-
                                 if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                                    impact.transform.SetParent(hit.collider.transform);
+                                    ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
+                                else
+                                    ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
                             }
                             if (hit.collider.CompareTag("Glass"))
-                                hit.collider.GetComponent<Glass>().Break(hit.point);
+                                hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
                         }
                         else
                         {
                             hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
-                            Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                            //Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                            ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                         }
                         if (hit.rigidbody != null)
                             hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
@@ -207,7 +212,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         currentWeapon.currentAmmoCount--;
                         Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
                         Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
-                        GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation, parentObject.transform);
+                        GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation);
                         grenade.AddComponent<GrenadeIndicator>();
                         Rigidbody rb = grenade.GetComponent<Rigidbody>();
                         Weapon weaponScript = grenade.GetComponent<Weapon>();
@@ -246,9 +251,10 @@ namespace RatGamesStudios.OperationDeratization.Player
                             recoil.RecoilFire();
                             currentWeapon.currentAmmoCount--;
                             Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                            ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
-                            flash.Play();
-                            Destroy(flash, 1f);
+                            //ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
+                            //flash.Play();
+                            //Destroy(flash, 1f);
+                            ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
                         }
                         else
                         {
@@ -264,26 +270,28 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                             if (hitBox == null && currentWeapon.gunStyle != GunStyle.Melee)
                             {
-                                GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
-                                Destroy(ricochet, 2f);
+                                //GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+                                //Destroy(ricochet, 2f);
+                                ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
-                                if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("MovingDoors") && !hit.collider.CompareTag("Glass") && hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
+                                if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass") && hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
                                 {
-                                    GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
-
                                     if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                                        impact.transform.SetParent(hit.collider.transform);
+                                        ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
+                                    else
+                                        ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
                                 }
                                 if (hit.collider.CompareTag("Glass"))
-                                    hit.collider.GetComponent<Glass>().Break(hit.point);
+                                    hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
                             }
-                            else if(hitBox == null && currentWeapon.gunStyle == GunStyle.Melee)
+                            else if (hitBox == null && currentWeapon.gunStyle == GunStyle.Melee)
                                 if (hit.collider.CompareTag("Glass"))
-                                    hit.collider.GetComponent<Glass>().Break(hit.point);
+                                    hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
                             if (hitBox != null)
                             {
                                 hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
-                                Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                                //Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                                ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                             }
                             if (hit.rigidbody != null)
                                 hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
@@ -504,6 +512,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 {
                     lineRenderer.SetPosition(i, hit.point);
                     lineRenderer.positionCount = i + 1;
+
                     return;
                 }
             }

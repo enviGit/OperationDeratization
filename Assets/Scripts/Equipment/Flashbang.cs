@@ -12,10 +12,12 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private AudioSource whiteNoise;
         private AudioSource bang;
         public float delay = 2f;
-        public float distance = 10f;
+        public float distance = 11.5f;
         public bool shouldFlash = false;
-        bool hasFlashed = false;
-        float countdown;
+        private bool hasFlashed = false;
+        private float countdown;
+        private float minimalCollisionForceToBreakGlass = 10f;
+        private float impactForce = 100f;
 
         private void Start()
         {
@@ -109,6 +111,26 @@ namespace RatGamesStudios.OperationDeratization.Equipment
             whiteNoise.Stop();
             whiteNoise.volume = 1;
             Destroy(gameObject);
+        }
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Glass"))
+            {
+                Glass glass = other.gameObject.GetComponent<Glass>();
+
+                if (glass != null)
+                {
+                    float collisionForce = other.impulse.magnitude;
+
+                    if (collisionForce >= minimalCollisionForceToBreakGlass)
+                        glass.BreakFromGrenade(transform.position, impactForce);
+                }
+            }
+            else
+            {
+                Rigidbody rb = GetComponent<Rigidbody>();
+                rb.velocity *= 1f;
+            }
         }
     }
 }

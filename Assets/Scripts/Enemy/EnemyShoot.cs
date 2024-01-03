@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Interactables;
+using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using RatGamesStudios.OperationDeratization.UI.InGame;
 using System.Collections;
@@ -9,7 +10,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
     public class EnemyShoot : MonoBehaviour
     {
         [Header("References")]
-        public ParticleSystem muzzleFlash;
+        public GameObject muzzleFlash;
         public GameObject impactEffect;
         public GameObject impactRicochet;
         public GameObject bloodSpread;
@@ -51,6 +52,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             if (currentWeapon != null && currentWeapon.currentAmmoCount == 0 && currentWeapon.maxAmmoCount != 0 && !isReloading)
             {
                 StartCoroutine(ReloadCoroutine());
+
                 return;
             }
             if (Time.time > autoShotTimer && currentWeapon != null && currentWeapon.currentAmmoCount > 0 && !isReloading && isFiring)
@@ -68,9 +70,10 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                         break;
                 }
 
-                ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
-                flash.Play();
-                Destroy(flash, 1f);
+                //ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
+                //flash.Play();
+                //Destroy(flash, 1f);
+                ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
 
                 if (Physics.Raycast(muzzle.transform.position, muzzle.forward, out hit, currentWeapon.range, layerMask))
                 {
@@ -79,23 +82,29 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
                     if (hitBox == null)
                     {
-                        GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
-                        Destroy(ricochet, 2f);
+                        //GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
+                        //Destroy(ricochet, 2f);
+                        ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
-                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("MovingDoors") && !hit.collider.CompareTag("Glass") && hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
+                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass") && 
+                            hit.collider.gameObject.layer != LayerMask.NameToLayer("Postprocessing"))
                         {
-                            GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
-
                             if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                                impact.transform.SetParent(hit.collider.transform);
+                                ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
+                            else
+                                ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
+
                         }
-                        if(hit.collider.CompareTag("Glass"))
-                            hit.collider.GetComponent<Glass>().Break(hit.point);
+                        if (hit.collider.CompareTag("Glass"))
+                            hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
                     }
                     else
                     {
                         if (hitBox.health != null)
+                        {
                             hitBox.OnRaycastHit(currentWeapon, muzzle.forward, gameObject); //Or transform.forward
+                            ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                        }
                         if (hitBox.playerHealth != null)
                         {
                             hitBox.OnRaycastHitPlayer(currentWeapon, gameObject);

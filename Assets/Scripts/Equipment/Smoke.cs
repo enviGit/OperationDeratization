@@ -1,3 +1,5 @@
+using RatGamesStudios.OperationDeratization.Interactables;
+using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Equipment
@@ -7,17 +9,17 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         [Header("References")]
         public GameObject smokeEffect;
         private AudioSource bang;
-        private GameObject parentObject;
 
         [Header("Grenade")]
         public float delay = 2f;
         public bool shouldSmoke = false;
         private bool hasSmoked = false;
         private float countdown;
+        private float minimalCollisionForceToBreakGlass = 10f;
+        private float impactForce = 100f;
 
         private void Start()
         {
-            parentObject = GameObject.Find("3D");
             countdown = delay;
             bang = GameObject.FindGameObjectWithTag("Bang").GetComponent<AudioSource>();
         }
@@ -37,8 +39,29 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private void SmokeOn()
         {
             bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[2]);
-            Instantiate(smokeEffect, transform.position, transform.rotation, parentObject.transform);
+            //Instantiate(smokeEffect, transform.position, transform.rotation, parentObject.transform);
+            ObjectPoolManager.SpawnObject(smokeEffect, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);
             Destroy(gameObject);
+        }
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Glass"))
+            {
+                Glass glass = other.gameObject.GetComponent<Glass>();
+
+                if (glass != null)
+                {
+                    float collisionForce = other.impulse.magnitude;
+
+                    if (collisionForce >= minimalCollisionForceToBreakGlass)
+                        glass.BreakFromGrenade(transform.position, impactForce);
+                }
+            }
+            else
+            {
+                Rigidbody rb = GetComponent<Rigidbody>();
+                rb.velocity *= 1f;
+            }
         }
     }
 }

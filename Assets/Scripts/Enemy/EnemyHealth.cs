@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy.State;
+using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using RatGamesStudios.OperationDeratization.Player;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using RatGamesStudios.OperationDeratization.UI.InGame;
@@ -88,7 +89,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             if (isAttackedByPlayer && isAlive)
             {
                 float distance = Vector3.Distance(Camera.main.transform.position, transform.position);
-                damageTextInstance = Instantiate(damageTextPrefab, transform.position + new Vector3(0f, 1f, 0f), Camera.main.transform.rotation, transform);
+                damageTextInstance = ObjectPoolManager.SpawnObject(damageTextPrefab, transform.position + new Vector3(0f, 1f, 0f), Camera.main.transform.rotation, transform);
                 textToDisplay = damageTextInstance.transform.GetChild(0).GetComponent<TextMeshPro>();
                 float minScale = 0.2f;
                 float midScale = 1f;
@@ -139,9 +140,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         public bool IsLowHealth()
         {
-            float randomThreshold = Random.Range(lowHealth, lowHealth + 10);
-
-            return currentHealth < randomThreshold;
+            return currentHealth < lowHealth;
         }
         private void Die(Vector3 direction)
         {

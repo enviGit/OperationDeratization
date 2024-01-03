@@ -65,6 +65,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             {
                 allWeapons = 0;
                 weaponsFullAmmo = 0;
+
                 return;
             }
             if (!isFilling)
