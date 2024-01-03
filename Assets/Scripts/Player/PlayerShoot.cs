@@ -15,6 +15,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         public GameObject impactEffect;
         public GameObject impactRicochet;
         public GameObject bloodSpread;
+        [SerializeField] private GameObject bloodWound;
         private AudioSource gunFireAudio;
         private AudioSource gunReloadAudio;
         private AudioSource gunSwitchAudio;
@@ -194,6 +195,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                             hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
                             //Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                             ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                            ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
                         }
                         if (hit.rigidbody != null)
                             hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
@@ -292,6 +294,9 @@ namespace RatGamesStudios.OperationDeratization.Player
                                 hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
                                 //Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                                 ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+
+                                if(currentWeapon.gunStyle != GunStyle.Melee)
+                                    ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
                             }
                             if (hit.rigidbody != null)
                                 hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);

@@ -14,10 +14,10 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         public GameObject impactEffect;
         public GameObject impactRicochet;
         public GameObject bloodSpread;
+        [SerializeField] private GameObject bloodWound;
         private AudioSource gunFireAudio;
         private AudioSource gunReloadAudio;
         public AiWeapons aiWeapons;
-        public Gun[] availableGuns = new Gun[5];
         public Gun currentWeapon;
         public LayerMask layerMask;
 
@@ -104,6 +104,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                         {
                             hitBox.OnRaycastHit(currentWeapon, muzzle.forward, gameObject); //Or transform.forward
                             ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                            ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
                         }
                         if (hitBox.playerHealth != null)
                         {
