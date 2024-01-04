@@ -11,19 +11,15 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         {
             if (destroyedVersion != null)
                 ObjectPoolManager.SpawnObject(destroyedVersion, transform.position, transform.rotation, ObjectPoolManager.PoolType.Gameobject);
-            //Instantiate(destroyedVersion, transform.position, transform.rotation);
 
             ObjectPoolManager.ReturnObjectToPool(gameObject);
-            //Destroy(gameObject);
         }
         /*public void DestroyFromBullet()
         {
             if (destroyedVersion != null)
                 ObjectPoolManager.SpawnObject(destroyedVersion, transform.position, transform.rotation, ObjectPoolManager.PoolType.Gameobject);
-            //Instantiate(destroyedVersion, transform.position, transform.rotation);
 
             ObjectPoolManager.ReturnObjectToPool(gameObject);
-            //Destroy(gameObject);
         }*/
     }
 }

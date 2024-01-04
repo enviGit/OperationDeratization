@@ -162,21 +162,15 @@ namespace RatGamesStudios.OperationDeratization.Player
                     recoil.RecoilFire();
                     currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                    //ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
-                    //flash.Play();
-                    //Destroy(flash, 1f);
                     ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
 
                     if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                     {
-                        // Debug.Log("Hit: " + hit.collider.name);
                         Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                         var hitBox = hit.collider.GetComponent<HitBox>();
 
                         if (hitBox == null)
                         {
-                            //GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
-                            //Destroy(ricochet, 2f);
                             ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
                             if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
@@ -192,7 +186,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                         else
                         {
                             hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
-                            //Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                             ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                             ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
                         }
@@ -252,9 +245,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                             recoil.RecoilFire();
                             currentWeapon.currentAmmoCount--;
                             Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
-                            //ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
-                            //flash.Play();
-                            //Destroy(flash, 1f);
                             ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
                         }
                         else
@@ -265,14 +255,11 @@ namespace RatGamesStudios.OperationDeratization.Player
                         }
                         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
                         {
-                            //Debug.Log("Hit: " + hit.collider.name);
                             Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                             var hitBox = hit.collider.GetComponent<HitBox>();
 
                             if (hitBox == null && currentWeapon.gunStyle != GunStyle.Melee)
                             {
-                                //GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
-                                //Destroy(ricochet, 2f);
                                 ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
                                 if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
@@ -291,7 +278,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                             if (hitBox != null)
                             {
                                 hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
-                                //Instantiate(bloodSpread, hit.point, impactRotation, hit.collider.transform);
                                 ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
 
                                 if(currentWeapon.gunStyle != GunStyle.Melee)

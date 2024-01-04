@@ -43,7 +43,6 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         public void Explode()
         {
             bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[0]);
-            //Instantiate(explosionEffect, transform.position, transform.rotation, parentObject.transform);
             ObjectPoolManager.SpawnObject(explosionEffect, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);
             Collider[] collidersToMove = Physics.OverlapSphere(transform.position, radius);
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));

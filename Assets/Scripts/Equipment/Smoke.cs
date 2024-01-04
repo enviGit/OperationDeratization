@@ -39,7 +39,6 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private void SmokeOn()
         {
             bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[2]);
-            //Instantiate(smokeEffect, transform.position, transform.rotation, parentObject.transform);
             ObjectPoolManager.SpawnObject(smokeEffect, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);
             Destroy(gameObject);
         }

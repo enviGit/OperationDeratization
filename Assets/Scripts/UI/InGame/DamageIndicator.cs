@@ -112,7 +112,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             }
 
             unRegister();
-            //Destroy(gameObject);
             ObjectPoolManager.ReturnObjectToPool(gameObject);
         }
     }
