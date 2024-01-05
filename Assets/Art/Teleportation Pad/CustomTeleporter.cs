@@ -10,7 +10,7 @@ public class CustomTeleporter : MonoBehaviour
 	//teleport when a button is pressed?
 	public bool buttonTeleport;
 	//the name of the button
-	public string buttonName;
+	public KeyCode buttonName;
 	//teleport delayed?
 	public bool delayedTeleport;
 	//time it takes to teleport, if not instant
@@ -41,38 +41,38 @@ public class CustomTeleporter : MonoBehaviour
 	public bool teleportPadOn = true;
 	public SceneLoader sceneLoader;
 
-	void Start ()
+	void Start()
 	{
 		//Set the countdown ready to the time you chose
 		curTeleportTime = teleportTime;
 	}
 
 
-	void Update ()
+	void Update()
 	{
 		//check if theres something/someone inside
-		if(inside)
+		if (inside)
 		{
 			//if that object hasnt just arrived from another pad, teleport it
-			if(!arrived && teleportPadOn)
-			Teleport();
+			if (!arrived && teleportPadOn)
+				Teleport();
 		}
 	}
 
 	void Teleport()
 	{
 		//if you chose to teleport instantly
-		if(instantTeleport)
+		if (instantTeleport)
 		{
 			//if you chose instant + random teleport, teleport to a random pad from the array
-			if(randomTeleport)
+			if (randomTeleport)
 			{
 				//choose a random pad from the array
-				int chosenPad = Random.Range(0,destinationPad.Length);
+				int chosenPad = Random.Range(0, destinationPad.Length);
 				//set arrived to true in that array, so it doesnt teleport the subject back
 				destinationPad[chosenPad].GetComponent<CustomTeleporter>().arrived = true;
 				//and teleport the subject
-				subject.transform.position = destinationPad[chosenPad].transform.position + new Vector3(0,teleportationHeightOffset,0);
+				subject.transform.position = destinationPad[chosenPad].transform.position + new Vector3(0, teleportationHeightOffset, 0);
 				//play teleport sound
 				teleportSound.Play();
 			}
@@ -81,29 +81,29 @@ public class CustomTeleporter : MonoBehaviour
 				//set arrived to true in that array, so it doesnt teleport the subject back
 				destinationPad[0].GetComponent<CustomTeleporter>().arrived = true;
 				//and teleport the subject
-				subject.transform.position = destinationPad[0].transform.position + new Vector3(0,teleportationHeightOffset,0);
+				subject.transform.position = destinationPad[0].transform.position + new Vector3(0, teleportationHeightOffset, 0);
 				//play teleport sound
 				teleportSound.Play();
 			}
 		}
-		else if(delayedTeleport) //if its a delayed teleport
+		else if (delayedTeleport) //if its a delayed teleport
 		{
 			//start the countdown
-			curTeleportTime-=1 * Time.deltaTime;
+			curTeleportTime -= 1 * Time.deltaTime;
 			//if the countdown reaches zero
-			if(curTeleportTime <= 0)
+			if (curTeleportTime <= 0)
 			{
 				//reset the countdown
 				curTeleportTime = teleportTime;
 				//if you chose delayed + random teleport, teleport to random pad from array, after the delay
-				if(randomTeleport)
+				if (randomTeleport)
 				{
 					//choose a random pad from the array
-					int chosenPad = Random.Range(0,destinationPad.Length);
+					int chosenPad = Random.Range(0, destinationPad.Length);
 					//set arrived to true in that array, so it doesnt teleport the subject back
 					destinationPad[chosenPad].GetComponent<CustomTeleporter>().arrived = true;
 					//teleport
-					subject.transform.position = destinationPad[chosenPad].transform.position + new Vector3(0,teleportationHeightOffset,0);
+					subject.transform.position = destinationPad[chosenPad].transform.position + new Vector3(0, teleportationHeightOffset, 0);
 					//play teleport sound
 					teleportSound.Play();
 				}
@@ -119,64 +119,68 @@ public class CustomTeleporter : MonoBehaviour
 				}
 			}
 		}
-		else if(buttonTeleport) //if you selected a teleport activated by a button
+		else if (buttonTeleport) //if you selected a teleport activated by a button
 		{
 			//checks if the button you set in the inspector is being pressed
-			if(Input.GetButtonDown(buttonName))
+			if (Input.GetKeyDown(buttonName))
 			{
-				if(delayedTeleport) //if you set it to button + delayed
+				if (delayedTeleport) //if you set it to button + delayed
 				{
 					//start the countdown
-					curTeleportTime-=1 * Time.deltaTime;
+					curTeleportTime -= 1 * Time.deltaTime;
 					//if the countdown reaches zero
-					if(curTeleportTime <= 0)
+					if (curTeleportTime <= 0)
 					{
 						//reset the countdown
 						curTeleportTime = teleportTime;
 						//if you chose delayed + random teleport + button, teleport to random pad from array, after the delay
 						// and button press
-						if(randomTeleport)
+						if (randomTeleport)
 						{
 							//choose a random pad from the array
-							int chosenPad = Random.Range(0,destinationPad.Length);
+							int chosenPad = Random.Range(0, destinationPad.Length);
 							//set arrived to true in that array, so it doesnt teleport the subject back
 							destinationPad[chosenPad].GetComponent<CustomTeleporter>().arrived = true;
 							//teleport
-							subject.transform.position = destinationPad[chosenPad].transform.position + new Vector3(0,teleportationHeightOffset,0);
+							subject.transform.position = destinationPad[chosenPad].transform.position + new Vector3(0, teleportationHeightOffset, 0);
 							//play teleport sound
 							teleportSound.Play();
 						}
 						else //if not random, teleport to the first one in the array list
 						{
 							//set arrived to true in that array, so it doesnt teleport the subject back
-							destinationPad[0].GetComponent<CustomTeleporter>().arrived = true;
+							//destinationPad[0].GetComponent<CustomTeleporter>().arrived = true;
 							//teleport
-							subject.transform.position = destinationPad[0].transform.position + new Vector3(0,teleportationHeightOffset,0);
+							//subject.transform.position = destinationPad[0].transform.position + new Vector3(0,teleportationHeightOffset,0);
 							//play teleport sound
+							//teleportSound.Play();
 							teleportSound.Play();
+							sceneLoader.LoadScene(2);
 						}
 					}
 				}
 				//if you chose button + random teleport, teleport to random pad from array, on button down
-				else if(randomTeleport)
+				else if (randomTeleport)
 				{
 					//choose a random pad from the array
-					int chosenPad = Random.Range(0,destinationPad.Length);
+					int chosenPad = Random.Range(0, destinationPad.Length);
 					//set arrived to true in that array, so it doesnt teleport the subject back
 					destinationPad[chosenPad].GetComponent<CustomTeleporter>().arrived = true;
 					//teleport
-					subject.transform.position = destinationPad[chosenPad].transform.position + new Vector3(0,teleportationHeightOffset,0);
+					subject.transform.position = destinationPad[chosenPad].transform.position + new Vector3(0, teleportationHeightOffset, 0);
 					//play teleport sound
 					teleportSound.Play();
 				}
 				else
 				{
 					//set arrived to true in that array, so it doesnt teleport the subject back
-					destinationPad[0].GetComponent<CustomTeleporter>().arrived = true;
+					//destinationPad[0].GetComponent<CustomTeleporter>().arrived = true;
 					//teleport
-					subject.transform.position = destinationPad[0].transform.position + new Vector3(0,teleportationHeightOffset,0);
+					//subject.transform.position = destinationPad[0].transform.position + new Vector3(0,teleportationHeightOffset,0);
 					//play teleport sound
+					//teleportSound.Play();
 					teleportSound.Play();
+					sceneLoader.LoadScene(2);
 				}
 			}
 		}
@@ -187,10 +191,10 @@ public class CustomTeleporter : MonoBehaviour
 		//when an object enters the trigger
 		//if you set a tag in the inspector, check if an object has that tag
 		//otherwise the pad will take in and teleport any object
-		if(objectTag != "")
+		if (objectTag != "")
 		{
 			//if the objects tag is the same as the one allowed in the inspector
-			if(trig.gameObject.tag == objectTag)
+			if (trig.gameObject.tag == objectTag)
 			{
 				//set the subject to be the entered object
 				subject = trig.transform;
@@ -198,7 +202,7 @@ public class CustomTeleporter : MonoBehaviour
 				inside = true;
 				//if its a button teleport, the pad should be set to be ready to teleport again
 				//so the player/object doesn't have to leave the pad, and re enter again, we do that here
-				if(buttonTeleport)
+				if (buttonTeleport)
 				{
 					arrived = false;
 				}
@@ -212,7 +216,7 @@ public class CustomTeleporter : MonoBehaviour
 			inside = true;
 			//if its a button teleport, the pad should be set to be ready to teleport again
 			//so the player/object doesn't have to leave the pad, and re enter again, we do that here
-			if(buttonTeleport)
+			if (buttonTeleport)
 			{
 				arrived = false;
 			}
@@ -225,17 +229,17 @@ public class CustomTeleporter : MonoBehaviour
 		//when an object exists the trigger
 		//if you set a tag in the inspector, check if an object has that tag
 		//otherwise the pad will register any object as the one leaving 
-		if(objectTag != "")
+		if (objectTag != "")
 		{
 			//if the objects tag is the same as the one allowed in the inspector
-			if(trig.gameObject.tag == objectTag)
+			if (trig.gameObject.tag == objectTag)
 			{
 				//set that the object left
 				inside = false;
 				//reset countdown time
 				curTeleportTime = teleportTime;
 				//if the object that left the trigger is the same object as the subject
-				if(trig.transform == subject)
+				if (trig.transform == subject)
 				{
 					//set arrived to false, so that the pad can be used again
 					arrived = false;
@@ -251,7 +255,7 @@ public class CustomTeleporter : MonoBehaviour
 			//reset countdown time
 			curTeleportTime = teleportTime;
 			//if the object that left the trigger is the same object as the subject
-			if(trig.transform == subject)
+			if (trig.transform == subject)
 			{
 				//set arrived to false, so that the pad can be used again
 				arrived = false;

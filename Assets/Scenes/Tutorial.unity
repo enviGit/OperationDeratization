@@ -5098,7 +5098,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 11.41, y: 37.01}
+  m_AnchoredPosition: {x: 11.62, y: 37.01}
   m_SizeDelta: {x: 12.56, y: 10.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &230832750
@@ -5121,7 +5121,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Exit the tutorial by \nstanding on the \nteleporter for 1 second"
+  m_text: "Exit the tutorial by pressing \nthe interaction key while\n standing on
+    the teleporter"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
@@ -13949,6 +13950,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.74
       objectReference: {fileID: 0}
@@ -13994,7 +13999,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: m_IsTrigger
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8200002, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: m_Volume
@@ -14002,7 +14007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: buttonName
-      value: Action
+      value: 102
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: sceneLoader
@@ -14010,6 +14015,10 @@ PrefabInstance:
       objectReference: {fileID: 1087031884}
     - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
       propertyPath: buttonTeleport
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
+      propertyPath: delayedTeleport
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 13600000, guid: b46e0920d9667ca45b59dc5301c885aa, type: 3}
@@ -14091,12 +14100,37 @@ PrefabInstance:
     - target: {fileID: 1774964022376264579, guid: b46e0920d9667ca45b59dc5301c885aa,
         type: 3}
       propertyPath: ShapeModule.radiusThickness
-      value: 1.0000
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1774964022376264579, guid: b46e0920d9667ca45b59dc5301c885aa,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1774964022376264579, guid: b46e0920d9667ca45b59dc5301c885aa,
         type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7562476102865633763, guid: b46e0920d9667ca45b59dc5301c885aa,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 3d152f67f64ca4e4a8b6fd7697f7bf25, type: 3}
+    - target: {fileID: 7562476102865633763, guid: b46e0920d9667ca45b59dc5301c885aa,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7562476102865633763, guid: b46e0920d9667ca45b59dc5301c885aa,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7562476102865633763, guid: b46e0920d9667ca45b59dc5301c885aa,
+        type: 3}
+      propertyPath: m_Pivot.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7562476102865633763, guid: b46e0920d9667ca45b59dc5301c885aa,
         type: 3}
@@ -14106,11 +14140,16 @@ PrefabInstance:
     - target: {fileID: 7562476102865633763, guid: b46e0920d9667ca45b59dc5301c885aa,
         type: 3}
       propertyPath: m_RenderMode
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7562476102865633763, guid: b46e0920d9667ca45b59dc5301c885aa,
         type: 3}
       propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7562476102865633763, guid: b46e0920d9667ca45b59dc5301c885aa,
+        type: 3}
+      propertyPath: m_RenderAlignment
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -90159,12 +90198,6 @@ MonoBehaviour:
     type: 3}
   bloodWound: {fileID: 653411554418141, guid: 738b94983f507d64091b820286618565, type: 3}
   aiWeapons: {fileID: 0}
-  availableGuns:
-  - {fileID: 11400000, guid: 371068d0be20ce34db3dcfd08f14fa4c, type: 2}
-  - {fileID: 11400000, guid: 7bb225ff5c22e474385e5d88ab384b98, type: 2}
-  - {fileID: 11400000, guid: bca0009bc98551445b44987eb74c3497, type: 2}
-  - {fileID: 11400000, guid: 4fc2a6997318b874395d7fda39183694, type: 2}
-  - {fileID: 11400000, guid: 3f9d741383bb7fd44b7b4c6fe9503729, type: 2}
   currentWeapon: {fileID: 0}
   layerMask:
     serializedVersion: 2
@@ -93061,12 +93094,6 @@ MonoBehaviour:
     type: 3}
   bloodWound: {fileID: 653411554418141, guid: 738b94983f507d64091b820286618565, type: 3}
   aiWeapons: {fileID: 0}
-  availableGuns:
-  - {fileID: 11400000, guid: 371068d0be20ce34db3dcfd08f14fa4c, type: 2}
-  - {fileID: 11400000, guid: 7bb225ff5c22e474385e5d88ab384b98, type: 2}
-  - {fileID: 11400000, guid: bca0009bc98551445b44987eb74c3497, type: 2}
-  - {fileID: 11400000, guid: 4fc2a6997318b874395d7fda39183694, type: 2}
-  - {fileID: 11400000, guid: 3f9d741383bb7fd44b7b4c6fe9503729, type: 2}
   currentWeapon: {fileID: 0}
   layerMask:
     serializedVersion: 2
@@ -99497,12 +99524,6 @@ MonoBehaviour:
     type: 3}
   bloodWound: {fileID: 653411554418141, guid: 738b94983f507d64091b820286618565, type: 3}
   aiWeapons: {fileID: 0}
-  availableGuns:
-  - {fileID: 11400000, guid: 371068d0be20ce34db3dcfd08f14fa4c, type: 2}
-  - {fileID: 11400000, guid: 7bb225ff5c22e474385e5d88ab384b98, type: 2}
-  - {fileID: 11400000, guid: bca0009bc98551445b44987eb74c3497, type: 2}
-  - {fileID: 11400000, guid: 4fc2a6997318b874395d7fda39183694, type: 2}
-  - {fileID: 11400000, guid: 3f9d741383bb7fd44b7b4c6fe9503729, type: 2}
   currentWeapon: {fileID: 0}
   layerMask:
     serializedVersion: 2
@@ -102978,12 +102999,6 @@ MonoBehaviour:
     type: 3}
   bloodWound: {fileID: 653411554418141, guid: 738b94983f507d64091b820286618565, type: 3}
   aiWeapons: {fileID: 0}
-  availableGuns:
-  - {fileID: 11400000, guid: 371068d0be20ce34db3dcfd08f14fa4c, type: 2}
-  - {fileID: 11400000, guid: 7bb225ff5c22e474385e5d88ab384b98, type: 2}
-  - {fileID: 11400000, guid: bca0009bc98551445b44987eb74c3497, type: 2}
-  - {fileID: 11400000, guid: 4fc2a6997318b874395d7fda39183694, type: 2}
-  - {fileID: 11400000, guid: 3f9d741383bb7fd44b7b4c6fe9503729, type: 2}
   currentWeapon: {fileID: 0}
   layerMask:
     serializedVersion: 2
@@ -107554,12 +107569,6 @@ MonoBehaviour:
     type: 3}
   bloodWound: {fileID: 653411554418141, guid: 738b94983f507d64091b820286618565, type: 3}
   aiWeapons: {fileID: 0}
-  availableGuns:
-  - {fileID: 11400000, guid: 371068d0be20ce34db3dcfd08f14fa4c, type: 2}
-  - {fileID: 11400000, guid: 7bb225ff5c22e474385e5d88ab384b98, type: 2}
-  - {fileID: 11400000, guid: bca0009bc98551445b44987eb74c3497, type: 2}
-  - {fileID: 11400000, guid: 4fc2a6997318b874395d7fda39183694, type: 2}
-  - {fileID: 11400000, guid: 3f9d741383bb7fd44b7b4c6fe9503729, type: 2}
   currentWeapon: {fileID: 0}
   layerMask:
     serializedVersion: 2
@@ -110926,12 +110935,6 @@ MonoBehaviour:
     type: 3}
   bloodWound: {fileID: 653411554418141, guid: 738b94983f507d64091b820286618565, type: 3}
   aiWeapons: {fileID: 0}
-  availableGuns:
-  - {fileID: 11400000, guid: 371068d0be20ce34db3dcfd08f14fa4c, type: 2}
-  - {fileID: 11400000, guid: 7bb225ff5c22e474385e5d88ab384b98, type: 2}
-  - {fileID: 11400000, guid: bca0009bc98551445b44987eb74c3497, type: 2}
-  - {fileID: 11400000, guid: 4fc2a6997318b874395d7fda39183694, type: 2}
-  - {fileID: 11400000, guid: 3f9d741383bb7fd44b7b4c6fe9503729, type: 2}
   currentWeapon: {fileID: 0}
   layerMask:
     serializedVersion: 2
@@ -117474,12 +117477,6 @@ MonoBehaviour:
     type: 3}
   bloodWound: {fileID: 653411554418141, guid: 738b94983f507d64091b820286618565, type: 3}
   aiWeapons: {fileID: 0}
-  availableGuns:
-  - {fileID: 11400000, guid: 371068d0be20ce34db3dcfd08f14fa4c, type: 2}
-  - {fileID: 11400000, guid: 7bb225ff5c22e474385e5d88ab384b98, type: 2}
-  - {fileID: 11400000, guid: bca0009bc98551445b44987eb74c3497, type: 2}
-  - {fileID: 11400000, guid: 4fc2a6997318b874395d7fda39183694, type: 2}
-  - {fileID: 11400000, guid: 3f9d741383bb7fd44b7b4c6fe9503729, type: 2}
   currentWeapon: {fileID: 0}
   layerMask:
     serializedVersion: 2
