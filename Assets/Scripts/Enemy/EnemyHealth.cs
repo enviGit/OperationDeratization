@@ -19,6 +19,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
         private WeaponIk weaponIk;
         private AiAgent agent;
+        [SerializeField] private Tracker tracker;
+        private AudioSource markSound;
 
         [Header("Dmg popup")]
         [SerializeField] private GameObject damageTextPrefab;
@@ -40,6 +42,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             agent = GetComponent<AiAgent>();
             weaponIk = GetComponent<WeaponIk>();
             player = GameObject.FindGameObjectWithTag("Player");
+            markSound = player.transform.Find("Sounds/OpponentMarking").GetComponent<AudioSource>();
             currentHealth = enemyStats.maxHealth;
             var rigidBodies = GetComponentsInChildren<Rigidbody>();
 
@@ -157,11 +160,19 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         {
             isMarkedAsDead = true;
             StartCoroutine(FadeOutPromptText());
-            Tracker tracker = FindObjectOfType<Tracker>();
             tracker.MarkOpponentAsDead(gameObject);
+
+            if (!markSound.isPlaying)
+            {
+                markSound.clip = Resources.Load<AudioClip>("Audio/Tracker/Mark" + Random.Range(1, 9));
+                markSound.Play();
+            }
+
             SetShaderParameters(0);
             float elapsedTime = 0f;
             float duration = 5f;
+
+            yield return new WaitForSeconds(2f);
 
             while (elapsedTime < duration)
             {

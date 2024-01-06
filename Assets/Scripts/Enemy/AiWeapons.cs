@@ -93,7 +93,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         private IEnumerator EquipWeapon()
         {
-            animator.runtimeAnimatorController = currentWeapon.GetComponent<Weapon>().animator;
             animator.SetBool("Equip", true);
 
             yield return new WaitForSeconds(0.5f);
