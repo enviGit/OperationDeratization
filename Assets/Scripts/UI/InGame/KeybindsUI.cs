@@ -8,7 +8,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private TextMeshProUGUI holdButtonText;
         private TextMeshProUGUI keybindsText;
         private bool isTabHeld = false;
-        public TextMeshPro[] otherTexts;
+        [SerializeField] private Material whiteTextMat;
 
         private void Start()
         {
@@ -39,14 +39,8 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         {
             holdButtonText.gameObject.SetActive(!isTabHeld);
             keybindsText.gameObject.SetActive(isTabHeld);
-            float targetAlpha = isTabHeld ? 0.1f : 1.0f;
-
-            foreach (TextMeshPro otherText in otherTexts)
-            {
-                Color currentColor = otherText.color;
-                currentColor.a = targetAlpha;
-                otherText.color = currentColor;
-            }
+            Color targetColor = isTabHeld ? Color.gray : Color.white;
+            whiteTextMat.color = targetColor;
         }
     }
 }
