@@ -24621,7 +24621,6 @@ GameObject:
   - component: {fileID: 7256608316402740529}
   - component: {fileID: -3704953664359785682}
   - component: {fileID: 6580162567666451631}
-  - component: {fileID: 8917059949147302634}
   m_Layer: 0
   m_Name: ShatteredGlassPanel
   m_TagString: Untagged
@@ -24892,8 +24891,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80e5cd252ae58bd4ea950d17933dcc2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosiveForce: 150
   explosiveRadius: 0.5
+  destructionDelay: 3
 --- !u!82 &6580162567666451631
 AudioSource:
   m_ObjectHideFlags: 0
@@ -25000,19 +24999,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &8917059949147302634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8070299339062572939}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07d2131ca73099348925a8b2cc8bf952, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToDespawn: 3
 --- !u!1 &8209487821010453593
 GameObject:
   m_ObjectHideFlags: 0

@@ -2921,7 +2921,6 @@ GameObject:
   - component: {fileID: 7334330577092804203}
   - component: {fileID: 7334330577092804200}
   - component: {fileID: 7334330577092804201}
-  - component: {fileID: 7334330577092804195}
   - component: {fileID: 7334330577092804194}
   m_Layer: 10
   m_Name: Player
@@ -2980,7 +2979,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: -9.8
   jumpHeight: 0.7
+  playerHeight: 3.6
+  playerCrouchHeight: 2
   moveSpeed: 4
+  movementClips: []
   fallDamageMultiplier: 1.5
   isGrounded: 0
   isCrouching: 0
@@ -3004,9 +3006,7 @@ MonoBehaviour:
   impactRicochet: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
   bloodSpread: {fileID: 1000012909287652, guid: abb9f519b142e304d9c45b56afa768bc,
     type: 3}
-  gunFireAudio: {fileID: 0}
-  gunReloadAudio: {fileID: 0}
-  gunSwitchAudio: {fileID: 0}
+  bloodWound: {fileID: 0}
   cam: {fileID: 7334330578852653922}
   throwForce: 25
   throwUpForce: 10
@@ -3015,6 +3015,7 @@ MonoBehaviour:
   xSensitivity: 3
   ySensitivity: 3
   isAiming: 0
+  _isClimbing: 0
 --- !u!114 &7334330577092804196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3028,6 +3029,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 2
+  interactCooldown: 0.5
 --- !u!114 &7334330577092804197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3042,6 +3044,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ammoRefill: {fileID: 0}
   promptText: {fileID: 0}
+  markText: {fileID: 0}
   ammoText: {fileID: 0}
   ammoRefillPrompt: {fileID: 0}
 --- !u!114 &7334330577092804202
@@ -3064,12 +3067,15 @@ MonoBehaviour:
   ragdoll: {fileID: 0}
   inventoryUI: {fileID: 0}
   deathCamera: {fileID: 0}
-  postProcessing: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+  vignetteMaterial: {fileID: 0}
+  impactClips: []
+  currentHealth: 0
   maxHealth: 100
   chipSpeed: 1
   isAlive: 1
   currentArmor: 0
   maxArmor: 100
+  armorSocket: {fileID: 0}
 --- !u!114 &7334330577092804203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3130,18 +3136,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &7334330577092804195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7334330577092804207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 953d7dc2e8c3a7c46ae4ebdca03fd3e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7334330577092804194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3367,7 +3361,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d734120030a61d49a7335a52acc1dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flashlight: {fileID: 0}
   playerHealth: {fileID: 7334330577092804202}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  flashlightImg: {fileID: 0}
+  onImg: {fileID: 0}
+  offImg: {fileID: 0}
 --- !u!1 &7334330578680802567
 GameObject:
   m_ObjectHideFlags: 0

@@ -2832,7 +2832,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d734120030a61d49a7335a52acc1dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flashlight: {fileID: 0}
   playerHealth: {fileID: 5527347485069648904}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  flashlightImg: {fileID: 0}
+  onImg: {fileID: 0}
+  offImg: {fileID: 0}
 --- !u!1 &5527347485055332406
 GameObject:
   m_ObjectHideFlags: 0
@@ -2989,7 +2996,6 @@ GameObject:
   - component: {fileID: 5527347485069648905}
   - component: {fileID: 5527347485069648906}
   - component: {fileID: 5527347485069648907}
-  - component: {fileID: 5527347485069648897}
   - component: {fileID: 5527347485069648896}
   - component: {fileID: 3105376607697131598}
   m_Layer: 10
@@ -3051,6 +3057,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: -9.8
   jumpHeight: 0.7
+  playerHeight: 3.6
+  playerCrouchHeight: 2
   moveSpeed: 4
   movementClips:
   - {fileID: 8300000, guid: 75cd9a1b1eb98a147b373575dbcbe971, type: 3}
@@ -3079,6 +3087,7 @@ MonoBehaviour:
   impactRicochet: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
   bloodSpread: {fileID: 1000012909287652, guid: abb9f519b142e304d9c45b56afa768bc,
     type: 3}
+  bloodWound: {fileID: 0}
   cam: {fileID: 5527347485989892352}
   throwForce: 25
   throwUpForce: 10
@@ -3101,6 +3110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 2
+  interactCooldown: 0.5
 --- !u!114 &5527347485069648903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3115,6 +3125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ammoRefill: {fileID: 0}
   promptText: {fileID: 0}
+  markText: {fileID: 0}
   ammoText: {fileID: 0}
   ammoRefillPrompt: {fileID: 0}
 --- !u!114 &5527347485069648904
@@ -3134,24 +3145,21 @@ MonoBehaviour:
   armorBar: {fileID: 0}
   frontArmorBar: {fileID: 0}
   backArmorBar: {fileID: 0}
-  ragdoll: {fileID: 5527347485069648897}
+  ragdoll: {fileID: 0}
   inventoryUI: {fileID: 0}
   deathCamera: {fileID: 821791114199504756}
-  postProcessing: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+  vignetteMaterial: {fileID: 0}
   impactClips:
   - {fileID: 8300000, guid: ab94d8c7886d39b45ac77316ef59c334, type: 3}
   - {fileID: 8300000, guid: 7d8e352d2f2c4764e844d8cfc8763ead, type: 3}
   - {fileID: 8300000, guid: d1c23857f650e1a49afde49d4cf7e39c, type: 3}
-  gasClips:
-  - {fileID: 8300000, guid: 0db59f417e5190c4989d70f6541c1d2c, type: 3}
-  - {fileID: 8300000, guid: bd8175f4761d291498ee7b4891ae1b6c, type: 3}
-  - {fileID: 8300000, guid: 1a80109f83c2f5b448c2a631a4cf9c25, type: 3}
-  - {fileID: 8300000, guid: cd7e050a08181b44ebb5b7a2e749d416, type: 3}
+  currentHealth: 0
   maxHealth: 100
   chipSpeed: 1
   isAlive: 1
   currentArmor: 0
   maxArmor: 100
+  armorSocket: {fileID: 0}
 --- !u!114 &5527347485069648905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3212,18 +3220,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &5527347485069648897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5527347485069648909}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 953d7dc2e8c3a7c46ae4ebdca03fd3e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5527347485069648896
 MonoBehaviour:
   m_ObjectHideFlags: 0
