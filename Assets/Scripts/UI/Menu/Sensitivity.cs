@@ -33,8 +33,10 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         }
         private void UpdateSliderText(float value)
         {
-            int intValue = Mathf.RoundToInt(Mathf.Clamp(value * 10, 1, 30));
-            sliderText.text = intValue.ToString();
+            int intValue = Mathf.RoundToInt(Mathf.Clamp(value * 10, 1, 20));
+            float normalizedValue = Mathf.InverseLerp(1, 20, intValue);
+            int displayedValue = Mathf.RoundToInt(normalizedValue * 10);
+            sliderText.text = displayedValue.ToString();
         }
         public void RestoreOriginalValues()
         {
