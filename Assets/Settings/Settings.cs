@@ -13,7 +13,7 @@ namespace RatGamesStudios.OperationDeratization
 
         public static float Sensitivity
         {
-            get => PlayerPrefs.GetFloat(mouseSens, 5);
+            get => PlayerPrefs.GetFloat(mouseSens, 1);
             set => PlayerPrefs.SetFloat(mouseSens, value);
         }
         public static float SfxMixer
@@ -41,23 +41,28 @@ namespace RatGamesStudios.OperationDeratization
         {
             get
             {
-                int defaultResolutionIndex = GetResolutionIndex(Screen.currentResolution);
+                int defaultResolutionIndex = GetDefaultResolutionIndex();
 
                 return PlayerPrefs.GetInt(resolutionIndex, defaultResolutionIndex);
             }
             set => PlayerPrefs.SetInt(resolutionIndex, value);
         }
-        private static int GetResolutionIndex(Resolution resolution)
+        private static int GetDefaultResolutionIndex()
         {
             Resolution[] resolutions = Screen.resolutions;
+            int[] commonWidths = { 3840, 2560, 1920, 1366 };
+            int[] commonHeights = { 2160, 1440, 1080, 768 };
 
-            for (int i = 0; i < resolutions.Length; i++)
+            for (int i = 0; i < commonWidths.Length; i++)
             {
-                if (resolutions[i].width == resolution.width && resolutions[i].height == resolution.height)
-                    return i;
+                for (int j = 0; j < resolutions.Length; j++)
+                {
+                    if (resolutions[j].width == commonWidths[i] && resolutions[j].height == commonHeights[i])
+                        return j;
+                }
             }
 
-            return Screen.resolutions.Length - 1;
+            return resolutions.Length > 0 ? resolutions.Length - 1 : 0;
         }
     }
 }

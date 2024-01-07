@@ -2128,7 +2128,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7751761024485384252}
   - component: {fileID: 7751761024485384250}
-  - component: {fileID: 7751761024485384253}
   m_Layer: 0
   m_Name: Slider
   m_TagString: Untagged
@@ -2210,18 +2209,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7751761024485384253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7751761024485384255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68e6503ca3538054c9bf6fa208a2613a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7751761024537430275
 GameObject:
   m_ObjectHideFlags: 0
@@ -2409,7 +2396,6 @@ GameObject:
   - component: {fileID: 7751761024559793399}
   - component: {fileID: 7751761024559793393}
   - component: {fileID: 7751761024559793392}
-  - component: {fileID: 7751761024559793390}
   - component: {fileID: 7751761024559793391}
   - component: {fileID: 7751761024559793388}
   - component: {fileID: 7751761024559793386}
@@ -2476,15 +2462,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStats: {fileID: 11400000, guid: 9d8623d014b615a40a5c88edd09a5780, type: 2}
-  healthBarSlider: {fileID: 7751761024485384250}
-  healthBarSliderImage: {fileID: 7751761023329684725}
-  maxHealthColour: {r: 0.15389748, g: 0.6320754, b: 0, a: 1}
-  noHealthColour: {r: 1, g: 0, b: 0, a: 1}
-  showHealthBar: 0
-  blinkIntensity: 10
-  blinkDuration: 0.05
+  tracker: {fileID: 0}
+  damageTextPrefab: {fileID: 0}
+  currentHealth: 0
   isAlive: 1
   isMarkedAsDead: 0
+  currentArmor: 0
+  maxArmor: 100
+  armorSocket: {fileID: 0}
 --- !u!195 &7751761024559793393
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2519,18 +2504,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca3a873d618b47442984d983b8c7e8f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7751761024559793390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7751761024559793403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 953d7dc2e8c3a7c46ae4ebdca03fd3e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7751761024559793391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2544,12 +2517,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialState: 3
+  currentState: 0
   navMeshAgent: {fileID: 0}
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 0}
   healthBar: {fileID: 0}
   playerTransform: {fileID: 0}
   weapons: {fileID: 0}
+  sightSensor: {fileID: 0}
+  targeting: {fileID: 0}
+  health: {fileID: 0}
 --- !u!114 &7751761024559793388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2563,6 +2540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 0}
+  hasLootedAmmo: 0
   inaccuracy: 0.4
 --- !u!54 &7751761024559793386
 Rigidbody:
@@ -2605,9 +2583,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148a8199b8b558440b9f38d9d269ef17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetTransform: {fileID: 0}
-  aimTransform: {fileID: 0}
-  targetOffset: {x: 0, y: 0.65, z: 0}
   iterations: 10
   weight: 0.8
   angleLimit: 90
@@ -2636,16 +2611,8 @@ MonoBehaviour:
   impactRicochet: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
   bloodSpread: {fileID: 1000012909287652, guid: abb9f519b142e304d9c45b56afa768bc,
     type: 3}
-  gunFireAudio: {fileID: 0}
-  gunReloadAudio: {fileID: 0}
-  gunSwitchAudio: {fileID: 0}
+  bloodWound: {fileID: 0}
   aiWeapons: {fileID: 0}
-  availableGuns:
-  - {fileID: 11400000, guid: 371068d0be20ce34db3dcfd08f14fa4c, type: 2}
-  - {fileID: 11400000, guid: 7bb225ff5c22e474385e5d88ab384b98, type: 2}
-  - {fileID: 11400000, guid: bca0009bc98551445b44987eb74c3497, type: 2}
-  - {fileID: 11400000, guid: 4fc2a6997318b874395d7fda39183694, type: 2}
-  - {fileID: 11400000, guid: 3f9d741383bb7fd44b7b4c6fe9503729, type: 2}
   currentWeapon: {fileID: 0}
   layerMask:
     serializedVersion: 2

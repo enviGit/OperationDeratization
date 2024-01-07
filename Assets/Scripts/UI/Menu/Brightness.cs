@@ -19,12 +19,12 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         {
             sliderText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             originalBrightness = Settings.Brightness;
-            brightnessSlider.value = originalBrightness;
+            brightnessSlider.value = originalBrightness - 1;
             sliderText.text = (brightnessSlider.value + 1).ToString("0");
 
             if (postProcessing.TryGet<ColorAdjustments>(out colorAdj))
             {
-                colorAdj.postExposure.value = brightnessSlider.value;
+                colorAdj.postExposure.value = brightnessSlider.value + 1;
                 brightnessSlider.onValueChanged.AddListener(OnBrightnessSliderChanged);
             }
             if (postProcessing.TryGet<Vignette>(out vignette))
@@ -32,17 +32,17 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         }
         private void OnBrightnessSliderChanged(float value)
         {
-            colorAdj.postExposure.value = Mathf.Clamp(value, -4f, 2f);
+            colorAdj.postExposure.value = Mathf.Clamp(value, -4f, 2f) + 1;
             sliderText.text = (value + 1).ToString("0");
         }
         public void RestoreOriginalValues()
         {
-            brightnessSlider.value = originalBrightness;
-            Settings.Brightness = brightnessSlider.value;
+            brightnessSlider.value = originalBrightness - 1;
+            Settings.Brightness = brightnessSlider.value + 1;
         }
         public void ApplyChanges()
         {
-            originalBrightness = brightnessSlider.value;
+            originalBrightness = brightnessSlider.value + 1;
             Settings.Brightness = originalBrightness;
         }
     }

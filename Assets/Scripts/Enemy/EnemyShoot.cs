@@ -70,9 +70,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                         break;
                 }
 
-                //ParticleSystem flash = Instantiate(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
-                //flash.Play();
-                //Destroy(flash, 1f);
                 ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
 
                 if (Physics.Raycast(muzzle.transform.position, muzzle.forward, out hit, currentWeapon.range, layerMask))
@@ -82,8 +79,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
                     if (hitBox == null)
                     {
-                        //GameObject ricochet = Instantiate(impactRicochet, hit.point, impactRotation);
-                        //Destroy(ricochet, 2f);
                         ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
                         if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))

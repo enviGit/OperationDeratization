@@ -1120,7 +1120,6 @@ GameObject:
   - component: {fileID: 2640833210494592714}
   - component: {fileID: 2640833210494592713}
   - component: {fileID: 2640833210494592712}
-  - component: {fileID: 2640833210494592706}
   - component: {fileID: 2640833210494592707}
   - component: {fileID: 4831105670469409421}
   - component: {fileID: 6526669987241376}
@@ -1183,6 +1182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: -9.8
   jumpHeight: 0.7
+  playerHeight: 3.6
+  playerCrouchHeight: 2
   moveSpeed: 4
   movementClips:
   - {fileID: 8300000, guid: 75cd9a1b1eb98a147b373575dbcbe971, type: 3}
@@ -1211,9 +1212,8 @@ MonoBehaviour:
   impactRicochet: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
   bloodSpread: {fileID: 1000012909287652, guid: abb9f519b142e304d9c45b56afa768bc,
     type: 3}
+  bloodWound: {fileID: 0}
   cam: {fileID: 2640833211185198019}
-  trailPrefab: {fileID: 2122679543000649686, guid: a48743209c8956941b2e696a8dd30fe1,
-    type: 3}
   throwForce: 25
   throwUpForce: 10
   linePoints: 25
@@ -1270,7 +1270,7 @@ MonoBehaviour:
   armorBar: {fileID: 0}
   frontArmorBar: {fileID: 0}
   backArmorBar: {fileID: 0}
-  ragdoll: {fileID: 2640833210494592706}
+  ragdoll: {fileID: 0}
   inventoryUI: {fileID: 0}
   deathCamera: {fileID: 7166524682563425719}
   vignetteMaterial: {fileID: 2100000, guid: d544e29ae9b83fb4d83b080385bd6bf4, type: 2}
@@ -1285,6 +1285,7 @@ MonoBehaviour:
   isAlive: 1
   currentArmor: 0
   maxArmor: 100
+  armorSocket: {fileID: 0}
 --- !u!114 &2640833210494592714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1345,18 +1346,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &2640833210494592706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2640833210494592718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 953d7dc2e8c3a7c46ae4ebdca03fd3e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2640833210494592707
 MonoBehaviour:
   m_ObjectHideFlags: 0
