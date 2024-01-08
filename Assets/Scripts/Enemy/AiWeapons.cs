@@ -93,6 +93,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         private IEnumerator EquipWeapon()
         {
+            animator.runtimeAnimatorController = currentWeapon.GetComponent<Weapon>().animator;
             animator.SetBool("Equip", true);
 
             yield return new WaitForSeconds(0.5f);
@@ -112,9 +113,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private IEnumerator HolsterWeapon()
         {
             weaponActive = false;
-            animator.SetBool("Equip", false);
+            //animator.SetBool("Equip", false);
 
-            yield return new WaitForSeconds(0.5f);
+            //yield return new WaitForSeconds(0.5f);
 
             while (animator.GetCurrentAnimatorStateInfo(1).normalizedTime < 1f)
                 yield return null;

@@ -5,8 +5,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 {
     public class AiLocomotion : MonoBehaviour
     {
-        NavMeshAgent agent;
-        Animator animator;
+        private NavMeshAgent agent;
+        private Animator animator;
 
         private void Start()
         {
@@ -14,6 +14,10 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             animator = GetComponent<Animator>();
         }
         private void Update()
+        {
+            SetSpeed();
+        }
+        private void SetSpeed()
         {
             if (agent.hasPath)
                 animator.SetFloat("Speed", agent.velocity.magnitude);
