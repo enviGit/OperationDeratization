@@ -27,8 +27,6 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
                 colorAdj.postExposure.value = brightnessSlider.value + 1;
                 brightnessSlider.onValueChanged.AddListener(OnBrightnessSliderChanged);
             }
-            if (postProcessing.TryGet<Vignette>(out vignette))
-                vignette.intensity.value = 0f;
         }
         private void OnBrightnessSliderChanged(float value)
         {
