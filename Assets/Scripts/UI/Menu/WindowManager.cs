@@ -66,7 +66,10 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         public void ApplyAllChanges()
         {
             SetAndApplyResolution(currentResolutionIndex);
-            fullscreen.ApplyChanges();
+
+            if (fullscreen != null)
+                fullscreen.ApplyChanges();
+
             soundSettings.ApplyChanges();
             brightness.ApplyChanges();
             sensitivity.ApplyChanges();
@@ -75,7 +78,10 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         public void AbortChanges()
         {
             RestoreOriginalValues();
-            fullscreen.RestoreOriginalState();
+
+            if (fullscreen != null)
+                fullscreen.RestoreOriginalState();
+
             soundSettings.RestoreOriginalValues();
             brightness.RestoreOriginalValues();
             sensitivity.RestoreOriginalValues();
