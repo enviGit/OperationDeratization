@@ -6,11 +6,10 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
     public class Fullscreen : MonoBehaviour
     {
         private bool originalFullScreen;
-        private Toggle toggle;
+        [SerializeField] private Toggle toggle;
 
         private void Awake()
         {
-            toggle = GetComponent<Toggle>();
             originalFullScreen = Settings.FullScreen;
             Screen.fullScreen = originalFullScreen;
             toggle.onValueChanged.AddListener(OnToggleValueChanged);

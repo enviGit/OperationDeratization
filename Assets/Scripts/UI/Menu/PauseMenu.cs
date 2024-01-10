@@ -1,5 +1,4 @@
 using RatGamesStudios.OperationDeratization.Player;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,20 +9,29 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
     {
         public static bool GameIsPaused = false;
         [SerializeField] private GameObject pauseMenuUI;
-        [SerializeField] private PlayerHealth playerStatus;
         [SerializeField] private GameObject endGameScreen;
         [SerializeField] private TextMeshProUGUI endGameText;
+        [SerializeField] private GameObject optionsMenu;
+        [SerializeField] private WindowManager windowManager;
+        [SerializeField] private PlayerHealth playerHealth;
+        [SerializeField] private PlayerShoot playerShoot;
+        [SerializeField] private PlayerInventory playerInventory;
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && playerStatus.isAlive)
+            if (Input.GetKeyDown(KeyCode.Escape) && playerHealth.isAlive)
             {
-                if (GameIsPaused)
-                    Resume();
+                if (!optionsMenu.activeSelf)
+                {
+                    if (GameIsPaused)
+                        Resume();
+                    else
+                        Pause();
+                }
                 else
-                    Pause();
+                    CloseOptions();
             }
-            if (!playerStatus.isAlive)
+            if (!playerHealth.isAlive)
             {
                 Transform[] children = transform.GetComponentsInChildren<Transform>(true);
 
@@ -35,10 +43,8 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 
                 endGameScreen.SetActive(true);
                 endGameText.text = "GAME   OVER";
-                Transform endGameChild = endGameScreen.transform.GetChild(0).transform;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-                StartCoroutine(ActivateChildrenRandomly(endGameChild));
             }
         }
         private bool IsPartOfMenu(Transform obj)
@@ -63,10 +69,8 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
             AudioListener.pause = false;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
-            pointer.enabled = true;
-            PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
-            inventory.enabled = true;
+            playerShoot.enabled = true;
+            playerInventory.enabled = true;
         }
         private void Pause()
         {
@@ -76,14 +80,19 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
             AudioListener.pause = true;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            PlayerShoot pointer = FindObjectOfType<PlayerShoot>();
-            pointer.enabled = false;
-            PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
-            inventory.enabled = false;
+            playerShoot.enabled = false;
+            playerInventory.enabled = false;
+        }
+        private void CloseOptions()
+        {
+            windowManager.AbortChanges();
+            optionsMenu.SetActive(false);
+            pauseMenuUI.SetActive(true);
         }
         public void LoadMenu()
         {
             Time.timeScale = 1f;
+            GameIsPaused = false;
             AudioListener.pause = false;
             SceneManager.LoadScene(0);
         }
@@ -104,49 +113,6 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 #else
         Application.Quit();
 #endif
-        }
-        private IEnumerator ActivateChildrenRandomly(Transform parent)
-        {
-            int childCount = parent.childCount;
-            bool[] activatedChildren = new bool[childCount];
-
-            while (!AllChildrenActivated(activatedChildren))
-            {
-                int randomChildIndex = GetRandomChildIndex(childCount, activatedChildren);
-
-                if (randomChildIndex != -1)
-                {
-                    Transform child = parent.GetChild(randomChildIndex);
-                    child.gameObject.SetActive(true);
-                    activatedChildren[randomChildIndex] = true;
-
-                    yield return new WaitForSeconds(0.2f);
-                }
-            }
-        }
-        private int GetRandomChildIndex(int childCount, bool[] activatedChildren)
-        {
-            int randomIndex = Random.Range(0, childCount);
-
-            for (int i = 0; i < childCount; i++)
-            {
-                int index = (randomIndex + i) % childCount;
-
-                if (!activatedChildren[index])
-                    return index;
-            }
-
-            return -1;
-        }
-        private bool AllChildrenActivated(bool[] activatedChildren)
-        {
-            foreach (bool activated in activatedChildren)
-            {
-                if (!activated)
-                    return false;
-            }
-
-            return true;
         }
     }
 }

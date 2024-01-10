@@ -8,29 +8,33 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 {
     public class Brightness : MonoBehaviour
     {
-        public VolumeProfile postProcessing;
+        public VolumeProfile[] postProcessing = new VolumeProfile[4];
         public Slider brightnessSlider;
-        private ColorAdjustments colorAdj;
-        private Vignette vignette;
-        private TextMeshProUGUI sliderText;
+        [SerializeField] private TextMeshProUGUI sliderText;
+        private ColorAdjustments[] colorAdj = new ColorAdjustments[4];
         private float originalBrightness;
 
         private void Start()
         {
-            sliderText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             originalBrightness = Settings.Brightness;
             brightnessSlider.value = originalBrightness - 1;
             sliderText.text = (brightnessSlider.value + 1).ToString("0");
 
-            if (postProcessing.TryGet<ColorAdjustments>(out colorAdj))
+            for(int i = 0; i < postProcessing.Length; i++)
             {
-                colorAdj.postExposure.value = brightnessSlider.value + 1;
-                brightnessSlider.onValueChanged.AddListener(OnBrightnessSliderChanged);
+                if (postProcessing[i].TryGet<ColorAdjustments>(out colorAdj[i]))
+                {
+                    colorAdj[i].postExposure.value = brightnessSlider.value + 1;
+                    brightnessSlider.onValueChanged.AddListener(OnBrightnessSliderChanged);
+                }
             }
+            
         }
         private void OnBrightnessSliderChanged(float value)
         {
-            colorAdj.postExposure.value = Mathf.Clamp(value, -4f, 2f) + 1;
+            foreach(ColorAdjustments child in colorAdj)
+                child.postExposure.value = Mathf.Clamp(value, -4f, 2f) + 1;
+
             sliderText.text = (value + 1).ToString("0");
         }
         public void RestoreOriginalValues()

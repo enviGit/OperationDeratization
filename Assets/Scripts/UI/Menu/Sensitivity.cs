@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Player;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,14 +7,13 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 {
     public class Sensitivity : MonoBehaviour
     {
-        private Slider sensitivitySlider;
-        private TextMeshProUGUI sliderText;
+        [SerializeField] private Slider sensitivitySlider;
+        [SerializeField] private TextMeshProUGUI sliderText;
+        [SerializeField] private PlayerShoot pointerSensitivity;
         private float originalSensitivity;
 
         private void Start()
         {
-            sensitivitySlider = GetComponent<Slider>();
-            sliderText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             originalSensitivity = Settings.Sensitivity;
             SetSensitivity(originalSensitivity);
             UpdateSliderText(sensitivitySlider.value);
@@ -47,6 +47,12 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         {
             originalSensitivity = sensitivitySlider.value;
             Settings.Sensitivity = originalSensitivity;
+
+            if(pointerSensitivity != null)
+            {
+                pointerSensitivity.xSensitivity = 3f * Settings.Sensitivity;
+                pointerSensitivity.ySensitivity = 3f * Settings.Sensitivity;
+            }
         }
     }
 }

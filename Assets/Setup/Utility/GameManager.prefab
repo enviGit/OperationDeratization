@@ -47,7 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicMixer: {fileID: 24100000, guid: dc5759d6713e98c448cd5e44a0f780bc, type: 2}
   sfxMixer: {fileID: 24100000, guid: a0cf530a2af7fe3469e9902f72e7dc14, type: 2}
-  postProcessing: {fileID: 11400000, guid: 31c41187e3a59134a910fbf6322ea664, type: 2}
+  postProcessing:
+  - {fileID: 11400000, guid: 31c41187e3a59134a910fbf6322ea664, type: 2}
+  - {fileID: 11400000, guid: cf4dfe13f23639041bbbfb8e19f595ca, type: 2}
+  - {fileID: 11400000, guid: 2f20cb9ae134c9e4681281ee183fadb0, type: 2}
+  - {fileID: 11400000, guid: 7dcc2dc9a08399543b50174770c8763c, type: 2}
 --- !u!82 &7059095044890955240
 AudioSource:
   m_ObjectHideFlags: 0
@@ -59,8 +63,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: dc5759d6713e98c448cd5e44a0f780bc,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: f1fb0007cb47eb6449cbf98b74aefa36, type: 3}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: eba4891a6f53f2b4eafcbb9cb6042e33, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1
   Loop: 1

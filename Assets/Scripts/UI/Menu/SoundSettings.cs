@@ -7,7 +7,6 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 {
     public class SoundSettings : MonoBehaviour
     {
-        [SerializeField] private AudioSource musicSource;
         [SerializeField] private Slider musicSlider;
         [SerializeField] private AudioMixer musicMixer;
         private TextMeshProUGUI musicText;
@@ -19,7 +18,6 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 
         private void Start()
         {
-            musicSource.Play();
             musicText = musicSlider.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             sfxText = sfxSlider.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             originalMusicVolume = Settings.MusicMixer;

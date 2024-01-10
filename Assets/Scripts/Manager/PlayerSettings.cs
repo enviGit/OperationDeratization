@@ -11,14 +11,10 @@ namespace RatGamesStudios.OperationDeratization.Manager
         private int resolutionIndex;
         public AudioMixer musicMixer;
         private float musicVolume;
-        private AudioSource bgMusic;
         public AudioMixer sfxMixer;
         private float sfxVolume;
-        public VolumeProfile globalVolume;
-        public VolumeProfile cityVolume;
-        public VolumeProfile farmVolume;
-        public VolumeProfile graveyardVolume;
-        private ColorAdjustments colorAdj;
+        public VolumeProfile[] postProcessing = new VolumeProfile[4];
+        private ColorAdjustments[] colorAdj = new ColorAdjustments[4];
 
         private void Start()
         {
@@ -26,7 +22,6 @@ namespace RatGamesStudios.OperationDeratization.Manager
             resolutionIndex = Settings.ResolutionIndex;
             ApplyResolution(resolutionIndex);
             ApplyFullscreen();
-            bgMusic = GetComponent<AudioSource>();
             musicVolume = Settings.MusicMixer;
             ApplyMusicVolume(musicVolume);
             sfxVolume = Settings.SfxMixer;
@@ -47,7 +42,6 @@ namespace RatGamesStudios.OperationDeratization.Manager
                 volume = .001f;
 
             musicMixer.SetFloat("MusicVolume", Mathf.Log10(volume / 100) * 20f);
-            bgMusic.Play();
         }
         private void ApplySfxVolume(float volume)
         {
@@ -58,14 +52,11 @@ namespace RatGamesStudios.OperationDeratization.Manager
         }
         private void ApplyBrightness()
         {
-            if (globalVolume.TryGet(out colorAdj))
-                colorAdj.postExposure.value = Settings.Brightness;
-            if (cityVolume.TryGet(out colorAdj))
-                colorAdj.postExposure.value = Settings.Brightness;
-            if (graveyardVolume.TryGet(out colorAdj))
-                colorAdj.postExposure.value = Settings.Brightness;
-            if (farmVolume.TryGet(out colorAdj))
-                colorAdj.postExposure.value = Settings.Brightness;
+            for(int i = 0; i < postProcessing.Length; i++)
+            {
+                if (postProcessing[i].TryGet(out colorAdj[i]))
+                    colorAdj[i].postExposure.value = Settings.Brightness;
+            }
         }
     }
 }

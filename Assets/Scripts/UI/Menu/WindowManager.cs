@@ -8,6 +8,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
     {
         [SerializeField] private TextMeshProUGUI resolutionText;
         [SerializeField] private Slider resolutionSlider;
+        [SerializeField] private GameObject settings;
         private Resolution[] resolutions;
         private int currentResolutionIndex = 0;
         private int originalResolutionIndex = 0;
@@ -18,10 +19,10 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 
         private void Start()
         {
-            fullscreen = FindObjectOfType<Fullscreen>();
-            soundSettings = FindObjectOfType<SoundSettings>();
-            brightness = FindObjectOfType<Brightness>();
-            sensitivity = FindObjectOfType<Sensitivity>();
+            fullscreen = settings.GetComponent<Fullscreen>();
+            soundSettings = settings.GetComponent<SoundSettings>();
+            brightness = settings.GetComponent<Brightness>();
+            sensitivity = settings.GetComponent<Sensitivity>();
             resolutions = Screen.resolutions;
             originalResolutionIndex = Settings.ResolutionIndex;
             currentResolutionIndex = originalResolutionIndex;
