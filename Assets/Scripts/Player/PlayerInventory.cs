@@ -13,6 +13,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         public Image grenadeWeaponImage;
         public Image flashbangWeaponImage;
         public Image smokeWeaponImage;
+        private PlayerUI playerUI;
 
         [Header("Weapon")]
         [SerializeField] private Gun melee;
@@ -39,6 +40,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             MeshRenderer meshRenderer = mesh.GetComponent<MeshRenderer>();
             meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
             meshRenderer.receiveShadows = false;
+            playerUI = GetComponent<PlayerUI>();
             weapons = new Gun[6];
             weapons[0] = melee;
             weapons[1] = null;
@@ -112,7 +114,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (newItem.currentAmmoCount < newItem.editorAmmoValue)
                         newItem.currentAmmoCount = newItem.editorAmmoValue;
                     else
-                        FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
+                        playerUI.ShowGrenadePrompt(newItem.gunName);
                 }
                 else if (newItem.gunStyle == GunStyle.Flashbang)
                 {
@@ -123,7 +125,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (newItem.currentAmmoCount < newItem.editorAmmoValue)
                         newItem.currentAmmoCount = newItem.editorAmmoValue;
                     else
-                        FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
+                        playerUI.ShowGrenadePrompt(newItem.gunName);
                 }
                 else if (newItem.gunStyle == GunStyle.Smoke)
                 {
@@ -134,7 +136,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (newItem.currentAmmoCount < newItem.editorAmmoValue)
                         newItem.currentAmmoCount = newItem.editorAmmoValue;
                     else
-                        FindObjectOfType<PlayerUI>().ShowGrenadePrompt(newItem.gunName);
+                        playerUI.ShowGrenadePrompt(newItem.gunName);
                 }
                 if (newItem.gunStyle != GunStyle.Grenade && newItem.gunStyle != GunStyle.Flashbang && newItem.gunStyle != GunStyle.Smoke)
                 {

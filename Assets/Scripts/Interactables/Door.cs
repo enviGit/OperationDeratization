@@ -9,19 +9,25 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [SerializeField] private GameObject door;
         [SerializeField] private AudioSource doorSound;
         public AudioClip[] soundClips;
+        private Animator animator;
 
         [Header("Door")]
         private bool doorOpen;
         private float enemyDetectionRadius = 2f;
 
+
+        private void Start()
+        {
+            animator = door.GetComponent<Animator>();
+        }
         private void Update()
         {
             if (DetectEnemyNearby())
             {
                 doorOpen = true;
-                door.GetComponent<Animator>().SetBool("IsOpen", doorOpen);
+                animator.SetBool("IsOpen", doorOpen);
             }
-            if (door.GetComponent<Animator>().GetBool("IsOpen"))
+            if (animator.GetBool("IsOpen"))
                 prompt = "Close door";
             else
                 prompt = "Open door";
@@ -30,7 +36,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             doorOpen = !doorOpen;
             doorSound.PlayOneShot(soundClips[0]);
-            door.GetComponent<Animator>().SetBool("IsOpen", doorOpen);
+            animator.SetBool("IsOpen", doorOpen);
         }
         private bool DetectEnemyNearby()
         {

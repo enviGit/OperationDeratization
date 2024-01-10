@@ -15,6 +15,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         public Gun gun;
         [SerializeField] private Image upperImage;
         [SerializeField] private Image bottomImage;
+        private GameObject player;
         private PlayerInteract interact;
         private PlayerInventory inventory;
         private PlayerShoot shoot;
@@ -23,9 +24,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
         private void Start()
         {
-            interact = FindObjectOfType<PlayerInteract>();
-            inventory = FindObjectOfType<PlayerInventory>();
-            shoot = FindObjectOfType<PlayerShoot>();
+            player = GameObject.FindGameObjectWithTag("Player");
+            interact = player.GetComponent<PlayerInteract>();
+            inventory = player.GetComponent<PlayerInventory>();
+            shoot = player.GetComponent<PlayerShoot>();
             GameObject upperImageObject = GameObject.FindGameObjectWithTag("UpperImage");
             GameObject bottomImageObject = GameObject.FindGameObjectWithTag("BottomImage");
 

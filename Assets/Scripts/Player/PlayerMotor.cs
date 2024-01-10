@@ -1,4 +1,3 @@
-using RatGamesStudios.OperationDeratization.Interactables;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Player
@@ -8,7 +7,6 @@ namespace RatGamesStudios.OperationDeratization.Player
         [Header("References")]
         private CharacterController controller;
         private PlayerStance currentState = new PlayerStance();
-        private LadderTrigger ladder;
         private PlayerStamina stamina;
         private PlayerHealth health;
         private PlayerShoot aiming;
@@ -31,11 +29,12 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         [Header("Bool checks")]
         public bool isGrounded;
-        private bool _isClimbing = false;
+        public bool _isClimbing = false;
         public bool isCrouching = false;
         public bool isMoving = false;
         public bool isRunning = false;
         private bool _isAiming = false;
+        public bool shouldDetachFromLadder = false;
 
         private void Start()
         {
@@ -47,7 +46,6 @@ namespace RatGamesStudios.OperationDeratization.Player
             currentState.camHeight = 2f;
             stamina = GetComponent<PlayerStamina>();
             health = GetComponent<PlayerHealth>();
-            ladder = FindObjectOfType<LadderTrigger>();
             aiming = GetComponent<PlayerShoot>();
             movementSound = transform.Find("Sounds/Movement").GetComponent<AudioSource>();
         }
@@ -55,15 +53,15 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             isGrounded = controller.isGrounded;
             _isAiming = aiming.isAiming;
-
-            if (ladder != null)
-                _isClimbing = ladder.isClimbing;
-
-            Move();
-            Crouch();
-            CrouchToggle();
             Jump();
-            Gravity();
+
+            if (controller.enabled)
+            {
+                Move();
+                Crouch();
+                CrouchToggle();
+                Gravity();
+            }
         }
         private void Move()
         {
@@ -149,7 +147,6 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                 if (fallDamageTaken > 0)
                 {
-                    //Debug.Log(fallDamageTaken);
                     health.TakeFallingDamage(fallDamageTaken);
                     fallDamageTaken = 0;
                 }
@@ -226,7 +223,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 else if (isCrouching && Physics.Raycast(transform.position, transform.up, out hit, controller.height + jumpHeight, obstacleMask))
                     return;
                 if (_isClimbing)
-                    ladder.DetachFromLadder();
+                    shouldDetachFromLadder = true;
                 if (isCrouching)
                 {
                     isCrouching = false;

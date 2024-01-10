@@ -52,7 +52,6 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void Start()
         {
-            ladder = FindObjectOfType<LadderTrigger>();
             playerMotor = GetComponent<PlayerMotor>();
             stamina = GetComponent<PlayerStamina>();
             cam = Camera.main;
@@ -75,9 +74,8 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             previousWeapon = currentWeapon;
             currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
+            _isClimbing = playerMotor._isClimbing;
 
-            if (ladder != null)
-                _isClimbing = ladder.isClimbing;
             if (previousWeapon != null && previousWeapon.gunStyle != currentWeapon.gunStyle)
             {
                 if (currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke)
@@ -280,7 +278,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                                 hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
                                 ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
 
-                                if(currentWeapon.gunStyle != GunStyle.Melee)
+                                if (currentWeapon.gunStyle != GunStyle.Melee)
                                     ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
                             }
                             if (hit.rigidbody != null)

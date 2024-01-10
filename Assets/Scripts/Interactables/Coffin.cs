@@ -12,19 +12,21 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [Header("Door")]
         private bool coffinOpen;
         private float enemyDetectionRadius = 2f;
+        private Animator animator;
 
         private void Start()
         {
             sound = GetComponent<AudioSource>();
+            animator = coffin.GetComponent<Animator>();
         }
         private void Update()
         {
             if (DetectEnemyNearby())
             {
                 coffinOpen = true;
-                coffin.GetComponent<Animator>().SetBool("IsOpen", coffinOpen);
+                animator.SetBool("IsOpen", coffinOpen);
             }
-            if (coffin.GetComponent<Animator>().GetBool("IsOpen"))
+            if (animator.GetBool("IsOpen"))
                 prompt = "Close coffin";
             else
                 prompt = "Open coffin";
@@ -32,7 +34,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         protected override void Interact()
         {
             coffinOpen = !coffinOpen;
-            coffin.GetComponent<Animator>().SetBool("IsOpen", coffinOpen);
+            animator.SetBool("IsOpen", coffinOpen);
             sound.PlayOneShot(sound.clip);
         }
         private bool DetectEnemyNearby()

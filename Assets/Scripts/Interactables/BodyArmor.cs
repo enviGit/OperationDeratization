@@ -9,7 +9,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     public class BodyArmor : Interactable
     {
         [Header("References")]
-        public PlayerHealth playerArmor;
+        private PlayerHealth playerArmor;
         private AudioSource pickingArmorSound;
         private float delayBeforeDestroy = 1f;
         private bool used = false;
@@ -17,6 +17,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
         private void Start()
         {
+            playerArmor = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
             pickingArmorSound = GetComponent<AudioSource>();
 
             foreach (Transform child in transform)

@@ -8,6 +8,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [Header("References")]
         [SerializeField] private GameObject container;
         private AudioSource sound;
+        private Animator animator;
 
         [Header("Container")]
         private bool containerOpen;
@@ -16,15 +17,16 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private void Start()
         {
             sound = GetComponent<AudioSource>();
+            animator = container.GetComponent<Animator>();
         }
         private void Update()
         {
             if (DetectEnemyNearby())
             {
                 containerOpen = true;
-                container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
+                animator.SetBool("IsOpen", containerOpen);
             }
-            if (container.GetComponent<Animator>().GetBool("IsOpen"))
+            if (animator.GetBool("IsOpen"))
                 prompt = "Close container";
             else
                 prompt = "Open container";
@@ -32,7 +34,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         protected override void Interact()
         {
             containerOpen = !containerOpen;
-            container.GetComponent<Animator>().SetBool("IsOpen", containerOpen);
+            animator.SetBool("IsOpen", containerOpen);
             sound.PlayOneShot(sound.clip);
         }
         private bool DetectEnemyNearby()

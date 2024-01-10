@@ -9,7 +9,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [Header("References")]
         [SerializeField] private GameObject leftDoor;
         [SerializeField] private GameObject rightDoor;
-        private CharacterController playerController;
+        private GameObject player;
         private AudioSource doorSound;
         public AudioClip[] soundClips;
 
@@ -29,7 +29,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private void Start()
         {
             doorSound = GetComponent<AudioSource>();
-            playerController = FindObjectOfType<CharacterController>();
+            player = GameObject.FindGameObjectWithTag("Player");
         }
         private void Awake()
         {
@@ -39,7 +39,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private void Update()
         {
             List<float> distance = new List<float>();
-            float distanceToPlayer = Vector3.Distance(transform.position, playerController.transform.position);
+            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
             distance.Add(distanceToPlayer);
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             int count = 0;

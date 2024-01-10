@@ -8,7 +8,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     public class FirstAidKit : Interactable
     {
         [Header("References")]
-        public PlayerHealth playerHealth;
+        private PlayerHealth playerHealth;
         public float hpToRestore = 15f;
         private float delayBeforeDestroy = 3.5f;
         private AudioSource restoreHealthSound;
@@ -17,6 +17,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
         private void Start()
         {
+            playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
             restoreHealthSound = GetComponent<AudioSource>();
             mesh = GetComponent<MeshRenderer>();
         }

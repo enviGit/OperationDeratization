@@ -11,8 +11,9 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [Header("References")]
         public TextMeshProUGUI ammoRefillPrompt;
         public GameObject loadingSlider;
-        public Slider slider;
-        public TextMeshProUGUI sliderValue;
+        [HideInInspector] public Slider slider;
+        [HideInInspector] public TextMeshProUGUI sliderValue;
+        private GameObject player;
         private PlayerInventory inventory;
         private PlayerUI ui;
         private AudioSource lootingSound;
@@ -26,8 +27,11 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private void Start()
         {
             lootingSound = GetComponent<AudioSource>();
-            inventory = FindObjectOfType<PlayerInventory>();
-            ui = FindObjectOfType<PlayerUI>();
+            player = GameObject.FindGameObjectWithTag("Player");
+            inventory = player.GetComponent<PlayerInventory>();
+            ui = player.GetComponent<PlayerUI>();
+            slider = loadingSlider.transform.GetChild(0).GetComponent<Slider>();
+            sliderValue = loadingSlider.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             loadingSlider.SetActive(false);
         }
         private void Update()

@@ -8,8 +8,8 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         [Header("References")]
         [SerializeField] private CharacterController mover;
         [SerializeField] private Rigidbody rb;
-        private PlayerMotor playerMotor;
-        private PlayerShoot playerShoot;
+        [SerializeField] private PlayerMotor playerMotor;
+        [SerializeField] private PlayerShoot playerShoot;
 
         [Header("Sway and bob")]
         public float step = 0.01f;
@@ -20,27 +20,22 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         public Vector3 travelLimit = Vector3.one * 0.025f;
         public Vector3 bobLimit = Vector3.one * 0.01f;
         public Vector3 multiplier = Vector3.one * 1.5f;
-        float smooth = 10f;
-        float smoothRot = 12f;
-        float curveSin { get => Mathf.Sin(speedCurve); }
-        float curveCos { get => Mathf.Cos(speedCurve); }
-        Vector2 walkInput;
-        Vector2 lookInput;
-        Vector3 swayPos;
-        Vector3 swayEulerRot;
-        Vector3 bobPosition;
-        Vector3 bobEulerRotation;
+        private float smooth = 10f;
+        private float smoothRot = 12f;
+        private float curveSin { get => Mathf.Sin(speedCurve); }
+        private float curveCos { get => Mathf.Cos(speedCurve); }
+        private Vector2 walkInput;
+        private Vector2 lookInput;
+        private Vector3 swayPos;
+        private Vector3 swayEulerRot;
+        private Vector3 bobPosition;
+        private Vector3 bobEulerRotation;
 
         [Header("Bool checks")]
         private bool isAiming;
         private bool isMoving;
         private bool isRunning;
 
-        private void Start()
-        {
-            playerMotor = FindObjectOfType<PlayerMotor>();
-            playerShoot = FindObjectOfType<PlayerShoot>();
-        }
         private void Update()
         {
             isAiming = playerShoot.isAiming;

@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Player;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Interactables
@@ -7,6 +8,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [Header("References")]
         private Transform playerTransform;
         private CharacterController characterController;
+        private PlayerMotor playerMotor;
 
         [Header("Ladder")]
         [SerializeField] private float climbSpeed = 3f;
@@ -14,10 +16,14 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private Vector3 ladderTop;
         private Vector3 ladderBottom;
 
+        private void Start()
+        {
+            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            characterController = playerTransform.GetComponent<CharacterController>();
+            playerMotor = playerTransform.GetComponent<PlayerMotor>();
+        }
         protected override void Interact()
         {
-            prompt = "Climb ladder";
-
             if (isClimbing)
                 DetachFromLadder();
             else
@@ -25,9 +31,8 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         }
         private void AttachToLadder()
         {
-            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-            characterController = playerTransform.GetComponent<CharacterController>();
             isClimbing = true;
+            playerMotor._isClimbing = isClimbing;
             ladderTop = transform.GetChild(0).position;
             ladderBottom = transform.GetChild(1).position;
             playerTransform.position = new Vector3(ladderBottom.x, playerTransform.position.y, ladderBottom.z + 0.3f);
@@ -37,11 +42,21 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             characterController.enabled = true;
             isClimbing = false;
+            playerMotor._isClimbing = isClimbing;
         }
         private void FixedUpdate()
         {
             if (isClimbing)
             {
+                if(playerMotor.shouldDetachFromLadder)
+                {
+                    DetachFromLadder();
+                    playerMotor.shouldDetachFromLadder = false;
+
+                    return;
+                }
+
+                prompt = "";
                 float verticalInput = Input.GetAxis("Vertical");
 
                 if (verticalInput > 0 && playerTransform.position.y < ladderTop.y)
@@ -61,6 +76,8 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                 else
                     DetachFromLadder();
             }
+            else
+                prompt = "Climb ladder";
         }
     }
 }

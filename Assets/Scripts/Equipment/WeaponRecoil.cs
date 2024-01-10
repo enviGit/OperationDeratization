@@ -6,8 +6,8 @@ namespace RatGamesStudios.OperationDeratization.Equipment
     public class WeaponRecoil : MonoBehaviour
     {
         [Header("References")]
-        private PlayerInventory playerInv;
-        private PlayerShoot playerShoot;
+        [SerializeField] private PlayerInventory playerInv;
+        [SerializeField] private PlayerShoot playerShoot;
         private Gun gun;
 
         [Header("Recoil")]
@@ -15,11 +15,6 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private Vector3 currentRotation;
         private Vector3 targetRotation;
 
-        private void Start()
-        {
-            playerInv = FindObjectOfType<PlayerInventory>();
-            playerShoot = FindObjectOfType<PlayerShoot>();
-        }
         private void Update()
         {
             isAiming = playerShoot.isAiming;
