@@ -5,6 +5,7 @@ using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using RatGamesStudios.OperationDeratization.UI.InGame;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -13,14 +14,15 @@ namespace RatGamesStudios.OperationDeratization.Enemy
     public class EnemyHealth : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private EnemyStats enemyStats;
         private GameObject player;
-        private float lowHealth = 10f;
         private List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
         private WeaponIk weaponIk;
         private AiAgent agent;
+
+        [Header("Tracker")]
         [SerializeField] private Tracker tracker;
         private AudioSource markSound;
+        private GameObject markText;
 
         [Header("Dmg popup")]
         [SerializeField] private GameObject damageTextPrefab;
@@ -28,7 +30,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private GameObject damageTextInstance;
 
         [Header("Enemy health")]
+        [SerializeField] private EnemyStats enemyStats;
         public float currentHealth;
+        private float lowHealth = 10f;
         public bool isAlive = true;
         public bool isMarkedAsDead = false;
 
@@ -42,6 +46,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             agent = GetComponent<AiAgent>();
             weaponIk = GetComponent<WeaponIk>();
             player = GameObject.FindGameObjectWithTag("Player");
+            markText = player.GetComponent<PlayerUI>().markText.gameObject;
             markSound = player.transform.Find("Sounds/OpponentMarking").GetComponent<AudioSource>();
             currentHealth = enemyStats.maxHealth;
             var rigidBodies = GetComponentsInChildren<Rigidbody>();
@@ -186,18 +191,18 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         private IEnumerator FadeOutPromptText()
         {
-            float fadeDuration = 2f;
+            float duration = 3f;
             float elapsedTime = 0f;
-            player.GetComponent<PlayerUI>().markText.text = "Opponent marked as dead";
+            markText.SetActive(true);
 
-            while (elapsedTime < fadeDuration)
+            while (elapsedTime < duration)
             {
                 elapsedTime += Time.deltaTime;
 
                 yield return null;
             }
 
-            player.GetComponent<PlayerUI>().markText.text = "";
+            markText.SetActive(false);
         }
         private void SetShaderParameters(float disappearIntensity)
         {

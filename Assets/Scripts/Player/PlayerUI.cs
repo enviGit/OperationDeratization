@@ -1,5 +1,6 @@
 using RatGamesStudios.OperationDeratization.Interactables;
 using System.Collections;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -22,14 +23,20 @@ namespace RatGamesStudios.OperationDeratization.Player
         private Coroutine hideCoroutine;
         private const int maxLines = 2;
 
+        [Header("String Builder")]
+        private StringBuilder ammoTextBuilder;
+        private StringBuilder ammoRefillPromptBuilder;
+
         private void Start()
         {
-            inventory = FindObjectOfType<PlayerInventory>();
-            interact = FindObjectOfType<PlayerInteract>();
+            inventory = GetComponent<PlayerInventory>();
+            interact = GetComponent<PlayerInteract>();
+            ammoTextBuilder = new StringBuilder();
+            ammoRefillPromptBuilder = new StringBuilder();
         }
         private void Update()
         {
-            currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
+            currentWeapon = inventory.CurrentWeapon;
             UpdateAmmoText();
         }
         public void UpdateText(string prompt)
@@ -38,34 +45,29 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         private void UpdateAmmoText()
         {
+            ammoTextBuilder.Clear();
+
             if (currentWeapon.gunStyle != GunStyle.Melee)
             {
                 if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
-                    ammoText.text = currentWeapon.currentAmmoCount.ToString();
+                    ammoTextBuilder.Append(currentWeapon.currentAmmoCount.ToString());
                 else
-                    ammoText.text = currentWeapon.currentAmmoCount + " / " + currentWeapon.maxAmmoCount;
+                    ammoTextBuilder.Append($"{currentWeapon.currentAmmoCount} / {currentWeapon.maxAmmoCount}");
             }
             else
-                ammoText.text = "";
+                ammoTextBuilder.Append("");
+
+            ammoText.text = ammoTextBuilder.ToString();
         }
         public void ShowGrenadePrompt(string gunName)
         {
-            ammoRefillPrompt.text = "You cannot carry more " + gunName + "s!\n" + ammoRefillPrompt.text;
-            string[] lines = ammoRefillPrompt.text.Split('\n');
-
-            if (lines.Length > maxLines)
-            {
-                string newText = "";
-
-                for (int i = 0; i < maxLines; i++)
-                    newText += lines[i] + "\n";
-
-                ammoRefillPrompt.text = newText;
-            }
-            if (hideCoroutine != null)
-                StopCoroutine(hideCoroutine);
-
-            hideCoroutine = StartCoroutine(HideAmmoRefillPrompt());
+            ammoRefillPromptBuilder.Insert(0, $"You cannot carry more {gunName}s!\n");
+            UpdateAmmoRefillPrompt();
+        }
+        public void ShowAmmoRefillPrompt(string gunName)
+        {
+            ammoRefillPromptBuilder.Insert(0, $"You cannot carry more {gunName} ammo!\n");
+            UpdateAmmoRefillPrompt();
         }
         public IEnumerator RefillAmmo()
         {
@@ -110,19 +112,18 @@ namespace RatGamesStudios.OperationDeratization.Player
                 ammoRefill.isFilling = false;
             }
         }
-        public void ShowAmmoRefillPrompt(string gunName)
+        private void UpdateAmmoRefillPrompt()
         {
-            ammoRefillPrompt.text = "You cannot carry more " + gunName + " ammo!\n" + ammoRefillPrompt.text;
-            string[] lines = ammoRefillPrompt.text.Split('\n');
+            string[] lines = ammoRefillPromptBuilder.ToString().Split('\n');
 
             if (lines.Length > maxLines)
             {
-                string newText = "";
+                ammoRefillPromptBuilder.Clear();
 
                 for (int i = 0; i < maxLines; i++)
-                    newText += lines[i] + "\n";
+                    ammoRefillPromptBuilder.Append(lines[i]).Append("\n");
 
-                ammoRefillPrompt.text = newText;
+                ammoRefillPrompt.text = ammoRefillPromptBuilder.ToString();
             }
             if (hideCoroutine != null)
                 StopCoroutine(hideCoroutine);
@@ -131,6 +132,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         private IEnumerator HideAmmoRefillPrompt()
         {
+            StringBuilder hiddenTextBuilder = new StringBuilder(ammoRefillPrompt.text);
             Color textColor = ammoRefillPrompt.color;
             float startTime = Time.time;
             float endTime = startTime + fadeDuration;
@@ -139,12 +141,14 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 float t = (Time.time - startTime) / fadeDuration;
                 textColor.a = Mathf.Lerp(1.0f, 0.0f, t);
+                ammoRefillPrompt.text = hiddenTextBuilder.ToString();
                 ammoRefillPrompt.color = textColor;
 
                 yield return null;
             }
 
-            ammoRefillPrompt.text = "";
+            hiddenTextBuilder.Length = 0;
+            ammoRefillPrompt.text = hiddenTextBuilder.ToString();
             textColor.a = 1.0f;
             ammoRefillPrompt.color = textColor;
             hideCoroutine = null;
