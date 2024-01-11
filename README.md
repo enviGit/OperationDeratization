@@ -19,7 +19,7 @@ The game features simple and intuitive controls, including WASD movement and mou
 - **Graphic & UX/UI Designer:** Filip Krawiec ([@alwarez](https://www.github.com/alwarez))
 - **Level Designer:** Jakub Molek ([@JacobDeMolay](https://github.com/JacobDeMolay))
 - **Implementation Strategist & Tester:** Dawid Mucha ([@BzykuuDM](https://github.com/BzykuuDM))
-- **Game Developer:** Paweł Trojański ([@enviGit](https://github.com/enviGit))
+- **Animator & Game Developer:** Paweł Trojański ([@enviGit](https://github.com/enviGit))
 
 ## Copyrights Information
 **All rights are reserved for the authors of Operation Deratization. Unauthorized distribution, reproduction, or modification of this game is strictly prohibited.**

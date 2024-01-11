@@ -16,6 +16,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         [Header("References")]
         private GameObject player;
         private List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
+        private List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
         private WeaponIk weaponIk;
         private AiAgent agent;
 
@@ -65,6 +66,13 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
                 if (smr != null)
                     skinnedMeshRenderers.Add(smr);
+            }
+            foreach (Transform child in armorSocket.GetChild(0))
+            {
+                MeshRenderer mr = child.GetComponent<MeshRenderer>();
+
+                if (mr != null)
+                    meshRenderers.Add(mr);
             }
         }
         private void Update()
@@ -212,6 +220,17 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
                 Material[] materials = skinnedMeshRenderer.materials;
+
+                foreach (var material in materials)
+                {
+                    float clampedDisapperIntensity = Mathf.Clamp(disappearIntensity, 0f, 1f);
+                    float mappedDissolve = Mathf.Lerp(minDissolve, maxDissolve, clampedDisapperIntensity);
+                    material.SetFloat("_dissolveAmount", mappedDissolve);
+                }
+            }
+            foreach (MeshRenderer meshRenderer in meshRenderers)
+            {
+                Material[] materials = meshRenderer.materials;
 
                 foreach (var material in materials)
                 {
