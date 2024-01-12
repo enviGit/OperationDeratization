@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2551352463736364049}
-  - component: {fileID: 3830978521075765070}
-  m_Layer: 6
+  - component: {fileID: 1575832035472861114}
+  m_Layer: 0
   m_Name: CoffinNew
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,7 +34,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &3830978521075765070
+--- !u!95 &1575832035472861114
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -66,7 +66,8 @@ GameObject:
   - component: {fileID: 766136023840196906}
   - component: {fileID: 2410550404647545231}
   - component: {fileID: 2657828503473339382}
-  - component: {fileID: 721629209682773788}
+  - component: {fileID: 8040496429286608752}
+  - component: {fileID: 5212421718452843208}
   m_Layer: 6
   m_Name: coffin-new-cover
   m_TagString: Untagged
@@ -153,7 +154,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -9185722244433850353, guid: 3645208b986d09a4e8bd9d29cebc4d9a, type: 3}
---- !u!114 &721629209682773788
+--- !u!114 &8040496429286608752
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,6 +169,112 @@ MonoBehaviour:
   useEvents: 0
   prompt: Open coffin
   coffin: {fileID: 2892411712762447531}
+--- !u!82 &5212421718452843208
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4069089232920009774}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: a0cf530a2af7fe3469e9902f72e7dc14,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: b704ee228f78e924fad62bcbe21a298d, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.50445557
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.043437302
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5173531986143111644
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +287,7 @@ GameObject:
   - component: {fileID: 7034825282873341746}
   - component: {fileID: 1891669057892791892}
   - component: {fileID: 2657828503473339381}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: coffin-new-base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +316,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5173531986143111644}
-  m_Mesh: {fileID: 4300000, guid: 68c2cbc18e5df9c4daa51c565b503ca3, type: 2}
+  m_Mesh: {fileID: -7637804630279267970, guid: 3645208b986d09a4e8bd9d29cebc4d9a, type: 3}
 --- !u!23 &1891669057892791892
 MeshRenderer:
   m_ObjectHideFlags: 0
