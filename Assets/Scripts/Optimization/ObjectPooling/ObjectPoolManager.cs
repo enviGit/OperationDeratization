@@ -23,7 +23,7 @@ namespace RatGamesStudios.OperationDeratization.Optimization.ObjectPooling
         }
         private void SetupEmpties()
         {
-            objectPoolEmptyHolder = new GameObject("Pooled Objects");
+            objectPoolEmptyHolder = new GameObject("///Pooled Objects");
             particleSystemsEmpty = new GameObject("Particle Effects");
             particleSystemsEmpty.transform.SetParent(objectPoolEmptyHolder.transform);
             gameObjectsEmpty = new GameObject("Game Objects");
