@@ -22,6 +22,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private PlayerStance currentState = new PlayerStance();
         public Camera cam;
         private PlayerMotor playerMotor;
+        private PlayerInventory inventory;
         private PlayerStamina stamina;
 
         [Header("Weapon")]
@@ -37,7 +38,8 @@ namespace RatGamesStudios.OperationDeratization.Player
         private LayerMask grenadeCollisionMask;
         private float dynamicFieldOfView;
         private Animator weaponAnimator;
-        private Transform weaponHolderActive;
+        private Transform weaponHolder;
+        private LineRenderer lineRenderer;
 
         [Header("Movement")]
         private float xRotation = 0f;
@@ -53,16 +55,18 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Start()
         {
             playerMotor = GetComponent<PlayerMotor>();
+            inventory = GetComponent<PlayerInventory>();
             stamina = GetComponent<PlayerStamina>();
             cam = Camera.main;
-            previousWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
-            currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
+            lineRenderer = cam.GetComponent<LineRenderer>();
+            previousWeapon = inventory.CurrentWeapon;
+            currentWeapon = inventory.CurrentWeapon;
             gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
             gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
             gunSwitchAudio = transform.Find("Sounds/WeaponSwitch").GetComponent<AudioSource>();
             xSensitivity *= Settings.Sensitivity;
             ySensitivity *= Settings.Sensitivity;
-            weaponHolderActive = transform.Find("Camera/Main Camera/WeaponHolder");
+            weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
 
             if (Settings.QualityPreset == 0)
                 isLowQuality = true;
@@ -76,7 +80,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Update()
         {
             previousWeapon = currentWeapon;
-            currentWeapon = GetComponent<PlayerInventory>().CurrentWeapon;
+            currentWeapon = inventory.CurrentWeapon;
             _isClimbing = playerMotor._isClimbing;
 
             if (previousWeapon != null && previousWeapon.gunStyle != currentWeapon.gunStyle)
@@ -98,7 +102,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 StartCoroutine(ReloadCoroutine());
             }
 
-            foreach (Transform child in weaponHolderActive)
+            foreach (Transform child in weaponHolder)
             {
                 child.GetChild(0).gameObject.SetActive(true);
 
@@ -135,22 +139,22 @@ namespace RatGamesStudios.OperationDeratization.Player
                         Destroy(weapon.gameObject);
                     if (currentWeapon.gunStyle == GunStyle.Grenade)
                     {
-                        GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
-                        GetComponent<PlayerInventory>().grenadeWeaponImage.gameObject.SetActive(false);
+                        inventory.weapons[inventory.currentWeaponIndex] = null;
+                        inventory.grenadeWeaponImage.gameObject.SetActive(false);
                     }
                     if (currentWeapon.gunStyle == GunStyle.Flashbang)
                     {
-                        GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
-                        GetComponent<PlayerInventory>().flashbangWeaponImage.gameObject.SetActive(false);
+                        inventory.weapons[inventory.currentWeaponIndex] = null;
+                        inventory.flashbangWeaponImage.gameObject.SetActive(false);
                     }
                     if (currentWeapon.gunStyle == GunStyle.Smoke)
                     {
-                        GetComponent<PlayerInventory>().weapons[GetComponent<PlayerInventory>().currentWeaponIndex] = null;
-                        GetComponent<PlayerInventory>().smokeWeaponImage.gameObject.SetActive(false);
+                        inventory.weapons[inventory.currentWeaponIndex] = null;
+                        inventory.smokeWeaponImage.gameObject.SetActive(false);
                     }
 
-                    GetComponent<PlayerInventory>().SetCurrentWeapon(0);
-                    GetComponent<PlayerInventory>().UpdateWeaponImages();
+                    inventory.SetCurrentWeapon(0);
+                    inventory.UpdateWeaponImages();
 
                     return;
                 }
@@ -165,7 +169,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
                     ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
 
-                    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
+                    if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, currentWeapon.range, obstacleMask))
                     {
                         Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                         var hitBox = hit.collider.GetComponent<HitBox>();
@@ -189,7 +193,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         }
                         else
                         {
-                            hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
+                            hitBox.OnRaycastHit(currentWeapon, cam.transform.forward, gameObject);
                             ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
 
                             if (!isLowQuality)
@@ -210,7 +214,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
                         currentWeapon.currentAmmoCount--;
-                        Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
                         Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
                         GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation);
                         grenade.AddComponent<GrenadeIndicator>();
@@ -252,6 +255,48 @@ namespace RatGamesStudios.OperationDeratization.Player
                             currentWeapon.currentAmmoCount--;
                             Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
                             ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
+
+                            if (currentWeapon.gunType == GunType.Shotgun)
+                            {
+                                int numPellets = 5;
+                                float maxSpread = 0.1f;
+
+                                for (int i = 0; i < numPellets; i++)
+                                {
+                                    Vector3 spreadDirection = cam.transform.forward + new Vector3(Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread),
+                                        Random.Range(-maxSpread, maxSpread));
+                                    RaycastHit spreadHit;
+
+                                    if (Physics.Raycast(cam.transform.position, spreadDirection, out spreadHit, currentWeapon.range, obstacleMask))
+                                    {
+                                        ObjectPoolManager.SpawnObject(impactRicochet, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), ObjectPoolManager.PoolType.ParticleSystem);
+                                        HitBox spreadHitBox = spreadHit.collider.GetComponent<HitBox>();
+
+                                        if (!isLowQuality && spreadHitBox == null)
+                                        {
+                                            if (spreadHit.collider.gameObject.GetComponent<Weapon>() == null && !spreadHit.collider.CompareTag("GraveyardWall")
+                                                && !spreadHit.collider.CompareTag("Glass"))
+                                            {
+                                                if (spreadHit.rigidbody != null || spreadHit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                                                    ObjectPoolManager.SpawnObject(impactEffect, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
+                                                else
+                                                    ObjectPoolManager.SpawnObject(impactEffect, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), ObjectPoolManager.PoolType.ParticleSystem);
+                                            }
+                                        }
+                                        if (spreadHit.collider.CompareTag("Glass"))
+                                            spreadHit.collider.GetComponent<Glass>().Break(spreadHit.point, currentWeapon.impactForce);
+                                        if (spreadHitBox != null)
+                                        {
+                                            spreadHitBox.OnRaycastHit(currentWeapon, spreadDirection.normalized, gameObject);
+
+                                            if (!isLowQuality)
+                                                ObjectPoolManager.SpawnObject(bloodWound, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
+                                        }
+                                        if (spreadHit.rigidbody != null)
+                                            spreadHit.rigidbody.AddForce(-spreadHit.normal * currentWeapon.impactForce);
+                                    }
+                                }
+                            }
                         }
                         else
                         {
@@ -259,10 +304,10 @@ namespace RatGamesStudios.OperationDeratization.Player
                             stamina.BlockStaminaOnAttack();
                             weaponAnimator.SetTrigger("Attack");
                         }
-                        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, currentWeapon.range, obstacleMask))
+                        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, currentWeapon.range, obstacleMask))
                         {
                             Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
-                            var hitBox = hit.collider.GetComponent<HitBox>();
+                            HitBox hitBox = hit.collider.GetComponent<HitBox>();
 
                             if (hitBox == null && currentWeapon.gunStyle != GunStyle.Melee)
                             {
@@ -286,7 +331,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                                     hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
                             if (hitBox != null)
                             {
-                                hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
+                                hitBox.OnRaycastHit(currentWeapon, cam.transform.forward, gameObject);
                                 ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
 
                                 if (!isLowQuality)
@@ -384,7 +429,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -80f, 80f);
             transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
-            Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
             Vector3 originalPosition = new Vector3(0.0866f, -0.02f, 0.1845f);
             Vector3 originalRotation = new Vector3(20.84f, 198.13f, 129.6f);
@@ -474,7 +519,6 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
                 isAiming = false;
-                LineRenderer lineRenderer = cam.GetComponent<LineRenderer>();
                 lineRenderer.enabled = false;
 
                 if (weapon != null)
@@ -490,8 +534,6 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         private void DrawTrajectory()
         {
-            Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
-            LineRenderer lineRenderer = cam.GetComponent<LineRenderer>();
             lineRenderer.enabled = true;
             lineRenderer.positionCount = Mathf.CeilToInt(linePoints / timeBetweenPoints + 1);
             Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);

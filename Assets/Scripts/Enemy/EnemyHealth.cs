@@ -5,7 +5,6 @@ using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using RatGamesStudios.OperationDeratization.UI.InGame;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -19,6 +18,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
         private WeaponIk weaponIk;
         private AiAgent agent;
+        private Camera cam;
 
         [Header("Tracker")]
         [SerializeField] private Tracker tracker;
@@ -46,6 +46,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         {
             agent = GetComponent<AiAgent>();
             weaponIk = GetComponent<WeaponIk>();
+            cam = Camera.main;
             player = GameObject.FindGameObjectWithTag("Player");
             markText = player.GetComponent<PlayerUI>().markText.gameObject;
             markSound = player.transform.Find("Sounds/OpponentMarking").GetComponent<AudioSource>();
@@ -104,8 +105,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                 Die(direction);
             if (isAttackedByPlayer && isAlive)
             {
-                float distance = Vector3.Distance(Camera.main.transform.position, transform.position);
-                damageTextInstance = ObjectPoolManager.SpawnObject(damageTextPrefab, transform.position + new Vector3(0f, 1f, 0f), Camera.main.transform.rotation, transform);
+                float distance = Vector3.Distance(cam.transform.position, transform.position);
+                damageTextInstance = ObjectPoolManager.SpawnObject(damageTextPrefab, transform.position + new Vector3(0f, 1f, 0f), cam.transform.rotation, transform);
                 textToDisplay = damageTextInstance.transform.GetChild(0).GetComponent<TextMeshPro>();
                 float minScale = 0.2f;
                 float midScale = 1f;
@@ -117,7 +118,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
                 if (!IsObjectVisible(damageTextInstance.transform.GetChild(0).gameObject) && distance < 5f)
                 {
-                    Vector3 directionToTarget = (transform.position - Camera.main.transform.position).normalized;
+                    Vector3 directionToTarget = (transform.position - cam.transform.position).normalized;
                     float xOffset = 0f;
                     float zOffset = 0f;
                     float angle = Mathf.Atan2(directionToTarget.x, directionToTarget.z) * Mathf.Rad2Deg;
@@ -131,7 +132,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                     else
                         xOffset = -0.45f;
 
-                    float cameraAngle = Camera.main.transform.rotation.eulerAngles.x;
+                    float cameraAngle = cam.transform.rotation.eulerAngles.x;
                     float offsetY;
 
                     if (cameraAngle > 0f && cameraAngle <= 180f)
@@ -152,7 +153,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             if (renderer == null)
                 return false;
 
-            return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), renderer.bounds);
+            return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(cam), renderer.bounds);
         }
         public bool IsLowHealth()
         {

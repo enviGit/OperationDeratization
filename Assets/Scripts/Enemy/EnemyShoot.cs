@@ -81,6 +81,58 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
                     var hitBox = hit.collider.GetComponent<HitBox>();
 
+                    if (currentWeapon.gunType == GunType.Shotgun)
+                    {
+                        int numPellets = 5;
+                        float maxSpread = 0.1f;
+
+                        for (int i = 0; i < numPellets; i++)
+                        {
+                            Vector3 spreadDirection = muzzle.forward + new Vector3(Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread),
+                                Random.Range(-maxSpread, maxSpread));
+                            RaycastHit spreadHit;
+
+                            if (Physics.Raycast(muzzle.transform.position, spreadDirection, out spreadHit, currentWeapon.range, layerMask))
+                            {
+                                ObjectPoolManager.SpawnObject(impactRicochet, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), ObjectPoolManager.PoolType.ParticleSystem);
+                                HitBox spreadHitBox = spreadHit.collider.GetComponent<HitBox>();
+
+                                if (!isLowQuality && spreadHitBox == null)
+                                {
+                                    if (spreadHit.collider.gameObject.GetComponent<Weapon>() == null && !spreadHit.collider.CompareTag("GraveyardWall")
+                                        && !spreadHit.collider.CompareTag("Glass"))
+                                    {
+                                        if (spreadHit.rigidbody != null || spreadHit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                                            ObjectPoolManager.SpawnObject(impactEffect, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
+                                        else
+                                            ObjectPoolManager.SpawnObject(impactEffect, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), ObjectPoolManager.PoolType.ParticleSystem);
+                                    }
+                                }
+                                if (spreadHit.collider.CompareTag("Glass"))
+                                    spreadHit.collider.GetComponent<Glass>().Break(spreadHit.point, currentWeapon.impactForce);
+                                if (spreadHitBox != null)
+                                {
+                                    if (hitBox.health != null)
+                                    {
+                                        spreadHitBox.OnRaycastHit(currentWeapon, spreadDirection.normalized, gameObject); //Or transform.forward
+                                        ObjectPoolManager.SpawnObject(bloodSpread, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
+
+                                        if (!isLowQuality)
+                                            ObjectPoolManager.SpawnObject(bloodWound, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
+                                    }
+                                    if (hitBox.playerHealth != null)
+                                    {
+                                        hitBox.OnRaycastHitPlayer(currentWeapon, gameObject);
+
+                                        if (hitBox.damageToPlayer > 0)
+                                            DISystem.CreateIndicator(this.transform);
+                                    }
+                                }
+                                if (spreadHit.rigidbody != null)
+                                    spreadHit.rigidbody.AddForce(-spreadHit.normal * currentWeapon.impactForce);
+                            }
+                        }
+                    }
                     if (hitBox == null)
                     {
                         ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
