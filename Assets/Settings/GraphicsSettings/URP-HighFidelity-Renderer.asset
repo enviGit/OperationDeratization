@@ -1,32 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8674020797015664435
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60d5fc2b883beda44babece05c5d5d27, type: 3}
-  m_Name: Blit
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  settings:
-    Event: 500
-    blitMaterial: {fileID: 2100000, guid: 48625db7f5c0316418e3db3a171fc1e7, type: 2}
-    blitMaterialPassIndex: 0
-    setInverseViewMatrix: 0
-    requireDepthNormals: 0
-    srcType: 0
-    srcTextureId: _CameraColorTexture
-    srcTextureObject: {fileID: 0}
-    dstType: 0
-    dstTextureId: _BlitPassTexture
-    dstTextureObject: {fileID: 0}
-    overrideGraphicsFormat: 0
-    graphicsFormat: 4
 --- !u!114 &-1878332245247344467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,11 +63,10 @@ MonoBehaviour:
       type: 3}
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
-  - {fileID: -8674020797015664435}
   - {fileID: 7940438143572126805}
   - {fileID: 5823274700638544219}
   - {fileID: -1658307043727752707}
-  m_RendererFeatureMap: adc0de57c6d2eee5cdd887c30ab09f87552c94dc6b1a326e5b6114b97c6dd050fd4114a28782fce8
+  m_RendererFeatureMap: adc0de57c6d2eee5552c94dc6b1a326e5b6114b97c6dd050fd4114a28782fce8
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -145,7 +117,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 60d5fc2b883beda44babece05c5d5d27, type: 3}
-  m_Name: Blit
+  m_Name: Scanner
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
@@ -172,7 +144,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 60d5fc2b883beda44babece05c5d5d27, type: 3}
-  m_Name: Blit
+  m_Name: Vignette
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
