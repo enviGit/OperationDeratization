@@ -25,12 +25,16 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private float autoShotTimer = 0f;
         public bool isReloading = false;
         public bool isFiring = false;
+        private bool isLowQuality = false;
 
         private void Start()
         {
             aiWeapons = GetComponent<AiWeapons>();
             gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
             gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
+
+            if (Settings.QualityPreset == 0)
+                isLowQuality = true;
         }
         private void Update()
         {
@@ -81,13 +85,15 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                     {
                         ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
-                        if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
+                        if (!isLowQuality)
                         {
-                            if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                                ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
-                            else
-                                ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
-
+                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
+                            {
+                                if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                                    ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
+                                else
+                                    ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
+                            }
                         }
                         if (hit.collider.CompareTag("Glass"))
                             hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
@@ -98,7 +104,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                         {
                             hitBox.OnRaycastHit(currentWeapon, muzzle.forward, gameObject); //Or transform.forward
                             ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
-                            ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
+
+                            if (!isLowQuality)
+                                ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
                         }
                         if (hitBox.playerHealth != null)
                         {

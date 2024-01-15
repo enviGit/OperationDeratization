@@ -22,7 +22,6 @@ namespace RatGamesStudios.OperationDeratization.Player
         private PlayerStance currentState = new PlayerStance();
         public Camera cam;
         private PlayerMotor playerMotor;
-        private LadderTrigger ladder;
         private PlayerStamina stamina;
 
         [Header("Weapon")]
@@ -49,6 +48,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private bool isReloading = false;
         public bool isAiming = false;
         public bool _isClimbing = false;
+        private bool isLowQuality = false;
 
         private void Start()
         {
@@ -63,6 +63,9 @@ namespace RatGamesStudios.OperationDeratization.Player
             xSensitivity *= Settings.Sensitivity;
             ySensitivity *= Settings.Sensitivity;
             weaponHolderActive = transform.Find("Camera/Main Camera/WeaponHolder");
+
+            if (Settings.QualityPreset == 0)
+                isLowQuality = true;
         }
         private void Awake()
         {
@@ -171,12 +174,15 @@ namespace RatGamesStudios.OperationDeratization.Player
                         {
                             ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
-                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
+                            if (!isLowQuality)
                             {
-                                if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                                    ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
-                                else
-                                    ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
+                                if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
+                                {
+                                    if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                                        ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
+                                    else
+                                        ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
+                                }
                             }
                             if (hit.collider.CompareTag("Glass"))
                                 hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
@@ -185,7 +191,9 @@ namespace RatGamesStudios.OperationDeratization.Player
                         {
                             hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
                             ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
-                            ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
+
+                            if (!isLowQuality)
+                                ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
                         }
                         if (hit.rigidbody != null)
                             hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
@@ -260,12 +268,15 @@ namespace RatGamesStudios.OperationDeratization.Player
                             {
                                 ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
 
-                                if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
+                                if (!isLowQuality)
                                 {
-                                    if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                                        ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
-                                    else
-                                        ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
+                                    if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
+                                    {
+                                        if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                                            ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
+                                        else
+                                            ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
+                                    }
                                 }
                                 if (hit.collider.CompareTag("Glass"))
                                     hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
@@ -278,8 +289,9 @@ namespace RatGamesStudios.OperationDeratization.Player
                                 hitBox.OnRaycastHit(currentWeapon, Camera.main.transform.forward, gameObject);
                                 ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
 
-                                if (currentWeapon.gunStyle != GunStyle.Melee)
-                                    ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
+                                if (!isLowQuality)
+                                    if (currentWeapon.gunStyle != GunStyle.Melee)
+                                        ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
                             }
                             if (hit.rigidbody != null)
                                 hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
