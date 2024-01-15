@@ -21,7 +21,6 @@ namespace RatGamesStudios.OperationDeratization.Manager
             resolutions = Screen.resolutions;
             resolutionIndex = Settings.ResolutionIndex;
             ApplyResolution(resolutionIndex);
-            ApplyFullscreen();
             musicVolume = Settings.MusicMixer;
             ApplyMusicVolume(musicVolume);
             sfxVolume = Settings.SfxMixer;
@@ -31,10 +30,6 @@ namespace RatGamesStudios.OperationDeratization.Manager
         private void ApplyResolution(int resolution)
         {
             Screen.SetResolution(resolutions[resolution].width, resolutions[resolution].height, Settings.FullScreen);
-        }
-        private void ApplyFullscreen()
-        {
-            Screen.fullScreen = Settings.FullScreen;
         }
         private void ApplyMusicVolume(float volume)
         {

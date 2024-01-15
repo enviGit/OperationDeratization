@@ -10,6 +10,8 @@ namespace RatGamesStudios.OperationDeratization
         private static string brightness = "brightness";
         private static string fullScreen = "fullScreen";
         private static string resolutionIndex = "resolutionIndex";
+        private static string runInBg = "runInBg";
+        private static string quality = "quality";
 
         public static float Sensitivity
         {
@@ -63,6 +65,16 @@ namespace RatGamesStudios.OperationDeratization
             }
 
             return resolutions.Length > 0 ? resolutions.Length - 1 : 0;
+        }
+        public static bool RunInBg
+        {
+            get => PlayerPrefs.GetInt(runInBg, 1) != 0;
+            set => PlayerPrefs.SetInt(runInBg, value ? 1 : 0);
+        }
+        public static int QualityPreset
+        {
+            get => PlayerPrefs.GetInt(quality, 2);
+            set => PlayerPrefs.SetInt(quality, value);
         }
     }
 }

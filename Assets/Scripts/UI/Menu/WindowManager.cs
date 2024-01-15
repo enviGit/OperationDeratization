@@ -16,6 +16,8 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         private SoundSettings soundSettings;
         private Brightness brightness;
         private Sensitivity sensitivity;
+        private RunInBackground runInBg;
+        private Quality quality;
 
         private void Start()
         {
@@ -23,6 +25,8 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
             soundSettings = settings.GetComponent<SoundSettings>();
             brightness = settings.GetComponent<Brightness>();
             sensitivity = settings.GetComponent<Sensitivity>();
+            runInBg = settings.GetComponent<RunInBackground>();
+            quality = settings.GetComponent<Quality>();
             resolutions = Screen.resolutions;
             originalResolutionIndex = Settings.ResolutionIndex;
             currentResolutionIndex = originalResolutionIndex;
@@ -70,6 +74,8 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 
             if (fullscreen != null)
                 fullscreen.ApplyChanges();
+            if (quality != null)
+                quality.ApplyChanges();
 
             soundSettings.ApplyChanges();
             brightness.ApplyChanges();
@@ -82,6 +88,10 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 
             if (fullscreen != null)
                 fullscreen.RestoreOriginalState();
+            if (runInBg != null)
+                runInBg.RestoreOriginalState();
+            if (quality != null)
+                quality.RestoreOriginalValues();
 
             soundSettings.RestoreOriginalValues();
             brightness.RestoreOriginalValues();

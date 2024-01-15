@@ -1,21 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace RatGamesStudios.OperationDeratization
 {
     public class Quality : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+        [SerializeField] private RenderPipelineAsset[] qualityLevels;
+        [SerializeField] TMP_Dropdown dropdown;
+        private int originalQuality;
 
-        // Update is called once per frame
-        void Update()
+        private void Start()
         {
-        
+            originalQuality = Settings.QualityPreset;
+            dropdown.value = originalQuality;
+        }
+        public void ChangeLevel(int value)
+        {
+            QualitySettings.SetQualityLevel(value);
+            QualitySettings.renderPipeline = qualityLevels[value];
+        }
+        public void RestoreOriginalValues()
+        {
+            dropdown.value = originalQuality;
+            Settings.QualityPreset = dropdown.value;
+        }
+        public void ApplyChanges()
+        {
+            originalQuality = dropdown.value;
+            Settings.QualityPreset = originalQuality;
         }
     }
 }
