@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Player
 {
@@ -19,6 +20,9 @@ namespace RatGamesStudios.OperationDeratization.Player
         public TextMeshProUGUI markText;
         [SerializeField] private TextMeshProUGUI ammoText;
         [SerializeField] private TextMeshProUGUI ammoRefillPrompt;
+        [SerializeField] private Transform loadingSlider;
+        private Material slider;
+        private TextMeshProUGUI sliderValue;
         private float fadeDuration = 1.5f;
         private Coroutine hideCoroutine;
         private const int maxLines = 2;
@@ -31,6 +35,8 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             inventory = GetComponent<PlayerInventory>();
             interact = GetComponent<PlayerInteract>();
+            slider = loadingSlider.GetChild(0).GetComponent<SpriteRenderer>().material;
+            sliderValue = loadingSlider.GetChild(1).GetComponent<TextMeshProUGUI>();
             ammoTextBuilder = new StringBuilder();
             ammoRefillPromptBuilder = new StringBuilder();
         }
@@ -88,8 +94,8 @@ namespace RatGamesStudios.OperationDeratization.Player
                     }
 
                     float progress = (Time.time - startTime) / 2.0f;
-                    ammoRefill.slider.value = progress;
-                    ammoRefill.sliderValue.text = string.Format("{0:F1}", progress * 2.0f);
+                    slider.SetFloat("_RemovedSegments", Mathf.Lerp(slider.GetFloat("_SegmentCount"), 0, progress));
+                    sliderValue.text = string.Format("{0:F1}", progress * 2.0f);
 
                     yield return new WaitForSeconds(0.1f);
                 }

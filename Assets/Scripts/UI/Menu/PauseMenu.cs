@@ -13,10 +13,18 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         [SerializeField] private TextMeshProUGUI endGameText;
         [SerializeField] private GameObject optionsMenu;
         [SerializeField] private WindowManager windowManager;
-        [SerializeField] private PlayerHealth playerHealth;
-        [SerializeField] private PlayerShoot playerShoot;
-        [SerializeField] private PlayerInventory playerInventory;
+        private GameObject player;
+        private PlayerHealth playerHealth;
+        private PlayerShoot playerShoot;
+        private PlayerInventory playerInventory;
 
+        private void Start()
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+            playerHealth = player.GetComponent<PlayerHealth>();
+            playerShoot = player.GetComponent<PlayerShoot>();
+            playerInventory = player.GetComponent<PlayerInventory>();
+        }
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape) && playerHealth.isAlive)
