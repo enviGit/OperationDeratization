@@ -3,7 +3,6 @@ using System.Collections;
 using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Player
 {
@@ -20,7 +19,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         public TextMeshProUGUI markText;
         [SerializeField] private TextMeshProUGUI ammoText;
         [SerializeField] private TextMeshProUGUI ammoRefillPrompt;
-        [SerializeField] private Transform loadingSlider;
+        public Transform loadingSlider;
         private Material slider;
         private TextMeshProUGUI sliderValue;
         private float fadeDuration = 1.5f;
@@ -39,6 +38,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             sliderValue = loadingSlider.GetChild(1).GetComponent<TextMeshProUGUI>();
             ammoTextBuilder = new StringBuilder();
             ammoRefillPromptBuilder = new StringBuilder();
+            loadingSlider.gameObject.SetActive(false);
         }
         private void Update()
         {
@@ -80,7 +80,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (ammoRefill != null)
             {
                 ammoRefill.isFilling = true;
-                ammoRefill.loadingSlider.SetActive(true);
+                loadingSlider.gameObject.SetActive(true);
                 float startTime = Time.time;
 
                 while (Time.time - startTime < 2.0f)
@@ -88,7 +88,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (!Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance))
                     {
                         ammoRefill.isFilling = false;
-                        ammoRefill.loadingSlider.SetActive(false);
+                        loadingSlider.gameObject.SetActive(false);
 
                         yield break;
                     }
@@ -114,7 +114,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     }
                 }
 
-                ammoRefill.loadingSlider.SetActive(false);
+                loadingSlider.gameObject.SetActive(false);
                 ammoRefill.isFilling = false;
             }
         }

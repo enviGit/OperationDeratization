@@ -10,7 +10,6 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     {
         [Header("References")]
         public TextMeshProUGUI ammoRefillPrompt;
-        public GameObject loadingSlider;
         private GameObject player;
         private PlayerInventory inventory;
         private PlayerUI ui;
@@ -28,7 +27,6 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             player = GameObject.FindGameObjectWithTag("Player");
             inventory = player.GetComponent<PlayerInventory>();
             ui = player.GetComponent<PlayerUI>();
-            loadingSlider.SetActive(false);
         }
         private void Update()
         {
