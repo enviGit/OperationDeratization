@@ -99,8 +99,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
                                 if (!isLowQuality && spreadHitBox == null)
                                 {
-                                    if (spreadHit.collider.gameObject.GetComponent<Weapon>() == null && !spreadHit.collider.CompareTag("GraveyardWall")
-                                        && !spreadHit.collider.CompareTag("Glass"))
+                                    if (spreadHit.collider.gameObject.GetComponent<Weapon>() == null && !spreadHit.collider.CompareTag("GraveyardWall") && !spreadHit.collider.CompareTag("Glass")
+                                        && spreadHit.collider.gameObject.layer != LayerMask.NameToLayer("Water"))
                                     {
                                         if (spreadHit.rigidbody != null || spreadHit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
                                             ObjectPoolManager.SpawnObject(impactEffect, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
@@ -139,7 +139,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
                         if (!isLowQuality)
                         {
-                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass"))
+                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass") && hit.collider.gameObject.layer != LayerMask.NameToLayer("Water"))
                             {
                                 if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
                                     ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
