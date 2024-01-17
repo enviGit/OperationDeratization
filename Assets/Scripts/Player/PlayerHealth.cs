@@ -7,11 +7,12 @@ namespace RatGamesStudios.OperationDeratization.Player
     public class PlayerHealth : MonoBehaviour
     {
         [Header("References")]
-        public Image frontHealthBar;
-        public Image backHealthBar;
-        public Transform armorBar;
-        public Image frontArmorBar;
-        public Image backArmorBar;
+        [SerializeField] private GameObject healthBar;
+        [SerializeField] private GameObject armorBar;
+        private Image frontHealthBar;
+        private Image backHealthBar;
+        private Image frontArmorBar;
+        private Image backArmorBar;
         public Ragdoll ragdoll;
         public Transform inventoryUI;
         public Camera deathCamera;
@@ -44,6 +45,10 @@ namespace RatGamesStudios.OperationDeratization.Player
             deathSound = transform.Find("Sounds/Death").GetComponent<AudioSource>();
             impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
             ragdoll = GetComponent<Ragdoll>();
+            frontHealthBar = healthBar.transform.GetChild(2).GetComponent<Image>();
+            backHealthBar = healthBar.transform.GetChild(1).GetComponent<Image>();
+            frontArmorBar = armorBar.transform.GetChild(2).GetComponent<Image>();
+            backArmorBar = armorBar.transform.GetChild(1).GetComponent<Image>();
             var rigidBodies = GetComponentsInChildren<Rigidbody>();
 
             foreach (var rigidBody in rigidBodies)
@@ -83,20 +88,19 @@ namespace RatGamesStudios.OperationDeratization.Player
             float fillF = frontHealthBar.fillAmount;
             float fillB = backHealthBar.fillAmount;
             float hFraction = currentHealth / maxHealth;
+            float hFractionNormalized = hFraction * 0.738f;
 
-            if (fillB > hFraction)
+            if (fillB > hFractionNormalized)
             {
-                frontHealthBar.fillAmount = hFraction;
-                backHealthBar.color = Color.red;
+                frontHealthBar.fillAmount = hFractionNormalized;
                 lerpTimer += Time.deltaTime;
                 float percentComplete = lerpTimer / chipSpeed;
                 percentComplete = percentComplete * percentComplete;
-                backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete);
+                backHealthBar.fillAmount = Mathf.Lerp(fillB, hFractionNormalized, percentComplete);
             }
-            if (fillF < hFraction)
+            if (fillF < hFractionNormalized)
             {
-                backHealthBar.color = Color.green;
-                backHealthBar.fillAmount = hFraction;
+                backHealthBar.fillAmount = hFractionNormalized;
                 lerpTimer += Time.deltaTime;
                 float percentComplete = lerpTimer / chipSpeed;
                 percentComplete = percentComplete * percentComplete;
@@ -104,7 +108,6 @@ namespace RatGamesStudios.OperationDeratization.Player
             }
             if (!isAlive)
             {
-                armorBar.gameObject.SetActive(false);
                 backArmorBar.fillAmount = 0;
 
                 return;
@@ -113,35 +116,24 @@ namespace RatGamesStudios.OperationDeratization.Player
             float fillAF = frontArmorBar.fillAmount;
             float fillAB = backArmorBar.fillAmount;
             float aFraction = currentArmor / maxArmor;
+            float aFractionNormalized = aFraction * 0.25f;
 
-            if (currentArmor == 0)
+
+            if (fillAB > aFractionNormalized)
             {
-                armorBar.gameObject.SetActive(false);
-                backArmorBar.fillAmount = 0;
+                frontArmorBar.fillAmount = aFractionNormalized;
+                lerpTimer += Time.deltaTime;
+                float percentComplete = lerpTimer / chipSpeed;
+                percentComplete = percentComplete * percentComplete;
+                backArmorBar.fillAmount = Mathf.Lerp(fillAB, aFractionNormalized, percentComplete);
             }
-            else
+            if (fillAF < aFractionNormalized)
             {
-                armorBar.gameObject.SetActive(true);
-                backArmorBar.fillAmount = aFraction;
-
-                if (fillAB > aFraction)
-                {
-                    frontArmorBar.fillAmount = aFraction;
-                    backArmorBar.color = Color.gray;
-                    lerpTimer += Time.deltaTime;
-                    float percentComplete = lerpTimer / chipSpeed;
-                    percentComplete = percentComplete * percentComplete;
-                    backArmorBar.fillAmount = Mathf.Lerp(fillAB, aFraction, percentComplete);
-                }
-                if (fillAF < aFraction)
-                {
-                    backArmorBar.color = Color.blue;
-                    backArmorBar.fillAmount = aFraction;
-                    lerpTimer += Time.deltaTime;
-                    float percentComplete = lerpTimer / chipSpeed;
-                    percentComplete = percentComplete * percentComplete;
-                    frontArmorBar.fillAmount = Mathf.Lerp(fillAF, backArmorBar.fillAmount, percentComplete);
-                }
+                backArmorBar.fillAmount = aFractionNormalized;
+                lerpTimer += Time.deltaTime;
+                float percentComplete = lerpTimer / chipSpeed;
+                percentComplete = percentComplete * percentComplete;
+                frontArmorBar.fillAmount = Mathf.Lerp(fillAF, backArmorBar.fillAmount, percentComplete);
             }
         }
         public void TakeDamage(float damage)
@@ -224,8 +216,8 @@ namespace RatGamesStudios.OperationDeratization.Player
                 int randomIndex = Random.Range(0, impactClips.Length - 1);
                 impactSound.PlayOneShot(impactClips[randomIndex]);
 
-                if (currentHealth <= 3)
-                    impactSound.PlayOneShot(impactClips[3], 0.5f);
+                //if (currentHealth <= 3)
+                //impactSound.PlayOneShot(impactClips[3], 0.5f);
             }
             if (currentHealth <= 0)
                 Die();
@@ -249,7 +241,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             interact.enabled = false;
             PlayerInventory inventory = GetComponent<PlayerInventory>();
             PlayerStamina stamina = GetComponent<PlayerStamina>();
-            stamina.staminaBarFill.transform.parent.gameObject.SetActive(false);
+            stamina.staminaBar.SetActive(false);
             stamina.enabled = false;
 
             foreach (Gun weapon in inventory.weapons)

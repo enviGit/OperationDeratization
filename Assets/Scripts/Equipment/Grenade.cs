@@ -52,7 +52,6 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                 Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
 
                 if (rb != null)
-                    //if (!nearbyObject.CompareTag("Enemy"))
                     rb.AddExplosionForce(force, transform.position, radius);
             }
 

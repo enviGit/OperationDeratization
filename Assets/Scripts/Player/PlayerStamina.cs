@@ -5,28 +5,38 @@ namespace RatGamesStudios.OperationDeratization.Player
 {
     public class PlayerStamina : MonoBehaviour
     {
+        [Header("References")]
+        private PlayerMotor playerMotor;
+        public GameObject staminaBar;
+        private Image frontStaminaBar;
+        private Image backStaminaBar;
+        private AudioSource heavyBreathingSound;
+
         [Header("Stamina bar")]
         public float maxStamina = 100f;
-        public float sprintStaminaCost = 6f;
-        public float jumpStaminaCost = 12f;
+        public float sprintStaminaCost = 5f;
+        public float jumpStaminaCost = 10f;
         public float attackStaminaCost = 15f;
         public float staminaRegenRate = 25f;
         public float currentStamina = 100f;
-        public Image staminaBarFill;
+        private float lerpTimer;
+        public float chipSpeed = 2f;
         public bool isStaminaRegenBlocked = false;
-        private AudioSource heavyBreathingSound;
 
         private void Start()
         {
+            playerMotor = GetComponent<PlayerMotor>();
+            frontStaminaBar = staminaBar.transform.GetChild(3).GetComponent<Image>();
+            backStaminaBar = staminaBar.transform.GetChild(2).GetComponent<Image>();
             currentStamina = maxStamina;
-            staminaBarFill.transform.parent.gameObject.SetActive(false);
+            staminaBar.SetActive(false);
             heavyBreathingSound = transform.Find("Sounds/HeavyBreathing").GetComponent<AudioSource>();
         }
         private void Update()
         {
-            if (GetComponent<PlayerMotor>().isRunning && GetComponent<PlayerMotor>().isMoving)
+            if (playerMotor.isRunning && playerMotor.isMoving)
                 UseStamina(sprintStaminaCost * Time.deltaTime);
-            if (!GetComponent<PlayerMotor>().isRunning && GetComponent<PlayerMotor>().isGrounded)
+            if (!playerMotor.isRunning && playerMotor.isGrounded)
             {
                 if (!isStaminaRegenBlocked)
                     currentStamina = Mathf.Clamp(currentStamina + staminaRegenRate * Time.deltaTime, 0, maxStamina);
@@ -37,11 +47,32 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void UpdateStaminaUI()
         {
             if (currentStamina == maxStamina)
-                staminaBarFill.transform.parent.gameObject.SetActive(false);
+                staminaBar.SetActive(false);
             else
             {
-                staminaBarFill.transform.parent.gameObject.SetActive(true);
-                staminaBarFill.fillAmount = currentStamina / maxStamina;
+                staminaBar.SetActive(true);
+
+                float fillF = frontStaminaBar.fillAmount;
+                float fillB = backStaminaBar.fillAmount;
+                float hFraction = currentStamina / maxStamina;
+                float hFractionNormalized = hFraction * 0.25f;
+
+                if (fillB > hFractionNormalized)
+                {
+                    frontStaminaBar.fillAmount = hFractionNormalized;
+                    lerpTimer += Time.deltaTime;
+                    float percentComplete = lerpTimer / chipSpeed;
+                    percentComplete = percentComplete * percentComplete;
+                    backStaminaBar.fillAmount = Mathf.Lerp(fillB, hFractionNormalized, percentComplete);
+                }
+                if (fillF < hFractionNormalized)
+                {
+                    backStaminaBar.fillAmount = hFractionNormalized;
+                    lerpTimer += Time.deltaTime;
+                    float percentComplete = lerpTimer / chipSpeed;
+                    percentComplete = percentComplete * percentComplete;
+                    frontStaminaBar.fillAmount = Mathf.Lerp(fillF, backStaminaBar.fillAmount, percentComplete);
+                }
             }
         }
         public bool HasStamina(float amount)
@@ -51,6 +82,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         public void UseStamina(float amount)
         {
             currentStamina = Mathf.Clamp(currentStamina - amount, 0, maxStamina);
+            lerpTimer = 0f;
             UpdateStaminaUI();
 
             if (currentStamina == 0)
