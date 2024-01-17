@@ -904,10 +904,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a03acb562139194cb7bb58ffdb7c6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frontHealthBar: {fileID: 0}
-  backHealthBar: {fileID: 0}
-  frontArmorBar: {fileID: 0}
-  backArmorBar: {fileID: 0}
+  healthBar: {fileID: 0}
+  armorBar: {fileID: 0}
   ragdoll: {fileID: 1148401328078746724}
   inventoryUI: {fileID: 0}
   deathCamera: {fileID: 4561917405251861247}
@@ -1032,13 +1030,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407ecc3f24bb75846a815723db786a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staminaBarFill: {fileID: 0}
+  staminaBar: {fileID: 0}
   maxStamina: 100
-  sprintStaminaCost: 6
-  jumpStaminaCost: 12
+  sprintStaminaCost: 5
+  jumpStaminaCost: 10
   attackStaminaCost: 15
   staminaRegenRate: 25
   currentStamina: 100
+  chipSpeed: 2
   isStaminaRegenBlocked: 0
 --- !u!114 &1148401328078746730
 MonoBehaviour:
