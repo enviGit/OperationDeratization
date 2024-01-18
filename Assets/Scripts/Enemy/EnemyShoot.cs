@@ -112,25 +112,25 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                                     spreadHit.collider.GetComponent<Glass>().Break(spreadHit.point, currentWeapon.impactForce);
                                 if (spreadHitBox != null)
                                 {
-                                    if (hitBox.health != null)
+                                    if (spreadHitBox.health != null)
                                     {
-                                        spreadHitBox.OnRaycastHit(currentWeapon, spreadDirection.normalized, gameObject); //Or transform.forward
+                                        spreadHitBox.OnRaycastHit(currentWeapon, muzzle.forward, gameObject); //Or transform.forward
                                         ObjectPoolManager.SpawnObject(bloodSpread, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
 
                                         if (!isLowQuality)
                                             ObjectPoolManager.SpawnObject(bloodWound, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
                                     }
-                                    if (hitBox.playerHealth != null)
+                                    if (spreadHitBox.playerHealth != null)
                                     {
-                                        hitBox.OnRaycastHitPlayer(currentWeapon, gameObject);
+                                        spreadHitBox.OnRaycastHitPlayer(currentWeapon, gameObject);
 
-                                        if (hitBox.damageToPlayer > 0)
+                                        if (spreadHitBox.damageToPlayer > 0)
                                             DISystem.CreateIndicator(this.transform);
                                     }
                                 }
-                                if (spreadHit.rigidbody != null)
-                                    spreadHit.rigidbody.AddForce(-spreadHit.normal * currentWeapon.impactForce);
                             }
+                            if (spreadHit.rigidbody != null)
+                                spreadHit.rigidbody.AddForce(-spreadHit.normal * currentWeapon.impactForce);
                         }
                     }
                     if (hitBox == null)

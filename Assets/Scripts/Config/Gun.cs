@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RatGamesStudios.OperationDeratization
 {
@@ -38,11 +39,13 @@ namespace RatGamesStudios.OperationDeratization
 
         private void OnEnable()
         {
-            magazineSize = editorAmmoValue;
-            currentAmmoCount = editorAmmoValue;
-            maxAmmoCount = editorAmmoValue * 3;
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
-        public void OnLoad()
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             magazineSize = editorAmmoValue;
             currentAmmoCount = editorAmmoValue;

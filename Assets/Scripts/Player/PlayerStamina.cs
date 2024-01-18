@@ -13,7 +13,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private AudioSource heavyBreathingSound;
 
         [Header("Stamina bar")]
-        public float maxStamina = 100f;
+        public float maxStamina = 150f;
         public float sprintStaminaCost = 5f;
         public float jumpStaminaCost = 10f;
         public float attackStaminaCost = 15f;

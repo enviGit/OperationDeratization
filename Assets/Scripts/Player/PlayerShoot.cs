@@ -193,11 +193,14 @@ namespace RatGamesStudios.OperationDeratization.Player
                         }
                         else
                         {
-                            hitBox.OnRaycastHit(currentWeapon, cam.transform.forward, gameObject);
-                            ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                            if (hitBox.playerHealth == null)
+                            {
+                                hitBox.OnRaycastHit(currentWeapon, cam.transform.forward, gameObject);
+                                ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
 
-                            if (!isLowQuality)
-                                ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
+                                if (!isLowQuality)
+                                    ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
+                            }
                         }
                         if (hit.rigidbody != null)
                             hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
@@ -285,7 +288,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                                         }
                                         if (spreadHit.collider.CompareTag("Glass"))
                                             spreadHit.collider.GetComponent<Glass>().Break(spreadHit.point, currentWeapon.impactForce);
-                                        if (spreadHitBox != null)
+                                        if (spreadHitBox != null && spreadHitBox.playerHealth == null)
                                         {
                                             spreadHitBox.OnRaycastHit(currentWeapon, spreadDirection.normalized, gameObject);
 
@@ -329,7 +332,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                             else if (hitBox == null && currentWeapon.gunStyle == GunStyle.Melee)
                                 if (hit.collider.CompareTag("Glass"))
                                     hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
-                            if (hitBox != null)
+                            if (hitBox != null && hitBox.playerHealth == null)
                             {
                                 hitBox.OnRaycastHit(currentWeapon, cam.transform.forward, gameObject);
                                 ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
