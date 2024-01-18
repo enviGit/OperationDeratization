@@ -1,3 +1,4 @@
+=using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private GameObject player;
         private AudioSource doorSound;
         public AudioClip[] soundClips;
+        public CinemachineVirtualCamera vCamera;
 
         [Header("Door")]
         public float doorSlideAmount = 1.75f;
@@ -25,6 +27,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [Header("Bool checks")]
         private static bool doorsOpen = false;
         private static bool doorsMoving = false;
+        public bool isUsingCameraCheck = false;
 
         private void Start()
         {
@@ -39,10 +42,20 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private void Update()
         {
             List<float> distance = new List<float>();
-            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-            distance.Add(distanceToPlayer);
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             int count = 0;
+
+            if (player != null)
+            {
+                float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+                distance.Add(distanceToPlayer);
+            }
+            if (isUsingCameraCheck)
+            {
+                float distanceToCamera = Vector3.Distance(transform.position, vCamera.transform.position);
+                distance.Add(distanceToCamera);
+            }
+
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
             foreach (GameObject enemy in enemies)
             {
@@ -55,6 +68,16 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                     count++;
             }
 
+            CinemachineTrackedDolly dollyCart = vCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
+
+            if (dollyCart != null)
+            {
+                float pathPosition = dollyCart.m_PathPosition;
+
+                if (pathPosition >= 3f && pathPosition <= 4f || pathPosition >=4.1f && pathPosition=<5f)
+                    count++;
+            }
+
             if (count != 0 && !doorsMoving && !doorsOpen)
                 OpenDoors();
             if (count == 0 && !doorsMoving && doorsOpen)
@@ -62,7 +85,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         }
         private void OpenDoors()
         {
-            if(leftDoor != null || rightDoor != null)
+            if (leftDoor != null || rightDoor != null)
             {
                 doorSound.pitch = 1.2f;
                 doorSound.PlayOneShot(soundClips[0]);
@@ -101,7 +124,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         }
         private void ScaleDoors(float amount, bool opening)
         {
-            if (doorScaleAmount == 1f) 
+            if (doorScaleAmount == 1f)
                 return;
             if (leftDoor != null)
             {
