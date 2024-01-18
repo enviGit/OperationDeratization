@@ -1,4 +1,4 @@
-=using Cinemachine;
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,6 +53,15 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             {
                 float distanceToCamera = Vector3.Distance(transform.position, vCamera.transform.position);
                 distance.Add(distanceToCamera);
+                CinemachineTrackedDolly dollyCart = vCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
+
+                if (dollyCart != null)
+                {
+                    float pathPosition = dollyCart.m_PathPosition;
+
+                    if (pathPosition >= 3f && pathPosition <= 4f || pathPosition >= 4.1f && pathPosition <= 5f)
+                        count++;
+                }
             }
 
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -65,16 +74,6 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             foreach (float item in distance)
             {
                 if (item <= activationDistance)
-                    count++;
-            }
-
-            CinemachineTrackedDolly dollyCart = vCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
-
-            if (dollyCart != null)
-            {
-                float pathPosition = dollyCart.m_PathPosition;
-
-                if (pathPosition >= 3f && pathPosition <= 4f || pathPosition >=4.1f && pathPosition=<5f)
                     count++;
             }
 
