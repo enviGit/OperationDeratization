@@ -1,5 +1,7 @@
 using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.UI.Menu;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,10 +12,12 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
     {
         [SerializeField] private Image cooldownFillImage;
         [SerializeField] private TextMeshProUGUI trackerCooldownText;
+        [SerializeField] private PauseMenu playerUI;
         public float trackingCooldown = 31f;
         public float trackingDuration = 5f;
         public Transform indicator;
         public Transform player;
+        private List<GameObject> opponents = new List<GameObject>();
         private GameObject nearestOpponent;
         private bool isTracking = false;
         private bool isOnCooldown = false;
@@ -28,12 +32,13 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             indicator.GetChild(0).gameObject.SetActive(false);
             currentCooldownTime = trackingCooldown;
             trackerSound = GetComponent<AudioSource>();
+            opponents.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         }
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                if (!isTracking && !isOnCooldown)
+                if (!isTracking && !isOnCooldown && opponents.Count > 0)
                 {
                     StartTracking();
                     StartCoroutine(SceneScanning());
@@ -151,10 +156,24 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             if (opponent == nearestOpponent)
             {
                 nearestOpponent = null;
+                opponents.Remove(opponent);
 
                 if (isTracking)
                     StartCoroutine(UpdateTrackingRoutine());
             }
+
+            StartCoroutine(DelayedCheckForVictory());
+        }
+        private IEnumerator DelayedCheckForVictory()
+        {
+            yield return new WaitForSeconds(5f);
+
+            CheckForVictory();
+        }
+        private void CheckForVictory()
+        {
+            if (opponents.Count == 0)
+                playerUI.victoryScreen.SetActive(true);
         }
         private void OnRenderImage(RenderTexture cameraView, RenderTexture shaderView)
         {

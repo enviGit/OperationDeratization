@@ -1,7 +1,5 @@
 using RatGamesStudios.OperationDeratization.Player;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace RatGamesStudios.OperationDeratization.UI.Menu
 {
@@ -10,7 +8,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         public static bool GameIsPaused = false;
         [SerializeField] private GameObject pauseMenuUI;
         [SerializeField] private GameObject endGameScreen;
-        [SerializeField] private TextMeshProUGUI endGameText;
+        public GameObject victoryScreen;
         [SerializeField] private GameObject optionsMenu;
         [SerializeField] private WindowManager windowManager;
         private GameObject player;
@@ -27,7 +25,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         }
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && playerHealth.isAlive)
+            if (Input.GetKeyDown(KeyCode.Escape) && playerHealth.isAlive && !victoryScreen.activeSelf)
             {
                 if (!optionsMenu.activeSelf)
                 {
@@ -50,10 +48,27 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
                 }
 
                 endGameScreen.SetActive(true);
-                endGameText.text = "GAME   OVER";
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
+            if(victoryScreen.activeSelf)
+            {
+                Transform[] children = transform.GetComponentsInChildren<Transform>(true);
+
+                foreach (Transform child in children)
+                {
+                    if (child != transform && !child.name.Contains("Menu") && !IsPartOfMenu(child))
+                        child.gameObject.SetActive(false);
+                }
+
+                Time.timeScale = 0f;
+                GameIsPaused = true;
+                AudioListener.pause = true;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                playerShoot.enabled = false;
+                playerInventory.enabled = false;
+            }    
         }
         private bool IsPartOfMenu(Transform obj)
         {
@@ -96,31 +111,6 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
             windowManager.AbortChanges();
             optionsMenu.SetActive(false);
             pauseMenuUI.SetActive(true);
-        }
-        public void LoadMenu()
-        {
-            Time.timeScale = 1f;
-            GameIsPaused = false;
-            AudioListener.pause = false;
-            SceneManager.LoadScene(0);
-        }
-        public void RestartLevel()
-        {
-            Time.timeScale = 1f;
-            GameIsPaused = false;
-            AudioListener.pause = false;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            string currentSceneName = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(currentSceneName);
-        }
-        public void QuitGame()
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
         }
     }
 }
