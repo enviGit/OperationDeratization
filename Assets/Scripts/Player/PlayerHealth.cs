@@ -10,7 +10,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         [SerializeField] private GameObject healthBar;
         [SerializeField] private GameObject armorBar;
         private Image frontHealthBar;
-        private Image backHealthBar;
+        [HideInInspector] public Image backHealthBar;
         private Image frontArmorBar;
         private Image backArmorBar;
         public Ragdoll ragdoll;
@@ -40,7 +40,6 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void Start()
         {
-            currentHealth = maxHealth;
             heartbeatSound = transform.Find("Sounds/Heartbeat").GetComponent<AudioSource>();
             deathSound = transform.Find("Sounds/Death").GetComponent<AudioSource>();
             impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
@@ -141,6 +140,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (!isAlive)
                 return;
 
+            backHealthBar.color = Color.red;
             float damageToHealth = damage;
 
             if (currentArmor > 0)
@@ -177,6 +177,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (!isAlive)
                 return;
 
+            backHealthBar.color = Color.red;
             currentHealth -= damage;
             float percentMultiplier = 1.5f;
             float percent = (currentHealth * percentMultiplier) / maxHealth;
@@ -199,6 +200,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (!isAlive)
                 return;
 
+            backHealthBar.color = Color.red;
             currentHealth -= damage;
             float percentMultiplier = 1.5f;
             float percent = (currentHealth * percentMultiplier) / maxHealth;

@@ -2,6 +2,7 @@ using RatGamesStudios.OperationDeratization.Enemy;
 using RatGamesStudios.OperationDeratization.Player;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Interactables
 {
@@ -30,6 +31,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             if (!used && playerHealth.currentHealth < 99f)
             {
+                playerHealth.backHealthBar.color = new Color(0.25f, 0.5f, 0f, 1f);
                 playerHealth.RestoreHealth(hpToRestore);
                 prompt = "";
                 StartCoroutine(DestroyAfterSound());
@@ -51,7 +53,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                 yield return null;
             }
 
-            Destroy(gameObject);
+            Destroy(transform.parent.gameObject);
         }
         private void SetShaderParameters(float disappearIntensity)
         {
