@@ -12,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization
         private static string resolutionIndex = "resolutionIndex";
         private static string runInBg = "runInBg";
         private static string quality = "quality";
+        private static string canSkipCutscene = "canSkipCutscene";
 
         public static float Sensitivity
         {
@@ -75,6 +76,11 @@ namespace RatGamesStudios.OperationDeratization
         {
             get => PlayerPrefs.GetInt(quality, 2);
             set => PlayerPrefs.SetInt(quality, value);
+        }
+        public static bool CanSkipCutscene
+        {
+            get => PlayerPrefs.GetInt(canSkipCutscene, 0) != 0;
+            set => PlayerPrefs.SetInt(canSkipCutscene, value ? 1 : 0);
         }
     }
 }

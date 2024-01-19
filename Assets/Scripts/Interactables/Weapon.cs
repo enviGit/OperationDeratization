@@ -25,9 +25,14 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player");
-            interact = player.GetComponent<PlayerInteract>();
-            inventory = player.GetComponent<PlayerInventory>();
-            shoot = player.GetComponent<PlayerShoot>();
+
+            if (player != null)
+            {
+                interact = player.GetComponent<PlayerInteract>();
+                inventory = player.GetComponent<PlayerInventory>();
+                shoot = player.GetComponent<PlayerShoot>();
+            }
+            
             GameObject upperImageObject = GameObject.FindGameObjectWithTag("UpperImage");
             GameObject bottomImageObject = GameObject.FindGameObjectWithTag("BottomImage");
 
@@ -40,63 +45,66 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
-            if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance, obstacleMask) && interact.hitInfo.transform.GetComponent<Weapon>() && shoot.isAiming == false)
+            if(interact != null)
             {
-                if (upperImage != null)
+                if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance, obstacleMask) && interact.hitInfo.transform.GetComponent<Weapon>() && shoot.isAiming == false)
                 {
-                    if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke)
-                    {
-                        upperImage.gameObject.SetActive(true);
-                        upperImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
-                    }
-
-                }
-                if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade && interact.hitInfo.transform.childCount != 0)
-                    prompt = "Refill Explosive Grenades";
-                else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang && interact.hitInfo.transform.childCount != 0)
-                    prompt = "Refill Flashbang Grenades";
-                else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && interact.hitInfo.transform.childCount != 0)
-                    prompt = "Refill Smoke Grenades";
-                else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Primary || interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Secondary)
-                    prompt = "Pick up " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
-                else
-                    prompt = "";
-                if (inventory.HasWeaponOfSameCategory(interact.hitInfo.transform.GetComponent<Weapon>().gun) && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade &&
-                    interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke)
-                {
-                    Gun inventoryWeapon = null;
-
-                    foreach (Gun gun in inventory.weapons)
-                    {
-                        if (gun != null && gun.gunStyle == interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle)
-                            inventoryWeapon = gun;
-                    }
-
-                    //prompt = "Swap " + inventoryWeapon.gunName + "\n\n\n\nfor " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
-                    prompt = "Swap\n\n\n\nfor";
-
                     if (upperImage != null)
                     {
-                        upperImage.gameObject.SetActive(true);
-                        upperImage.sprite = inventoryWeapon.activeGunIcon;
+                        if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke)
+                        {
+                            upperImage.gameObject.SetActive(true);
+                            upperImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
+                        }
+
                     }
-                    if (bottomImage != null)
+                    if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade && interact.hitInfo.transform.childCount != 0)
+                        prompt = "Refill Explosive Grenades";
+                    else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang && interact.hitInfo.transform.childCount != 0)
+                        prompt = "Refill Flashbang Grenades";
+                    else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && interact.hitInfo.transform.childCount != 0)
+                        prompt = "Refill Smoke Grenades";
+                    else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Primary || interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Secondary)
+                        prompt = "Pick up " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
+                    else
+                        prompt = "";
+                    if (inventory.HasWeaponOfSameCategory(interact.hitInfo.transform.GetComponent<Weapon>().gun) && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade &&
+                        interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke)
                     {
-                        bottomImage.gameObject.SetActive(true);
-                        bottomImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
+                        Gun inventoryWeapon = null;
+
+                        foreach (Gun gun in inventory.weapons)
+                        {
+                            if (gun != null && gun.gunStyle == interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle)
+                                inventoryWeapon = gun;
+                        }
+
+                        //prompt = "Swap " + inventoryWeapon.gunName + "\n\n\n\nfor " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
+                        prompt = "Swap\n\n\n\nfor";
+
+                        if (upperImage != null)
+                        {
+                            upperImage.gameObject.SetActive(true);
+                            upperImage.sprite = inventoryWeapon.activeGunIcon;
+                        }
+                        if (bottomImage != null)
+                        {
+                            bottomImage.gameObject.SetActive(true);
+                            bottomImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
+                        }
                     }
                 }
-            }
-            else
-            {
-                if (upperImage != null || bottomImage != null)
+                else
                 {
-                    upperImage.gameObject.SetActive(false);
+                    if (upperImage != null || bottomImage != null)
+                    {
+                        upperImage.gameObject.SetActive(false);
 
-                    if(bottomImage != null)
-                        bottomImage.gameObject.SetActive(false);
+                        if (bottomImage != null)
+                            bottomImage.gameObject.SetActive(false);
 
-                    prompt = "";
+                        prompt = "";
+                    }
                 }
             }
         }

@@ -6,6 +6,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     public class LadderTrigger : Interactable
     {
         [Header("References")]
+        private GameObject player;
         private Transform playerTransform;
         private CharacterController characterController;
         private PlayerMotor playerMotor;
@@ -18,9 +19,15 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
         private void Start()
         {
-            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-            characterController = playerTransform.GetComponent<CharacterController>();
-            playerMotor = playerTransform.GetComponent<PlayerMotor>();
+            player = GameObject.FindGameObjectWithTag("Player");
+
+            if(player != null)
+            {
+                playerTransform = player.transform;
+                characterController = playerTransform.GetComponent<CharacterController>();
+                playerMotor = playerTransform.GetComponent<PlayerMotor>();
+
+            }
         }
         protected override void Interact()
         {

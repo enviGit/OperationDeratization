@@ -25,8 +25,12 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             lootingSound = GetComponent<AudioSource>();
             player = GameObject.FindGameObjectWithTag("Player");
-            inventory = player.GetComponent<PlayerInventory>();
-            ui = player.GetComponent<PlayerUI>();
+
+            if(player != null)
+            {
+                inventory = player.GetComponent<PlayerInventory>();
+                ui = player.GetComponent<PlayerUI>();
+            }
         }
         private void Update()
         {

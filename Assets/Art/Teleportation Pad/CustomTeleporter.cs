@@ -1,5 +1,6 @@
 using RatGamesStudios.OperationDeratization.Manager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CustomTeleporter : MonoBehaviour
 {
@@ -115,7 +116,7 @@ public class CustomTeleporter : MonoBehaviour
 					//subject.transform.position = destinationPad[0].transform.position + new Vector3(0,teleportationHeightOffset,0);
 					//play teleport sound
 					teleportSound.Play();
-					sceneLoader.LoadScene(2);
+					sceneLoader.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 				}
 			}
 		}
@@ -155,7 +156,7 @@ public class CustomTeleporter : MonoBehaviour
 							//play teleport sound
 							//teleportSound.Play();
 							teleportSound.Play();
-							sceneLoader.LoadScene(2);
+							sceneLoader.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 						}
 					}
 				}
@@ -180,7 +181,7 @@ public class CustomTeleporter : MonoBehaviour
 					//play teleport sound
 					//teleportSound.Play();
 					teleportSound.Play();
-					sceneLoader.LoadScene(2);
+					sceneLoader.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 				}
 			}
 		}
