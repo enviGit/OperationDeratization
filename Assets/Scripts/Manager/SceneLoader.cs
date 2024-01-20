@@ -41,7 +41,8 @@ namespace RatGamesStudios.OperationDeratization.Manager
             Time.timeScale = 1f;
             AudioListener.pause = false;
             loadingSound.Play();
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(index);
+            Application.backgroundLoadingPriority = ThreadPriority.Low;
+            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(index, LoadSceneMode.Single);
             asyncOperation.allowSceneActivation = false;
             float progress = 0;
 

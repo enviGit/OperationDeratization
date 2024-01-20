@@ -12,7 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private Image frontHealthBar;
         [HideInInspector] public Image backHealthBar;
         private Image frontArmorBar;
-        private Image backArmorBar;
+        [HideInInspector] public Image backArmorBar;
         public Ragdoll ragdoll;
         public Transform inventoryUI;
         public Camera deathCamera;
@@ -141,6 +141,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 return;
 
             backHealthBar.color = Color.red;
+            backArmorBar.color = Color.gray;
             float damageToHealth = damage;
 
             if (currentArmor > 0)
@@ -312,7 +313,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 return;
 
             currentArmor = 100;
-            UpdateHealthUI();
+            lerpTimer = 0f;
         }
         private void OnDisable()
         {

@@ -25,6 +25,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private float rotationSpeed = 360f;
         private float currentCooldownTime;
         public Material terrainScanMat;
+        private Transform cam;
         private AudioSource trackerSound;
 
         private void Start()
@@ -32,10 +33,13 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             indicator.GetChild(0).gameObject.SetActive(false);
             currentCooldownTime = trackingCooldown;
             trackerSound = GetComponent<AudioSource>();
+            cam = Camera.main.transform;
             opponents.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         }
         private void Update()
         {
+            if(isTracking)
+                terrainScanMat.SetVector("_Position", cam.position);
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 if (!isTracking && !isOnCooldown && opponents.Count > 0)
@@ -175,10 +179,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             if (opponents.Count == 0)
                 playerUI.victoryScreen.SetActive(true);
         }
-        private void OnRenderImage(RenderTexture cameraView, RenderTexture shaderView)
-        {
-            Graphics.Blit(cameraView, shaderView, terrainScanMat, 0);
-        }
         public IEnumerator SceneScanning()
         {
             int numScans = 4;
@@ -190,7 +190,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                 float scanRange = 0f;
                 float startOpacity = 1f;
                 float endOpacity = 0f;
-                terrainScanMat.SetVector("_Position", player.position);
 
                 while (timer <= 1f)
                 {

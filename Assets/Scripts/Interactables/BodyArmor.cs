@@ -37,6 +37,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             if (!used && playerArmor.currentArmor <= 99)
             {
+                playerArmor.backArmorBar.color = new Color(0f, 0.44f, 0.78f, 1f);
                 playerArmor.PickupArmor();
                 prompt = "";
                 StartCoroutine(DestroyAfterSound());

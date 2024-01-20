@@ -39,7 +39,11 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (!playerMotor.isRunning && playerMotor.isGrounded)
             {
                 if (!isStaminaRegenBlocked)
+                {
+                    backStaminaBar.color = new Color(0.88f, 0.31f, 0.12f, 1f);
                     currentStamina = Mathf.Clamp(currentStamina + staminaRegenRate * Time.deltaTime, 0, maxStamina);
+                }
+                   
             }
 
             UpdateStaminaUI();
@@ -81,6 +85,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         public void UseStamina(float amount)
         {
+            backStaminaBar.color = Color.gray;
             currentStamina = Mathf.Clamp(currentStamina - amount, 0, maxStamina);
             lerpTimer = 0f;
             UpdateStaminaUI();
