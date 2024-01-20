@@ -7,7 +7,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
     {
         private TextMeshProUGUI holdButtonText;
         private TextMeshProUGUI keybindsText;
-        private bool isTabHeld = false;
+        private bool isF1Held = false;
         [SerializeField] private Material whiteTextMat;
 
         private void Start()
@@ -18,28 +18,28 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void Update()
         {
-            if (Input.GetKey(KeyCode.Tab))
+            if (Input.GetKey(KeyCode.F1))
             {
-                if (!isTabHeld)
+                if (!isF1Held)
                 {
-                    isTabHeld = true;
+                    isF1Held = true;
                     ToggleKeybindUI(true);
                 }
             }
             else
             {
-                if (isTabHeld)
+                if (isF1Held)
                 {
-                    isTabHeld = false;
+                    isF1Held = false;
                     ToggleKeybindUI(false);
                 }
             }
         }
-        private void ToggleKeybindUI(bool isTabHeld)
+        private void ToggleKeybindUI(bool isF1Held)
         {
-            holdButtonText.gameObject.SetActive(!isTabHeld);
-            keybindsText.gameObject.SetActive(isTabHeld);
-            Color targetColor = isTabHeld ? Color.gray : Color.white;
+            holdButtonText.gameObject.SetActive(!isF1Held);
+            keybindsText.gameObject.SetActive(isF1Held);
+            Color targetColor = isF1Held ? Color.gray : Color.white;
             whiteTextMat.color = targetColor;
         }
     }
