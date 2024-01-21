@@ -20,7 +20,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private AudioSource gunReloadAudio;
         private AudioSource gunSwitchAudio;
         private PlayerStance currentState = new PlayerStance();
-        public Camera cam;
+        [HideInInspector] public Camera cam;
         private PlayerMotor playerMotor;
         private PlayerInventory inventory;
         private PlayerStamina stamina;
@@ -277,7 +277,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                                         if (!isLowQuality && spreadHitBox == null)
                                         {
-                                            if (spreadHit.collider.gameObject.GetComponent<Weapon>() == null && !spreadHit.collider.CompareTag("GraveyardWall") && !spreadHit.collider.CompareTag("Glass") 
+                                            if (spreadHit.collider.gameObject.GetComponent<Weapon>() == null && !spreadHit.collider.CompareTag("GraveyardWall") && !spreadHit.collider.CompareTag("Glass")
                                                 && spreadHit.collider.gameObject.layer != LayerMask.NameToLayer("Water"))
                                             {
                                                 if (spreadHit.rigidbody != null || spreadHit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
@@ -397,38 +397,8 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         private void PointerPosition()
         {
-            float mouseX;
-            float mouseY;
-
-            if (isAiming && currentWeapon.gunType == GunType.Sniper)
-            {
-                float sensitivityModifier = 1f;
-
-                switch (dynamicFieldOfView)
-                {
-                    case 1f:
-                        sensitivityModifier = 0.2f;
-                        break;
-                    case 3.5f:
-                        sensitivityModifier = 0.5f;
-                        break;
-                    case 6f:
-                        sensitivityModifier = 1f;
-                        break;
-                    default:
-                        sensitivityModifier = 1f;
-                        break;
-                }
-
-                mouseX = Input.GetAxis("Mouse X") * (xSensitivity * sensitivityModifier);
-                mouseY = Input.GetAxis("Mouse Y") * (ySensitivity * sensitivityModifier);
-            }
-            else
-            {
-                mouseX = Input.GetAxis("Mouse X") * xSensitivity;
-                mouseY = Input.GetAxis("Mouse Y") * ySensitivity;
-            }
-
+            float mouseX = Input.GetAxis("Mouse X") * xSensitivity;
+            float mouseY = Input.GetAxis("Mouse Y") * ySensitivity;
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -80f, 80f);
             transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
@@ -472,7 +442,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 case GunType.Sniper:
                     originalPosition = new Vector3(0.12f, -0.23f, 0.45f);
                     originalRotation = new Vector3(3f, 5f, 0);
-                    aimingPosition = new Vector3(0.0119f, -0.13355f, 0.42f);
+                    aimingPosition = new Vector3(0.0119f, -0.14f, 0.5f);
                     aimingRotation = new Vector3(0, 0, 0);
                     break;
                 case GunType.Grenade:
@@ -508,9 +478,9 @@ namespace RatGamesStudios.OperationDeratization.Player
                         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
                         Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
                         Camera zoomCamera = zoom.GetComponent<Camera>();
-                        dynamicFieldOfView = zoomCamera.fieldOfView - Input.GetAxis("Mouse ScrollWheel") * 25f;
-                        dynamicFieldOfView = Mathf.Clamp(dynamicFieldOfView, 1f, 6f);
-                        zoomCamera.fieldOfView = dynamicFieldOfView;
+                        float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
+                        dynamicFieldOfView = Mathf.Clamp(dynamicFieldOfView - scrollDelta * 10f, 5f, 25f);
+                        zoomCamera.fieldOfView = Mathf.Lerp(zoomCamera.fieldOfView, dynamicFieldOfView, Time.deltaTime * 5f);
                     }
                     else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke)
                         DrawTrajectory();
