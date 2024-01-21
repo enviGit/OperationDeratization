@@ -14,6 +14,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         public Image flashbangWeaponImage;
         public Image smokeWeaponImage;
         private PlayerUI playerUI;
+        [SerializeField] private Transform weaponHolder;
 
         [Header("Weapon")]
         [SerializeField] private Gun melee;
@@ -36,10 +37,6 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void Start()
         {
-            Transform mesh = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
-            MeshRenderer meshRenderer = mesh.GetComponent<MeshRenderer>();
-            meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
-            meshRenderer.receiveShadows = false;
             playerUI = GetComponent<PlayerUI>();
             weapons = new Gun[6];
             weapons[0] = melee;
@@ -262,7 +259,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                     weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                     Quaternion randomRotation = Random.rotation;
                     newWeapon.transform.rotation = randomRotation;
-                    Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
 
                     foreach (Transform child in weaponHolder)
                     {
@@ -290,8 +286,6 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             if (index < 0 || index >= weapons.Length || weapons[index] == null)
                 return;
-
-            Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
 
             foreach (Transform weapon in weaponHolder)
             {

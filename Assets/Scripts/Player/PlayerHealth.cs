@@ -18,9 +18,10 @@ namespace RatGamesStudios.OperationDeratization.Player
         public Camera deathCamera;
         public Material vignetteMaterial;
         private AudioSource heartbeatSound;
-        private AudioSource deathSound;
         private AudioSource impactSound;
         public AudioClip[] impactClips;
+        [SerializeField] private GameObject miniMapCanvas;
+        private PlayerInventory inventory;
 
         [Header("Health")]
         public float currentHealth;
@@ -41,9 +42,9 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Start()
         {
             heartbeatSound = transform.Find("Sounds/Heartbeat").GetComponent<AudioSource>();
-            deathSound = transform.Find("Sounds/Death").GetComponent<AudioSource>();
             impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
             ragdoll = GetComponent<Ragdoll>();
+            inventory = GetComponent<PlayerInventory>();
             frontHealthBar = healthBar.transform.GetChild(2).GetComponent<Image>();
             backHealthBar = healthBar.transform.GetChild(1).GetComponent<Image>();
             frontArmorBar = armorBar.transform.GetChild(2).GetComponent<Image>();
@@ -218,9 +219,6 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 int randomIndex = Random.Range(0, impactClips.Length - 1);
                 impactSound.PlayOneShot(impactClips[randomIndex]);
-
-                //if (currentHealth <= 3)
-                //impactSound.PlayOneShot(impactClips[3], 0.5f);
             }
             if (currentHealth <= 0)
                 Die();
@@ -228,24 +226,9 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Die()
         {
             isAlive = false;
-
-            if (currentArmor > 0)
-                armorSocket.GetChild(0).gameObject.SetActive(true);
-
+            miniMapCanvas.SetActive(false);
             deathCamera.gameObject.SetActive(true);
             deathCamera.transform.SetParent(null);
-            CharacterController controller = GetComponent<CharacterController>();
-            controller.enabled = false;
-            PlayerMotor playerMotor = GetComponent<PlayerMotor>();
-            playerMotor.enabled = false;
-            PlayerShoot shoot = GetComponent<PlayerShoot>();
-            shoot.enabled = false;
-            PlayerInteract interact = GetComponent<PlayerInteract>();
-            interact.enabled = false;
-            PlayerInventory inventory = GetComponent<PlayerInventory>();
-            PlayerStamina stamina = GetComponent<PlayerStamina>();
-            stamina.staminaBar.SetActive(false);
-            stamina.enabled = false;
 
             foreach (Gun weapon in inventory.weapons)
             {
@@ -264,29 +247,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 }
             }
 
-            for (int i = 1; i < inventory.weapons.Length; i++)
-                inventory.weapons[i] = null;
-
-            inventory.currentWeaponIndex = 0;
-            Transform weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
-
-            foreach (Transform child in weaponHolder)
-            {
-                if (child.gameObject.name == "Knife_00(Clone)")
-                {
-                    Destroy(child.gameObject);
-
-                    continue;
-                }
-            }
-
-            Transform mesh = transform.Find("Mesh");
-
-            foreach (Transform child in mesh)
-                child.gameObject.SetActive(true);
-
-            ragdoll.ActivateRagdoll();
-            deathSound.Play();
+            gameObject.SetActive(false);
         }
         public void RestoreHealth(float healAmount)
         {
