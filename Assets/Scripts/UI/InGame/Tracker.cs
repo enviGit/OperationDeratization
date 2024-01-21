@@ -26,6 +26,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private float currentCooldownTime;
         public Material terrainScanMat;
         private AudioSource trackerSound;
+        private Transform cam;
 
         private void Start()
         {
@@ -34,6 +35,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             trackerSound = GetComponent<AudioSource>();
             player = GameObject.FindGameObjectWithTag("Player").transform;
             opponents.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
+            cam = Camera.main.transform;
         }
         private void Update()
         {

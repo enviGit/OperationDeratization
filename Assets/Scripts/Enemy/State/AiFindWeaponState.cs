@@ -39,10 +39,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
                 }
             }
             if (agent.weapons.HasWeapon())
-            {
-                agent.weapons.ActiveWeapon();
                 agent.stateMachine.ChangeState(AiStateId.FindTarget);
-            }
         }
         private Vector3 RandomNavmeshLocation(float radius, AiAgent agent)
         {

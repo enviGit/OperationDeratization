@@ -49,10 +49,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
             Settings.Sensitivity = originalSensitivity;
 
             if(pointerSensitivity != null)
-            {
-                pointerSensitivity.xSensitivity = 3f * Settings.Sensitivity;
-                pointerSensitivity.ySensitivity = 3f * Settings.Sensitivity;
-            }
+                pointerSensitivity.sensitivity = 3f * Settings.Sensitivity;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace RatGamesStudios.OperationDeratization.Player
     {
         [Header("References")]
         [SerializeField] private WeaponRecoil recoil;
+        [SerializeField] private WeaponSway sway;
         public GameObject muzzleFlash;
         public GameObject impactEffect;
         public GameObject impactRicochet;
@@ -43,8 +44,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         [Header("Movement")]
         private float xRotation = 0f;
-        public float xSensitivity = 3f;
-        public float ySensitivity = 3f;
+        public float sensitivity = 3f;
 
         [Header("Bool checks")]
         private bool isReloading = false;
@@ -64,8 +64,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
             gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
             gunSwitchAudio = transform.Find("Sounds/WeaponSwitch").GetComponent<AudioSource>();
-            xSensitivity *= Settings.Sensitivity;
-            ySensitivity *= Settings.Sensitivity;
+            sensitivity *= Settings.Sensitivity;
             weaponHolder = transform.Find("Camera/Main Camera/WeaponHolder");
 
             if (Settings.QualityPreset == 0)
@@ -397,8 +396,10 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         private void PointerPosition()
         {
-            float mouseX = Input.GetAxis("Mouse X") * xSensitivity;
-            float mouseY = Input.GetAxis("Mouse Y") * ySensitivity;
+            //float mouseX = Input.GetAxis("Mouse X") * CalculateSensitivity();
+            //float mouseY = Input.GetAxis("Mouse Y") * CalculateSensitivity();
+            float mouseX = Input.GetAxis("Mouse X") * sensitivity;
+            float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -80f, 80f);
             transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
@@ -472,6 +473,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     isAiming = true;
                     weapon.localPosition = aimingPosition;
                     weapon.localRotation = Quaternion.Euler(aimingRotation);
+                    sway.enabled = false;
 
                     if (currentWeapon.gunType == GunType.Sniper)
                     {
@@ -493,6 +495,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
                 isAiming = false;
                 lineRenderer.enabled = false;
+                sway.enabled = true;
 
                 if (weapon != null)
                 {
@@ -505,6 +508,21 @@ namespace RatGamesStudios.OperationDeratization.Player
                     playerMotor.moveSpeed = 2f;
             }
         }
+        /*private float CalculateSensitivity()
+        {
+            float baseSensitivity = xSensitivity;
+
+            if (currentWeapon.gunType == GunType.Sniper)
+            {
+                Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
+                Camera zoomCamera = zoom.GetComponent<Camera>();
+                float adjustedSensitivity = baseSensitivity * (cam.fieldOfView / 60f) * (zoomCamera.fieldOfView / 40f);
+
+                return adjustedSensitivity;
+            }
+
+            return baseSensitivity;
+        }*/
         private void DrawTrajectory()
         {
             lineRenderer.enabled = true;

@@ -8,6 +8,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         }
         public void Enter(AiAgent agent)
         {
+            agent.weapons.ActiveWeapon();
             agent.navMeshAgent.stoppingDistance = agent.config.attackStoppingDistance;
             agent.navMeshAgent.speed = agent.config.attackSpeed;
         }
