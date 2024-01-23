@@ -157,7 +157,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     fallTime += Time.deltaTime;
                 if (fallTime > fallTimeCalc)
                 {
-                    float fallDamage = fallTime * fallDamageMultiplier;
+                    float fallDamage = fallTime * fallDamageMultiplier * Time.timeScale;
 
                     if (fallDamage > 0)
                         fallDamageTaken += fallDamage;

@@ -14,7 +14,9 @@ namespace RatGamesStudios.OperationDeratization.Player
         public Image flashbangWeaponImage;
         public Image smokeWeaponImage;
         private PlayerUI playerUI;
+        private PlayerShoot playerShoot;
         [SerializeField] private Transform weaponHolder;
+        [SerializeField] private GameObject wheels;
 
         [Header("Weapon")]
         [SerializeField] private Gun melee;
@@ -37,6 +39,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void Start()
         {
+            playerShoot = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShoot>();
             playerUI = GetComponent<PlayerUI>();
             weapons = new Gun[7];
             weapons[0] = melee;
@@ -156,7 +159,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         public void SwitchItem()
         {
-            if (GetComponent<PlayerShoot>().isAiming == false)
+            if (playerShoot.isAiming == false && !wheels.activeSelf)
             {
                 int scrollDelta = (int)Input.mouseScrollDelta.y;
 

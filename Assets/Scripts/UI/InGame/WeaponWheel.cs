@@ -2,6 +2,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.UI.InGame
@@ -49,6 +50,9 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
 
         [Header("MenuCanvases")]
         [SerializeField] private GameObject[] pause_options_victory = new GameObject[3];
+
+        [Header("AudioMixers")]
+        [SerializeField] private AudioMixer[] mixers = new AudioMixer[2];
 
         private Vector2[] pos = new Vector2[9];
         private Vector3 start, end;
@@ -307,7 +311,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                     }
                     else
                     {
-                        if (inventory.weapons[selectedIndex - 1] != null) // IndexOutOfRangeException: Index was outside the bounds of the array.
+                        if (inventory.weapons[selectedIndex - 1] != null) // IndexOutOfRangeException: Index was outside the bounds of the array.   
                             inventory.SetCurrentWeapon(selectedIndex - 1);
                     }
 
@@ -321,9 +325,19 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                 selectedIndex = -1;
             }
             if (m_WheelEnabled)
+            {
                 Time.timeScale = Mathf.SmoothDamp(Time.timeScale, targetTimeScale, ref m_TimeV, timeToGoToTargetTimeScale);
+
+                foreach(AudioMixer child in mixers)
+                    child.SetFloat("Pitch", targetTimeScale * 10f * 5);
+            } 
             else
+            {
                 Time.timeScale = Mathf.SmoothDamp(Time.timeScale, 1f, ref m_TimeV, timeToGoToTargetTimeScale / 10f);
+
+                foreach (AudioMixer child in mixers)
+                    child.SetFloat("Pitch", 1f);
+            }
         }
     }
 }
