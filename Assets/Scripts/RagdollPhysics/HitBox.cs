@@ -88,7 +88,7 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
                 float damageMultiplierAtDistance = 0;
 
                 if (gun.gunType == GunType.Rifle)
-                    damageMultiplierAtDistance = 1 / (1 + 0.01f * distance);
+                    damageMultiplierAtDistance = 1f;
                 else
                     damageMultiplierAtDistance = 1 / (1 + 0.05f * distance);
 

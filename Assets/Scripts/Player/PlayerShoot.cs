@@ -473,13 +473,13 @@ namespace RatGamesStudios.OperationDeratization.Player
                     isAiming = true;
                     weapon.localPosition = aimingPosition;
                     weapon.localRotation = Quaternion.Euler(aimingRotation);
-                    sway.enabled = false;
 
                     if (currentWeapon.gunType == GunType.Sniper)
                     {
                         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
                         Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
                         Camera zoomCamera = zoom.GetComponent<Camera>();
+                        zoomCamera.enabled = true;
                         float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
                         dynamicFieldOfView = Mathf.Clamp(dynamicFieldOfView - scrollDelta * 10f, 5f, 25f);
                         zoomCamera.fieldOfView = Mathf.Lerp(zoomCamera.fieldOfView, dynamicFieldOfView, Time.deltaTime * 5f);
@@ -495,12 +495,17 @@ namespace RatGamesStudios.OperationDeratization.Player
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, Time.deltaTime * 5f);
                 isAiming = false;
                 lineRenderer.enabled = false;
-                sway.enabled = true;
 
                 if (weapon != null)
                 {
                     weapon.localPosition = originalPosition;
                     weapon.localRotation = Quaternion.Euler(originalRotation);
+                }
+                if (currentWeapon.gunType == GunType.Sniper)
+                {
+                    Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
+                    Camera zoomCamera = zoom.GetComponent<Camera>();
+                    zoomCamera.enabled = false;
                 }
                 if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
                     playerMotor.moveSpeed = 4f;
