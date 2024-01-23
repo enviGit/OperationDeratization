@@ -398,8 +398,8 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             //float mouseX = Input.GetAxis("Mouse X") * CalculateSensitivity();
             //float mouseY = Input.GetAxis("Mouse Y") * CalculateSensitivity();
-            float mouseX = Input.GetAxis("Mouse X") * sensitivity;
-            float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+            float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.timeScale;
+            float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.timeScale;
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -80f, 80f);
             transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;

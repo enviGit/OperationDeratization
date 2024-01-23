@@ -38,13 +38,14 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Start()
         {
             playerUI = GetComponent<PlayerUI>();
-            weapons = new Gun[6];
+            weapons = new Gun[7];
             weapons[0] = melee;
             weapons[1] = null;
             weapons[2] = null;
             weapons[3] = null;
             weapons[4] = null;
             weapons[5] = null;
+            weapons[6] = null;
             currentWeaponIndex = 0;
             UpdateWeaponImages();
         }

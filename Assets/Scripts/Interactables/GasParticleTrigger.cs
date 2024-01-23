@@ -7,7 +7,12 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     {
         private PlayerHealth playerHealth;
         private bool playerCollision = false;
+        [SerializeField] private bool isTutorialActive = false;
 
+        private void Start()
+        {
+            playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        }
         private void Update()
         {
             if (!playerCollision)
@@ -21,18 +26,18 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             if (other.CompareTag("Player"))
             {
-                playerHealth = other.GetComponent<PlayerHealth>();
-
-                if (playerHealth != null)
-                {
                     playerCollision = true;
-                    InvokeRepeating("DealGasDamageToPlayer", 0f, 0.5f);
-                }
+
+                    if(isTutorialActive)
+                        InvokeRepeating("DealGasDamageToPlayer", 0f, 1f);
+                    else
+                        InvokeRepeating("DealGasDamageToPlayer", 0f, 0.5f);
             }
         }
         private void DealGasDamageToPlayer()
         {
-            playerHealth.TakeGasDamage(Random.Range(5, 10));
+            int damage = isTutorialActive ? Random.Range(1, 2) : Random.Range(5, 10);
+            playerHealth.TakeGasDamage(damage);
         }
     }
 }

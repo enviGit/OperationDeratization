@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.UI.InGame
@@ -17,16 +18,16 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         public float trackingDuration = 5f;
         public Transform indicator;
         private Transform player;
-        private List<GameObject> opponents = new List<GameObject>();
+        public List<GameObject> opponents = new List<GameObject>();
         private GameObject nearestOpponent;
-        private bool isTracking = false;
-        private bool isOnCooldown = false;
+        public bool isTracking = false;
+        public bool isOnCooldown = false;
         private Quaternion targetRotation;
         private float rotationSpeed = 360f;
         private float currentCooldownTime;
         public Material terrainScanMat;
         private AudioSource trackerSound;
-        private Transform cam;
+        [SerializeField] private bool isTutorialActive = false;
 
         private void Start()
         {
@@ -35,7 +36,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             trackerSound = GetComponent<AudioSource>();
             player = GameObject.FindGameObjectWithTag("Player").transform;
             opponents.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
-            cam = Camera.main.transform;
         }
         private void Update()
         {
@@ -77,7 +77,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             indicator.rotation = Quaternion.RotateTowards(indicator.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             //indicator.rotation = Quaternion.Slerp(indicator.rotation, Quaternion.LookRotation(nearestOpponent.transform.position - player.position) * Quaternion.Euler(-15, 1, 60), rotationSpeed * Time.deltaTime);
         }
-        private void StartTracking()
+        public void StartTracking()
         {
             isTracking = true;
             indicator.GetChild(0).gameObject.SetActive(true);
@@ -182,6 +182,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         {
             int numScans = 4;
             float timeBetweenScans = 0.5f;
+            float range = isTutorialActive ? 100f : 1000f;
 
             for (int i = 0; i < numScans; i++)
             {
@@ -194,7 +195,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                 while (timer <= 1f)
                 {
                     timer += Time.deltaTime;
-                    scanRange = Mathf.Lerp(0f, 100f, timer);
+                    scanRange = Mathf.Lerp(0f, range, timer);
                     float interpolatedOpacity = Mathf.Lerp(startOpacity, endOpacity, timer);
                     terrainScanMat.SetFloat("_Range", scanRange);
                     terrainScanMat.SetFloat("_Opacity", interpolatedOpacity);
@@ -206,6 +207,18 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
 
                 yield return new WaitForSeconds(timeBetweenScans);
             }
+        }
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            terrainScanMat.SetFloat("_Opacity", 0f);
         }
     }
 }
