@@ -17,7 +17,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         public float trackingCooldown = 31f;
         public float trackingDuration = 5f;
         public Transform indicator;
-        private Transform player;
+        public Transform player;
         public List<GameObject> opponents = new List<GameObject>();
         private GameObject nearestOpponent;
         public bool isTracking = false;
@@ -29,7 +29,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private AudioSource trackerSound;
         [SerializeField] private bool isTutorialActive = false;
 
-        private void Start()
+        private void Awake()
         {
             indicator.GetChild(0).gameObject.SetActive(false);
             currentCooldownTime = trackingCooldown;

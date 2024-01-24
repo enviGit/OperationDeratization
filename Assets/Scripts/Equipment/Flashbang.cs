@@ -9,7 +9,6 @@ namespace RatGamesStudios.OperationDeratization.Equipment
     {
         [Header("Flashbang")]
         private Image whiteImage;
-        private AudioSource whiteNoise;
         private AudioSource bang;
         public float delay = 2f;
         public float distance = 11.5f;
@@ -18,13 +17,16 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private float countdown;
         private float minimalCollisionForceToBreakGlass = 10f;
         private float impactForce = 100f;
+        private GameObject mesh;
+        private GameObject indicator;
 
         private void Start()
         {
             countdown = delay;
             whiteImage = GameObject.FindGameObjectWithTag("WhiteImage").GetComponent<Image>();
-            whiteNoise = GameObject.FindGameObjectWithTag("WhiteNoise").GetComponent<AudioSource>();
-            bang = GameObject.FindGameObjectWithTag("Bang").GetComponent<AudioSource>();
+            bang = GetComponent<AudioSource>();
+            mesh = transform.GetChild(1).gameObject;
+            indicator = transform.GetChild(2).gameObject;
         }
         private void Update()
         {
@@ -41,14 +43,17 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                 }
             }
         }
+        private void DestroyObject()
+        {
+            Destroy(gameObject);
+        }
         public void Flash()
         {
             Transform playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
             Vector3 grenadeDirection = transform.position - playerTransform.position;
             float angle = Vector3.Angle(grenadeDirection, playerTransform.forward);
             float distanceComparision = Vector3.Distance(transform.position, playerTransform.position);
-            bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[1]);
-            whiteNoise.Play();
+            bang.Play();
 
             if (angle < 60f && distanceComparision <= distance)
             {
@@ -58,7 +63,9 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                 {
                     if (hit.transform.gameObject != gameObject)
                     {
-                        Destroy(gameObject);
+                        mesh.SetActive(false);
+                        indicator.SetActive(false);
+                        Invoke("DestroyObject", 3f);
 
                         return;
                     }
@@ -67,7 +74,11 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                 StartCoroutine(FlashCoroutine());
             }
             else
-                Destroy(gameObject);
+            {
+                mesh.SetActive(false);
+                indicator.SetActive(false);
+                Invoke("DestroyObject", 3f);
+            }
         }
         private IEnumerator FlashCoroutine()
         {
@@ -103,13 +114,13 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                 if (waitTime < 0.1f)
                     waitTime = 0.1f;
 
-                whiteNoise.volume -= 0.05f;
+                bang.volume -= 0.05f;
 
                 yield return new WaitForSeconds(waitTime);
             }
 
-            whiteNoise.Stop();
-            whiteNoise.volume = 1;
+            bang.Stop();
+            bang.volume = 1;
             Destroy(gameObject);
         }
         private void OnCollisionEnter(Collision other)

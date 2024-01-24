@@ -30,6 +30,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private Vector3 swayEulerRot;
         private Vector3 bobPosition;
         private Vector3 bobEulerRotation;
+        private float timeScale;
 
         [Header("Bool checks")]
         private bool isAiming;
@@ -38,6 +39,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
 
         private void Update()
         {
+            timeScale = Time.timeScale;
             isAiming = playerShoot.isAiming;
             isMoving = playerMotor.isMoving;
             isRunning = playerMotor.isRunning;
@@ -84,16 +86,21 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         }
         private void CompositePositionRotation()
         {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, swayPos, Time.deltaTime * smooth);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(swayEulerRot) * Quaternion.Euler(bobEulerRotation), Time.deltaTime * smoothRot);
+            float deltaTime = Time.deltaTime;
+
+            transform.localPosition = Vector3.Lerp(transform.localPosition, swayPos, deltaTime * smooth * Time.timeScale);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(swayEulerRot) * Quaternion.Euler(bobEulerRotation), deltaTime * smoothRot * Time.timeScale);
         }
         private void BobOffset()
         {
-            speedCurve += Time.deltaTime * (mover.isGrounded ? rb.velocity.magnitude : 1f) + 0.01f;
-            bobPosition.x = (curveCos * bobLimit.x * (mover.isGrounded ? 1 : 0)) - (walkInput.x * travelLimit.x);
+            float deltaTime = Time.deltaTime;
+            float groundedMultiplier = mover.isGrounded ? 1 : 0;
+            speedCurve += deltaTime * (mover.isGrounded ? rb.velocity.magnitude : 1f) * timeScale + 0.01f;
+            bobPosition.x = (curveCos * bobLimit.x * groundedMultiplier) - (walkInput.x * travelLimit.x);
             bobPosition.y = (curveSin * bobLimit.y) - (rb.velocity.y * travelLimit.y);
             bobPosition.z = -(walkInput.y * travelLimit.z);
         }
+
         private void BobRotation()
         {
             bobEulerRotation.x = (walkInput != Vector2.zero ? multiplier.x * (Mathf.Sin(2 * speedCurve)) : multiplier.x * (Mathf.Sin(2 * speedCurve) / 2));

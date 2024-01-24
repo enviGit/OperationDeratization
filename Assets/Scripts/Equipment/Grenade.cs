@@ -12,6 +12,8 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         public GameObject explosionEffect;
         public Gun grenade;
         private AudioSource bang;
+        private GameObject mesh;
+        private GameObject indicator;
 
         [Header("Grenade")]
         public float delay = 3f;
@@ -25,7 +27,9 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private void Start()
         {
             countdown = delay;
-            bang = GameObject.FindGameObjectWithTag("Bang").GetComponent<AudioSource>();
+            bang = GetComponent<AudioSource>();
+            mesh = transform.GetChild(1).gameObject;
+            indicator = transform.GetChild(2).gameObject;
         }
         private void Update()
         {
@@ -42,10 +46,14 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         }
         public void Explode()
         {
-            bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[0]);
+            mesh.SetActive(false);
+            indicator.SetActive(false);
+            bang.Play();
+            float delayBeforeDestroy = bang.clip.length;
+            Invoke("DestroyObject", delayBeforeDestroy);
             ObjectPoolManager.SpawnObject(explosionEffect, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);
+            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing") | 1 << LayerMask.NameToLayer("Interactable"));
             Collider[] collidersToMove = Physics.OverlapSphere(transform.position, radius);
-            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
             foreach (Collider nearbyObject in collidersToMove)
             {
@@ -87,13 +95,13 @@ namespace RatGamesStudios.OperationDeratization.Equipment
 
                 if (hitBox != null)
                 {
-                    RaycastHit hit;
+                    /*RaycastHit hit;
 
                     if (Physics.Raycast(transform.position, nearbyObject.transform.position - transform.position, out hit, radius, obstacleMask))
                     {
                         if (hit.collider != nearbyObject)
                             continue;
-                    }
+                    }*/
                     if (nearbyObject.CompareTag("Enemy"))
                     {
                         hitBox.OnExplosion(damageInt, transform.forward);
@@ -106,7 +114,9 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                     }
                 }
             }
-
+        }
+        private void DestroyObject()
+        {
             Destroy(gameObject);
         }
         private void OnCollisionEnter(Collision other)

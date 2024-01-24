@@ -161,7 +161,11 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             else if (IsInside(pos[0], pos[2], pos[3], mousePos))
             {
                 selectedIndex = 1;
-                nameToDisplay.text = inventory.weapons[0].gunName;
+
+                if (inventory.weapons[0] != null)
+                    nameToDisplay.text = inventory.weapons[0].gunName;
+                else
+                    nameToDisplay.text = "";
             }
             else if (IsInside(pos[0], pos[3], pos[4], mousePos))
             {
@@ -311,7 +315,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                     }
                     else
                     {
-                        if (inventory.weapons[selectedIndex - 1] != null) // IndexOutOfRangeException: Index was outside the bounds of the array.   
+                        if (inventory.weapons[selectedIndex - 1] != null)   
                             inventory.SetCurrentWeapon(selectedIndex - 1);
                     }
 

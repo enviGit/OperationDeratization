@@ -1094,6 +1094,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mover: {fileID: 2640833210494592711}
   rb: {fileID: 2640833210494592712}
+  playerMotor: {fileID: 0}
+  playerShoot: {fileID: 0}
   step: 0.01
   maxStepDistance: 0.06
   rotationStep: 4
@@ -1191,9 +1193,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bce0a222b72a565468d6353af81e346b, type: 3}
   fallDamageMultiplier: 1.5
   isGrounded: 0
+  _isClimbing: 0
   isCrouching: 0
   isMoving: 0
   isRunning: 0
+  shouldDetachFromLadder: 0
 --- !u!114 &2640833210494592704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1207,6 +1211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recoil: {fileID: 2640833211145329735}
+  sway: {fileID: 0}
   muzzleFlash: {fileID: 19800004, guid: 56e0e2eb44b8b05459913533ae401929, type: 3}
   impactEffect: {fileID: 100002, guid: 957385c45b877e645a128e11a3efb2f9, type: 3}
   impactRicochet: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
@@ -1218,8 +1223,7 @@ MonoBehaviour:
   throwUpForce: 10
   linePoints: 25
   timeBetweenPoints: 0.03
-  xSensitivity: 3
-  ySensitivity: 3
+  sensitivity: 3
   isAiming: 0
   _isClimbing: 0
 --- !u!114 &2640833210494592709
@@ -1253,6 +1257,7 @@ MonoBehaviour:
   markText: {fileID: 0}
   ammoText: {fileID: 0}
   ammoRefillPrompt: {fileID: 0}
+  loadingSlider: {fileID: 0}
 --- !u!114 &2640833210494592715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1265,10 +1270,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a03acb562139194cb7bb58ffdb7c6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frontHealthBar: {fileID: 0}
-  backHealthBar: {fileID: 0}
+  healthBar: {fileID: 0}
   armorBar: {fileID: 0}
-  frontArmorBar: {fileID: 0}
+  backHealthBar: {fileID: 0}
   backArmorBar: {fileID: 0}
   ragdoll: {fileID: 0}
   inventoryUI: {fileID: 0}
@@ -1279,6 +1283,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7d8e352d2f2c4764e844d8cfc8763ead, type: 3}
   - {fileID: 8300000, guid: d1c23857f650e1a49afde49d4cf7e39c, type: 3}
   - {fileID: 8300000, guid: cd7e050a08181b44ebb5b7a2e749d416, type: 3}
+  miniMapCanvas: {fileID: 0}
   currentHealth: 0
   maxHealth: 100
   chipSpeed: 1
@@ -1298,13 +1303,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407ecc3f24bb75846a815723db786a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  staminaBar: {fileID: 0}
   maxStamina: 100
   sprintStaminaCost: 6
   jumpStaminaCost: 15
   attackStaminaCost: 15
   staminaRegenRate: 25
   currentStamina: 100
-  staminaBarFill: {fileID: 0}
+  chipSpeed: 2
   isStaminaRegenBlocked: 0
 --- !u!114 &2640833210494592713
 MonoBehaviour:
@@ -1324,6 +1330,8 @@ MonoBehaviour:
   grenadeWeaponImage: {fileID: 0}
   flashbangWeaponImage: {fileID: 0}
   smokeWeaponImage: {fileID: 0}
+  weaponHolder: {fileID: 0}
+  wheels: {fileID: 0}
   melee: {fileID: 11400000, guid: 3880d37e7cc547a41b35abfa981276dd, type: 2}
   weapons: []
   currentWeaponIndex: -1
@@ -1632,6 +1640,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b25510a5c37cff4ea8ec67addbe8e8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInv: {fileID: 0}
+  playerShoot: {fileID: 0}
 --- !u!1 &2640833211185198017
 GameObject:
   m_ObjectHideFlags: 0
@@ -4127,7 +4137,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4714944578820941934}
   - component: {fileID: 4714944578820941933}
-  - component: {fileID: 4714944578820941932}
   m_Layer: 0
   m_Name: Bang
   m_TagString: Bang
@@ -4256,22 +4265,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4714944578820941932
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4714944578820941935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c1b60c3c9b89294e805c0d6a9de414a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioClips:
-  - {fileID: 8300000, guid: cb69663ee4937614b89816f18bed37dd, type: 3}
-  - {fileID: 8300000, guid: e72e9236fa1f3d045a27f6cf772c6886, type: 3}
-  - {fileID: 8300000, guid: 199a8685121e80048bf38b05f2aea489, type: 3}
 --- !u!1 &4714944579159250559
 GameObject:
   m_ObjectHideFlags: 0

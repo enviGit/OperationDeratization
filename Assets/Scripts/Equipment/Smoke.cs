@@ -9,6 +9,8 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         [Header("References")]
         public GameObject smokeEffect;
         private AudioSource bang;
+        private GameObject mesh;
+        private GameObject indicator;
 
         [Header("Grenade")]
         public float delay = 2f;
@@ -21,7 +23,9 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private void Start()
         {
             countdown = delay;
-            bang = GameObject.FindGameObjectWithTag("Bang").GetComponent<AudioSource>();
+            bang = GetComponent<AudioSource>();
+            mesh = transform.GetChild(1).gameObject;
+            indicator = transform.GetChild(2).gameObject;
         }
         private void Update()
         {
@@ -38,8 +42,15 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         }
         private void SmokeOn()
         {
-            bang.PlayOneShot(bang.GetComponent<ProjectileSound>().audioClips[2]);
+            mesh.SetActive(false);
+            indicator.SetActive(false);
+            bang.Play();
+            float delayBeforeDestroy = bang.clip.length;
+            Invoke("DestroyObject", delayBeforeDestroy);
             ObjectPoolManager.SpawnObject(smokeEffect, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);
+        }
+        private void DestroyObject()
+        {
             Destroy(gameObject);
         }
         private void OnCollisionEnter(Collision other)

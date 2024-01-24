@@ -1,7 +1,7 @@
+using RatGamesStudios.OperationDeratization.UI.Menu;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using RatGamesStudios.OperationDeratization.UI.Menu;
 using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Manager

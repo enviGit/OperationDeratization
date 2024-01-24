@@ -225,6 +225,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         rb.velocity = Vector3.zero;
                         rb.angularVelocity = Vector3.zero;
                         rb.isKinematic = false;
+                        rb.constraints = RigidbodyConstraints.None;
                         rb.freezeRotation = false;
 
                         if (isAiming)
@@ -265,8 +266,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                                 for (int i = 0; i < numPellets; i++)
                                 {
-                                    Vector3 spreadDirection = cam.transform.forward + new Vector3(Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread),
-                                        Random.Range(-maxSpread, maxSpread));
+                                    Vector3 spreadDirection = cam.transform.forward + new Vector3(Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread));
                                     RaycastHit spreadHit;
 
                                     if (Physics.Raycast(cam.transform.position, spreadDirection, out spreadHit, currentWeapon.range, obstacleMask))
@@ -478,8 +478,8 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
                         Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
+                        zoom.gameObject.SetActive(true);
                         Camera zoomCamera = zoom.GetComponent<Camera>();
-                        zoomCamera.enabled = true;
                         float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
                         dynamicFieldOfView = Mathf.Clamp(dynamicFieldOfView - scrollDelta * 10f, 5f, 25f);
                         zoomCamera.fieldOfView = Mathf.Lerp(zoomCamera.fieldOfView, dynamicFieldOfView, Time.deltaTime * 5f);
@@ -504,8 +504,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 if (currentWeapon.gunType == GunType.Sniper)
                 {
                     Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
-                    Camera zoomCamera = zoom.GetComponent<Camera>();
-                    zoomCamera.enabled = false;
+                    zoom.gameObject.SetActive(false);
                 }
                 if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
                     playerMotor.moveSpeed = 4f;

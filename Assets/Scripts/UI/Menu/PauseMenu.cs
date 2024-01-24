@@ -18,6 +18,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 
         private void Start()
         {
+            GameIsPaused = false;
             player = GameObject.FindGameObjectWithTag("Player");
             playerHealth = player.GetComponent<PlayerHealth>();
             playerShoot = player.GetComponent<PlayerShoot>();
@@ -51,7 +52,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
-            if(victoryScreen.activeSelf)
+            if (victoryScreen.activeSelf)
             {
                 Transform[] children = transform.GetComponentsInChildren<Transform>(true);
 
@@ -68,7 +69,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
                 Cursor.visible = true;
                 playerShoot.enabled = false;
                 playerInventory.enabled = false;
-            }    
+            }
         }
         private bool IsPartOfMenu(Transform obj)
         {
