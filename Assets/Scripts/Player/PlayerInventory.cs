@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Player
@@ -13,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         public Image grenadeWeaponImage;
         public Image flashbangWeaponImage;
         public Image smokeWeaponImage;
+        public Image molotovWeaponImage;
         private PlayerUI playerUI;
         private PlayerShoot playerShoot;
         [SerializeField] private Transform weaponHolder;
@@ -23,9 +23,10 @@ namespace RatGamesStudios.OperationDeratization.Player
         public Gun[] weapons;
         public int currentWeaponIndex = -1;
         private int currentItemIndex = 0;
-        public int grenadeCount = 0;
-        public int flashbangCount = 0;
-        public int smokeCount = 0;
+        [HideInInspector] public int grenadeCount = 0;
+        [HideInInspector] public int flashbangCount = 0;
+        [HideInInspector] public int smokeCount = 0;
+        [HideInInspector] public int molotovCount = 0;
         public Gun CurrentWeapon
         {
             get
@@ -69,6 +70,10 @@ namespace RatGamesStudios.OperationDeratization.Player
                 smokeCount = weapons[5].currentAmmoCount;
             else
                 smokeCount = 0;
+            if (weapons[6] != null)
+                molotovCount = weapons[6].currentAmmoCount;
+            else
+                molotovCount = 0;
         }
         public void AddItem(Gun newItem)
         {
@@ -139,7 +144,18 @@ namespace RatGamesStudios.OperationDeratization.Player
                     else
                         playerUI.ShowGrenadePrompt(newItem.gunName);
                 }
-                if (newItem.gunStyle != GunStyle.Grenade && newItem.gunStyle != GunStyle.Flashbang && newItem.gunStyle != GunStyle.Smoke)
+                else if (newItem.gunStyle == GunStyle.Molotov)
+                {
+                    Transform molotov = transform.Find("Camera/Main Camera/WeaponHolder/Molotov_00(Clone)");
+
+                    if (molotov != null)
+                        Destroy(molotov.gameObject);
+                    if (newItem.currentAmmoCount < newItem.editorAmmoValue)
+                        newItem.currentAmmoCount = newItem.editorAmmoValue;
+                    else
+                        playerUI.ShowGrenadePrompt(newItem.gunName);
+                }
+                if (newItem.gunStyle == GunStyle.Primary || newItem.gunStyle == GunStyle.Secondary)
                 {
                     Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
                     GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
@@ -219,7 +235,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         public void RemoveItem()
         {
-            if (Input.GetKeyDown(KeyCode.G) && CurrentWeapon.gunStyle != GunStyle.Melee && CurrentWeapon.gunStyle != GunStyle.Grenade && CurrentWeapon.gunStyle != GunStyle.Flashbang && CurrentWeapon.gunStyle != GunStyle.Smoke)
+            if (Input.GetKeyDown(KeyCode.G) && (CurrentWeapon.gunStyle == GunStyle.Primary || CurrentWeapon.gunStyle == GunStyle.Secondary))
             {
                 Gun droppedWeapon = CurrentWeapon;
                 weapons[currentWeaponIndex] = null;
@@ -247,6 +263,9 @@ namespace RatGamesStudios.OperationDeratization.Player
                             break;
                         case GunStyle.Smoke:
                             weaponImage = smokeWeaponImage;
+                            break;
+                        case GunStyle.Molotov:
+                            weaponImage = molotovWeaponImage;
                             break;
                     }
 
@@ -376,6 +395,19 @@ namespace RatGamesStudios.OperationDeratization.Player
                 {
                     smokeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
                     smokeWeaponImage.gameObject.SetActive(true);
+                }
+            }
+            if (molotovWeaponImage != null)
+            {
+                if (CurrentWeapon.gunStyle != GunStyle.Molotov)
+                {
+                    if (weapons[6] != null)
+                        molotovWeaponImage.sprite = weapons[6].gunIcon;
+                }
+                else
+                {
+                    molotovWeaponImage.sprite = CurrentWeapon.activeGunIcon;
+                    molotovWeaponImage.gameObject.SetActive(true);
                 }
             }
         }

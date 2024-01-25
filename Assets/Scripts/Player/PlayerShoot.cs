@@ -84,9 +84,9 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             if (previousWeapon != null && previousWeapon.gunStyle != currentWeapon.gunStyle)
             {
-                if (currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke)
+                if (currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke && currentWeapon.gunStyle != GunStyle.Molotov)
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[3]);
-                else if (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke)
+                else if (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke || currentWeapon.gunStyle != GunStyle.Molotov)
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
                 else
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
@@ -119,7 +119,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
 
             if (Input.GetMouseButtonDown(0) && (Time.time > shotTimer || Time.time > autoShotTimer) && currentWeapon.currentAmmoCount == 0 && !isReloading &&
-                (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke))
+                (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke || currentWeapon.gunStyle != GunStyle.Molotov))
             {
                 gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
 
@@ -127,7 +127,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             }
             if (Input.GetMouseButtonDown(0) && currentWeapon.gunStyle == GunStyle.Melee && !stamina.HasStamina(stamina.attackStaminaCost / 2))
                 return;
-            if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
+            if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke || currentWeapon.gunStyle == GunStyle.Molotov)
             {
                 if (currentWeapon.currentAmmoCount == 0)
                 {
@@ -150,6 +150,11 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         inventory.weapons[inventory.currentWeaponIndex] = null;
                         inventory.smokeWeaponImage.gameObject.SetActive(false);
+                    }
+                    if (currentWeapon.gunStyle == GunStyle.Molotov)
+                    {
+                        inventory.weapons[inventory.currentWeaponIndex] = null;
+                        inventory.molotovWeaponImage.gameObject.SetActive(false);
                     }
 
                     inventory.SetCurrentWeapon(0);
@@ -212,7 +217,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
+                    if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke || currentWeapon.gunStyle == GunStyle.Molotov)
                     {
                         gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
                         currentWeapon.currentAmmoCount--;
@@ -242,10 +247,15 @@ namespace RatGamesStudios.OperationDeratization.Player
                             Flashbang flashbangScript = grenade.AddComponent<Flashbang>();
                             flashbangScript.shouldFlash = true;
                         }
-                        else
+                        else if (currentWeapon.gunStyle == GunStyle.Smoke)
                         {
                             Smoke smokeScript = grenade.GetComponent<Smoke>();
                             smokeScript.shouldSmoke = true;
+                        }
+                        else
+                        {
+                            Molotov molotovScript = grenade.GetComponent<Molotov>();
+                            molotovScript.shouldExplode = true;
                         }
                     }
                     else
@@ -353,7 +363,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             isReloading = true;
 
-            if (currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke)
+            if (currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke && currentWeapon.gunStyle != GunStyle.Molotov)
             {
                 gunReloadAudio.clip = weaponReload.gunAudioClips[2];
                 gunReloadAudio.Play();
@@ -464,6 +474,12 @@ namespace RatGamesStudios.OperationDeratization.Player
                     aimingPosition = new Vector3(0.16f, -0.15f, 0.3f);
                     aimingRotation = new Vector3(3f, 0, 0);
                     break;
+                case GunType.Molotov:
+                    originalPosition = new Vector3(0.12f, -0.16f, 0.17f);
+                    originalRotation = new Vector3(3f, 0, 0);
+                    aimingPosition = new Vector3(0.12f, -0.16f, 0.17f);
+                    aimingRotation = new Vector3(3f, 0, 0);
+                    break;
             }
 
             if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee && !playerMotor.isRunning)
@@ -484,7 +500,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         dynamicFieldOfView = Mathf.Clamp(dynamicFieldOfView - scrollDelta * 10f, 5f, 25f);
                         zoomCamera.fieldOfView = Mathf.Lerp(zoomCamera.fieldOfView, dynamicFieldOfView, Time.deltaTime * 5f);
                     }
-                    else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke)
+                    else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke || currentWeapon.gunType == GunType.Molotov)
                         DrawTrajectory();
                     else
                         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);

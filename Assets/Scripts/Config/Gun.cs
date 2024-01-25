@@ -53,6 +53,6 @@ namespace RatGamesStudios.OperationDeratization
         }
     }
 
-    public enum GunType { Melee, Pistol, Revolver, Shotgun, Rifle, Sniper, Grenade, Flashbang, Smoke }
-    public enum GunStyle { Melee, Primary, Secondary, Grenade, Flashbang, Smoke }
+    public enum GunType { Melee, Pistol, Revolver, Shotgun, Rifle, Sniper, Grenade, Flashbang, Smoke, Molotov}
+    public enum GunStyle { Melee, Primary, Secondary, Grenade, Flashbang, Smoke, Molotov }
 }

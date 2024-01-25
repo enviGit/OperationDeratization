@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Enemy
 {
-    [System.Serializable]
+    [Serializable]
     public class HumanBone
     {
         public HumanBodyBones bone;

@@ -51,7 +51,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                 {
                     if (upperImage != null)
                     {
-                        if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke)
+                        if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Molotov)
                         {
                             upperImage.gameObject.SetActive(true);
                             upperImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
@@ -64,12 +64,15 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                         prompt = "Refill Flashbang Grenades";
                     else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && interact.hitInfo.transform.childCount != 0)
                         prompt = "Refill Smoke Grenades";
+                    else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Molotov && interact.hitInfo.transform.childCount != 0)
+                        prompt = "Refill Molotov Cocktails";
                     else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Primary || interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Secondary)
                         prompt = "Pick up " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
                     else
                         prompt = "";
                     if (inventory.HasWeaponOfSameCategory(interact.hitInfo.transform.GetComponent<Weapon>().gun) && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade &&
-                        interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke)
+                        interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke && 
+                        interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Molotov)
                     {
                         Gun inventoryWeapon = null;
 
@@ -122,7 +125,8 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
             if ((interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade && inventory.grenadeCount < 3) ||
         (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang && inventory.flashbangCount < 3) ||
-        (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && inventory.smokeCount < 3))
+        (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && inventory.smokeCount < 3) ||
+        (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Molotov && inventory.molotovCount < 3))
             {
                 List<Transform> grenadeObjects = new List<Transform>();
 
@@ -210,8 +214,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                 childIndex = 3;
             else if (gun.gunStyle == GunStyle.Flashbang)
                 childIndex = 4;
-            else
+            else if (gun.gunStyle == GunStyle.Smoke)
                 childIndex = 5;
+            else
+                childIndex = 6;
 
             weaponObject.transform.SetSiblingIndex(childIndex);
             inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
@@ -248,7 +254,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
             if (weapons != null && weapons.GetComponent<AiAgent>().stateMachine.currentState != AiStateId.Death)
             {
-                if (gun.gunStyle != GunStyle.Grenade && gun.gunStyle != GunStyle.Flashbang && gun.gunStyle != GunStyle.Smoke && weapons.currentWeapon == null)
+                if ((gun.gunStyle == GunStyle.Primary || gun.gunStyle == GunStyle.Secondary) && weapons.currentWeapon == null)
                 {
                     GameObject newWeapon = Instantiate(gun.gunPrefab);
                     weapons.Equip(newWeapon, sockets);

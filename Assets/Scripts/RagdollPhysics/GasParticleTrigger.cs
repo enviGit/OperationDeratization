@@ -1,7 +1,7 @@
 using RatGamesStudios.OperationDeratization.Player;
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.Interactables
+namespace RatGamesStudios.OperationDeratization.RagdollPhysics
 {
     public class GasParticleTrigger : MonoBehaviour
     {

@@ -55,7 +55,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             if (currentWeapon.gunStyle != GunStyle.Melee)
             {
-                if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke)
+                if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke || currentWeapon.gunStyle == GunStyle.Molotov)
                     ammoTextBuilder.Append(currentWeapon.currentAmmoCount.ToString());
                 else
                     ammoTextBuilder.Append($"{currentWeapon.currentAmmoCount} / {currentWeapon.maxAmmoCount}");
@@ -104,7 +104,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 {
                     foreach (Gun gun in inventory.weapons)
                     {
-                        if (gun != null && gun.gunStyle != GunStyle.Melee && gun.gunStyle != GunStyle.Grenade && gun.gunStyle != GunStyle.Flashbang && gun.gunStyle != GunStyle.Smoke)
+                        if (gun != null && (gun.gunStyle == GunStyle.Primary || gun.gunStyle == GunStyle.Secondary))
                         {
                             if (gun.maxAmmoCount < gun.magazineSize * 3)
                                 gun.maxAmmoCount += gun.magazineSize;

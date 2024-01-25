@@ -63,10 +63,11 @@ MonoBehaviour:
       type: 3}
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
+  - {fileID: 6205383594744388702}
   - {fileID: 3892869100003149855}
   - {fileID: 4760958791699853956}
   - {fileID: -4189827282265178363}
-  m_RendererFeatureMap: adc0de57c6d2eee51f48c836d23f063684f28ae1cb52124205ff571249bedac5
+  m_RendererFeatureMap: adc0de57c6d2eee55e9cc67b80f31d561f48c836d23f063684f28ae1cb52124205ff571249bedac5
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -150,6 +151,33 @@ MonoBehaviour:
   settings:
     Event: 500
     blitMaterial: {fileID: 2100000, guid: 4b7af64bec6fc3b4da9e511fa9c7d5aa, type: 2}
+    blitMaterialPassIndex: 0
+    setInverseViewMatrix: 0
+    requireDepthNormals: 0
+    srcType: 0
+    srcTextureId: _CameraColorTexture
+    srcTextureObject: {fileID: 0}
+    dstType: 0
+    dstTextureId: _BlitPassTexture
+    dstTextureObject: {fileID: 0}
+    overrideGraphicsFormat: 0
+    graphicsFormat: 4
+--- !u!114 &6205383594744388702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60d5fc2b883beda44babece05c5d5d27, type: 3}
+  m_Name: Fire
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    Event: 500
+    blitMaterial: {fileID: 2100000, guid: 5f5a9609768b5864c9429c88c459f36f, type: 2}
     blitMaterialPassIndex: 0
     setInverseViewMatrix: 0
     requireDepthNormals: 0

@@ -10,6 +10,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private PlayerStamina stamina;
         private PlayerHealth health;
         private PlayerShoot aiming;
+        private Camera cam;
 
         [Header("Movement")]
         private Vector3 playerVelocity;
@@ -43,6 +44,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             controller = GetComponent<CharacterController>();
             currentState = new PlayerStance();
             currentState.playerStance = PlayerStance.Stance.Idle;
+            cam = Camera.main;
             currentState.camHeight = 2f;
             stamina = GetComponent<PlayerStamina>();
             health = GetComponent<PlayerHealth>();
@@ -168,14 +170,14 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             if (currentState.playerStance == PlayerStance.Stance.Crouching)
             {
-                float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 1f, Time.deltaTime * 5f);
-                Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
+                float camNewHeight = Mathf.Lerp(cam.transform.localPosition.y, 1f, Time.deltaTime * 5f);
+                cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, camNewHeight, cam.transform.localPosition.z);
                 controller.height = 2.5f;
             }
             else
             {
-                float camNewHeight = Mathf.Lerp(Camera.main.transform.localPosition.y, 2f, Time.deltaTime * 5f);
-                Camera.main.transform.localPosition = new Vector3(Camera.main.transform.localPosition.x, camNewHeight, Camera.main.transform.localPosition.z);
+                float camNewHeight = Mathf.Lerp(cam.transform.localPosition.y, 2f, Time.deltaTime * 5f);
+                cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, camNewHeight, cam.transform.localPosition.z);
                 controller.height = 3.6f;
             }
         }
