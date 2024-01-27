@@ -13,7 +13,6 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private GameObject indicator;
 
         [Header("Grenade")]
-        public float delay = 2f;
         public bool shouldExplode = false;
         private bool hasExploded = false;
         private float minimalCollisionForceToBreakGlass = 10f;
@@ -29,10 +28,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         {
             mesh.SetActive(false);
             indicator.SetActive(false);
-
-            if(!bang.isPlaying)
-                bang.Play();
-
+            bang.Play();
             float delayBeforeDestroy = bang.clip.length;
             Invoke("DestroyObject", delayBeforeDestroy);
             ObjectPoolManager.SpawnObject(molotovFire, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);
@@ -43,6 +39,8 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         }
         private void OnCollisionEnter(Collision other)
         {
+            if (hasExploded)
+                return;
             if (other.gameObject.CompareTag("Glass"))
             {
                 Glass glass = other.gameObject.GetComponent<Glass>();
@@ -58,9 +56,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
             if (shouldExplode)
             {
                 Explode();
-
-                if(!hasExploded)
-                    hasExploded = true;
+                hasExploded = true;
             }
         }
     }

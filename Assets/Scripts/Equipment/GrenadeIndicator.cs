@@ -9,6 +9,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private Transform indicator;
         private Transform distanceText;
         private TextMeshPro distanceShow;
+        private Camera cam;
 
         private void Start()
         {
@@ -17,15 +18,20 @@ namespace RatGamesStudios.OperationDeratization.Equipment
             distanceText = transform.Find("Indicator/Distance");
             distanceShow = distanceText.GetComponent<TextMeshPro>();
             distanceShow.gameObject.SetActive(true);
+            cam = Camera.main;
         }
         private void Update()
         {
-            float distance = Vector3.Distance(Camera.main.transform.position, transform.position);
-            distanceShow.text = Mathf.RoundToInt(distance) + "m";
+            if(cam != null)
+            {
+                float distance = Vector3.Distance(cam.transform.position, transform.position);
+                distanceShow.text = Mathf.RoundToInt(distance) + "m";
+            }
         }
         private void FixedUpdate()
         {
-            indicator.transform.LookAt(indicator.transform.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
+            if (cam != null)
+                indicator.transform.LookAt(indicator.transform.position + cam.transform.rotation * Vector3.forward, cam.transform.rotation * Vector3.up);
         }
     }
 }

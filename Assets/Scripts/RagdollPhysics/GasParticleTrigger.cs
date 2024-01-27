@@ -1,4 +1,6 @@
+using RatGamesStudios.OperationDeratization.Enemy;
 using RatGamesStudios.OperationDeratization.Player;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.RagdollPhysics
@@ -6,38 +8,56 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
     public class GasParticleTrigger : MonoBehaviour
     {
         private PlayerHealth playerHealth;
-        private bool playerCollision = false;
-        [SerializeField] private bool isTutorialActive = false;
+        private EnemyHealth enemyHealth;
+        private List<GameObject> charactersInTrigger = new List<GameObject>();
 
         private void Start()
         {
             playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
         }
-        private void Update()
+        private void OnTriggerEnter(Collider other)
         {
-            if (!playerCollision)
-                CancelInvoke("DealGasDamageToPlayer");
-        }
-        private void LateUpdate()
-        {
-            playerCollision = false;
-        }
-        private void OnParticleCollision(GameObject other)
-        {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Player") || other.CompareTag("Enemy"))
             {
-                    playerCollision = true;
+                charactersInTrigger.Add(other.gameObject);
 
-                    if(isTutorialActive)
-                        InvokeRepeating("DealGasDamageToPlayer", 0f, 1f);
-                    else
-                        InvokeRepeating("DealGasDamageToPlayer", 0f, 0.5f);
+                if (charactersInTrigger.Count == 1)
+                    InvokeRepeating("DealGasDamageOverTime", 0f, 1f);
             }
         }
-        private void DealGasDamageToPlayer()
+        private void OnTriggerExit(Collider other)
         {
-            int damage = isTutorialActive ? Random.Range(1, 2) : Random.Range(5, 10);
-            playerHealth.TakeGasDamage(damage);
+            if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+            {
+                charactersInTrigger.Remove(other.gameObject);
+
+                if (charactersInTrigger.Count == 0)
+                    CancelInvoke("DealGasDamageOverTime");
+            }
+        }
+        private void DealGasDamageOverTime()
+        {
+            foreach (var character in charactersInTrigger)
+            {
+                if (character != null)
+                {
+                    if (character.CompareTag("Player"))
+                    {
+                        int damage = Random.Range(10, 20);
+                        playerHealth.TakeGasDamage(damage);
+                    }
+                    else if (character.CompareTag("Enemy"))
+                    {
+                        enemyHealth = character.GetComponent<EnemyHealth>();
+
+                        if (enemyHealth != null)
+                        {
+                            int enemyDamage = Random.Range(10, 20);
+                            enemyHealth.TakeDamage(enemyDamage, Vector3.zero, false);
+                        }
+                    }
+                }
+            }
         }
     }
 }

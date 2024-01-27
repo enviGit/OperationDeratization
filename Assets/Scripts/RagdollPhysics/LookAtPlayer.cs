@@ -20,5 +20,9 @@ namespace RatGamesStudios.OperationDeratization
             Quaternion targetRotation = Quaternion.LookRotation(player.position - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
+        private void LookAt()
+        {
+            transform.LookAt(player);
+        }
     }
 }
