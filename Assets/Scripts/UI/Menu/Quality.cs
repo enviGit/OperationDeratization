@@ -17,7 +17,7 @@ namespace RatGamesStudios.OperationDeratization
         }
         public void ChangeLevel(int value)
         {
-            QualitySettings.SetQualityLevel(value);
+            QualitySettings.SetQualityLevel(value, true);
             QualitySettings.renderPipeline = qualityLevels[value];
         }
         public void RestoreOriginalValues()

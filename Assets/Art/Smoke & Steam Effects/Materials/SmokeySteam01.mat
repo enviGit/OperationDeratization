@@ -23,18 +23,19 @@ Material:
   m_Name: SmokeySteam01
   m_Shader: {fileID: 4800000, guid: b7839dad95683814aa64166edc107ae2, type: 3}
   m_ValidKeywords:
+  - _COLOROVERLAY_ON
   - _EMISSION
-  - _FADING_ON
-  - _FLIPBOOKBLENDING_ON
-  - _SOFTPARTICLES_ON
+  - _NORMALMAP
+  - _RECEIVE_SHADOWS_OFF
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords:
   - _ALPHABLEND_ON
+  - _FLIPBOOKBLENDING_OFF
   - _REQUIRE_UV2
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 2950
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses:
@@ -49,7 +50,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: b7e9b138ba248a44f957941f56c3b0d4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -65,7 +66,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 76e25da1cefc7f446bcc43a70fb13a0f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -93,9 +94,9 @@ Material:
     - _CameraFadingEnabled: 0
     - _CameraFarFadeDistance: 2
     - _CameraNearFadeDistance: 1
-    - _ColorMode: 0
-    - _Cull: 2
-    - _Cutoff: 0.5
+    - _ColorMode: 3
+    - _Cull: 0
+    - _Cutoff: 0
     - _DetailNormalMapScale: 1
     - _DistortionBlend: 0.5
     - _DistortionEnabled: 0
@@ -103,7 +104,7 @@ Material:
     - _DistortionStrengthScaled: 0.1
     - _DstBlend: 10
     - _EmissionEnabled: 1
-    - _FlipbookBlending: 1
+    - _FlipbookBlending: 0
     - _FlipbookMode: 1
     - _GlossMapScale: 1
     - _Glossiness: 0
@@ -113,11 +114,11 @@ Material:
     - _Mode: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _QueueOffset: 0
-    - _ReceiveShadows: 1
+    - _QueueOffset: -50
+    - _ReceiveShadows: 0
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
-    - _SoftParticlesEnabled: 1
+    - _SoftParticlesEnabled: 0
     - _SoftParticlesFarFadeDistance: 2
     - _SoftParticlesNearFadeDistance: 0
     - _SpecularHighlights: 1
@@ -126,10 +127,10 @@ Material:
     - _UVSec: 0
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
-    - _BaseColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
+    - _BaseColor: {r: 0.54195684, g: 0.7529412, b: 0.37254903, a: 1}
+    - _BaseColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
-    - _Color: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
-    - _EmissionColor: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
-    - _SoftParticleFadeParams: {r: 0, g: 0.5, b: 0, a: 0}
+    - _Color: {r: 0.54195684, g: 0.7529412, b: 0.372549, a: 1}
+    - _EmissionColor: {r: 0.09803922, g: 0.34901962, b: 0.078431375, a: 1}
+    - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
