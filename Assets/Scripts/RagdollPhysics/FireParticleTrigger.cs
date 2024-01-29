@@ -66,7 +66,7 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
                         if (character.CompareTag("Player"))
                         {
                             int damage = Random.Range(5, 10);
-                            playerHealth.TakeGasDamage(damage);
+                            playerHealth.TakeFireDamage(damage);
                         }
                         else if (character.CompareTag("Enemy"))
                         {

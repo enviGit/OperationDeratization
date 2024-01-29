@@ -13,15 +13,22 @@ namespace RatGamesStudios.OperationDeratization.Player
         [HideInInspector] public Image backHealthBar;
         private Image frontArmorBar;
         [HideInInspector] public Image backArmorBar;
-        public Ragdoll ragdoll;
+        private Ragdoll ragdoll;
         public Transform inventoryUI;
-        public Camera deathCamera;
+        [SerializeField] private GameObject miniMapCanvas;
+        private PlayerInventory inventory;
+        
+        [Header("Impact Sounds")]
         public Material vignetteMaterial;
         private AudioSource heartbeatSound;
         private AudioSource impactSound;
-        public AudioClip[] impactClips;
-        [SerializeField] private GameObject miniMapCanvas;
-        private PlayerInventory inventory;
+        [SerializeField] private AudioClip[] impactClips = new AudioClip[3];
+        [SerializeField] private AudioClip[] gasClips = new AudioClip[3];
+
+        [Header("Death")]
+        public Camera deathCamera;
+        [SerializeField] private AudioSource deathSounds;
+        [SerializeField] private AudioClip[] deathClips = new AudioClip[2];
 
         [Header("Health")]
         public float currentHealth;
@@ -217,6 +224,32 @@ namespace RatGamesStudios.OperationDeratization.Player
             }
             if (impactClips.Length > 0)
             {
+                int randomIndex = Random.Range(0, gasClips.Length - 1);
+                impactSound.PlayOneShot(gasClips[randomIndex]);
+            }
+            if (currentHealth <= 0)
+                Die();
+        }
+        public void TakeFireDamage(float damage)
+        {
+            if (!isAlive)
+                return;
+
+            backHealthBar.color = Color.red;
+            currentHealth -= damage;
+            float percentMultiplier = 1.5f;
+            float percent = (currentHealth * percentMultiplier) / maxHealth;
+            lerpTimer = 0f;
+
+            if (vignetteMaterial != null)
+            {
+                float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
+                float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
+                vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
+                vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
+            }
+            if (impactClips.Length > 0)
+            {
                 int randomIndex = Random.Range(0, impactClips.Length - 1);
                 impactSound.PlayOneShot(impactClips[randomIndex]);
             }
@@ -229,6 +262,17 @@ namespace RatGamesStudios.OperationDeratization.Player
             miniMapCanvas.SetActive(false);
             deathCamera.gameObject.SetActive(true);
             deathCamera.transform.SetParent(null);
+
+            if (deathClips.Length > 0)
+            {
+                deathSounds.clip = deathClips[0];
+                deathSounds.Play();
+            }
+            if (deathClips.Length > 1)
+            {
+                float delay = deathClips[0].length;
+                Invoke("PlaySecondDeathClip", delay);
+            }
 
             foreach (Gun weapon in inventory.weapons)
             {
@@ -248,6 +292,14 @@ namespace RatGamesStudios.OperationDeratization.Player
             }
 
             gameObject.SetActive(false);
+        }
+        private void PlaySecondDeathClip()
+        {
+            if (deathClips.Length > 1)
+            {
+                deathSounds.clip = deathClips[1];
+                deathSounds.Play();
+            }
         }
         public void RestoreHealth(float healAmount)
         {
