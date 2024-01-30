@@ -1,5 +1,6 @@
 ﻿using RatGamesStudios.OperationDeratization.Player;
 using System;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -23,6 +24,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private int selectedIndex = -1;
         [SerializeField] private GameObject wheelAmmoCount;
         [SerializeField] private TextMeshProUGUI nameToDisplay;
+        private StringBuilder nameDisplayBuilder = new StringBuilder();
 
         [Serializable]
         public class Wheel
@@ -145,6 +147,8 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             if (playerCamera == null)
                 return;
 
+            nameDisplayBuilder.Clear();  // Clear the StringBuilder before building the new text
+
             for (int i = 0; i < pos.Length; i++)
             {
                 //Changing World coordinates to screen coordinates
@@ -156,72 +160,59 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             if (IsInside(pos[0], pos[1], pos[2], mousePos))
             {
                 selectedIndex = 0;
-                nameToDisplay.text = "Tracker";
+                nameDisplayBuilder.Append("Tracker");
             }
             else if (IsInside(pos[0], pos[2], pos[3], mousePos))
             {
                 selectedIndex = 1;
 
                 if (inventory.weapons[0] != null)
-                    nameToDisplay.text = inventory.weapons[0].gunName;
-                else
-                    nameToDisplay.text = "";
+                    nameDisplayBuilder.Append(inventory.weapons[0].gunName);
             }
             else if (IsInside(pos[0], pos[3], pos[4], mousePos))
             {
                 selectedIndex = 2;
 
                 if (inventory.weapons[1] != null)
-                    nameToDisplay.text = inventory.weapons[1].gunName;
-                else
-                    nameToDisplay.text = "";
+                    nameDisplayBuilder.Append(inventory.weapons[1].gunName);
             }
             else if (IsInside(pos[0], pos[4], pos[5], mousePos))
             {
                 selectedIndex = 3;
 
                 if (inventory.weapons[2] != null)
-                    nameToDisplay.text = inventory.weapons[2].gunName;
-                else
-                    nameToDisplay.text = "";
+                    nameDisplayBuilder.Append(inventory.weapons[2].gunName);
             }
             else if (IsInside(pos[0], pos[5], pos[6], mousePos))
             {
                 selectedIndex = 4;
 
                 if (inventory.weapons[3] != null)
-                    nameToDisplay.text = inventory.weapons[3].gunName;
-                else
-                    nameToDisplay.text = "";
+                    nameDisplayBuilder.Append(inventory.weapons[3].gunName);
             }
             else if (IsInside(pos[0], pos[6], pos[7], mousePos))
             {
                 selectedIndex = 5;
 
                 if (inventory.weapons[4] != null)
-                    nameToDisplay.text = inventory.weapons[4].gunName;
-                else
-                    nameToDisplay.text = "";
+                    nameDisplayBuilder.Append(inventory.weapons[4].gunName);
             }
             else if (IsInside(pos[0], pos[7], pos[8], mousePos))
             {
                 selectedIndex = 6;
 
                 if (inventory.weapons[5] != null)
-                    nameToDisplay.text = inventory.weapons[5].gunName;
-                else
-                    nameToDisplay.text = "";
+                    nameDisplayBuilder.Append(inventory.weapons[5].gunName);
             }
             else if (IsInside(pos[0], pos[8], pos[1], mousePos))
             {
                 selectedIndex = 7;
 
                 if (inventory.weapons[6] != null)
-                    nameToDisplay.text = inventory.weapons[6].gunName;
-                else
-                    nameToDisplay.text = "";
+                    nameDisplayBuilder.Append(inventory.weapons[6].gunName);
             }
 
+            nameToDisplay.text = nameDisplayBuilder.ToString();  // Update the TextMeshPro text
             EnableHighlight(selectedIndex);
         }
         private void Start()

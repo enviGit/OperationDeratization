@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Text;
+using TMPro;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.UI.InGame
@@ -7,6 +8,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
     {
         private TextMeshProUGUI _text;
         public Gun weapon;
+        private StringBuilder ammoStringBuilder = new StringBuilder();
 
         private void Start()
         {
@@ -19,12 +21,18 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             if (weapon == null)
                 _text.text = "";
             else
-            {
-                if (weapon.gunStyle == GunStyle.Primary || weapon.gunStyle == GunStyle.Secondary)
-                    _text.text = weapon.currentAmmoCount + " / " + weapon.maxAmmoCount;
-                else
-                    _text.text = weapon.currentAmmoCount.ToString();
-            }
+                UpdateAmmoText();
+        }
+        private void UpdateAmmoText()
+        {
+            ammoStringBuilder.Clear();  // Clear the StringBuilder before building the new text
+
+            if (weapon.gunStyle == GunStyle.Primary || weapon.gunStyle == GunStyle.Secondary)
+                ammoStringBuilder.Append(weapon.currentAmmoCount).Append(" / ").Append(weapon.maxAmmoCount);
+            else
+                ammoStringBuilder.Append(weapon.currentAmmoCount);
+
+            _text.text = ammoStringBuilder.ToString();  // Update the TextMeshPro text
         }
     }
 }
