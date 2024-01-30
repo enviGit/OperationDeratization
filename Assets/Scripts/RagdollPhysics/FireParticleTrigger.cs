@@ -12,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
         private PlayerHealth playerHealth;
         private Dictionary<GameObject, VisualEffect> characterVfxMap = new Dictionary<GameObject, VisualEffect>();
         private bool isCoroutineRunning = false;
+        private Coroutine fireDamageToPlayerCoroutine;
 
         private void Start()
         {
@@ -29,6 +30,8 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
                     isCoroutineRunning = true;
                 }
             }
+            if (other.CompareTag("Player"))
+                fireDamageToPlayerCoroutine = StartCoroutine(DealFireDamageToPlayer());
         }
         private void OnTriggerExit(Collider other)
         {
@@ -49,6 +52,14 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
                     }
                 }
             }
+            if (other.CompareTag("Player"))
+            {
+                if (fireDamageToPlayerCoroutine != null)
+                {
+                    StopCoroutine(fireDamageToPlayerCoroutine);
+                    fireDamageToPlayerCoroutine = null;
+                }
+            }
         }
         private IEnumerator DealFireDamageOverTimeCoroutine()
         {
@@ -63,12 +74,7 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
 
                     if (isVfxActive)
                     {
-                        if (character.CompareTag("Player"))
-                        {
-                            int damage = Random.Range(5, 10);
-                            playerHealth.TakeFireDamage(damage);
-                        }
-                        else if (character.CompareTag("Enemy"))
+                        if (character.CompareTag("Enemy"))
                         {
                             int enemyDamage = Random.Range(5, 10);
                             character.GetComponent<EnemyHealth>().TakeDamage(enemyDamage, Vector3.zero, false);
@@ -80,6 +86,16 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
                         }
                     }
                 }
+            }
+        }
+        private IEnumerator DealFireDamageToPlayer()
+        {
+            while (true)
+            {
+                int damage = Random.Range(5, 10);
+                playerHealth.TakeFireDamage(damage);
+
+                yield return new WaitForSeconds(1f);
             }
         }
         private void OnDisable()
@@ -94,6 +110,12 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
             }
 
             characterVfxMap.Clear();
+
+            if (fireDamageToPlayerCoroutine != null)
+            {
+                StopCoroutine(fireDamageToPlayerCoroutine);
+                fireDamageToPlayerCoroutine = null;
+            }
         }
     }
 }

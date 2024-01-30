@@ -45,14 +45,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         {
             Vector3 randomDirection = Random.insideUnitSphere * radius;
             randomDirection += agent.transform.position;
-            RaycastHit hit;
-
-            if (Physics.Raycast(agent.transform.position, randomDirection - agent.transform.position, out hit, radius * 20f))
-            {
-                if (hit.collider.CompareTag("GasParticles"))
-                    return RandomNavmeshLocation(radius, agent);
-            }
-
             NavMeshHit navHit;
             NavMesh.SamplePosition(randomDirection, out navHit, radius, NavMesh.AllAreas);
 
