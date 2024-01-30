@@ -17,7 +17,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         public Transform inventoryUI;
         [SerializeField] private GameObject miniMapCanvas;
         private PlayerInventory inventory;
-        
+
         [Header("Impact Sounds")]
         public Material vignetteMaterial;
         private AudioSource heartbeatSound;
@@ -26,7 +26,8 @@ namespace RatGamesStudios.OperationDeratization.Player
         [SerializeField] private AudioClip[] gasClips = new AudioClip[3];
 
         [Header("Death")]
-        public Camera deathCamera;
+        private Transform cam;
+        [SerializeField] private bool isTutorialActive = false;
         [SerializeField] private AudioSource deathSounds;
         [SerializeField] private AudioClip[] deathClips = new AudioClip[2];
 
@@ -56,6 +57,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             backHealthBar = healthBar.transform.GetChild(1).GetComponent<Image>();
             frontArmorBar = armorBar.transform.GetChild(2).GetComponent<Image>();
             backArmorBar = armorBar.transform.GetChild(1).GetComponent<Image>();
+            cam = Camera.main.transform;
             var rigidBodies = GetComponentsInChildren<Rigidbody>();
 
             foreach (var rigidBody in rigidBodies)
@@ -260,8 +262,20 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             isAlive = false;
             miniMapCanvas.SetActive(false);
-            deathCamera.gameObject.SetActive(true);
-            deathCamera.transform.SetParent(null);
+            cam.SetParent(null);
+
+            if(isTutorialActive)
+            {
+                cam.position = new Vector3(-23.95f, 6.14f, -16f);
+                cam.rotation = Quaternion.Euler(32.69f, 44.98f, 0.05f);
+            }
+            else
+            {
+                cam.position = new Vector3(303.92f, 19.76f, -110.96f);
+                cam.rotation = Quaternion.Euler(23.24f, 299.43f, 0.0456f);
+            }
+
+            cam.localScale = Vector3.one;
 
             if (deathClips.Length > 0)
             {
@@ -278,7 +292,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 if (weapon != null && weapon.gunStyle != GunStyle.Melee)
                 {
-                    GameObject newWeapon = Instantiate(weapon.gunPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+                    GameObject newWeapon = Instantiate(weapon.gunPrefab, transform.position + new Vector3(0f, 1f, 0f), Quaternion.identity);
                     Rigidbody rb;
 
                     if (newWeapon.GetComponent<Rigidbody>() != null)
@@ -292,6 +306,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             }
 
             gameObject.SetActive(false);
+            Destroy(cam.GetChild(0).gameObject);
         }
         private void PlaySecondDeathClip()
         {
