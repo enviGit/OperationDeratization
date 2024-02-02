@@ -1,0 +1,48 @@
+W tym podrozdziale przeanalizujemy strukturę projektu, skupiając się na kluczowych aspektach organizacyjnych, które pomagają w zarządzaniu zasobami oraz utrzymaniu czytelności kodu. Szczególnie skoncentrujemy się na organizacji katalogów, strukturze plików konfiguracyjnych oraz narzędziach zewnętrznych.
+
+\subsubsection{Organizacja katalogów}
+Struktura projektu gry została starannie zaplanowana, aby ułatwić zarządzanie zasobami. Poniżej przedstawiono główne katalogi wraz z ich przeznaczeniem:
+\begin{itemize}
+    \item \texttt{Assets/Animations/} -- W tym katalogu znajdują się wszystkie pliki związane z animacjami w grze. Pliki te mogą obejmować animacje postaci, obiektów, interfejsu użytkownika i inne.
+    \item \texttt{Assets/Art/} -- Katalog z zasobami artystycznymi, takimi jak modele, tekstury, prefaby, materiały gotowych paczek plików.
+    \item \texttt{Assets/Audio/} -- Zawiera pliki dźwiękowe i muzykę używaną w grze.
+    \item \texttt{Assets/Editor/} -- Skrypty związane z Edytorem Unity, np. narzędzia pomocnicze do pracy w edytorze.
+    \item \texttt{Assets/NavMeshComponents/} -- Katalog z komponentami służącymi do dynamicznego generowania i obsługi nawigacji (\textit{NavMesh}) w czasie rzeczywistym w środowisku gry.
+    \item \texttt{Assets/Plugins/} -- Zawiera zewnętrzne pluginy używane w projekcie.
+    \item \texttt{Assets/Resources/} -- Katalog przechowujący pliki audio, takie jak muzyka wykorzystywana w grze. Katalog ten jest często używany do przechowywania zasobów, do których potrzebujemy dostępu w trakcie działania gry, a niekoniecznie podczas edycji w Unity.
+    \item \texttt{Assets/Scenes/} -- Zawiera pliki scen, reprezentujące poszczególne poziomy lub ekrany w grze.
+    \item \texttt{Assets/ScriptableObjects/} -- Zawiera pliki \textit{Scriptable Objects}, które przechowują dane bez potrzeby tworzenia instancji.
+    \item \texttt{Assets/Scripts/} -- Tutaj przechowywane są skrypty odpowiedzialne za logikę gry.
+    \item \texttt{Assets/Settings/} -- Pliki ustawień m.in. oświetlenia, graficznych oraz związanych z Volume Profile.
+    \item \texttt{Assets/Setup/} -- Zawiera komponenty interfejsu gracza, takie jak ikony broni oraz pliki z prefabami używanymi w celach pomocniczych, np. wyświetlanie kamery uruchamianej podczas śmierci gracza.
+    \item \texttt{Assets/Shaders/} -- W tym katalogu znajdziemy wszystkie stworzone efekty graficzne, wykorzystujące Shader Graph w Unity. W tym katalogu zorganizowane są różne efekty, takie jak materiały post-processingu, efekty specjalne, czy niestandardowe materiały.
+    \item \texttt{Assets/TextMeshPro/} -- Pliki związane z używaniem narzędzia TextMesh Pro do obsługi tekstu w grze.
+    \item \texttt{Docs/} -- Katalog, w którym znajduje się dokumentacja projektu w formatach takich jak LaTeX.
+\end{itemize}
+
+\subsubsection{Struktura plików konfiguracyjnych}
+Plików konfiguracyjne odgrywają kluczową rolę w definiowaniu parametrów i ustawień w grze. Poniżej znajduje się struktura i opis głównych typów plików konfiguracyjnych używanych w projekcie:
+\begin{itemize}
+\item \textbf{Ustawienia Agentów AI:} \texttt{Assets/ScriptableObjects/Enemy/} \\
+  Plików konfiguracyjnych dotyczących agentów sztucznej inteligencji. Każdy plik w tym folderze to osobny Scriptable Object, definiujący parametry zachowania, umiejętności i strategii AI w grze.
+\item \textbf{Statystyki Broni:} \texttt{Assets/ScriptableObjects/Weapon} \\
+  W tym podfolderze umieszczone są pliki Scriptable Object, które przechowują statystyki poszczególnych rodzajów broni. Każdy plik konfiguracyjny definiuje parametry takie jak obrażenia, zasięg, magazynki i inne właściwości związane z uzbrojeniem.
+  \item \textbf{Ustawienia Graficzne URP:} \texttt{Assets/Settings/GraphicsSettings/} \\
+  W tym podfolderze znajdują się pliki konfiguracyjne, które definiują ustawienia graficzne związane z Universal Render Pipeline (URP). Tutaj możemy dostosować parametry renderowania, oświetlenie, cienie i inne aspekty związane z wydajnością graficzną gry.
+  \item \textbf{Ustawienia Oświetlenia:} \texttt{Assets/Settings/Lightning/} \\
+  Zawiera parametry dotyczące świateł w grze. Może to obejmować kolor, intensywność, cień, odległość zasięgu, a także inne właściwości związane ze światłem punktowym, kierunkowym lub źródłem światła punktowego.
+  \item \textbf{Volume Profiles:} \texttt{Assets/Settings/VolumeProfiles/} \\
+  W tym podfolderze przechowywane są pliki konfiguracyjne związane z Volume Profile. Volume Profile to narzędzie w Unity, które umożliwia skonfigurowanie efektów wizualnych i dźwiękowych na poziomie sceny. Pliki w tym folderze kontrolują parametry takie jak kolorystyka, efekty post-processingu czy ustawienia dźwięku.
+\end{itemize}
+
+\subsubsection{Narzędzia Zewnętrzne}
+Narzędzia zewnętrzne wymienione poniżej są integralną częścią procesu tworzenia gry, wspierając różne aspekty projektu, od zarządzania zadaniami po rozwój kodu i dokumentacji.
+\begin{itemize}
+\item \textbf{Adobe Photoshop} -- Profesjonalne oprogramowanie do edycji grafiki, wykorzystywane do tworzenia i dostosowywania elementów interfejsu użytkownika oraz innych zasobów w grze.
+\item \textbf{Audacity} -- Oprogramowanie do edycji dźwięku, używane w projekcie do obróbki i edycji plików dźwiękowych, takich jak efekty dźwiękowe czy muzyka.
+\item \textbf{GitHub} -- Platforma do zarządzania kodem źródłowym, umożliwiająca kontrolę wersji, śledzenie zmian i współpracę w zespole.
+\item \textbf{GitHub Desktop / GitKraken} -- Klient desktopowy ułatwiający interakcję z repozytorium GitHub poprzez intuicyjny interfejs graficzny.
+\item \textbf{Microsoft Visual Studio 2019} -- Środowisko programistyczne używane do tworzenia, debugowania i rozwijania kodu źródłowego w języku C\#.
+\item \textbf{Overleaf} -- Platforma do współpracy nad dokumentacją w LaTeX, umożliwiająca tworzenie, edycję i udostępnianie dokumentów online.
+\item \textbf{Trello} -- Platforma do zarządzania projektem, umożliwiająca tworzenie tablic, list i kart do organizacji zadań oraz śledzenia postępu.
+\end{itemize}

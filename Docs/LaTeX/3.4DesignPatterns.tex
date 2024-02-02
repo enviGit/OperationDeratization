@@ -1,0 +1,147 @@
+W tym podrozdziale opiszemy, w jaki sposób konkretne wzorce projektowe są wykorzystywane w architekturze gry, jakie korzyści przynoszą, oraz jak wpływają na rozwój i utrzymanie kodu. To pozwoli Wam lepiej zrozumieć, dlaczego i w jaki sposób dany wzorzec jest stosowany w kontekście \textit{Operation Deratization}.
+
+\subsubsection{Wzorzec szablonu metody}\label{subsubsec:tempMeth}
+Wzorzec szablonu metody jest używany, gdy algorytm ma pewne kroki wspólne, ale pewne kroki są specyficzne dla konkretnych podklas. Poniżej znajduje się implementacja wzorca szablonu metody w klasie \texttt{Interactable}:
+\begin{codebox}
+\begin{lstlisting}[language={[Sharp]C}, label={listing:Interactable.cs}]
+public abstract class Interactable : MonoBehaviour
+{
+    [Header("Interactables")]
+    public bool useEvents;
+    public string prompt;
+
+    public virtual string OnLook()
+    {
+        return prompt;
+    }
+    public void BaseInteract()
+    {
+        if (useEvents)
+            GetComponent<InteractionEvent>().OnInteract.Invoke();
+
+        Interact();
+    }
+    protected virtual void Interact()
+    {
+
+    }
+}
+\end{lstlisting}
+\end{codebox}
+\captionof{lstlisting}{Klasa Interactable, z której dziedziczą wszystkie skrypty interaktywnych obiektów w grze}
+Wzorzec szablonu metody (\textit{Template method pattern}): Metoda \texttt{BaseInteract} jest szablonem, a metoda \texttt{Interact} jest hookiem (hakiem), który może być nadpisywany przez klasy dziedziczące. Dzięki temu, wspólne kroki interakcji są zdefiniowane w klasie bazowej (\texttt{Interactable}), ale specyficzne zachowanie może być dostosowane przez podklasy.
+
+\subsubsection{Wzorzec stanu}\label{subsubsec:state}
+Wzorzec stanu jest używany, gdy obiekt ma zmieniające się zachowanie w zależności od swojego stanu wewnętrznego. Poniżej znajduje się implementacja wzorca stanu w klasie \texttt{AiState}:
+\begin{codebox}
+\begin{lstlisting}[language={[Sharp]C}, label={listing:AiState.cs}]
+public enum AiStateId
+{
+    ChasePlayer,
+    Death,
+    Idle,
+    FindWeapon,
+    AttackTarget,
+    FindTarget,
+    FindFirstAidKit,
+    FindAmmo
+}
+public interface AiState
+{
+    AiStateId GetId();
+
+    void Enter(AiAgent agent);
+    void Update(AiAgent agent);
+    void Exit(AiAgent agent);
+}
+\end{lstlisting}
+\end{codebox}
+\captionof{lstlisting}{Implementacja wzorca stanu w klasie AiState}
+Wzorzec stanu (\textit{State pattern}): W tym przypadku, enum \texttt{AiStateId} reprezentuje różne stany, a interfejs \texttt{AiState} definiuje operacje związane z każdym stanem (\texttt{Enter}, \texttt{Update}, \texttt{Exit}). Każdy stan implementuje ten interfejs, co pozwala obiektowi AI zmieniać swoje zachowanie dynamicznie, w zależności od aktualnego stanu.
+
+\subsubsection{Wzorzec puli obiektów} \label{subsubsec:objPoolPattern}
+Wzorzec puli obiektów został zaimplementowany w klasie \texttt{ObjectPoolManager}, która zarządza efektywnym ponownym użyciem obiektów, minimalizując koszty tworzenia i usuwania. Kluczowe funkcje obejmują dynamiczne tworzenie pul obiektów, efektywne tworzenie i zwracanie obiektów. Poniżej znajdziesz implementację wzorca puli obiektów:
+\begin{codebox}
+\begin{lstlisting}[language={[Sharp]C}]
+public class ObjectPoolManager : MonoBehaviour
+{
+    // ... (Remaining part of the script)
+
+    public static GameObject SpawnObject(GameObject objectToSpawn, Vector3 spawnPosition, Quaternion spawnRotation, PoolType poolType)
+    {
+        PooledObjectInfo pool = null;
+        
+        foreach (PooledObjectInfo p in ObjectPools)
+        {
+            if (p.LookupString == objectToSpawn.name)
+            {
+                pool = p;
+                break;
+            }
+        }
+        
+        if (pool == null)
+        {
+            pool = new PooledObjectInfo() { LookupString = objectToSpawn.name };
+            ObjectPools.Add(pool);
+        }
+        
+        GameObject spawnableObj = pool.InactiveObjects.FirstOrDefault();
+        
+        if (spawnableObj == null)
+        {
+            GameObject parentObject = SetParentObject(poolType);
+            spawnableObj = Instantiate(objectToSpawn, spawnPosition, spawnRotation);
+            spawnableObj.transform.SetParent(parentObject.transform);
+        }
+        else
+        {
+            spawnableObj.transform.position = spawnPosition;
+            spawnableObj.transform.rotation = spawnRotation;
+            pool.InactiveObjects.Remove(spawnableObj);
+            spawnableObj.SetActive(true);
+        }
+        
+        return spawnableObj;
+    }
+
+    // ... (Remaining part of the script)
+}
+\end{lstlisting}
+\end{codebox}
+\captionof{lstlisting}{Klasa ObjectPoolManager odpowiedzialna za tworzenie pul obiektów}
+\begin{codebox}
+\begin{lstlisting}[language={[Sharp]C}]
+public class ObjectPoolManager : MonoBehaviour
+{
+    // ... (Remaining part of the script)
+
+    public static void ReturnObjectToPool(GameObject obj)
+    {
+        string objName = obj.name.Substring(0, obj.name.Length - 7);
+        PooledObjectInfo pool = null;
+
+        foreach (PooledObjectInfo p in ObjectPools)
+        {
+            if (p.LookupString == objName)
+            {
+                 pool = p;
+                 break;
+            }
+        }
+
+        if (pool == null)
+            Debug.LogWarning("Trying to release an object that is not pooled: " + obj.name);
+        else
+        {
+            obj.SetActive(false);
+            pool.InactiveObjects.Add(obj);
+        }
+    }
+
+    // ... (Remaining part of the script)
+}
+\end{lstlisting}
+\end{codebox}
+\captionof{lstlisting}{Fragment skryptu ObjectPoolManager.cs używany do zwracania obiektów do puli obiektów}
+Wzorzec puli obiektów (\textit{State pattern}): W klasie \texttt{ObjectPoolManager} jest szeroko wykorzystywany do efektywnego zarządzania obiektami w grze, poprawiając wydajność i optymalizując zużycie pamięci. Jeżeli interesują Cię konkretne przykłady użycia tego wzorca zachęcamy do kliknięcia w odnośnik, który skieruje Cię do rozdziału o optymalizacji, gdzie szerzej opisaliśmy zalety stosowania tej techniki:  \nameref{subsubsec:objPoolExamples}

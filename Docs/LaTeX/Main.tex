@@ -1,0 +1,132 @@
+\documentclass[12pt]{Tech} 
+
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{pbox}
+\usepackage{sudoku}
+\usepackage{url}
+\usepackage{placeins}
+\def\UrlBreaks{\do\/\do-}
+\usepackage{breakurl}
+\usepackage[breaklinks]{hyperref}
+\setcounter{secnumdepth}{3}
+
+\begin{document} % Zaczynamy dokument
+
+\input{Title} % wrzucamy zawartość strony title
+
+\thispagestyle{empty}
+
+% spis tresci
+% spis obrazkow
+% spis code-snippetow
+\newpage % dodajemy nową stronę
+\tableofcontents % generujemy spis sekcji, subsekcji i subsubsekcji
+\newpage % nowa strona
+\listoffigures % generujemy listę obrazków
+\newpage
+\renewcommand*{\lstlistingname}{Fragment kodu}
+\renewcommand*{\lstlistlistingname}{Spis fragmentów kodu}
+\lstlistoflistings
+\newpage
+
+\section{Wstęp}\label{sec:introduc}
+
+\input{1Introduction}
+
+\newpage
+
+\section{Charakterystyka}\label{sec:desc}
+\input{2Description}
+
+\newpage
+
+\section{Architektura i mechaniki gry}\label{sec:architec}
+\input{3Architecture}
+\subsection{Struktura projektu}
+\input{3.1Structure}
+\subsection{Kluczowe mechaniki gry}
+\input{3.2Mechanics}
+\subsection{Interakcje między modułami}
+\input{3.3Modules}
+\subsection{Wzorce projektowe}
+\input{3.4DesignPatterns}
+
+\newpage
+
+\section{Interfejs użytkownika (UI) i grafika}\label{sec:ui}
+\input{4UI}
+\subsection{Projektowanie interfejsu użytkownika}
+\input{4.1ProjectMenus}
+\subsection{Grafiki interfejsu}
+\input{4.2GrafikiInterfejsu}
+\subsection{Integracja grafiki z interfejsem}
+\input{4.3IntegracjaGrafiki}
+
+\newpage
+
+\section{Animacje i efekty wizualne}\label{sec:anim}
+\input{5Animations}
+\subsection{System animacji postaci i obiektów}
+\input{5.1AnimationSystem}
+\subsection{Specjalne efekty wizualne}
+\input{5.2VisualEffects}
+\subsection{Oświetlenie}
+\input{5.3Lightning}
+\subsection{Zastosowanie shaderów}
+\input{5.4ShaderApplications}
+
+\newpage
+
+\section{Poziomy (Level design)}\label{sec:leveldes}
+\input{6LevelDesign}
+\subsection{Planowanie i projektowanie poziomów}
+\input{6.1Planowanie}
+\subsection{Implementacja interakcji w środowisku}
+\input{6.2ImplementowanieInterakcji}
+\subsection{Rozkład przestrzeni}
+\input{6.3Layout}
+\subsection{Estetyka i atmosfera}\label{est:story}
+\input{6.4Estetyka}
+\subsection{Przerywniki filmowe}
+\input{6.5Cutscenes}
+\newpage
+
+\section{Audio}\label{sec:audio}
+\input{7Audio}
+\subsection{Kontrola ścieżek dźwiękowych}
+\input{7.1AudioControl}
+\subsection{Ustawienia 3D dźwięków}
+\input{7.2Sounds3D}
+
+\newpage
+
+\section{Testowanie i debugowanie}\label{sec:test}
+\input{8Testing}
+\subsection{Strategie testowania}
+\input{8.1TestStrategy}
+\subsection{Narzędzia debugujące}
+\input{8.2DebugTools}
+\subsection{Raportowanie błędów}
+\input{8.3ReportingBugs}
+
+\newpage
+
+\section{Optymalizacja i wydajność}\label{sec:opt}
+\input{9Optimization}
+\subsection{Profilowanie kodu}
+\input{9.1Profiling}
+\subsection{Zarządzanie zasobami}
+\input{9.2ResourcesManagement}
+\subsection{Techniki optymalizacji wydajności}
+\input{9.3PerformanceTechniques}
+
+\newpage
+ \nocite{optimization, audio, ui, navMesh, random}
+\bibliography{Bibliography} % wygenerowana bibliografia na podstawie pliku .bib
+
+\end{document}
