@@ -7,7 +7,7 @@ namespace RatGamesStudios.OperationDeratization
         [ContextMenu("Change Mesh Colliders based on Mesh Filter")]
         private void GenerateMeshColliders()
         {
-            MeshFilter[] meshFilters = GameObject.FindObjectsOfType<MeshFilter>();
+            MeshFilter[] meshFilters = FindObjectsOfType<MeshFilter>();
 
             foreach (MeshFilter meshFilter in meshFilters)
             {

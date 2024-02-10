@@ -1,10 +1,19 @@
 using RatGamesStudios.OperationDeratization.Enemy.State;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace RatGamesStudios.OperationDeratization.Enemy
 {
+    [Serializable]
+    public class CriticalLocations
+    {
+        public string locationName;
+        public Transform location;
+        public float radius;
+    }
     public class AiAgent : MonoBehaviour
     {
         [HideInInspector] public AiStateMachine stateMachine;
@@ -14,11 +23,12 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         public AiAgentConfig config;
         [HideInInspector] public Ragdoll ragdoll;
         [HideInInspector] public EnemyHealth healthBar;
-        public Transform playerTransform;
+        [HideInInspector] public Transform playerTransform;
         [HideInInspector] public AiWeapons weapons;
         [HideInInspector] public AiSightSensor sightSensor;
         [HideInInspector] public AiTargetingSystem targeting;
         [HideInInspector] public EnemyHealth health;
+        public List<CriticalLocations> locations = new List<CriticalLocations>();
 
         private void Start()
         {
@@ -29,6 +39,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             sightSensor = GetComponent<AiSightSensor>();
             targeting = GetComponent<AiTargetingSystem>();
             health = GetComponent<EnemyHealth>();
+            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
             stateMachine = new AiStateMachine(this);
             stateMachine.RegisterState(new AiChasePlayerState());
             stateMachine.RegisterState(new AiDeathState());
@@ -38,12 +49,24 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             stateMachine.RegisterState(new AiFindTargetState());
             stateMachine.RegisterState(new AiFindFirstAidKitState());
             stateMachine.RegisterState(new AiFindAmmoState());
+            stateMachine.RegisterState(new AiPatrolState());
             stateMachine.ChangeState(initialState);
         }
         private void Update()
         {
             stateMachine.Update();
             currentState = stateMachine.currentState;
+        }
+        private void OnDrawGizmos()
+        {
+            if(locations != null)
+            {
+                foreach (var location in locations)
+                {
+                    Gizmos.color = Color.cyan;
+                    Gizmos.DrawWireSphere(location.location.position, location.radius);
+                }
+            }
         }
     }
 }

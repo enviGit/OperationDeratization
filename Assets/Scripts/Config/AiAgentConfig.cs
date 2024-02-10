@@ -10,7 +10,8 @@ namespace RatGamesStudios.OperationDeratization
         public float dieForce = 5f;
         public float maxSightDistance = 25f;
         public float findWeaponSpeed = 4f;
-        public float findTargetSpeed = 3f;
+        public float findTargetSpeed = 4f;
+        public float patrolSpeed = 1f;
 
         [Header("Attack State")]
         public float attackStoppingDistance = 15f;
