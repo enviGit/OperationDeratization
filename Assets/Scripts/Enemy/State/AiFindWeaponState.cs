@@ -58,8 +58,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
                 }
             }
 
-            Debug.Log(closestLocation);
-
             // If a valid location is found, select a random point within its radius
             if (closestLocation != null)
             {
