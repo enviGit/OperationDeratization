@@ -12,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         {
             agent.navMeshAgent.stoppingDistance = agent.weapons.currentWeapon.GetComponent<Weapon>().gun.range - 2f;
             agent.navMeshAgent.speed = agent.config.attackSpeed;
+            agent.weapons.weaponActive = true;
         }
         public void Update(AiAgent agent)
         {

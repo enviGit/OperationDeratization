@@ -52,7 +52,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private MeshSockets weaponSockets;
         private WeaponIk weaponIk;
         private Transform currentTarget;
-        private bool weaponActive = false;
+        public bool weaponActive = false;
         public float inaccuracy = 0.4f;
 
         private void Start()
