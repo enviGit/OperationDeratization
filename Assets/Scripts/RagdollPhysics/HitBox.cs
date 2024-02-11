@@ -87,7 +87,7 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
                 float distance = Vector3.Distance(hitBoxObject.transform.position, shooter.transform.position);
                 float damageMultiplierAtDistance = 0;
 
-                if (gun.gunType == GunType.Rifle)
+                if (gun.gunType == GunType.Sniper)
                     damageMultiplierAtDistance = 1f;
                 else
                     damageMultiplierAtDistance = 1 / (1 + 0.05f * distance);
