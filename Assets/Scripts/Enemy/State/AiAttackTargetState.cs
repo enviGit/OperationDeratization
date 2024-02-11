@@ -1,3 +1,5 @@
+using RatGamesStudios.OperationDeratization.Interactables;
+
 namespace RatGamesStudios.OperationDeratization.Enemy.State
 {
     public class AiAttackTargetState : AiState
@@ -8,7 +10,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         }
         public void Enter(AiAgent agent)
         {
-            agent.navMeshAgent.stoppingDistance = agent.config.attackStoppingDistance;
+            agent.navMeshAgent.stoppingDistance = agent.weapons.currentWeapon.GetComponent<Weapon>().gun.range - 2f;
             agent.navMeshAgent.speed = agent.config.attackSpeed;
         }
         public void Update(AiAgent agent)

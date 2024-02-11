@@ -14,8 +14,6 @@ namespace RatGamesStudios.OperationDeratization
         public float patrolSpeed = 1f;
 
         [Header("Attack State")]
-        public float attackStoppingDistance = 15f;
         public float attackSpeed = 3f;
-        public float attackCloseRange = 7f;
     }
 }
