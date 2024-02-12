@@ -415,7 +415,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
             cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
-            Vector3 originalPosition = new Vector3(0.0866f, -0.02f, 0.1845f);
+            Vector3 originalPosition = new Vector3(0.0943f, -0.0578f, 0.1701f);
             Vector3 originalRotation = new Vector3(20.84f, 198.13f, 129.6f);
             Vector3 aimingPosition = new Vector3(0.05f, -0.08f, 0.2f);
             Vector3 aimingRotation = new Vector3(5.2f, -125, 101);
@@ -423,7 +423,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             switch (currentWeapon.gunType)
             {
                 case GunType.Melee:
-                    originalPosition = new Vector3(0.0866f, -0.02f, 0.1845f);
+                    originalPosition = new Vector3(0.0943f, -0.0578f, 0.1701f);
                     originalRotation = new Vector3(20.84f, 198.13f, 129.6f);
                     break;
                 case GunType.Pistol:
