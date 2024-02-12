@@ -61,6 +61,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             }
             if (Time.time > autoShotTimer && currentWeapon != null && currentWeapon.currentAmmoCount > 0 && !isReloading && isFiring)
             {
+                gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                 gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
                 currentWeapon.currentAmmoCount--;
                 Transform muzzle = null;
@@ -183,13 +184,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
             if (currentWeapon.gunType == GunType.Pistol)
                 yield return new WaitForSeconds(2f);
-            else if (currentWeapon.gunType == GunType.Revolver)
+            else if (currentWeapon.gunType == GunType.Revolver || currentWeapon.gunType == GunType.Rifle)
                 yield return new WaitForSeconds(3f);
-            else if (currentWeapon.gunType == GunType.Shotgun)
-                yield return new WaitForSeconds(4f);
-            else if (currentWeapon.gunType == GunType.Rifle)
-                yield return new WaitForSeconds(3f);
-            else if (currentWeapon.gunType == GunType.Sniper)
+            else if (currentWeapon.gunType == GunType.Shotgun || currentWeapon.gunType == GunType.Sniper)
                 yield return new WaitForSeconds(4f);
             if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)
                 yield break;

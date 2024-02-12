@@ -84,6 +84,8 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             if (previousWeapon != null && previousWeapon.gunStyle != currentWeapon.gunStyle)
             {
+                gunSwitchAudio.pitch = Random.Range(0.85f, 1.15f);
+
                 if (currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke && currentWeapon.gunStyle != GunStyle.Molotov)
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[3]);
                 else if (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke || currentWeapon.gunStyle != GunStyle.Molotov)
@@ -95,7 +97,8 @@ namespace RatGamesStudios.OperationDeratization.Player
             PointerPosition();
             Shoot();
 
-            if (Input.GetKeyDown(KeyCode.R) && currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.magazineSize != currentWeapon.currentAmmoCount && currentWeapon.maxAmmoCount != 0 && !isReloading)
+            if (Input.GetKeyDown(KeyCode.R) && currentWeapon.magazineSize != currentWeapon.currentAmmoCount && currentWeapon.maxAmmoCount != 0 && !isReloading &&
+                (currentWeapon.gunStyle != GunStyle.Primary || currentWeapon.gunStyle != GunStyle.Secondary))
             {
                 weaponReload = currentWeapon;
                 StartCoroutine(ReloadCoroutine());
@@ -121,6 +124,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (Input.GetMouseButtonDown(0) && (Time.time > shotTimer || Time.time > autoShotTimer) && currentWeapon.currentAmmoCount == 0 && !isReloading &&
                 (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke || currentWeapon.gunStyle != GunStyle.Molotov))
             {
+                gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                 gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
 
                 return;
@@ -167,6 +171,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 if (Input.GetMouseButton(0))
                 {
+                    gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                     gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
                     recoil.RecoilFire();
                     currentWeapon.currentAmmoCount--;
@@ -219,6 +224,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 {
                     if (currentWeapon.gunStyle == GunStyle.Grenade || currentWeapon.gunStyle == GunStyle.Flashbang || currentWeapon.gunStyle == GunStyle.Smoke || currentWeapon.gunStyle == GunStyle.Molotov)
                     {
+                        gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                         gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
                         currentWeapon.currentAmmoCount--;
                         Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
@@ -260,6 +266,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     }
                     else
                     {
+                        gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                         gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
 
                         if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
@@ -362,21 +369,14 @@ namespace RatGamesStudios.OperationDeratization.Player
         private IEnumerator ReloadCoroutine()
         {
             isReloading = true;
+            gunReloadAudio.clip = weaponReload.gunAudioClips[2];
+            gunReloadAudio.Play();
 
-            if (currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke && currentWeapon.gunStyle != GunStyle.Molotov)
-            {
-                gunReloadAudio.clip = weaponReload.gunAudioClips[2];
-                gunReloadAudio.Play();
-            }
             if (currentWeapon.gunType == GunType.Pistol)
                 yield return new WaitForSeconds(2f);
-            else if (currentWeapon.gunType == GunType.Revolver)
+            else if (currentWeapon.gunType == GunType.Revolver || currentWeapon.gunType == GunType.Rifle)
                 yield return new WaitForSeconds(3f);
-            else if (currentWeapon.gunType == GunType.Shotgun)
-                yield return new WaitForSeconds(4f);
-            else if (currentWeapon.gunType == GunType.Rifle)
-                yield return new WaitForSeconds(3f);
-            else if (currentWeapon.gunType == GunType.Sniper)
+            else if (currentWeapon.gunType == GunType.Shotgun || currentWeapon.gunType == GunType.Sniper)
                 yield return new WaitForSeconds(4f);
             if (weaponReload.currentAmmoCount == weaponReload.magazineSize)
                 yield break;

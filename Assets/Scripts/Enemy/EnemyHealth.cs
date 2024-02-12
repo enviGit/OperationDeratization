@@ -26,6 +26,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private GameObject markText;
 
         [Header("Dmg popup")]
+        [SerializeField] private bool isTutorialActive = false;
         [SerializeField] private GameObject damageTextPrefab;
         private TextMeshPro textToDisplay;
         private GameObject damageTextInstance;
@@ -103,7 +104,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
             if (currentHealth <= 0)
                 Die(direction);
-            if (isAttackedByPlayer && isAlive)
+            if (isAttackedByPlayer && isAlive && isTutorialActive)
             {
                 float distance = Vector3.Distance(cam.transform.position, transform.position);
                 damageTextInstance = ObjectPoolManager.SpawnObject(damageTextPrefab, transform.position + new Vector3(0f, 1f, 0f), cam.transform.rotation, transform);

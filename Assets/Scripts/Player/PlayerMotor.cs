@@ -84,7 +84,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     else
                         moveSpeed = 1f;
 
-                    movementSound.pitch = 0.5f;
+                    movementSound.pitch = Random.Range(0.35f, 0.65f);
                     movementSound.clip = movementClips[0];
                 }
                 else
@@ -99,13 +99,13 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         if (isRunning)
                         {
-                            movementSound.pitch = 1.3f;
+                            movementSound.pitch = Random.Range(1.15f, 1.45f);
                             movementSound.clip = movementClips[1];
 
                         }
                         else
                         {
-                            movementSound.pitch = 1f;
+                            movementSound.pitch = Random.Range(0.85f, 1.15f);
                             movementSound.clip = movementClips[0];
                         }
                     }
