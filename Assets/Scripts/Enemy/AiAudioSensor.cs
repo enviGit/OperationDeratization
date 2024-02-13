@@ -5,7 +5,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 {
     public class AiAudioSensor : MonoBehaviour
     {
-        public bool debugMode = true;
+        [SerializeField] private bool debugMode = true;
 
         private void HandleAudioEvent(AudioSource audioGameObject)
         {
@@ -31,10 +31,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private void Start()
         {
             AudioEventManager.Instance.OnAudioEvent += HandleAudioEvent;
-        }
-        private void OnDestroy()
-        {
-            AudioEventManager.Instance.OnAudioEvent -= HandleAudioEvent;
         }
         private void OnDrawGizmosSelected()
         {

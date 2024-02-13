@@ -108979,6 +108979,7 @@ GameObject:
   - component: {fileID: 7260659217882866518}
   - component: {fileID: 7260659217882866473}
   - component: {fileID: 7260659217882866527}
+  - component: {fileID: 7260659217882866531}
   - component: {fileID: 7260659217882866526}
   - component: {fileID: 7260659217882866528}
   - component: {fileID: 7260659217882866530}
@@ -109085,11 +109086,11 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 0}
   healthBar: {fileID: 7260659217882866513}
-  playerTransform: {fileID: 1214164374}
   weapons: {fileID: 7260659217882866518}
   sightSensor: {fileID: 0}
   targeting: {fileID: 0}
   health: {fileID: 0}
+  audioSensor: {fileID: 0}
   locations: []
 --- !u!114 &7260659217882866518
 MonoBehaviour:
@@ -109266,6 +109267,19 @@ VisualEffect:
         m_Overridden: 1
     m_Bool:
       m_Array: []
+--- !u!114 &7260659217882866531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260659217882866476}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3172f5d67a71c140b283849d5ddead8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
 --- !u!1 &7260659217883749100
 GameObject:
   m_ObjectHideFlags: 0
@@ -111881,17 +111895,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20d833c040eb734693ca798e441dcdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialState: 1
-  currentState: 1
+  initialState: 0
+  currentState: 0
   navMeshAgent: {fileID: 7260659218005279129}
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 0}
   healthBar: {fileID: 7260659218005279130}
-  playerTransform: {fileID: 1214164374}
   weapons: {fileID: 7260659218005279133}
   sightSensor: {fileID: 0}
   targeting: {fileID: 0}
   health: {fileID: 0}
+  audioSensor: {fileID: 0}
   locations: []
 --- !u!4 &7260659218005279200
 Transform:
@@ -111994,6 +112008,7 @@ GameObject:
   - component: {fileID: 7260659218005279133}
   - component: {fileID: 7260659218005279202}
   - component: {fileID: 7260659218005279124}
+  - component: {fileID: 7260659218005279211}
   - component: {fileID: 7260659218005279125}
   - component: {fileID: 7260659218005279208}
   - component: {fileID: 7260659218005279210}
@@ -112109,6 +112124,19 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &7260659218005279211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260659218005279207}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3172f5d67a71c140b283849d5ddead8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
 --- !u!4 &7260659218010875149
 Transform:
   m_ObjectHideFlags: 0
@@ -118408,6 +118436,7 @@ GameObject:
   - component: {fileID: 7260659218418486230}
   - component: {fileID: 7260659218418486185}
   - component: {fileID: 7260659218418486239}
+  - component: {fileID: 7260659218418486243}
   - component: {fileID: 7260659218418486238}
   - component: {fileID: 7260659218418486240}
   - component: {fileID: 7260659218418486242}
@@ -118514,11 +118543,11 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 0}
   healthBar: {fileID: 7260659218418486225}
-  playerTransform: {fileID: 1214164374}
   weapons: {fileID: 7260659218418486230}
   sightSensor: {fileID: 0}
   targeting: {fileID: 0}
   health: {fileID: 0}
+  audioSensor: {fileID: 0}
   locations: []
 --- !u!114 &7260659218418486230
 MonoBehaviour:
@@ -118695,6 +118724,19 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &7260659218418486243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260659218418486188}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3172f5d67a71c140b283849d5ddead8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
 --- !u!1 &7260659218420067178
 GameObject:
   m_ObjectHideFlags: 0
@@ -121906,6 +121948,7 @@ GameObject:
   - component: {fileID: 7260659218623456728}
   - component: {fileID: 7260659218623456679}
   - component: {fileID: 7260659218623456721}
+  - component: {fileID: 7260659218623456739}
   - component: {fileID: 7260659218623456720}
   - component: {fileID: 7260659218623456736}
   - component: {fileID: 7260659218623456738}
@@ -122081,17 +122124,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20d833c040eb734693ca798e441dcdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialState: 1
-  currentState: 1
+  initialState: 0
+  currentState: 0
   navMeshAgent: {fileID: 7260659218623456732}
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 0}
   healthBar: {fileID: 7260659218623456735}
-  playerTransform: {fileID: 1214164374}
   weapons: {fileID: 7260659218623456728}
   sightSensor: {fileID: 0}
   targeting: {fileID: 0}
   health: {fileID: 0}
+  audioSensor: {fileID: 0}
   locations: []
 --- !u!195 &7260659218623456732
 NavMeshAgent:
@@ -122274,6 +122317,19 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &7260659218623456739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260659218623456674}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3172f5d67a71c140b283849d5ddead8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
 --- !u!1 &7260659218625557762
 GameObject:
   m_ObjectHideFlags: 0
@@ -126426,6 +126482,7 @@ GameObject:
   - component: {fileID: 7260659218897330171}
   - component: {fileID: 7260659218897330052}
   - component: {fileID: 7260659218897330162}
+  - component: {fileID: 7260659218897330179}
   - component: {fileID: 7260659218897330163}
   - component: {fileID: 7260659218897330176}
   - component: {fileID: 7260659218897330178}
@@ -126574,11 +126631,11 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 0}
   healthBar: {fileID: 7260659218897330172}
-  playerTransform: {fileID: 1214164374}
   weapons: {fileID: 7260659218897330171}
   sightSensor: {fileID: 0}
   targeting: {fileID: 0}
   health: {fileID: 0}
+  audioSensor: {fileID: 0}
   locations: []
 --- !u!54 &7260659218897330170
 Rigidbody:
@@ -126793,6 +126850,19 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &7260659218897330179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260659218897330049}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3172f5d67a71c140b283849d5ddead8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
 --- !u!1 &7260659218901339261
 GameObject:
   m_ObjectHideFlags: 0
@@ -129925,6 +129995,7 @@ GameObject:
   - component: {fileID: 7260659219059971137}
   - component: {fileID: 7260659219059971134}
   - component: {fileID: 7260659219059971144}
+  - component: {fileID: 7260659219059971149}
   - component: {fileID: 7260659219059971145}
   - component: {fileID: 7260659219059971146}
   - component: {fileID: 7260659219059971148}
@@ -130066,11 +130137,11 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 0}
   healthBar: {fileID: 7260659219059971142}
-  playerTransform: {fileID: 1214164374}
   weapons: {fileID: 7260659219059971137}
   sightSensor: {fileID: 0}
   targeting: {fileID: 0}
   health: {fileID: 0}
+  audioSensor: {fileID: 0}
   locations: []
 --- !u!114 &7260659219059971140
 MonoBehaviour:
@@ -130292,6 +130363,19 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &7260659219059971149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260659219059971131}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3172f5d67a71c140b283849d5ddead8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
 --- !u!4 &7260659219062064282
 Transform:
   m_ObjectHideFlags: 0
@@ -136580,6 +136664,7 @@ GameObject:
   - component: {fileID: 7260659219413318133}
   - component: {fileID: 7260659219413318026}
   - component: {fileID: 7260659219413318140}
+  - component: {fileID: 7260659219413318145}
   - component: {fileID: 7260659219413318141}
   - component: {fileID: 7260659219413318142}
   - component: {fileID: 7260659219413318144}
@@ -136712,17 +136797,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20d833c040eb734693ca798e441dcdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialState: 1
-  currentState: 1
+  initialState: 0
+  currentState: 0
   navMeshAgent: {fileID: 7260659219413318129}
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 0}
   healthBar: {fileID: 7260659219413318130}
-  playerTransform: {fileID: 1214164374}
   weapons: {fileID: 7260659219413318133}
   sightSensor: {fileID: 0}
   targeting: {fileID: 0}
   health: {fileID: 0}
+  audioSensor: {fileID: 0}
   locations: []
 --- !u!114 &7260659219413318140
 MonoBehaviour:
@@ -136867,6 +136952,19 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &7260659219413318145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260659219413318031}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3172f5d67a71c140b283849d5ddead8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
 --- !u!1 &7260659219424773810
 GameObject:
   m_ObjectHideFlags: 0

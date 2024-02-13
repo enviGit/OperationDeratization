@@ -146,7 +146,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             if (eventName == "equipWeapon")
             {
                 weaponSockets.Attach(currentWeapon.transform, MeshSockets.SocketId.RightHand);
-                currentWeapon.transform.localPosition = new Vector3(0, 0, 0);
+                currentWeapon.transform.localPosition = Vector3.zero;
             }
             //if (eventName == "holsterWeapon")
             //weaponSockets.Attach(currentWeapon.transform, MeshSockets.SocketId.Spine);
