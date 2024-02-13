@@ -2312,7 +2312,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2851880125235344455}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Sounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2471,17 +2471,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20d833c040eb734693ca798e441dcdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialState: 3
-  currentState: 3
+  initialState: 2
+  currentState: 2
   navMeshAgent: {fileID: 2851880125368329930}
   config: {fileID: 11400000, guid: 160e15385e67abc4696fcd1e45a44efe, type: 2}
   ragdoll: {fileID: 2851880125368329928}
   healthBar: {fileID: 2851880125368329909}
-  playerTransform: {fileID: 0}
   weapons: {fileID: 2851880125368329934}
   sightSensor: {fileID: 0}
   targeting: {fileID: 0}
   health: {fileID: 0}
+  audioSensor: {fileID: 0}
   locations:
   - locationName: Graveyard
     location: {fileID: 0}
@@ -2535,6 +2535,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tracker: {fileID: 0}
+  isTutorialActive: 0
   damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
     type: 3}
   enemyStats: {fileID: 11400000, guid: 9d8623d014b615a40a5c88edd09a5780, type: 2}
@@ -3166,7 +3167,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: a0cf530a2af7fe3469e9902f72e7dc14,
     type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 75cd9a1b1eb98a147b373575dbcbe971, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3176,7 +3177,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 5
   MaxDistance: 30
   Pan2D: 0
   rolloffMode: 0

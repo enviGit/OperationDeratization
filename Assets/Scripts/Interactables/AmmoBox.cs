@@ -1,8 +1,8 @@
 using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Player;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Interactables
 {
@@ -15,6 +15,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private PlayerUI ui;
         private AudioSource lootingSound;
         public Animator ammoBoxAnimator;
+        private AudioEventManager audioEventManager;
 
         [Header("Ammo")]
         public bool isFilling = false;
@@ -25,8 +26,9 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             lootingSound = GetComponent<AudioSource>();
             player = GameObject.FindGameObjectWithTag("Player");
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
 
-            if(player != null)
+            if (player != null)
             {
                 inventory = player.GetComponent<PlayerInventory>();
                 ui = player.GetComponent<PlayerUI>();
@@ -73,6 +75,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             if (!isFilling)
             {
                 lootingSound.Play();
+                audioEventManager.NotifyAudioEvent(lootingSound);
                 StartCoroutine(ui.RefillAmmo());
             }
 
@@ -84,13 +87,18 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             if (other.CompareTag("Enemy"))
             {
                 AiWeapons weapons = other.GetComponent<AiWeapons>();
-                weapons.RefillAmmo(weapons.currentWeapon.GetComponent<Weapon>().gun.magazineSize);
 
-                if (weapons.hasLootedAmmo)
+                if (weapons.currentWeapon != null)
                 {
-                    ammoBoxAnimator.SetTrigger("isLooting");
-                    lootingSound.Play();
-                    weapons.hasLootedAmmo = false;
+                    weapons.RefillAmmo(weapons.currentWeapon.GetComponent<Weapon>().gun.magazineSize);
+
+                    if (weapons.hasLootedAmmo)
+                    {
+                        ammoBoxAnimator.SetTrigger("isLooting");
+                        lootingSound.Play();
+                        audioEventManager.NotifyAudioEvent(lootingSound);
+                        weapons.hasLootedAmmo = false;
+                    }
                 }
             }
         }

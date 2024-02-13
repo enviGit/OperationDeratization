@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.Manager;
 using System.Collections;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [SerializeField] private GameObject rightDoor;
         private AudioSource doorSound;
         public AudioClip[] soundClips;
+        private AudioEventManager audioEventManager;
 
         [Header("Door")]
         public float doorSlideAmount = 1.75f;
@@ -29,6 +31,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private void Start()
         {
             doorSound = transform.parent.GetComponent<AudioSource>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
         }
         private void Awake()
         {
@@ -72,6 +75,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                     {
                         doorSound.pitch = 1.2f;
                         doorSound.PlayOneShot(soundClips[0]);
+                        audioEventManager.NotifyAudioEvent(doorSound);
                         SlideDoors(doorSlideAmount);
                         ScaleDoors(doorScaleAmount, true);
                         doorsOpen = true;
@@ -85,6 +89,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                     {
                         doorSound.pitch = 2f;
                         doorSound.PlayOneShot(soundClips[1]);
+                        audioEventManager.NotifyAudioEvent(doorSound);
                         SlideDoors(-doorSlideAmount);
                         ScaleDoors(doorScaleAmount, false);
                         doorsOpen = false;
@@ -192,6 +197,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             {
                 doorSound.pitch = 2f;
                 doorSound.PlayOneShot(soundClips[1]);
+                audioEventManager.NotifyAudioEvent(doorSound);
                 SlideDoors(-doorSlideAmount);
 
                 if (doorScaleAmount != 1f)
@@ -207,7 +213,15 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             foreach (Collider collider in colliders)
             {
                 if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
+                {
+                    if (!doorsOpen)
+                    {
+                        doorSound.PlayOneShot(doorSound.clip);
+                        audioEventManager.NotifyAudioEvent(doorSound);
+                    }
+
                     return true;
+                }
             }
 
             return false;

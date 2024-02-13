@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         public Transform inventoryUI;
         [SerializeField] private GameObject miniMapCanvas;
         private PlayerInventory inventory;
+        private AudioEventManager audioEventManager;
 
         [Header("Impact Sounds")]
         public Material vignetteMaterial;
@@ -59,6 +61,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             backArmorBar = armorBar.transform.GetChild(1).GetComponent<Image>();
             cam = Camera.main.transform;
             var rigidBodies = GetComponentsInChildren<Rigidbody>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
 
             foreach (var rigidBody in rigidBodies)
             {
@@ -179,6 +182,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 int randomIndex = Random.Range(0, impactClips.Length - 1);
                 impactSound.PlayOneShot(impactClips[randomIndex]);
+                audioEventManager.NotifyAudioEvent(impactSound);
             }
             if (currentHealth <= 0)
                 Die();
@@ -202,7 +206,10 @@ namespace RatGamesStudios.OperationDeratization.Player
                 vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
             }
             if (impactClips.Length > 0)
+            {
                 impactSound.PlayOneShot(impactClips[2], 0.5f);
+                audioEventManager.NotifyAudioEvent(impactSound);
+            }
             if (currentHealth <= 0)
                 Die();
         }
@@ -228,6 +235,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 int randomIndex = Random.Range(0, gasClips.Length - 1);
                 impactSound.PlayOneShot(gasClips[randomIndex]);
+                audioEventManager.NotifyAudioEvent(impactSound);
             }
             if (currentHealth <= 0)
                 Die();
@@ -254,6 +262,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 int randomIndex = Random.Range(0, impactClips.Length - 1);
                 impactSound.PlayOneShot(impactClips[randomIndex]);
+                audioEventManager.NotifyAudioEvent(impactSound);
             }
             if (currentHealth <= 0)
                 Die();
@@ -281,6 +290,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 deathSounds.clip = deathClips[0];
                 deathSounds.Play();
+                audioEventManager.NotifyAudioEvent(deathSounds);
             }
             if (deathClips.Length > 1)
             {

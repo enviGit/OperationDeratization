@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Interactables;
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using RatGamesStudios.OperationDeratization.UI.InGame;
@@ -20,6 +21,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         public AiWeapons aiWeapons;
         public Gun currentWeapon;
         public LayerMask layerMask;
+        private AudioEventManager audioEventManager;
 
         [Header("Weapon")]
         private float autoShotTimer = 0f;
@@ -32,6 +34,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             aiWeapons = GetComponent<AiWeapons>();
             gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
             gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
 
             if (Settings.QualityPreset == 0)
                 isLowQuality = true;
@@ -63,6 +66,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             {
                 gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                 gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                audioEventManager.NotifyAudioEvent(gunFireAudio);
                 currentWeapon.currentAmmoCount--;
                 Transform muzzle = null;
                 string[] bonePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig10:", "mixamorig:" };
@@ -181,6 +185,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             isReloading = true;
             gunReloadAudio.clip = currentWeapon.gunAudioClips[2];
             gunReloadAudio.Play();
+            audioEventManager.NotifyAudioEvent(gunFireAudio);
 
             if (currentWeapon.gunType == GunType.Pistol)
                 yield return new WaitForSeconds(2f);

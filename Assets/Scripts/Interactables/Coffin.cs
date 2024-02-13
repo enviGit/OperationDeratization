@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.Manager;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Interactables
@@ -8,6 +9,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [Header("References")]
         [SerializeField] private GameObject coffin;
         private AudioSource sound;
+        private AudioEventManager audioEventManager;
 
         [Header("Door")]
         private bool coffinOpen;
@@ -18,6 +20,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             sound = GetComponent<AudioSource>();
             animator = coffin.GetComponent<Animator>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
         }
         private void Update()
         {
@@ -36,6 +39,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             coffinOpen = !coffinOpen;
             animator.SetBool("IsOpen", coffinOpen);
             sound.PlayOneShot(sound.clip);
+            audioEventManager.NotifyAudioEvent(sound);
         }
         private bool DetectEnemyNearby()
         {
@@ -46,7 +50,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                 if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
                 {
                     if (!coffinOpen)
+                    {
                         sound.PlayOneShot(sound.clip);
+                        audioEventManager.NotifyAudioEvent(sound);
+                    }
 
                     return true;
                 }

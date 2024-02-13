@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Player;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private float delayBeforeDestroy = 1f;
         private bool used = false;
         private List<MeshRenderer> meshes = new List<MeshRenderer>();
+        private AudioEventManager audioEventManager;
 
         private void Start()
         {
@@ -24,6 +26,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                 playerArmor = player.GetComponent<PlayerHealth>();
 
             pickingArmorSound = GetComponent<AudioSource>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
 
             foreach (Transform child in transform)
             {
@@ -47,6 +50,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private IEnumerator DestroyAfterSound()
         {
             pickingArmorSound.Play();
+            audioEventManager.NotifyAudioEvent(pickingArmorSound);
             SetShaderParameters(0);
             float elapsedTime = 0f;
             float duration = delayBeforeDestroy;

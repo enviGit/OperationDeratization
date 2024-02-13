@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 namespace RatGamesStudios.OperationDeratization.Enemy.State
 {
-    public class AiChasePlayerState : AiState
+    /*public class AiChasePlayerState : AiState
     {
         float timer = 0;
 
@@ -42,5 +42,5 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
                 timer = agent.config.maxTime;
             }
         }
-    }
+    }*/
 }

@@ -2,7 +2,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 {
     public enum AiStateId
     {
-        ChasePlayer,
         Death,
         Idle,
         FindWeapon,

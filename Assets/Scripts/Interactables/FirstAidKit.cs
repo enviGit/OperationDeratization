@@ -1,8 +1,8 @@
 using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Player;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Interactables
 {
@@ -16,12 +16,14 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private AudioSource restoreHealthSound;
         private bool used = false;
         private MeshRenderer mesh;
+        private AudioEventManager audioEventManager;
 
         private void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player");
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
 
-            if(player != null)
+            if (player != null)
                 playerHealth = player.GetComponent<PlayerHealth>();
 
             restoreHealthSound = GetComponent<AudioSource>();
@@ -41,6 +43,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private IEnumerator DestroyAfterSound()
         {
             restoreHealthSound.Play();
+            audioEventManager.NotifyAudioEvent(restoreHealthSound);
             SetShaderParameters(0);
             float elapsedTime = 0f;
             float duration = delayBeforeDestroy;

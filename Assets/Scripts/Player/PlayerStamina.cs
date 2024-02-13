@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Manager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private Image frontStaminaBar;
         private Image backStaminaBar;
         private AudioSource heavyBreathingSound;
+        private AudioEventManager audioEventManager;
 
         [Header("Stamina bar")]
         public float maxStamina = 150f;
@@ -26,6 +28,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Start()
         {
             playerMotor = GetComponent<PlayerMotor>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
             frontStaminaBar = staminaBar.transform.GetChild(3).GetComponent<Image>();
             backStaminaBar = staminaBar.transform.GetChild(2).GetComponent<Image>();
             currentStamina = maxStamina;
@@ -94,6 +97,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 isStaminaRegenBlocked = true;
                 heavyBreathingSound.Play();
+                audioEventManager.NotifyAudioEvent(heavyBreathingSound);
                 Invoke("UnblockStaminaRegen", 4f);
             }
         }

@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.Manager;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Interactables
@@ -9,6 +10,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [SerializeField] private GameObject container;
         private AudioSource sound;
         private Animator animator;
+        private AudioEventManager audioEventManager;
 
         [Header("Container")]
         private bool containerOpen;
@@ -18,6 +20,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             sound = GetComponent<AudioSource>();
             animator = container.GetComponent<Animator>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
         }
         private void Update()
         {
@@ -36,6 +39,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             containerOpen = !containerOpen;
             animator.SetBool("IsOpen", containerOpen);
             sound.PlayOneShot(sound.clip);
+            audioEventManager.NotifyAudioEvent(sound);
         }
         private bool DetectEnemyNearby()
         {
@@ -46,7 +50,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                 if (collider.CompareTag("Enemy") && collider.GetComponent<EnemyHealth>().isAlive)
                 {
                     if (!containerOpen)
+                    {
                         sound.PlayOneShot(sound.clip);
+                        audioEventManager.NotifyAudioEvent(sound);
+                    }
 
                     return true;
                 }

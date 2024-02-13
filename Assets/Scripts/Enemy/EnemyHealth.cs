@@ -79,7 +79,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         private void Update()
         {
-            if (!isAlive && !isMarkedAsDead && Vector3.Distance(transform.position, player.transform.position) < 2f)
+            if (!isAlive && !isMarkedAsDead && Vector3.Distance(transform.position, player.transform.position) < 3f)
                 StartCoroutine(HandleDeathEffects());
         }
         public void TakeDamage(int damage, Vector3 direction, bool isAttackedByPlayer)

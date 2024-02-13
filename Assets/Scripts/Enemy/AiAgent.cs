@@ -23,11 +23,11 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         public AiAgentConfig config;
         [HideInInspector] public Ragdoll ragdoll;
         [HideInInspector] public EnemyHealth healthBar;
-        [HideInInspector] public Transform playerTransform;
         [HideInInspector] public AiWeapons weapons;
         [HideInInspector] public AiSightSensor sightSensor;
         [HideInInspector] public AiTargetingSystem targeting;
         [HideInInspector] public EnemyHealth health;
+        [HideInInspector] public AiAudioSensor audioSensor;
         public List<CriticalLocations> locations = new List<CriticalLocations>();
 
         private void Start()
@@ -39,9 +39,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             sightSensor = GetComponent<AiSightSensor>();
             targeting = GetComponent<AiTargetingSystem>();
             health = GetComponent<EnemyHealth>();
-            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            audioSensor = GetComponent<AiAudioSensor>();
             stateMachine = new AiStateMachine(this);
-            stateMachine.RegisterState(new AiChasePlayerState());
             stateMachine.RegisterState(new AiDeathState());
             stateMachine.RegisterState(new AiIdleState());
             stateMachine.RegisterState(new AiFindWeaponState());
@@ -63,7 +62,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             {
                 foreach (var location in locations)
                 {
-                    Gizmos.color = Color.cyan;
+                    Gizmos.color = Color.blue;
                     Gizmos.DrawWireSphere(location.location.position, location.radius);
                 }
             }

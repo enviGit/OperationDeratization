@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Interactables;
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         private AudioSource bang;
         private GameObject mesh;
         private GameObject indicator;
+        private AudioEventManager audioEventManager;
 
         [Header("Grenade")]
         public bool shouldExplode = false;
@@ -23,12 +25,14 @@ namespace RatGamesStudios.OperationDeratization.Equipment
             bang = GetComponent<AudioSource>();
             mesh = transform.GetChild(1).gameObject;
             indicator = transform.GetChild(2).gameObject;
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
         }
         private void Explode()
         {
             mesh.SetActive(false);
             indicator.SetActive(false);
             bang.Play();
+            audioEventManager.NotifyAudioEvent(bang);
             float delayBeforeDestroy = bang.clip.length;
             Invoke("DestroyObject", delayBeforeDestroy);
             ObjectPoolManager.SpawnObject(molotovFire, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);

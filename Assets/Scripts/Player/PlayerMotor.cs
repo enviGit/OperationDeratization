@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Manager;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Player
@@ -11,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private PlayerHealth health;
         private PlayerShoot aiming;
         private Camera cam;
+        private AudioEventManager audioEventManager;
 
         [Header("Movement")]
         private Vector3 playerVelocity;
@@ -48,6 +50,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             currentState.camHeight = 2f;
             stamina = GetComponent<PlayerStamina>();
             health = GetComponent<PlayerHealth>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
             aiming = GetComponent<PlayerShoot>();
             movementSound = transform.Find("Sounds/Movement").GetComponent<AudioSource>();
         }
@@ -111,7 +114,10 @@ namespace RatGamesStudios.OperationDeratization.Player
                     }
                 }
                 if (!movementSound.isPlaying)
+                {
                     movementSound.Play();
+                    audioEventManager.NotifyAudioEvent(movementSound);
+                } 
             }
             else
             {
@@ -240,6 +246,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 movementSound.clip = movementClips[2];
                 movementSound.pitch = 1f;
                 movementSound.Play();
+                audioEventManager.NotifyAudioEvent(movementSound);
             }
             else
             {

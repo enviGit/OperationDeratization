@@ -1,4 +1,5 @@
 using Cinemachine;
+using RatGamesStudios.OperationDeratization.Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         private AudioSource doorSound;
         public AudioClip[] soundClips;
         public CinemachineVirtualCamera vCamera;
+        private AudioEventManager audioEventManager;
 
         [Header("Door")]
         public float doorSlideAmount = 1.75f;
@@ -33,6 +35,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             doorSound = GetComponent<AudioSource>();
             player = GameObject.FindGameObjectWithTag("Player");
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
         }
         private void Awake()
         {
@@ -88,6 +91,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             {
                 doorSound.pitch = 1.2f;
                 doorSound.PlayOneShot(soundClips[0]);
+                audioEventManager.NotifyAudioEvent(doorSound);
                 SlideDoors(doorSlideAmount);
                 ScaleDoors(doorScaleAmount, true);
                 doorsOpen = true;
@@ -99,6 +103,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             {
                 doorSound.pitch = 2f;
                 doorSound.PlayOneShot(soundClips[1]);
+                audioEventManager.NotifyAudioEvent(doorSound);
                 SlideDoors(-doorSlideAmount);
                 ScaleDoors(-doorScaleAmount, false);
                 doorsOpen = false;

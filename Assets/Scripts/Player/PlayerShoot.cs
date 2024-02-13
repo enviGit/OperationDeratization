@@ -1,5 +1,6 @@
 using RatGamesStudios.OperationDeratization.Equipment;
 using RatGamesStudios.OperationDeratization.Interactables;
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using System.Collections;
@@ -25,6 +26,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private PlayerMotor playerMotor;
         private PlayerInventory inventory;
         private PlayerStamina stamina;
+        private AudioEventManager audioEventManager;
 
         [Header("Weapon")]
         private Gun currentWeapon;
@@ -55,6 +57,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Start()
         {
             playerMotor = GetComponent<PlayerMotor>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
             inventory = GetComponent<PlayerInventory>();
             stamina = GetComponent<PlayerStamina>();
             cam = Camera.main;
@@ -87,11 +90,20 @@ namespace RatGamesStudios.OperationDeratization.Player
                 gunSwitchAudio.pitch = Random.Range(0.85f, 1.15f);
 
                 if (currentWeapon.gunStyle != GunStyle.Melee && currentWeapon.gunStyle != GunStyle.Grenade && currentWeapon.gunStyle != GunStyle.Flashbang && currentWeapon.gunStyle != GunStyle.Smoke && currentWeapon.gunStyle != GunStyle.Molotov)
+                {
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[3]);
+                    audioEventManager.NotifyAudioEvent(gunSwitchAudio);
+                } 
                 else if (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke || currentWeapon.gunStyle != GunStyle.Molotov)
+                {
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
+                    audioEventManager.NotifyAudioEvent(gunSwitchAudio);
+                } 
                 else
+                {
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                    audioEventManager.NotifyAudioEvent(gunSwitchAudio);
+                }
             }
 
             PointerPosition();
@@ -126,6 +138,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                 gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
+                audioEventManager.NotifyAudioEvent(gunFireAudio);
 
                 return;
             }
@@ -173,6 +186,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 {
                     gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                     gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                    audioEventManager.NotifyAudioEvent(gunFireAudio);
                     recoil.RecoilFire();
                     currentWeapon.currentAmmoCount--;
                     Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
@@ -226,6 +240,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                         gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                        audioEventManager.NotifyAudioEvent(gunFireAudio);
                         currentWeapon.currentAmmoCount--;
                         Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
                         GameObject grenade = Instantiate(currentWeapon.gunPrefab, weaponHolder.transform.position + grenadeOffset, weaponHolder.transform.rotation);
@@ -268,6 +283,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                         gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                        audioEventManager.NotifyAudioEvent(gunFireAudio);
 
                         if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
                         {
@@ -371,6 +387,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             isReloading = true;
             gunReloadAudio.clip = weaponReload.gunAudioClips[2];
             gunReloadAudio.Play();
+            audioEventManager.NotifyAudioEvent(gunReloadAudio);
 
             if (currentWeapon.gunType == GunType.Pistol)
                 yield return new WaitForSeconds(2f);
@@ -415,16 +432,16 @@ namespace RatGamesStudios.OperationDeratization.Player
             transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
             cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
-            Vector3 originalPosition = new Vector3(0.0943f, -0.0578f, 0.1701f);
-            Vector3 originalRotation = new Vector3(20.84f, 198.13f, 129.6f);
-            Vector3 aimingPosition = new Vector3(0.05f, -0.08f, 0.2f);
-            Vector3 aimingRotation = new Vector3(5.2f, -125, 101);
+            Vector3 originalPosition = new Vector3(0.05f, -0.0578f, 0.1701f);
+            Vector3 originalRotation = new Vector3(20.84f, -161.87f, 100f);
+            Vector3 aimingPosition = new Vector3(0.05f, -0.0578f, 0.1701f);
+            Vector3 aimingRotation = new Vector3(20.84f, -161.87f, 100f);
 
             switch (currentWeapon.gunType)
             {
                 case GunType.Melee:
-                    originalPosition = new Vector3(0.0943f, -0.0578f, 0.1701f);
-                    originalRotation = new Vector3(20.84f, 198.13f, 129.6f);
+                    originalPosition = new Vector3(0.05f, -0.0578f, 0.1701f);
+                    originalRotation = new Vector3(20.84f, -161.87f, 100f);
                     break;
                 case GunType.Pistol:
                     originalPosition = new Vector3(0.18f, -0.12f, 0.46f);
