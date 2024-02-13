@@ -137,6 +137,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke || currentWeapon.gunStyle != GunStyle.Molotov))
             {
                 gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
+                gunFireAudio.maxDistance = 15f;
                 gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
                 audioEventManager.NotifyAudioEvent(gunFireAudio);
 
@@ -185,6 +186,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 if (Input.GetMouseButton(0))
                 {
                     gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
+                    gunFireAudio.maxDistance = 40f;
                     gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
                     audioEventManager.NotifyAudioEvent(gunFireAudio);
                     recoil.RecoilFire();
@@ -240,6 +242,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                         gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                        gunFireAudio.maxDistance = 15f;
                         audioEventManager.NotifyAudioEvent(gunFireAudio);
                         currentWeapon.currentAmmoCount--;
                         Vector3 grenadeOffset = new Vector3(0, 0, 0.2f);
@@ -281,12 +284,12 @@ namespace RatGamesStudios.OperationDeratization.Player
                     }
                     else
                     {
-                        gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
-                        gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
-                        audioEventManager.NotifyAudioEvent(gunFireAudio);
-
                         if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
                         {
+                            gunFireAudio.maxDistance = 40f;
+                            gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
+                            gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                            audioEventManager.NotifyAudioEvent(gunFireAudio);
                             recoil.RecoilFire();
                             currentWeapon.currentAmmoCount--;
                             Transform muzzle = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/muzzle");
@@ -335,6 +338,10 @@ namespace RatGamesStudios.OperationDeratization.Player
                         }
                         else
                         {
+                            gunFireAudio.maxDistance = 10f;
+                            gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
+                            gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                            audioEventManager.NotifyAudioEvent(gunFireAudio);
                             stamina.UseStamina(stamina.attackStaminaCost);
                             stamina.BlockStaminaOnAttack();
                             weaponAnimator.SetTrigger("Attack");

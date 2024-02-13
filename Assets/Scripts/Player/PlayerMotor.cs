@@ -89,6 +89,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                     movementSound.pitch = Random.Range(0.35f, 0.65f);
                     movementSound.volume = 0.5f;
+                    movementSound.maxDistance = 5f;
                     movementSound.clip = movementClips[0];
                 }
                 else
@@ -105,6 +106,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         {
                             movementSound.pitch = Random.Range(1.15f, 1.45f);
                             movementSound.volume = 1f;
+                            movementSound.maxDistance = 35f;
                             movementSound.clip = movementClips[1];
 
                         }
@@ -112,6 +114,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         {
                             movementSound.pitch = Random.Range(0.85f, 1.15f);
                             movementSound.volume = 0.9f;
+                            movementSound.maxDistance = 30f;
                             movementSound.clip = movementClips[0];
                         }
                     }
