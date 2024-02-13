@@ -107,7 +107,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             if (isAttackedByPlayer && isAlive && isTutorialActive)
             {
                 float distance = Vector3.Distance(cam.transform.position, transform.position);
-                damageTextInstance = ObjectPoolManager.SpawnObject(damageTextPrefab, transform.position + new Vector3(0f, 1f, 0f), cam.transform.rotation, transform);
+                damageTextInstance = ObjectPoolManager.SpawnObject(damageTextPrefab, transform.position + new Vector3(0f, 2f, 0f), cam.transform.rotation, transform);
                 textToDisplay = damageTextInstance.transform.GetChild(0).GetComponent<TextMeshPro>();
                 float minScale = 0.2f;
                 float midScale = 1f;

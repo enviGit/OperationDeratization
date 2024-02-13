@@ -16,7 +16,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         }
         public void Update(AiAgent agent)
         {
-            if (!agent.targeting.HasTarget)
+            if (!agent.targeting.HasTarget || agent.targeting.Target == null)
             {
                 agent.stateMachine.ChangeState(AiStateId.FindTarget);
 

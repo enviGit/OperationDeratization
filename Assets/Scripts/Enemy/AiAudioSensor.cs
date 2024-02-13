@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Manager;
+using System;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Enemy
@@ -11,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         [HideInInspector] public Vector3 LastDetectedSoundPosition => lastDetectedSoundPosition;
         private bool lastDetectedSoundAudible;
         [HideInInspector] public bool LastDetectedSoundAudible => lastDetectedSoundAudible;
+        private readonly string[] highPrioritySounds = { "WeaponFire", "WeaponReload", "Impact", "Movement", "Grenade_00(Clone)", "ShatteredGlassPanel(Clone)" };
 
         private void HandleAudioEvent(AudioSource audioGameObject)
         {
@@ -23,14 +25,12 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                     string soundPath = GetGameObjectPath(audioGameObject.gameObject);
                     Debug.Log("Bot: " + gameObject.name + " has detected sound: " + audioGameObject.name + " at path: " + soundPath);
                 } 
-
-                lastDetectedSoundPosition = audioGameObject.transform.position;
-                lastDetectedSoundAudible = true;
-
-                if ((audioGameObject.name == "WeaponFire" || audioGameObject.name == "WeaponReload" || audioGameObject.name == "Impact" || audioGameObject.name == "Movement" ||
-                    audioGameObject.name == "Grenade_00(Clone)" || audioGameObject.name == "Molotov_00(Clone)" || audioGameObject.name == "ShatteredGlassPanel(Clone)")
-                    && agent.weapons.HasWeapon() && !agent.targeting.HasTarget && !agent.weapons.IsLowAmmo())
+                if (IsHighPrioritySound(audioGameObject.name) && agent.weapons.HasWeapon() && !agent.targeting.HasTarget && !agent.weapons.IsLowAmmo())
+                {
+                    lastDetectedSoundPosition = audioGameObject.transform.position;
+                    lastDetectedSoundAudible = true;
                     agent.stateMachine.ChangeState(AiStateId.InvestigateSound);
+                }
             }
         }
         private bool IsAudioAudible(AudioSource audioSource)
@@ -45,6 +45,10 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                 return potentialChild.parent.IsChildOf(transform);
             else
                 return false;
+        }
+        private bool IsHighPrioritySound(string soundName)
+        {
+            return Array.Exists(highPrioritySounds, sound => sound == soundName);
         }
         private string GetGameObjectPath(GameObject obj)
         {

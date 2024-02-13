@@ -101,10 +101,15 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             while (animator.GetCurrentAnimatorStateInfo(1).normalizedTime < 1f)
                 yield return null;
 
-            if (currentWeapon != null)
+            if (currentWeapon != null && currentWeapon.transform != null)
             {
-                weaponIk.SetAimTransform(currentWeapon.transform.Find("muzzle"));
-                weaponActive = true;
+                Transform muzzleTransform = currentWeapon.transform.Find("muzzle");
+
+                if (muzzleTransform != null)
+                {
+                    weaponIk.SetAimTransform(muzzleTransform);
+                    weaponActive = true;
+                }
             }
         }
         public void DeactiveWeapon()

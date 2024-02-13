@@ -19,6 +19,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         [SerializeField] private GameObject miniMapCanvas;
         private PlayerInventory inventory;
         private AudioEventManager audioEventManager;
+        private Transform sounds;
 
         [Header("Impact Sounds")]
         public Material vignetteMaterial;
@@ -55,6 +56,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
             ragdoll = GetComponent<Ragdoll>();
             inventory = GetComponent<PlayerInventory>();
+            sounds = transform.Find("Sounds");
             frontHealthBar = healthBar.transform.GetChild(2).GetComponent<Image>();
             backHealthBar = healthBar.transform.GetChild(1).GetComponent<Image>();
             frontArmorBar = armorBar.transform.GetChild(2).GetComponent<Image>();
@@ -272,6 +274,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             isAlive = false;
             miniMapCanvas.SetActive(false);
             cam.SetParent(null);
+            sounds.SetParent(null);
 
             if(isTutorialActive)
             {

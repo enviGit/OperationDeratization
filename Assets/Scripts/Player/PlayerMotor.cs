@@ -13,13 +13,13 @@ namespace RatGamesStudios.OperationDeratization.Player
         private PlayerShoot aiming;
         private Camera cam;
         private AudioEventManager audioEventManager;
+        [SerializeField] private Transform feet;
 
         [Header("Movement")]
         private Vector3 playerVelocity;
         public float gravity = -9.8f;
         public float jumpHeight = 0.7f;
-        public float playerHeight = 3.6f;
-        public float playerCrouchHeight = 2f;
+        private float playerCrouchHeight = 2f;
         public float moveSpeed = 4f;
         private AudioSource movementSound;
         public AudioClip[] movementClips;
@@ -63,8 +63,8 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (controller.enabled)
             {
                 Move();
-                Crouch();
                 CrouchToggle();
+                Crouch();
                 Gravity();
             }
         }
@@ -88,6 +88,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         moveSpeed = 1f;
 
                     movementSound.pitch = Random.Range(0.35f, 0.65f);
+                    movementSound.volume = 0.5f;
                     movementSound.clip = movementClips[0];
                 }
                 else
@@ -103,12 +104,14 @@ namespace RatGamesStudios.OperationDeratization.Player
                         if (isRunning)
                         {
                             movementSound.pitch = Random.Range(1.15f, 1.45f);
+                            movementSound.volume = 1f;
                             movementSound.clip = movementClips[1];
 
                         }
                         else
                         {
                             movementSound.pitch = Random.Range(0.85f, 1.15f);
+                            movementSound.volume = 0.9f;
                             movementSound.clip = movementClips[0];
                         }
                     }
@@ -176,13 +179,13 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             if (currentState.playerStance == PlayerStance.Stance.Crouching)
             {
-                float camNewHeight = Mathf.Lerp(cam.transform.localPosition.y, 1f, Time.deltaTime * 5f);
+                float camNewHeight = Mathf.Lerp(cam.transform.localPosition.y, currentState.camHeight, Time.deltaTime * 5f);
                 cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, camNewHeight, cam.transform.localPosition.z);
                 controller.height = 2.5f;
             }
             else
             {
-                float camNewHeight = Mathf.Lerp(cam.transform.localPosition.y, 2f, Time.deltaTime * 5f);
+                float camNewHeight = Mathf.Lerp(cam.transform.localPosition.y, currentState.camHeight, Time.deltaTime * 5f);
                 cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, camNewHeight, cam.transform.localPosition.z);
                 controller.height = 3.6f;
             }
@@ -198,7 +201,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     RaycastHit hit;
                     LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
 
-                    if (Physics.Raycast(transform.position, transform.up, out hit, playerHeight, obstacleMask))
+                    if (Physics.Raycast(feet.position, transform.up, out hit, playerCrouchHeight, obstacleMask))
                     {
                         isCrouching = true;
                         currentState.playerStance = PlayerStance.Stance.Crouching;
@@ -226,9 +229,9 @@ namespace RatGamesStudios.OperationDeratization.Player
                 RaycastHit hit;
                 LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
 
-                if (!isCrouching && Physics.Raycast(transform.position, transform.up, out hit, jumpHeight, obstacleMask))
+                if (!isCrouching && Physics.Raycast(feet.position, transform.up, out hit, jumpHeight, obstacleMask))
                     return;
-                else if (isCrouching && Physics.Raycast(transform.position, transform.up, out hit, controller.height + jumpHeight, obstacleMask))
+                else if (isCrouching && Physics.Raycast(feet.position, transform.up, out hit, playerCrouchHeight + jumpHeight, obstacleMask))
                     return;
                 if (_isClimbing)
                     shouldDetachFromLadder = true;
