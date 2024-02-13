@@ -183,6 +183,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (impactClips.Length > 0)
             {
                 int randomIndex = Random.Range(0, impactClips.Length - 1);
+                impactSound.pitch = Random.Range(0.85f, 1.15f);
                 impactSound.PlayOneShot(impactClips[randomIndex]);
                 audioEventManager.NotifyAudioEvent(impactSound);
             }
@@ -209,6 +210,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             }
             if (impactClips.Length > 0)
             {
+                impactSound.pitch = Random.Range(0.85f, 1.15f);
                 impactSound.PlayOneShot(impactClips[2], 0.5f);
                 audioEventManager.NotifyAudioEvent(impactSound);
             }
@@ -236,6 +238,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (impactClips.Length > 0)
             {
                 int randomIndex = Random.Range(0, gasClips.Length - 1);
+                impactSound.pitch = Random.Range(0.85f, 1.15f);
                 impactSound.PlayOneShot(gasClips[randomIndex]);
                 audioEventManager.NotifyAudioEvent(impactSound);
             }
@@ -263,6 +266,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (impactClips.Length > 0)
             {
                 int randomIndex = Random.Range(0, impactClips.Length - 1);
+                impactSound.pitch = Random.Range(0.85f, 1.15f);
                 impactSound.PlayOneShot(impactClips[randomIndex]);
                 audioEventManager.NotifyAudioEvent(impactSound);
             }

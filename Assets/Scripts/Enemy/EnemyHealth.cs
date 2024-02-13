@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy.State;
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using RatGamesStudios.OperationDeratization.Player;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
@@ -19,6 +20,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private WeaponIk weaponIk;
         private AiAgent agent;
         private Camera cam;
+        private AudioEventManager audioEventManager;
 
         [Header("Tracker")]
         [SerializeField] private Tracker tracker;
@@ -35,6 +37,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         [SerializeField] private EnemyStats enemyStats;
         public float currentHealth;
         private float lowHealth = 10f;
+        private AudioSource impactSound;
+        [SerializeField] private AudioClip[] impactClips;
         public bool isAlive = true;
         public bool isMarkedAsDead = false;
 
@@ -50,7 +54,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             cam = Camera.main;
             player = GameObject.FindGameObjectWithTag("Player");
             markText = player.GetComponent<PlayerUI>().markText.gameObject;
+            impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
             markSound = player.transform.Find("Sounds/OpponentMarking").GetComponent<AudioSource>();
+            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
             currentHealth = enemyStats.maxHealth;
             var rigidBodies = GetComponentsInChildren<Rigidbody>();
 
@@ -102,6 +108,13 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             currentHealth -= damageToHealth;
             currentHealth = Mathf.Clamp(currentHealth, 0, enemyStats.maxHealth);
 
+            if (impactClips.Length > 0)
+            {
+                int randomIndex = Random.Range(0, impactClips.Length - 1);
+                impactSound.pitch = Random.Range(0.85f, 1.15f);
+                impactSound.PlayOneShot(impactClips[randomIndex]);
+                audioEventManager.NotifyAudioEvent(impactSound);
+            }
             if (currentHealth <= 0)
                 Die(direction);
             if (isAttackedByPlayer && isAlive && isTutorialActive)

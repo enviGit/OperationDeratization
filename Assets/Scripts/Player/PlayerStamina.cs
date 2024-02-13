@@ -46,7 +46,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                     backStaminaBar.color = new Color(0.88f, 0.31f, 0.12f, 1f);
                     currentStamina = Mathf.Clamp(currentStamina + staminaRegenRate * Time.deltaTime, 0, maxStamina);
                 }
-                   
             }
 
             UpdateStaminaUI();
