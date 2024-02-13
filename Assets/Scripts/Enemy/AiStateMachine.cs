@@ -7,6 +7,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         public AiState[] states;
         public AiAgent agent;
         public AiStateId currentState;
+        private AiStateId previousState;
 
         public AiStateMachine(AiAgent agent)
         {
@@ -32,8 +33,13 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         public void ChangeState(AiStateId newState)
         {
             GetState(currentState)?.Exit(agent);
+            previousState = currentState;
             currentState = newState;
             GetState(currentState)?.Enter(agent);
+        }
+        public void RevertToPreviousState()
+        {
+            ChangeState(previousState);
         }
     }
 }

@@ -6,13 +6,31 @@ namespace RatGamesStudios.OperationDeratization.Enemy
     public class AiAudioSensor : MonoBehaviour
     {
         [SerializeField] private bool debugMode = true;
+        private AiAgent agent;
+        private Vector3 lastDetectedSoundPosition;
+        [HideInInspector] public Vector3 LastDetectedSoundPosition => lastDetectedSoundPosition;
+        private bool lastDetectedSoundAudible;
+        [HideInInspector] public bool LastDetectedSoundAudible => lastDetectedSoundAudible;
 
         private void HandleAudioEvent(AudioSource audioGameObject)
         {
+            if (!agent.health.isAlive)
+                return;
             if (!IsChildOfMyObject(audioGameObject.transform) && IsAudioAudible(audioGameObject))
             {
-                if (debugMode)
-                    Debug.Log("Bot: " + gameObject.name + " has detected sound: " + audioGameObject.name);
+                if (debugMode && Time.timeScale != 0)
+                {
+                    string soundPath = GetGameObjectPath(audioGameObject.gameObject);
+                    Debug.Log("Bot: " + gameObject.name + " has detected sound: " + audioGameObject.name + " at path: " + soundPath);
+                } 
+
+                lastDetectedSoundPosition = audioGameObject.transform.position;
+                lastDetectedSoundAudible = true;
+
+                if ((audioGameObject.name == "WeaponFire" || audioGameObject.name == "WeaponReload" || audioGameObject.name == "Impact" || audioGameObject.name == "Movement" ||
+                    audioGameObject.name == "Grenade_00(Clone)" || audioGameObject.name == "Molotov_00(Clone)" || audioGameObject.name == "ShatteredGlassPanel(Clone)")
+                    && agent.weapons.HasWeapon() && !agent.targeting.HasTarget && !agent.weapons.IsLowAmmo())
+                    agent.stateMachine.ChangeState(AiStateId.InvestigateSound);
             }
         }
         private bool IsAudioAudible(AudioSource audioSource)
@@ -28,8 +46,21 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             else
                 return false;
         }
+        private string GetGameObjectPath(GameObject obj)
+        {
+            string path = obj.name;
+
+            while (obj.transform.parent != null)
+            {
+                obj = obj.transform.parent.gameObject;
+                path = obj.name + "/" + path;
+            }
+
+            return path;
+        }
         private void Start()
         {
+            agent = GetComponent<AiAgent>();
             AudioEventManager.Instance.OnAudioEvent += HandleAudioEvent;
         }
         private void OnDrawGizmosSelected()

@@ -9,18 +9,21 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private NavMeshAgent agent;
         private Animator animator;
         private AudioSource movementSound;
+        private EnemyHealth health;
         private AudioEventManager audioEventManager;
 
         private void Start()
         {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
+            health = GetComponent<EnemyHealth>();
             movementSound = transform.Find("Sounds/Movement").GetComponent<AudioSource>();
             audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
         }
         private void Update()
         {
-            SetSpeed();
+            if(health.isAlive)
+                SetSpeed();
         }
         private void SetSpeed()
         {

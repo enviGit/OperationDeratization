@@ -26,7 +26,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         }
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && playerHealth.isAlive && !victoryScreen.activeSelf)
+            if (Input.GetKeyDown(KeyCode.Escape) && playerHealth.isAlive && !victoryScreen.activeSelf && !endGameScreen.activeSelf)
             {
                 if (!optionsMenu.activeSelf)
                 {
@@ -39,32 +39,33 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
                     CloseOptions();
             }
             if (!playerHealth.isAlive)
-            {
-                Transform[] children = transform.GetComponentsInChildren<Transform>(true);
-
-                foreach (Transform child in children)
-                {
-                    if (child != transform && !child.name.Contains("Menu") && !IsPartOfMenu(child))
-                        child.gameObject.SetActive(false);
-                }
-
                 endGameScreen.SetActive(true);
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            if (victoryScreen.activeSelf)
+        }
+        private void LateUpdate()
+        {
+            if(pauseMenuUI.activeSelf)
             {
-                Transform[] children = transform.GetComponentsInChildren<Transform>(true);
-
-                foreach (Transform child in children)
-                {
-                    if (child != transform && !child.name.Contains("Menu") && !IsPartOfMenu(child))
-                        child.gameObject.SetActive(false);
-                }
-
                 Time.timeScale = 0f;
                 GameIsPaused = true;
                 AudioListener.pause = true;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                playerShoot.enabled = false;
+                playerInventory.enabled = false;
+            }
+            if (victoryScreen.activeSelf || endGameScreen.activeSelf)
+            {
+                Transform[] children = transform.GetComponentsInChildren<Transform>(true);
+
+                foreach (Transform child in children)
+                {
+                    if (child != transform && !child.name.Contains("Menu") && !IsPartOfMenu(child))
+                        child.gameObject.SetActive(false);
+                }
+
+                Time.timeScale = 1f;
+                GameIsPaused = false;
+                AudioListener.pause = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 playerShoot.enabled = false;

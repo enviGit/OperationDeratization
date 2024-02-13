@@ -9,7 +9,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         FindTarget,
         FindFirstAidKit,
         FindAmmo,
-        Patrol
+        Patrol,
+        InvestigateSound
     }
     public interface AiState
     {

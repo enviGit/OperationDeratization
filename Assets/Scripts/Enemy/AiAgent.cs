@@ -49,6 +49,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             stateMachine.RegisterState(new AiFindFirstAidKitState());
             stateMachine.RegisterState(new AiFindAmmoState());
             stateMachine.RegisterState(new AiPatrolState());
+            stateMachine.RegisterState(new AiInvestigateSoundState());
             stateMachine.ChangeState(initialState);
         }
         private void Update()
