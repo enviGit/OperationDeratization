@@ -15,6 +15,14 @@ The game features simple and intuitive controls, including WASD movement and mou
 - Detailed main menu and options menu to adjust settings like resolution, fullscreen, volume, sensitivity and brightness.
 - Arena mode where players can face off against waves of enemies or individual opponents.
 
+<!-- ## Preview Images
+![Preview 1]()
+![Preview 2]()
+![Preview 3]() -->
+
+## Releases
+Explore all available [releases](https://github.com/enviGit/OperationDeratization/releases) to access past updates and improvements. Additionally, check out the [latest release](https://github.com/enviGit/OperationDeratization/releases/latest) for the most recent updates and improvements.
+
 ## Authors
 - **Graphic & UX/UI Designer:** Filip Krawiec ([@alwarez](https://www.github.com/alwarez))
 - **Level Designer:** Jakub Molek ([@JacobDeMolay](https://github.com/JacobDeMolay))
