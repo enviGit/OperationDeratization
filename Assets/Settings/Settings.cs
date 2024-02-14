@@ -13,6 +13,7 @@ namespace RatGamesStudios.OperationDeratization
         private static string runInBg = "runInBg";
         private static string quality = "quality";
         private static string canSkipCutscene = "canSkipCutscene";
+        private static string vsyncCount = "vsyncCount";
 
         public static float Sensitivity
         {
@@ -34,7 +35,6 @@ namespace RatGamesStudios.OperationDeratization
             get => PlayerPrefs.GetFloat(brightness, 0);
             set => PlayerPrefs.SetFloat(brightness, value);
         }
-
         public static bool FullScreen
         {
             get => PlayerPrefs.GetInt(fullScreen, 1) != 0;
@@ -74,13 +74,18 @@ namespace RatGamesStudios.OperationDeratization
         }
         public static int QualityPreset
         {
-            get => PlayerPrefs.GetInt(quality, 2);
+            get => PlayerPrefs.GetInt(quality, 1);
             set => PlayerPrefs.SetInt(quality, value);
         }
         public static bool CanSkipCutscene
         {
             get => PlayerPrefs.GetInt(canSkipCutscene, 0) != 0;
             set => PlayerPrefs.SetInt(canSkipCutscene, value ? 1 : 0);
+        }
+        public static bool VSync
+        {
+            get => PlayerPrefs.GetInt(vsyncCount, 0) != 0;
+            set => PlayerPrefs.SetInt(vsyncCount, value ? 1 : 0);
         }
     }
 }

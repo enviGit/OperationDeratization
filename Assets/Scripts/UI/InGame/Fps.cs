@@ -6,9 +6,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
     public class Fps : MonoBehaviour
     {
         private float count;
-        private float gpuUsage;
-        private long totalMemory;
-        private long freeMemory;
+        [SerializeField] private bool isTutorialActive = false;
 
         private IEnumerator Start()
         {
@@ -17,24 +15,25 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             while (true)
             {
                 count = 1f / Time.unscaledDeltaTime;
-                MonitorMemoryUsage();
 
                 yield return new WaitForSeconds(1f);
             }
         }
         private void OnGUI()
         {
-            GUIStyle headStyle = new GUIStyle();
-            headStyle.fontSize = 30;
+            GUIStyle headStyle = new GUIStyle
+            {
+                fontSize = 30
+            };
             headStyle.normal.textColor = Color.white;
-            GUI.Label(new Rect(5, 5, 100, 25), "FPS: " + Mathf.Round(count), headStyle);
-            GUI.Label(new Rect(5, 35, 100, 25), $"Total Mem: {totalMemory} MB", headStyle);
-            GUI.Label(new Rect(5, 65, 100, 25), $"Free Mem: {freeMemory} MB", headStyle);
-        }
-        private void MonitorMemoryUsage()
-        {
-            totalMemory = SystemInfo.systemMemorySize;
-            freeMemory = System.GC.GetTotalMemory(false);
+
+            if (!isTutorialActive)
+                GUI.Label(new Rect(5, 5, 100, 25), "FPS: " + Mathf.Round(count), headStyle);
+            else
+            {
+                headStyle.alignment = TextAnchor.MiddleRight;
+                GUI.Label(new Rect(Screen.width - 105, 5, 100, 25), "FPS: " + Mathf.Round(count), headStyle);
+            }
         }
     }
 }

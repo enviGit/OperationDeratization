@@ -19,7 +19,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
             if (!agent.targeting.HasTarget || agent.targeting.Target == null)
             {
                 agent.stateMachine.ChangeState(AiStateId.FindTarget);
-
+                
                 return;
             }
 
