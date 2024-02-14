@@ -15,10 +15,11 @@ The game features simple and intuitive controls, including WASD movement and mou
 - Detailed main menu and options menu to adjust settings like resolution, fullscreen, volume, sensitivity and brightness.
 - Arena mode where players can face off against waves of enemies or individual opponents.
 
-<!-- ## Preview Images
-![Preview 1]()
-![Preview 2]()
-![Preview 3]() -->
+## Preview Images
+![Equipment selection wheel](https://github.com/enviGit/OperationDeratization/assets/80624809/5979f6ae-65c4-49d6-b2ff-3731d9856ef9)
+![The dissolving effect of picked-up items](https://github.com/enviGit/OperationDeratization/assets/80624809/6d9e00c5-7e22-4ac3-b692-545186df0248)
+![Trajectory of grenades](https://github.com/enviGit/OperationDeratization/assets/80624809/8b428394-857c-4336-999a-0f8e4218497c)
+![Marking the enemy as deceased](https://github.com/enviGit/OperationDeratization/assets/80624809/9fac37db-bdf4-4d71-8eab-510f1019c6b0)
 
 ## Releases
 Explore all available [releases](https://github.com/enviGit/OperationDeratization/releases) to access past updates and improvements. Additionally, check out the [latest release](https://github.com/enviGit/OperationDeratization/releases/latest) for the most recent updates and improvements.
