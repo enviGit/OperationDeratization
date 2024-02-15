@@ -215,9 +215,12 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            terrainScanMat.SetVector("_Position", Vector3.zero);
+            terrainScanMat.SetFloat("_Opacity", 0f);
         }
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            terrainScanMat.SetVector("_Position", Vector3.zero);
             terrainScanMat.SetFloat("_Opacity", 0f);
         }
     }
