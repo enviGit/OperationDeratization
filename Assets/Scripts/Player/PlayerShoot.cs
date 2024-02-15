@@ -27,6 +27,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private PlayerInventory inventory;
         private PlayerStamina stamina;
         private AudioEventManager audioEventManager;
+        [HideInInspector] public Camera sniperCam = null;
 
         [Header("Weapon")]
         private Gun currentWeapon;
@@ -36,10 +37,10 @@ namespace RatGamesStudios.OperationDeratization.Player
         private float shotTimer = 0f;
         public float throwForce = 25f;
         public float throwUpForce = 10f;
-        [SerializeField] [Range(10, 100)] private int linePoints = 25;
-        [SerializeField] [Range(0.01f, 0.25f)] private float timeBetweenPoints = 0.03f;
+        [SerializeField][Range(10, 100)] private int linePoints = 25;
+        [SerializeField][Range(0.01f, 0.25f)] private float timeBetweenPoints = 0.03f;
         private LayerMask grenadeCollisionMask;
-        private float dynamicFieldOfView;
+        private float dynamicFieldOfView = 25f;
         private Animator weaponAnimator;
         private Transform weaponHolder;
         private LineRenderer lineRenderer;
@@ -93,12 +94,12 @@ namespace RatGamesStudios.OperationDeratization.Player
                 {
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[3]);
                     audioEventManager.NotifyAudioEvent(gunSwitchAudio);
-                } 
+                }
                 else if (currentWeapon.gunStyle != GunStyle.Grenade || currentWeapon.gunStyle != GunStyle.Flashbang || currentWeapon.gunStyle != GunStyle.Smoke || currentWeapon.gunStyle != GunStyle.Molotov)
                 {
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
                     audioEventManager.NotifyAudioEvent(gunSwitchAudio);
-                } 
+                }
                 else
                 {
                     gunSwitchAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
@@ -430,10 +431,8 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         private void PointerPosition()
         {
-            //float mouseX = Input.GetAxis("Mouse X") * CalculateSensitivity();
-            //float mouseY = Input.GetAxis("Mouse Y") * CalculateSensitivity();
-            float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.timeScale;
-            float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.timeScale;
+            float mouseX = Input.GetAxis("Mouse X") * CalculateSensitivity() * Time.timeScale;
+            float mouseY = Input.GetAxis("Mouse Y") * CalculateSensitivity() * Time.timeScale;
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -80f, 80f);
             transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
@@ -517,12 +516,10 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (currentWeapon.gunType == GunType.Sniper)
                     {
                         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 40f, Time.deltaTime * 5f);
-                        Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
-                        zoom.gameObject.SetActive(true);
-                        Camera zoomCamera = zoom.GetComponent<Camera>();
+                        sniperCam.gameObject.SetActive(true);
                         float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
-                        dynamicFieldOfView = Mathf.Clamp(dynamicFieldOfView - scrollDelta * 10f, 5f, 25f);
-                        zoomCamera.fieldOfView = Mathf.Lerp(zoomCamera.fieldOfView, dynamicFieldOfView, Time.deltaTime * 5f);
+                        dynamicFieldOfView = Mathf.Clamp(dynamicFieldOfView - scrollDelta * 10f, 1f, 25f);
+                        sniperCam.fieldOfView = Mathf.Lerp(sniperCam.fieldOfView, dynamicFieldOfView, Time.deltaTime * 5f);
                     }
                     else if (currentWeapon.gunType == GunType.Grenade || currentWeapon.gunType == GunType.Flashbang || currentWeapon.gunType == GunType.Smoke || currentWeapon.gunType == GunType.Molotov)
                         DrawTrajectory();
@@ -542,31 +539,26 @@ namespace RatGamesStudios.OperationDeratization.Player
                     weapon.localRotation = Quaternion.Euler(originalRotation);
                 }
                 if (currentWeapon.gunType == GunType.Sniper)
-                {
-                    Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
-                    zoom.gameObject.SetActive(false);
-                }
+                    sniperCam.gameObject.SetActive(false);
                 if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
                     playerMotor.moveSpeed = 4f;
                 else
                     playerMotor.moveSpeed = 2f;
             }
         }
-        /*private float CalculateSensitivity()
+        private float CalculateSensitivity()
         {
-            float baseSensitivity = xSensitivity;
+            float baseSensitivity = sensitivity;
 
-            if (currentWeapon.gunType == GunType.Sniper)
+            if (currentWeapon.gunType == GunType.Sniper && isAiming)
             {
-                Transform zoom = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)/Mesh/SVD/Camera");
-                Camera zoomCamera = zoom.GetComponent<Camera>();
-                float adjustedSensitivity = baseSensitivity * (cam.fieldOfView / 60f) * (zoomCamera.fieldOfView / 40f);
+                float adjustedSensitivity = baseSensitivity * (cam.fieldOfView / 60f) * (sniperCam.fieldOfView / 40f);
 
                 return adjustedSensitivity;
             }
 
             return baseSensitivity;
-        }*/
+        }
         private void DrawTrajectory()
         {
             lineRenderer.enabled = true;

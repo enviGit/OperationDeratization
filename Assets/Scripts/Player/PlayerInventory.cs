@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Interactables;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -319,6 +320,9 @@ namespace RatGamesStudios.OperationDeratization.Player
             }
 
             currentWeaponIndex = index;
+
+            if(weapons[currentWeaponIndex].gunType == GunType.Sniper)
+                playerShoot.sniperCam = transform.Find("Camera/Main Camera/WeaponHolder/" + weapons[currentWeaponIndex].gunPrefab.name + "(Clone)/Mesh/SVD/Camera").GetComponent<Camera>();
         }
         public void UpdateWeaponImages()
         {
