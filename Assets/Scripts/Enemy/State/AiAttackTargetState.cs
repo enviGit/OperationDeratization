@@ -18,7 +18,10 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         {
             if (!agent.targeting.HasTarget || agent.targeting.Target == null)
             {
-                agent.stateMachine.ChangeState(AiStateId.FindTarget);
+                if (agent.weapons.IsLowAmmo())
+                    agent.stateMachine.ChangeState(AiStateId.FindAmmo);
+                else
+                    agent.stateMachine.ChangeState(AiStateId.FindTarget);
                 
                 return;
             }
@@ -26,7 +29,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
             agent.weapons.SetTarget(agent.targeting.Target.transform);
             agent.navMeshAgent.destination = agent.targeting.TargetPosition;
             UpdateFiring(agent);
-            UpdateLowHealth(agent);
             UpdateLowAmmo(agent);
         }
         private void UpdateFiring(AiAgent agent)
@@ -59,11 +61,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
             else
                 return AiWeapons.WeaponSlotSecondary;
         }*/
-        private void UpdateLowHealth(AiAgent agent)
-        {
-            if (agent.health.IsLowHealth())
-                agent.stateMachine.ChangeState(AiStateId.FindFirstAidKit);
-        }
         private void UpdateLowAmmo(AiAgent agent)
         {
             if (agent.weapons.IsLowAmmo())

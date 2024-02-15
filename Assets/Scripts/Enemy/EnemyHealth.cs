@@ -36,7 +36,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         [Header("Enemy health")]
         [SerializeField] private EnemyStats enemyStats;
         public float currentHealth;
-        private float lowHealth = 10f;
+        private float lowHealth = 15f;
         private AudioSource impactSound;
         [SerializeField] private AudioClip[] impactClips;
         public bool isAlive = true;
