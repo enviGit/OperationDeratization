@@ -27,8 +27,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
             }
             if (agent.targeting.HasTarget)
             {
-                agent.stateMachine.ChangeState(AiStateId.AttackTarget);
                 timeSinceLastSawTarget = 0f; // Reset timer
+                agent.stateMachine.ChangeState(AiStateId.AttackTarget);
             }
             else
             {
