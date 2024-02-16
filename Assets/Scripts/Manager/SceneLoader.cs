@@ -25,6 +25,12 @@ namespace RatGamesStudios.OperationDeratization.Manager
             loadingImage.sprite = Resources.Load<Sprite>("Art/Loading/" + currentSceneIndex);
             StartCoroutine(LoadScene_Coroutine(currentSceneIndex));
         }
+        public void RestartFromVictoryCutscene()
+        {
+            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex - 1;
+            loadingImage.sprite = Resources.Load<Sprite>("Art/Loading/" + currentSceneIndex);
+            StartCoroutine(LoadScene_Coroutine(currentSceneIndex));
+        }
         public void LoadScene(int index)
         {
             loadingImage.sprite = Resources.Load<Sprite>("Art/Loading/" + index);
@@ -33,7 +39,10 @@ namespace RatGamesStudios.OperationDeratization.Manager
         public IEnumerator LoadScene_Coroutine(int index)
         {
             foreach (GameObject child in gObjectsToDeactivate)
-                child.SetActive(false);
+            {
+                if(child.activeSelf)
+                    child.SetActive(false);
+            }
             
             progressSlider.value = 0;
             LoaderUI.SetActive(true);
@@ -59,6 +68,14 @@ namespace RatGamesStudios.OperationDeratization.Manager
 
                 yield return null;
             }
+        }
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
         }
     }
 }

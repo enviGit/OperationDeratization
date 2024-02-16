@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.UI.Menu;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,7 +28,9 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private float currentCooldownTime;
         public Material terrainScanMat;
         private AudioSource trackerSound;
+        [SerializeField] private SceneLoader sceneLoader;
         [SerializeField] private bool isTutorialActive = false;
+        private bool shouldCheckForVictory = false;
 
         private void Awake()
         {
@@ -39,6 +42,9 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void Update()
         {
+            //if(shouldCheckForVictory)
+                //Do sth
+
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 if (!isTracking && !isOnCooldown && opponents.Count > 0)
@@ -126,7 +132,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void UpdateTracking()
         {
-            GameObject[] opponents = GameObject.FindGameObjectsWithTag("Enemy");
             float nearestDistance = Mathf.Infinity;
             GameObject newNearestOpponent = null;
 
@@ -165,7 +170,10 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                     StartCoroutine(UpdateTrackingRoutine());
             }
 
-            StartCoroutine(DelayedCheckForVictory());
+            //if(isTutorialActive)
+                StartCoroutine(DelayedCheckForVictory());
+            //else
+                //shouldCheckForVictory = true;
         }
         private IEnumerator DelayedCheckForVictory()
         {
@@ -176,7 +184,13 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private void CheckForVictory()
         {
             if (opponents.Count == 0)
-                playerUI.victoryScreen.SetActive(true);
+            {
+                if(isTutorialActive)
+                    playerUI.victoryScreen.SetActive(true);
+                else
+                    sceneLoader.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                    //Voice-Over in future and GPS to RadioStation
+            }
         }
         public IEnumerator SceneScanning()
         {

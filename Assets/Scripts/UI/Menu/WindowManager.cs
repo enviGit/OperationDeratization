@@ -77,7 +77,6 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
             runInBg.ApplyChanges();
             quality.ApplyChanges();
             vsync.ApplyChanges();
-
             soundSettings.ApplyChanges();
             brightness.ApplyChanges();
             sensitivity.ApplyChanges();
