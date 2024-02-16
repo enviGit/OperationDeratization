@@ -316,7 +316,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 if (currentHealth < 50)
                 {
                     float percent = currentHealth / maxHealth;
-                    float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
+                    float voronoiIntensity = Mathf.Lerp(0f, 0.3f, 1 - percent);
                     float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
                     vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
                     vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);

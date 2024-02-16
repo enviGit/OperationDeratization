@@ -40,9 +40,9 @@ namespace RatGamesStudios.OperationDeratization.Manager
 
             Settings.CanSkipCutscene = true;
 
-            foreach(GameObject child in gOToDisable)
+            foreach (GameObject child in gOToDisable)
             {
-                if(child.activeSelf)
+                if (child.activeSelf)
                     child.SetActive(false);
             }
 
@@ -55,9 +55,9 @@ namespace RatGamesStudios.OperationDeratization.Manager
 
             timeline.Stop();
 
-            foreach(GameObject child in gOToDisable)
+            foreach (GameObject child in gOToDisable)
             {
-                if(child.activeSelf)
+                if (child.activeSelf)
                     child.SetActive(false);
             }
 
@@ -67,14 +67,18 @@ namespace RatGamesStudios.OperationDeratization.Manager
         {
             yield return new WaitForSeconds((float)timeline.duration);
 
-            foreach(GameObject child in gOToDisable)
+            foreach (GameObject child in gOToDisable)
             {
-                if(child.activeSelf)
+                if (child.activeSelf)
                     child.SetActive(false);
             }
 
             Settings.CanSkipWinCutscene = true;
             victoryScreen.SetActive(true);
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
         private IEnumerator ShowWinSkipPrompt()
         {
@@ -83,13 +87,17 @@ namespace RatGamesStudios.OperationDeratization.Manager
 
             timeline.Stop();
 
-            foreach(GameObject child in gOToDisable)
+            foreach (GameObject child in gOToDisable)
             {
-                if(child.activeSelf)
+                if (child.activeSelf)
                     child.SetActive(false);
             }
 
             victoryScreen.SetActive(true);
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 }

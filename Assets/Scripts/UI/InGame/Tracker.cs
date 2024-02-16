@@ -30,10 +30,11 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private AudioSource trackerSound;
         [SerializeField] private SceneLoader sceneLoader;
         [SerializeField] private bool isTutorialActive = false;
-        private bool shouldCheckForVictory = false;
+        private AudioSource audioSource;
 
         private void Awake()
         {
+            audioSource = transform.parent.GetComponent<AudioSource>();
             indicator.GetChild(0).gameObject.SetActive(false);
             currentCooldownTime = trackingCooldown;
             trackerSound = GetComponent<AudioSource>();
@@ -43,7 +44,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private void Update()
         {
             //if(shouldCheckForVictory)
-                //Do sth
+            //Do sth
 
             if (Input.GetKeyDown(KeyCode.Z))
             {
@@ -170,10 +171,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                     StartCoroutine(UpdateTrackingRoutine());
             }
 
-            //if(isTutorialActive)
-                StartCoroutine(DelayedCheckForVictory());
-            //else
-                //shouldCheckForVictory = true;
+            StartCoroutine(DelayedCheckForVictory());
         }
         private IEnumerator DelayedCheckForVictory()
         {
@@ -185,12 +183,24 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         {
             if (opponents.Count == 0)
             {
-                if(isTutorialActive)
-                    playerUI.victoryScreen.SetActive(true);
-                else
-                    sceneLoader.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-                    //Voice-Over in future and GPS to RadioStation
+                if (!playerUI.endGameScreen.activeSelf)
+                {
+                    if (isTutorialActive)
+                        playerUI.victoryScreen.SetActive(true);
+                    else
+                    {
+                        audioSource.Play();
+                        StartCoroutine(LoadNextSceneAfterDelay());
+                    }
+                }
             }
+        }
+        private IEnumerator LoadNextSceneAfterDelay()
+        {
+            yield return new WaitForSeconds(audioSource.clip.length);
+
+            // Load the next scene
+            sceneLoader.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
         public IEnumerator SceneScanning()
         {
