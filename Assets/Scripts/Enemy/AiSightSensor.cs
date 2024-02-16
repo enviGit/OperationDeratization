@@ -6,9 +6,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
     [ExecuteInEditMode]
     public class AiSightSensor : MonoBehaviour
     {
-        public float distance = 35f;
+        public float distance = 75f;
         public float angle = 60f;
-        public float height = 2.5f;
+        public float height = 3.5f;
         public Color meshColor = Color.red;
         public int scanFrequency = 30;
         public LayerMask layers;

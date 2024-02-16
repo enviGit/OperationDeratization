@@ -132,7 +132,6 @@ namespace RatGamesStudios.OperationDeratization.Player
             float aFraction = currentArmor / maxArmor;
             float aFractionNormalized = aFraction * 0.25f;
 
-
             if (fillAB > aFractionNormalized)
             {
                 frontArmorBar.fillAmount = aFractionNormalized;
@@ -169,17 +168,9 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             currentHealth -= damageToHealth;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-            float percentMultiplier = 1.5f;
-            float percent = (currentHealth * percentMultiplier) / maxHealth;
             lerpTimer = 0f;
+            UpdateVignette();
 
-            if (vignetteMaterial != null)
-            {
-                float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
-                float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
-                vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
-                vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
-            }
             if (impactClips.Length > 0)
             {
                 int randomIndex = Random.Range(0, impactClips.Length - 1);
@@ -197,17 +188,9 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             backHealthBar.color = Color.red;
             currentHealth -= damage;
-            float percentMultiplier = 1.5f;
-            float percent = (currentHealth * percentMultiplier) / maxHealth;
             lerpTimer = 0f;
+            UpdateVignette();
 
-            if (vignetteMaterial != null)
-            {
-                float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
-                float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
-                vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
-                vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
-            }
             if (impactClips.Length > 0)
             {
                 impactSound.pitch = Random.Range(0.85f, 1.15f);
@@ -224,17 +207,9 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             backHealthBar.color = Color.red;
             currentHealth -= damage;
-            float percentMultiplier = 1.5f;
-            float percent = (currentHealth * percentMultiplier) / maxHealth;
             lerpTimer = 0f;
+            UpdateVignette();
 
-            if (vignetteMaterial != null)
-            {
-                float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
-                float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
-                vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
-                vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
-            }
             if (impactClips.Length > 0)
             {
                 int randomIndex = Random.Range(0, gasClips.Length - 1);
@@ -252,17 +227,9 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             backHealthBar.color = Color.red;
             currentHealth -= damage;
-            float percentMultiplier = 1.5f;
-            float percent = (currentHealth * percentMultiplier) / maxHealth;
             lerpTimer = 0f;
+            UpdateVignette();
 
-            if (vignetteMaterial != null)
-            {
-                float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
-                float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
-                vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
-                vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
-            }
             if (impactClips.Length > 0)
             {
                 int randomIndex = Random.Range(0, impactClips.Length - 1);
@@ -280,7 +247,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             cam.SetParent(null);
             sounds.SetParent(null);
 
-            if(isTutorialActive)
+            if (isTutorialActive)
             {
                 cam.position = new Vector3(-23.95f, 6.14f, -16f);
                 cam.rotation = Quaternion.Euler(32.69f, 44.98f, 0.05f);
@@ -340,14 +307,25 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             currentHealth += healAmount;
             lerpTimer = 0f;
-
+            UpdateVignette();
+        }
+        private void UpdateVignette()
+        {
             if (vignetteMaterial != null)
             {
-                float percent = currentHealth / maxHealth;
-                float voronoiIntensity = Mathf.Lerp(0f, 0.5f, 1 - percent);
-                float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
-                vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
-                vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
+                if (currentHealth < 50)
+                {
+                    float percent = currentHealth / maxHealth;
+                    float voronoiIntensity = Mathf.Lerp(0f, 0.3f, 1 - percent);
+                    float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
+                    vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
+                    vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
+                }
+                else
+                {
+                    vignetteMaterial.SetFloat("_VoronoiIntensity", 0f);
+                    vignetteMaterial.SetFloat("_VignetteRadiusPower", 0f);
+                }
             }
         }
         public void PickupArmor()

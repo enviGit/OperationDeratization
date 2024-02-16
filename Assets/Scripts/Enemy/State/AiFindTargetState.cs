@@ -36,8 +36,12 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
 
                 if (timeSinceLastSawTarget >= maxTimeWithoutTarget)
                 {
-                    agent.stateMachine.ChangeState(AiStateId.Patrol);
                     timeSinceLastSawTarget = 0f;
+
+                    if (agent.health.IsLowHealth())
+                        agent.stateMachine.ChangeState(AiStateId.FindFirstAidKit);
+                    else
+                        agent.stateMachine.ChangeState(AiStateId.Patrol);
                 }
             }
         }

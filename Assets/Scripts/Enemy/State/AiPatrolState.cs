@@ -26,6 +26,10 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
             }
             if (agent.targeting.HasTarget)
                 agent.stateMachine.ChangeState(AiStateId.AttackTarget);
+            if (agent.weapons.IsLowAmmo())
+                agent.stateMachine.ChangeState(AiStateId.FindAmmo);
+            if (agent.health.IsLowHealth())
+                agent.stateMachine.ChangeState(AiStateId.FindFirstAidKit);
         }
         public void Exit(AiAgent agent)
         {

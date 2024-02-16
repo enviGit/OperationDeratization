@@ -15,8 +15,9 @@ namespace RatGamesStudios.OperationDeratization.Manager
         private float sfxVolume;
         public VolumeProfile[] postProcessing = new VolumeProfile[4];
         private ColorAdjustments[] colorAdj = new ColorAdjustments[4];
+        [SerializeField] private RenderPipelineAsset[] qualityLevels;
 
-        private void Start()
+        private void Awake()
         {
             resolutions = Screen.resolutions;
             resolutionIndex = Settings.ResolutionIndex;
@@ -26,6 +27,9 @@ namespace RatGamesStudios.OperationDeratization.Manager
             sfxVolume = Settings.SfxMixer;
             ApplySfxVolume(musicVolume);
             ApplyBrightness();
+            ApplyRunInBg();
+            ApplyVSync();
+            ApplyQuality();
         }
         private void ApplyResolution(int resolution)
         {
@@ -47,11 +51,27 @@ namespace RatGamesStudios.OperationDeratization.Manager
         }
         private void ApplyBrightness()
         {
-            for(int i = 0; i < postProcessing.Length; i++)
+            for (int i = 0; i < postProcessing.Length; i++)
             {
                 if (postProcessing[i].TryGet(out colorAdj[i]))
                     colorAdj[i].postExposure.value = Settings.Brightness;
             }
+        }
+        private void ApplyRunInBg()
+        {
+            Application.runInBackground = Settings.RunInBg;
+        }
+        private void ApplyVSync()
+        {
+            if (Settings.VSync)
+                QualitySettings.vSyncCount = 1;
+            else
+                QualitySettings.vSyncCount = 0;
+        }
+        private void ApplyQuality()
+        {
+            QualitySettings.SetQualityLevel(Settings.QualityPreset, true);
+            QualitySettings.renderPipeline = qualityLevels[Settings.QualityPreset];
         }
     }
 }

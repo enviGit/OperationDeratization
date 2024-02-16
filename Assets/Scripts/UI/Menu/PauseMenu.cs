@@ -7,8 +7,8 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
     {
         public static bool GameIsPaused = false;
         [SerializeField] private GameObject pauseMenuUI;
-        [SerializeField] private GameObject endGameScreen;
-        public GameObject victoryScreen;
+        public GameObject endGameScreen;
+        [HideInInspector] public GameObject victoryScreen;
         [SerializeField] private GameObject optionsMenu;
         [SerializeField] private WindowManager windowManager;
         private GameObject player;

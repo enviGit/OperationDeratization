@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy;
+using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.UI.Menu;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,10 +28,13 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private float currentCooldownTime;
         public Material terrainScanMat;
         private AudioSource trackerSound;
+        [SerializeField] private SceneLoader sceneLoader;
         [SerializeField] private bool isTutorialActive = false;
+        private AudioSource audioSource;
 
         private void Awake()
         {
+            audioSource = transform.parent.GetComponent<AudioSource>();
             indicator.GetChild(0).gameObject.SetActive(false);
             currentCooldownTime = trackingCooldown;
             trackerSound = GetComponent<AudioSource>();
@@ -39,6 +43,9 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void Update()
         {
+            //if(shouldCheckForVictory)
+            //Do sth
+
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 if (!isTracking && !isOnCooldown && opponents.Count > 0)
@@ -126,7 +133,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void UpdateTracking()
         {
-            GameObject[] opponents = GameObject.FindGameObjectsWithTag("Enemy");
             float nearestDistance = Mathf.Infinity;
             GameObject newNearestOpponent = null;
 
@@ -176,7 +182,25 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private void CheckForVictory()
         {
             if (opponents.Count == 0)
-                playerUI.victoryScreen.SetActive(true);
+            {
+                if (!playerUI.endGameScreen.activeSelf)
+                {
+                    if (isTutorialActive)
+                        playerUI.victoryScreen.SetActive(true);
+                    else
+                    {
+                        audioSource.Play();
+                        StartCoroutine(LoadNextSceneAfterDelay());
+                    }
+                }
+            }
+        }
+        private IEnumerator LoadNextSceneAfterDelay()
+        {
+            yield return new WaitForSeconds(audioSource.clip.length);
+
+            // Load the next scene
+            sceneLoader.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
         public IEnumerator SceneScanning()
         {
@@ -215,9 +239,12 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            terrainScanMat.SetVector("_Position", Vector3.zero);
+            terrainScanMat.SetFloat("_Opacity", 0f);
         }
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            terrainScanMat.SetVector("_Position", Vector3.zero);
             terrainScanMat.SetFloat("_Opacity", 0f);
         }
     }
