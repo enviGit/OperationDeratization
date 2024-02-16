@@ -154,7 +154,16 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             if (eventName == "equipWeapon")
             {
                 weaponSockets.Attach(currentWeapon.transform, MeshSockets.SocketId.RightHand);
-                currentWeapon.transform.localPosition = Vector3.zero;
+
+                if(currentWeapon)
+                {
+                    if(currentWeapon.GetComponent<Weapon>().gun.gunType == GunType.Pistol)
+                        currentWeapon.transform.localPosition = new Vector3(0.0836f, -0.0644f, -0.0415f);
+                    else if(currentWeapon.GetComponent<Weapon>().gun.gunType == GunType.Revolver)
+                        currentWeapon.transform.localPosition = new Vector3(0.1347f, -0.0921f, -0.1241f);
+                    else
+                        currentWeapon.transform.localPosition = Vector3.zero;
+                }
             }
             //if (eventName == "holsterWeapon")
             //weaponSockets.Attach(currentWeapon.transform, MeshSockets.SocketId.Spine);

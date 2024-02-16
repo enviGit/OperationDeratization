@@ -15,6 +15,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         {
             agent.weapons.ActiveWeapon();
             agent.navMeshAgent.speed = agent.config.patrolSpeed;
+            agent.navMeshAgent.ResetPath();
         }
         public void Update(AiAgent agent)
         {

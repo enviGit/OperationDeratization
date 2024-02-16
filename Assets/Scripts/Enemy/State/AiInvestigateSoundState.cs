@@ -1,7 +1,12 @@
+using UnityEngine;
+
 namespace RatGamesStudios.OperationDeratization.Enemy.State
 {
     public class AiInvestigateSoundState : AiState
     {
+        private float timeSinceLastHeardTarget = 0f;
+        private float maxTimeWithoutTarget = 5f;
+
         public AiStateId GetId()
         {
             return AiStateId.InvestigateSound;
@@ -15,10 +20,34 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         }
         public void Update(AiAgent agent)
         {
-            if (!agent.navMeshAgent.hasPath || !agent.audioSensor.LastDetectedSoundAudible)
+            if (!agent.audioSensor.LastDetectedSoundAudible)
                 agent.stateMachine.RevertToPreviousState();
             if (agent.targeting.HasTarget)
+            {
                 agent.stateMachine.ChangeState(AiStateId.AttackTarget);
+                timeSinceLastHeardTarget = 0f; // Reset timer
+            }
+            else
+            {
+                if (Vector3.Distance(agent.audioSensor.LastDetectedSoundPosition, agent.transform.position) < 2.5f)
+                {
+                    timeSinceLastHeardTarget += Time.deltaTime;
+
+                    if (timeSinceLastHeardTarget >= maxTimeWithoutTarget)
+                    {
+                        if (agent.health.IsLowHealth())
+                        {
+                            agent.stateMachine.ChangeState(AiStateId.FindFirstAidKit);
+                            timeSinceLastHeardTarget = 0f;
+                        }
+                        else
+                        {
+                            agent.stateMachine.ChangeState(AiStateId.Patrol);
+                            timeSinceLastHeardTarget = 0f;
+                        }
+                    }
+                }
+            }
         }
         public void Exit(AiAgent agent)
         {
