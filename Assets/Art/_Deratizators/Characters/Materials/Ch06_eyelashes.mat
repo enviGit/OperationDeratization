@@ -23,18 +23,22 @@ Material:
   m_Name: Ch06_eyelashes
   m_Shader: {fileID: -6465566751694194690, guid: 48462817418c5874385ca8ba82f89cba,
     type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _ALPHATEST_ON
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
   disabledShaderPasses:
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
   - RayTracingPrepass
+  - DepthOnly
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -162,6 +166,7 @@ Material:
     - _BlendMode: 0
     - _BlendOp: 0
     - _BumpScale: 1
+    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _ConservativeDepthOffsetEnable: 0
@@ -225,10 +230,12 @@ Material:
     - _UVSec: 0
     - _UseShadowThreshold: 0
     - _WorkflowMode: 1
+    - _ZTest: 4
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 3
     - _ZTestTransparent: 4
     - _ZWrite: 0
+    - _ZWriteControl: 0
     - _brightness: 15
     - _changeNoise: 1
     - _disappearIntensity: 0
