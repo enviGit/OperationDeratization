@@ -188,31 +188,41 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         SetCurrentWeapon(newWeaponIndex);
                         UpdateWeaponImages();
+                        currentItemIndex = newWeaponIndex - 3;
                     }
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     SetCurrentWeapon(0);
                     UpdateWeaponImages();
+                    currentItemIndex = -1;
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
                     SetCurrentWeapon(1);
                     UpdateWeaponImages();
+                    currentItemIndex = -1;
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
                     SetCurrentWeapon(2);
                     UpdateWeaponImages();
+                    currentItemIndex = -1;
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha4))
                 {
                     currentItemIndex++;
 
-                    if (currentItemIndex > 2)
+                    if (currentItemIndex > 3)
                         currentItemIndex = 0;
 
                     int newWeaponIndex = currentItemIndex + 3;
+
+                    while (weapons[newWeaponIndex] == null && currentItemIndex < 4)
+                    {
+                        currentItemIndex++;
+                        newWeaponIndex = currentItemIndex + 3;
+                    }
 
                     SetCurrentWeapon(newWeaponIndex);
                     UpdateWeaponImages();
@@ -324,7 +334,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             currentWeaponIndex = index;
 
-            if(weapons[currentWeaponIndex].gunType == GunType.Sniper)
+            if (weapons[currentWeaponIndex].gunType == GunType.Sniper)
                 playerShoot.sniperCam = transform.Find("Camera/Main Camera/WeaponHolder/" + weapons[currentWeaponIndex].gunPrefab.name + "(Clone)/Mesh/SVD/Camera").GetComponent<Camera>();
         }
         public void UpdateWeaponImages()
