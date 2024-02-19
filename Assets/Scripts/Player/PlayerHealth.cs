@@ -17,6 +17,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private Ragdoll ragdoll;
         public Transform inventoryUI;
         [SerializeField] private GameObject miniMapCanvas;
+        [SerializeField] private Camera miniMapCamera;
         private PlayerInventory inventory;
         private AudioEventManager audioEventManager;
         private Transform sounds;
@@ -31,7 +32,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         [Header("Death")]
         private Transform cam;
         [SerializeField] private bool isTutorialActive = false;
-        [SerializeField] private AudioSource deathSounds;
+        private AudioSource deathSounds;
         [SerializeField] private AudioClip[] deathClips = new AudioClip[2];
 
         [Header("Health")]
@@ -54,6 +55,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             heartbeatSound = transform.Find("Sounds/Heartbeat").GetComponent<AudioSource>();
             impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
+            deathSounds = transform.Find("Sounds/Death").GetComponent<AudioSource>();
             ragdoll = GetComponent<Ragdoll>();
             inventory = GetComponent<PlayerInventory>();
             sounds = transform.Find("Sounds");
@@ -244,21 +246,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             isAlive = false;
             miniMapCanvas.SetActive(false);
-            cam.SetParent(null);
-            sounds.SetParent(null);
-
-            if (isTutorialActive)
-            {
-                cam.position = new Vector3(-23.95f, 6.14f, -16f);
-                cam.rotation = Quaternion.Euler(32.69f, 44.98f, 0.05f);
-            }
-            else
-            {
-                cam.position = new Vector3(303.92f, 19.76f, -110.96f);
-                cam.rotation = Quaternion.Euler(23.24f, 299.43f, 0.0456f);
-            }
-
-            cam.localScale = Vector3.one;
+            miniMapCamera.targetTexture = null;
 
             if (deathClips.Length > 0)
             {
@@ -288,9 +276,14 @@ namespace RatGamesStudios.OperationDeratization.Player
                     rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 }
             }
+            foreach(Transform child in cam.transform)
+                child.gameObject.SetActive(false);
 
-            gameObject.SetActive(false);
-            Destroy(cam.GetChild(0).gameObject);
+            GetComponent<CharacterController>().enabled = false;
+            GetComponent<PlayerMotor>().enabled = false;
+            GetComponent<PlayerInteract>().enabled = false;
+            GetComponent<PlayerInventory>().enabled = false;
+            GetComponent<PlayerShoot>().enabled = false;
         }
         private void PlaySecondDeathClip()
         {
