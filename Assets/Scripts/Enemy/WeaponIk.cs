@@ -13,7 +13,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
     {
         private Transform targetTransform;
         private Transform aimTransform;
+        //
         private Vector3 targetOffset = new Vector3(0, 0.65f, 0);
+        //
         public int iterations = 10;
         [Range(0, 1)] public float weight = 1f;
         public float angleLimit = 90f;
@@ -57,6 +59,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private Vector3 GetTargetPosition()
         {
             Vector3 targetDirection = (targetTransform.position + targetOffset) - aimTransform.position;
+            //Vector3 targetDirection = targetTransform.position - aimTransform.position;
             Vector3 aimDirection = aimTransform.forward;
             float blendOut = 0;
             float targetAngle = Vector3.Angle(targetDirection, aimDirection);

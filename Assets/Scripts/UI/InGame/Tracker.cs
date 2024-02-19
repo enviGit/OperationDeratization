@@ -31,6 +31,8 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         [SerializeField] private SceneLoader sceneLoader;
         [SerializeField] private bool isTutorialActive = false;
         private AudioSource audioSource;
+        [SerializeField] private GameObject minimap = null;
+        [SerializeField] private GameObject subtitles = null;
 
         private void Awake()
         {
@@ -43,9 +45,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void Update()
         {
-            //if(shouldCheckForVictory)
-            //Do sth
-
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 if (!isTracking && !isOnCooldown && opponents.Count > 0)
@@ -189,6 +188,8 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                         playerUI.victoryScreen.SetActive(true);
                     else
                     {
+                        minimap.SetActive(false);
+                        subtitles.SetActive(true);
                         audioSource.Play();
                         StartCoroutine(LoadNextSceneAfterDelay());
                     }

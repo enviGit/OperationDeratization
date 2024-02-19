@@ -1,4 +1,3 @@
-using RatGamesStudios.OperationDeratization.Interactables;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -162,6 +161,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
                     newWeapon.layer = LayerMask.NameToLayer("Interactable");
                     SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
+                    newWeapon.tag = "Weapon";
                     Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
                     weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
                     weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
@@ -277,6 +277,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity);
                     newWeapon.layer = LayerMask.NameToLayer("Interactable");
                     SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
+                    newWeapon.tag = "Weapon";
                     Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
                     weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
                     weaponRigidbody.mass = 2f;
@@ -317,6 +318,8 @@ namespace RatGamesStudios.OperationDeratization.Player
                     weapon.gameObject.SetActive(false);
                 else
                     weapon.gameObject.SetActive(true);
+
+                weapon.tag = "Untagged";
             }
 
             currentWeaponIndex = index;
