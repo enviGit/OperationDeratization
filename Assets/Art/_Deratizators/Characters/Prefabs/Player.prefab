@@ -1016,13 +1016,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recoil: {fileID: 8691292380146004751}
   sway: {fileID: 8691292381907960947}
-  muzzleFlash: {fileID: 100006, guid: 56e0e2eb44b8b05459913533ae401929, type: 3}
+  muzzleFlash: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc,
+    type: 3}
   impactEffect: {fileID: 100002, guid: 957385c45b877e645a128e11a3efb2f9, type: 3}
   impactRicochet: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
   bloodSpread: {fileID: 1000012909287652, guid: abb9f519b142e304d9c45b56afa768bc,
     type: 3}
   bloodWound: {fileID: 653411554418141, guid: 738b94983f507d64091b820286618565, type: 3}
   cam: {fileID: 8691292380173245579}
+  sniperCam: {fileID: 0}
   throwForce: 25
   throwUpForce: 10
   linePoints: 25
@@ -7996,7 +7998,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8691292380146004749}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.07507177, y: -1.59, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8107,6 +8109,7 @@ GameObject:
   - component: {fileID: 8691292380173245620}
   - component: {fileID: 8691292380173245622}
   - component: {fileID: 8691292380173245619}
+  - component: {fileID: 6417630498000502581}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -8311,6 +8314,19 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8691292380173245577}
   m_Enabled: 1
+--- !u!114 &6417630498000502581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8691292380173245577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 301eca71255100647bb9bad1d5641921, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: 3d417cf48fde7da46b5a79811115e87f, type: 3}
 --- !u!1 &8691292381907960945
 GameObject:
   m_ObjectHideFlags: 0
@@ -8362,7 +8378,7 @@ MonoBehaviour:
   playerShoot: {fileID: 1148401328078746728}
   speedCurve: 0
   travelLimit: {x: 0.025, y: 0.025, z: 0.025}
-  bobLimit: {x: 0.01, y: 0.01, z: 0.01}
+  swayLimit: {x: 0.01, y: 0.01, z: 0.01}
   multiplier: {x: 2.5, y: 2.5, z: 2.5}
 --- !u!1 &8691292381913636285
 GameObject:
@@ -8378,7 +8394,7 @@ GameObject:
   - component: {fileID: 8921346411665743758}
   m_Layer: 10
   m_Name: Knife_00(Clone)
-  m_TagString: Weapon
+  m_TagString: Untagged
   m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,5 +1,6 @@
 using RatGamesStudios.OperationDeratization.Interactables;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Enemy
@@ -53,7 +54,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private WeaponIk weaponIk;
         private Transform currentTarget;
         public bool weaponActive = false;
+        //
         public float inaccuracy = 0.4f;
+        //
 
         private void Start()
         {
@@ -83,6 +86,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             currentWeapon = weapon;
             currentWeapon.GetComponent<Weapon>().prompt = "";
             currentWeapon.GetComponent<Weapon>().enabled = false;
+            currentWeapon.tag =  "Untagged";
             currentWeapon.layer = LayerMask.NameToLayer("Default");
             SetLayerRecursively(currentWeapon, LayerMask.NameToLayer("Default"));
             sockets.Attach(currentWeapon.transform, MeshSockets.SocketId.Spine);
@@ -140,6 +144,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                 rb.mass = 2f;
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 currentWeapon.GetComponent<Weapon>().enabled = true;
+                currentWeapon.tag = "Weapon";
                 currentWeapon.layer = LayerMask.NameToLayer("Interactable");
                 SetLayerRecursively(currentWeapon, LayerMask.NameToLayer("Interactable"));
                 currentWeapon = null;
@@ -155,23 +160,49 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             {
                 weaponSockets.Attach(currentWeapon.transform, MeshSockets.SocketId.RightHand);
 
-                if(currentWeapon)
+                if (currentWeapon)
                 {
-                    if(currentWeapon.GetComponent<Weapon>().gun.gunType == GunType.Pistol)
+                    if (currentWeapon.GetComponent<Weapon>().gun.gunType == GunType.Pistol)
                         currentWeapon.transform.localPosition = new Vector3(0.0836f, -0.0644f, -0.0415f);
-                    else if(currentWeapon.GetComponent<Weapon>().gun.gunType == GunType.Revolver)
+                    else if (currentWeapon.GetComponent<Weapon>().gun.gunType == GunType.Revolver)
                         currentWeapon.transform.localPosition = new Vector3(0.1347f, -0.0921f, -0.1241f);
                     else
                         currentWeapon.transform.localPosition = Vector3.zero;
                 }
             }
-            //if (eventName == "holsterWeapon")
-            //weaponSockets.Attach(currentWeapon.transform, MeshSockets.SocketId.Spine);
         }
         public void SetTarget(Transform target)
         {
             weaponIk.SetTargetTransform(target);
             currentTarget = target;
+
+            /*if (target != null)
+            {
+                Collider[] hitboxes = target.GetComponentsInChildren<Collider>();
+
+                if (hitboxes.Length > 0)
+                {
+                    List<Collider> hitboxesWithHitboxLayer = new List<Collider>();
+
+                    foreach (Collider collider in hitboxes)
+                    {
+                        if (collider.gameObject.layer == LayerMask.NameToLayer("Hitbox"))
+                            hitboxesWithHitboxLayer.Add(collider);
+                    }
+
+                    if (hitboxesWithHitboxLayer.Count > 0)
+                    {
+                        Collider randomHitbox = hitboxesWithHitboxLayer[Random.Range(0, hitboxesWithHitboxLayer.Count)];
+                        weaponIk.SetTargetTransform(randomHitbox.transform);
+                        currentTarget = randomHitbox.transform;
+                    }
+                }
+            }
+            else
+            {
+                weaponIk.SetTargetTransform(target);
+                currentTarget = target;
+            }*/
         }
         public void RefillAmmo(int magazineSize)
         {
