@@ -130,7 +130,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && stamina.currentStamina > 0f && !_isAiming)
             {
                 isRunning = true;
-                moveSpeed *= 1.3f;
+                moveSpeed *= 1.5f;
             }
             else
                 isRunning = false;

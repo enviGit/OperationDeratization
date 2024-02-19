@@ -222,7 +222,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                             if (hitBox.playerHealth == null)
                             {
                                 hitBox.OnRaycastHit(currentWeapon, cam.transform.forward, gameObject);
-                                ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                                ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, ObjectPoolManager.PoolType.VFX);
 
                                 if (!isLowQuality)
                                     ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
@@ -375,7 +375,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                             if (hitBox != null && hitBox.playerHealth == null)
                             {
                                 hitBox.OnRaycastHit(currentWeapon, cam.transform.forward, gameObject);
-                                ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                                ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, ObjectPoolManager.PoolType.VFX);
 
                                 if (!isLowQuality)
                                     if (currentWeapon.gunStyle != GunStyle.Melee)

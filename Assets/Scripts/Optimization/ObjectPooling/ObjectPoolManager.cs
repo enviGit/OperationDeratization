@@ -9,10 +9,12 @@ namespace RatGamesStudios.OperationDeratization.Optimization.ObjectPooling
         public static List<PooledObjectInfo> ObjectPools = new List<PooledObjectInfo>();
         private GameObject objectPoolEmptyHolder;
         private static GameObject particleSystemsEmpty;
+        private static GameObject vfxEmpty;
         private static GameObject gameObjectsEmpty;
         public enum PoolType
         {
             ParticleSystem,
+            VFX,
             Gameobject
         }
         public static PoolType PoolingType;
@@ -26,6 +28,8 @@ namespace RatGamesStudios.OperationDeratization.Optimization.ObjectPooling
             objectPoolEmptyHolder = new GameObject("///Pooled Objects");
             particleSystemsEmpty = new GameObject("Particle Effects");
             particleSystemsEmpty.transform.SetParent(objectPoolEmptyHolder.transform);
+            vfxEmpty = new GameObject("VFX");
+            vfxEmpty.transform.SetParent(objectPoolEmptyHolder.transform);
             gameObjectsEmpty = new GameObject("Game Objects");
             gameObjectsEmpty.transform.SetParent(objectPoolEmptyHolder.transform);
         }
@@ -139,6 +143,8 @@ namespace RatGamesStudios.OperationDeratization.Optimization.ObjectPooling
             {
                 case PoolType.ParticleSystem:
                     return particleSystemsEmpty;
+                case PoolType.VFX:
+                    return vfxEmpty;
                 case PoolType.Gameobject:
                     return gameObjectsEmpty;
                 default:

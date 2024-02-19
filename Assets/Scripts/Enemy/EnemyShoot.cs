@@ -120,7 +120,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                                     if (spreadHitBox.health != null)
                                     {
                                         spreadHitBox.OnRaycastHit(currentWeapon, muzzle.forward, gameObject); //Or transform.forward
-                                        ObjectPoolManager.SpawnObject(bloodSpread, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
+                                        ObjectPoolManager.SpawnObject(bloodSpread, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), ObjectPoolManager.PoolType.VFX);
 
                                         if (!isLowQuality)
                                             ObjectPoolManager.SpawnObject(bloodWound, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
@@ -160,7 +160,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                         if (hitBox.health != null)
                         {
                             hitBox.OnRaycastHit(currentWeapon, muzzle.forward, gameObject); //Or transform.forward
-                            ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
+                            ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, ObjectPoolManager.PoolType.VFX);
 
                             if (!isLowQuality)
                                 ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
