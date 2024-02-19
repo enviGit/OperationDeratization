@@ -76,17 +76,16 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             if (moveDirection.magnitude > 0)
             {
+                if (moveDirection.magnitude > 1)
+                    moveDirection = moveDirection.normalized;
+
                 isMoving = true;
 
                 if (isCrouching)
                 {
                     currentState.playerStance = PlayerStance.Stance.Crouching;
 
-                    if (!_isAiming)
-                        moveSpeed = 2f;
-                    else
-                        moveSpeed = 1f;
-
+                    moveSpeed = !_isAiming ? 2f : 1f;
                     movementSound.pitch = Random.Range(0.35f, 0.65f);
                     movementSound.volume = 0.5f;
                     movementSound.maxDistance = 5f;
@@ -95,11 +94,8 @@ namespace RatGamesStudios.OperationDeratization.Player
                 else
                 {
                     currentState.playerStance = isRunning ? PlayerStance.Stance.Running : PlayerStance.Stance.Walking;
+                    moveSpeed = !_isAiming ? 4f : 2f;
 
-                    if (!_isAiming)
-                        moveSpeed = 4f;
-                    else
-                        moveSpeed = 2f;
                     if (isGrounded)
                     {
                         if (isRunning)
@@ -123,17 +119,12 @@ namespace RatGamesStudios.OperationDeratization.Player
                 {
                     movementSound.Play();
                     audioEventManager.NotifyAudioEvent(movementSound);
-                } 
+                }
             }
             else
             {
                 isMoving = false;
-
-                if (isCrouching)
-                    currentState.playerStance = PlayerStance.Stance.Crouching;
-                else
-                    currentState.playerStance = PlayerStance.Stance.Idle;
-
+                currentState.playerStance = isCrouching ? PlayerStance.Stance.Crouching : PlayerStance.Stance.Idle;
                 movementSound.Stop();
             }
             if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && stamina.currentStamina > 0f && !_isAiming)
