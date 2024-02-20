@@ -119,7 +119,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             float A2 = Area(v1, v, v3);
             float A3 = Area(v, v2, v3);
 
-            return (Mathf.Abs(A1 + A2 + A3 - A) < 1f);
+            return Mathf.Abs(A1 + A2 + A3 - A) < 1f;
         }
         public void EnableHighlight(int index)
         {

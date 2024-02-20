@@ -13,13 +13,15 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
     public class Tracker : MonoBehaviour
     {
         [SerializeField] private Image cooldownFillImage;
+        [SerializeField] private Image cooldownWheelFillImage;
         [SerializeField] private TextMeshProUGUI trackerCooldownText;
+        [SerializeField] private TextMeshProUGUI trackerCooldownWheelText;
         [SerializeField] private PauseMenu playerUI;
         public float trackingCooldown = 31f;
         public float trackingDuration = 5f;
         public Transform indicator;
-        public Transform player;
-        public List<GameObject> opponents = new List<GameObject>();
+        [HideInInspector] public Transform player;
+        [HideInInspector] public List<GameObject> opponents = new List<GameObject>();
         private GameObject nearestOpponent;
         public bool isTracking = false;
         public bool isOnCooldown = false;
@@ -157,7 +159,9 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private void UpdateCooldownFillAmount()
         {
             cooldownFillImage.fillAmount = 1 - (currentCooldownTime / trackingCooldown);
+            cooldownWheelFillImage.fillAmount = 1 - (currentCooldownTime / trackingCooldown);
             trackerCooldownText.text = Mathf.CeilToInt(currentCooldownTime).ToString() != "0" ? Mathf.CeilToInt(currentCooldownTime).ToString() : "";
+            trackerCooldownWheelText.text = Mathf.CeilToInt(currentCooldownTime).ToString() != "0" ? Mathf.CeilToInt(currentCooldownTime).ToString() : "";
         }
         public void MarkOpponentAsDead(GameObject opponent)
         {
@@ -205,33 +209,25 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         public IEnumerator SceneScanning()
         {
-            int numScans = 4;
-            float timeBetweenScans = 0.5f;
             float range = isTutorialActive ? 100f : 1000f;
+            float timer = 0f;
+            float scanRange = 0f;
+            float startOpacity = 1f;
+            float endOpacity = 0f;
+            terrainScanMat.SetVector("_Position", player.position);
 
-            for (int i = 0; i < numScans; i++)
+            while (timer <= 1f)
             {
-                float timer = 0f;
-                float scanRange = 0f;
-                float startOpacity = 1f;
-                float endOpacity = 0f;
-                terrainScanMat.SetVector("_Position", player.position);
+                timer += Time.deltaTime;
+                scanRange = Mathf.Lerp(0f, range, timer);
+                float interpolatedOpacity = Mathf.Lerp(startOpacity, endOpacity, timer);
+                terrainScanMat.SetFloat("_Range", scanRange);
+                terrainScanMat.SetFloat("_Opacity", interpolatedOpacity);
 
-                while (timer <= 1f)
-                {
-                    timer += Time.deltaTime;
-                    scanRange = Mathf.Lerp(0f, range, timer);
-                    float interpolatedOpacity = Mathf.Lerp(startOpacity, endOpacity, timer);
-                    terrainScanMat.SetFloat("_Range", scanRange);
-                    terrainScanMat.SetFloat("_Opacity", interpolatedOpacity);
-
-                    yield return null;
-                }
-
-                terrainScanMat.SetFloat("_Opacity", 0f);
-
-                yield return new WaitForSeconds(timeBetweenScans);
+                yield return null;
             }
+
+            terrainScanMat.SetFloat("_Opacity", 0f);
         }
         private void OnEnable()
         {

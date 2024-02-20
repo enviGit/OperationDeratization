@@ -39,7 +39,7 @@ namespace RatGamesStudios.OperationDeratization.Manager
         {
             if (isWinCutsceneActive && timeline.time >= 58f && vignette != null)
             {
-                float voronoiIntensity = Mathf.Lerp(0f, 0.3f, 1f);
+                float voronoiIntensity = Mathf.Lerp(0f, 0.75f, 1f);
                 float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1f);
                 vignette.SetFloat("_VoronoiIntensity", voronoiIntensity);
                 vignette.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);

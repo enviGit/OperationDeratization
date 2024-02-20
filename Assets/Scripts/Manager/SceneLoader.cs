@@ -13,11 +13,13 @@ namespace RatGamesStudios.OperationDeratization.Manager
         [SerializeField] private GameObject[] gObjectsToDeactivate;
         private AudioSource loadingSound;
         private Image loadingImage;
+        private Animator animator;
 
         private void Start()
         {
             loadingSound = GetComponent<AudioSource>();
             loadingImage = LoaderUI.transform.GetChild(0).GetComponent<Image>();
+            animator = GameObject.FindGameObjectWithTag("Bang").GetComponent<Animator>();
         }
         public void RestartScene()
         {
@@ -44,11 +46,16 @@ namespace RatGamesStudios.OperationDeratization.Manager
                     child.SetActive(false);
             }
             
-            progressSlider.value = 0;
-            LoaderUI.SetActive(true);
             PauseMenu.GameIsPaused = false;
             Time.timeScale = 1f;
             AudioListener.pause = false;
+            animator.SetTrigger("FadeOut");
+
+            yield return new WaitForSeconds(1f);
+
+            animator.gameObject.SetActive(false);
+            progressSlider.value = 0;
+            LoaderUI.SetActive(true);
             loadingSound.Play();
             AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(index, LoadSceneMode.Single);
             asyncOperation.allowSceneActivation = false;
