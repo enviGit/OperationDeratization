@@ -21,13 +21,17 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         {
             player = GameObject.FindGameObjectWithTag("Player");
 
-            if(player != null)
+            if (player != null)
             {
                 playerTransform = player.transform;
                 characterController = playerTransform.GetComponent<CharacterController>();
                 playerMotor = playerTransform.GetComponent<PlayerMotor>();
 
             }
+        }
+        private void FixedUpdate()
+        {
+            InputHandle();
         }
         protected override void Interact()
         {
@@ -51,11 +55,11 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             isClimbing = false;
             playerMotor._isClimbing = isClimbing;
         }
-        private void FixedUpdate()
+        private void InputHandle()
         {
             if (isClimbing)
             {
-                if(playerMotor.shouldDetachFromLadder)
+                if (playerMotor.shouldDetachFromLadder)
                 {
                     DetachFromLadder();
                     playerMotor.shouldDetachFromLadder = false;

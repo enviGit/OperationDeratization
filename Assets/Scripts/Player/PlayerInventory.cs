@@ -57,7 +57,10 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             SwitchItem();
             RemoveItem();
-
+            GrenadesCount();       
+        }
+        private void GrenadesCount()
+        {
             if (weapons[3] != null)
                 grenadeCount = weapons[3].currentAmmoCount;
             else
@@ -188,14 +191,11 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         SetCurrentWeapon(newWeaponIndex);
                         UpdateWeaponImages();
+
                         if (newWeaponIndex >= 3 && newWeaponIndex <= 6)
-                        {
                             currentItemIndex = newWeaponIndex - 3;
-                        }
                         else
-                        {
                             currentItemIndex = -1;
-                        }
                     }
                 }
                 else

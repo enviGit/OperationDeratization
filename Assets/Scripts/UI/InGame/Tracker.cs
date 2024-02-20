@@ -47,18 +47,29 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void Update()
         {
+            HandleInput();
+            UpdateTracking();
+            CalculateTargetRotation();
+            indicator.rotation = Quaternion.RotateTowards(indicator.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            //indicator.rotation = Quaternion.Slerp(indicator.rotation, Quaternion.LookRotation(nearestOpponent.transform.position - player.position) * Quaternion.Euler(-15, 1, 60), rotationSpeed * Time.deltaTime);
+        }
+        private void HandleInput()
+        {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                if (!isTracking && !isOnCooldown && opponents.Count > 0)
+                if (Input.GetKeyDown(KeyCode.Z))
                 {
-                    StartTracking();
-                    StartCoroutine(SceneScanning());
-                    trackerSound.Play();
+                    if (!isTracking && !isOnCooldown && opponents.Count > 0)
+                    {
+                        StartTracking();
+                        StartCoroutine(SceneScanning());
+                        trackerSound.Play();
+                    }
                 }
             }
-
-            UpdateTracking();
-
+        }
+        private void CalculateTargetRotation()
+        {
             if (nearestOpponent != null)
             {
                 Vector3 direction = nearestOpponent.transform.position - player.position;
@@ -77,13 +88,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             }
             else
                 indicator.GetChild(0).gameObject.SetActive(false);
-
-            RotateIndicator();
-        }
-        private void RotateIndicator()
-        {
-            indicator.rotation = Quaternion.RotateTowards(indicator.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            //indicator.rotation = Quaternion.Slerp(indicator.rotation, Quaternion.LookRotation(nearestOpponent.transform.position - player.position) * Quaternion.Euler(-15, 1, 60), rotationSpeed * Time.deltaTime);
         }
         public void StartTracking()
         {

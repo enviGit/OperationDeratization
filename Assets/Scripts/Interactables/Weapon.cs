@@ -43,6 +43,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         }
         private void Update()
         {
+            PlayerRaycast();
+        }
+        private void PlayerRaycast()
+        {
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
             if(interact != null)

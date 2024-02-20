@@ -83,9 +83,17 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         private void Update()
         {
+            _isClimbing = playerMotor._isClimbing;
+            WeaponSwitch();
+            PointerPosition();
+            Shoot();
+            ReloadCheck();
+            GetAnimator();
+        }
+        private void WeaponSwitch()
+        {
             previousWeapon = currentWeapon;
             currentWeapon = inventory.CurrentWeapon;
-            _isClimbing = playerMotor._isClimbing;
 
             if (previousWeapon != null && previousWeapon.gunStyle != currentWeapon.gunStyle)
             {
@@ -107,17 +115,18 @@ namespace RatGamesStudios.OperationDeratization.Player
                     audioEventManager.NotifyAudioEvent(gunSwitchAudio);
                 }
             }
-
-            PointerPosition();
-            Shoot();
-
+        }
+        private void ReloadCheck()
+        {
             if (Input.GetKeyDown(KeyCode.R) && currentWeapon.magazineSize != currentWeapon.currentAmmoCount && currentWeapon.maxAmmoCount != 0 && !isReloading &&
                 (currentWeapon.gunStyle != GunStyle.Primary || currentWeapon.gunStyle != GunStyle.Secondary))
             {
                 weaponReload = currentWeapon;
                 StartCoroutine(ReloadCoroutine());
             }
-
+        }
+        private void GetAnimator()
+        {
             foreach (Transform child in weaponHolder)
             {
                 child.GetChild(0).gameObject.SetActive(true);
@@ -472,7 +481,10 @@ namespace RatGamesStudios.OperationDeratization.Player
                     weapon.localRotation = Quaternion.Euler(rotation);
                 }
                 if (currentWeapon.gunType == GunType.Sniper)
+                {
+                    dynamicFieldOfView = 25f;
                     sniperCam.gameObject.SetActive(false);
+                }
                 if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
                     playerMotor.moveSpeed = 4f;
                 else

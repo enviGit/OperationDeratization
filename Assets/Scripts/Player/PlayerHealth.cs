@@ -84,6 +84,10 @@ namespace RatGamesStudios.OperationDeratization.Player
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
             currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
             UpdateHealthUI();
+            Heartbeat();
+        }
+        private void Heartbeat()
+        {
             float healthPercentage = currentHealth / maxHealth;
 
             if (healthPercentage <= 0.3f && isAlive == true)

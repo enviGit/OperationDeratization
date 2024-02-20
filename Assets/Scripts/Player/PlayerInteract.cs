@@ -26,6 +26,10 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Update()
         {
             playerUI.UpdateText(string.Empty);
+            RaycastCheck();
+        }
+        private void RaycastCheck()
+        {
             ray = new Ray(cam.transform.position, cam.transform.forward);
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
 
