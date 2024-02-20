@@ -242,7 +242,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            for(int i = 0; i < icons.Length; i++)
+            for (int i = 0; i < icons.Length; i++)
             {
                 if (inventory.weapons[i + 1] != null)
                 {
@@ -306,8 +306,16 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                     }
                     else
                     {
-                        if (inventory.weapons[selectedIndex - 1] != null)   
+                        if (inventory.weapons[selectedIndex - 1] != null)
+                        {
                             inventory.SetCurrentWeapon(selectedIndex - 1);
+                            inventory.UpdateWeaponImages();
+
+                            if (selectedIndex > 3)
+                                inventory.currentItemIndex = selectedIndex - 4;
+                            else
+                                inventory.currentItemIndex = -1;
+                        }
                     }
 
                     selectedIndex = -1;
@@ -323,9 +331,9 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             {
                 Time.timeScale = Mathf.SmoothDamp(Time.timeScale, targetTimeScale, ref m_TimeV, timeToGoToTargetTimeScale);
 
-                foreach(AudioMixer child in mixers)
+                foreach (AudioMixer child in mixers)
                     child.SetFloat("Pitch", targetTimeScale * 10f * 5);
-            } 
+            }
             else
             {
                 Time.timeScale = Mathf.SmoothDamp(Time.timeScale, 1f, ref m_TimeV, timeToGoToTargetTimeScale / 10f);

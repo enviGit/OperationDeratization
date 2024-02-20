@@ -22,7 +22,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         [SerializeField] private Gun melee;
         public Gun[] weapons;
         public int currentWeaponIndex = -1;
-        private int currentItemIndex = 0;
+        [HideInInspector] public int currentItemIndex = 0;
         [HideInInspector] public int grenadeCount = 0;
         [HideInInspector] public int flashbangCount = 0;
         [HideInInspector] public int smokeCount = 0;
@@ -40,7 +40,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void Start()
         {
-            playerShoot = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShoot>();
+            playerShoot = GetComponent<PlayerShoot>();
             playerUI = GetComponent<PlayerUI>();
             weapons = new Gun[7];
             weapons[0] = melee;
@@ -188,44 +188,54 @@ namespace RatGamesStudios.OperationDeratization.Player
                     {
                         SetCurrentWeapon(newWeaponIndex);
                         UpdateWeaponImages();
-                        currentItemIndex = newWeaponIndex - 3;
+                        if (newWeaponIndex >= 3 && newWeaponIndex <= 6)
+                        {
+                            currentItemIndex = newWeaponIndex - 3;
+                        }
+                        else
+                        {
+                            currentItemIndex = -1;
+                        }
                     }
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                else
                 {
-                    SetCurrentWeapon(0);
-                    UpdateWeaponImages();
-                    currentItemIndex = -1;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    SetCurrentWeapon(1);
-                    UpdateWeaponImages();
-                    currentItemIndex = -1;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
-                {
-                    SetCurrentWeapon(2);
-                    UpdateWeaponImages();
-                    currentItemIndex = -1;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha4))
-                {
-                    currentItemIndex++;
-
-                    if (currentItemIndex > 3)
-                        currentItemIndex = 0;
-
-                    int newWeaponIndex = currentItemIndex + 3;
-
-                    while (weapons[newWeaponIndex] == null && currentItemIndex < 4)
+                    if (Input.GetKeyDown(KeyCode.Alpha1))
+                    {
+                        SetCurrentWeapon(0);
+                        UpdateWeaponImages();
+                        currentItemIndex = -1;
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha2))
+                    {
+                        SetCurrentWeapon(1);
+                        UpdateWeaponImages();
+                        currentItemIndex = -1;
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha3))
+                    {
+                        SetCurrentWeapon(2);
+                        UpdateWeaponImages();
+                        currentItemIndex = -1;
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha4))
                     {
                         currentItemIndex++;
-                        newWeaponIndex = currentItemIndex + 3;
-                    }
 
-                    SetCurrentWeapon(newWeaponIndex);
-                    UpdateWeaponImages();
+                        if (currentItemIndex > 3)
+                            currentItemIndex = 0;
+
+                        int newWeaponIndex = currentItemIndex + 3;
+
+                        while (weapons[newWeaponIndex] == null && currentItemIndex < 4)
+                        {
+                            currentItemIndex++;
+                            newWeaponIndex = currentItemIndex + 3;
+                        }
+
+                        SetCurrentWeapon(newWeaponIndex);
+                        UpdateWeaponImages();
+                    }
                 }
             }
         }

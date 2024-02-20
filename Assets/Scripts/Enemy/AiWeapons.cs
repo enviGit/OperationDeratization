@@ -86,7 +86,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             currentWeapon = weapon;
             currentWeapon.GetComponent<Weapon>().prompt = "";
             currentWeapon.GetComponent<Weapon>().enabled = false;
-            currentWeapon.tag =  "Untagged";
+            currentWeapon.tag = "Untagged";
             currentWeapon.layer = LayerMask.NameToLayer("Default");
             SetLayerRecursively(currentWeapon, LayerMask.NameToLayer("Default"));
             sockets.Attach(currentWeapon.transform, MeshSockets.SocketId.Spine);
