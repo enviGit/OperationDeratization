@@ -186,13 +186,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             gunReloadAudio.clip = currentWeapon.gunAudioClips[2];
             gunReloadAudio.Play();
             audioEventManager.NotifyAudioEvent(gunFireAudio);
+            
+            yield return new WaitForSeconds(currentWeapon.reloadTime);
 
-            if (currentWeapon.gunType == GunType.Pistol)
-                yield return new WaitForSeconds(2f);
-            else if (currentWeapon.gunType == GunType.Revolver || currentWeapon.gunType == GunType.Rifle)
-                yield return new WaitForSeconds(3f);
-            else if (currentWeapon.gunType == GunType.Shotgun || currentWeapon.gunType == GunType.Sniper)
-                yield return new WaitForSeconds(4f);
             if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)
                 yield break;
 

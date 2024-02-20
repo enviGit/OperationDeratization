@@ -4,6 +4,7 @@ using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Player
@@ -397,12 +398,8 @@ namespace RatGamesStudios.OperationDeratization.Player
             gunReloadAudio.Play();
             audioEventManager.NotifyAudioEvent(gunReloadAudio);
 
-            if (currentWeapon.gunType == GunType.Pistol)
-                yield return new WaitForSeconds(2f);
-            else if (currentWeapon.gunType == GunType.Revolver || currentWeapon.gunType == GunType.Rifle)
-                yield return new WaitForSeconds(3f);
-            else if (currentWeapon.gunType == GunType.Shotgun || currentWeapon.gunType == GunType.Sniper)
-                yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(currentWeapon.reloadTime);
+            
             if (weaponReload.currentAmmoCount == weaponReload.magazineSize)
                 yield break;
 
@@ -438,72 +435,8 @@ namespace RatGamesStudios.OperationDeratization.Player
             transform.localRotation = Quaternion.Euler(0f, mouseX, 0f) * transform.localRotation;
             cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             Transform weapon = transform.Find("Camera/Main Camera/WeaponHolder/" + currentWeapon.gunPrefab.name + "(Clone)");
-            Vector3 originalPosition = new Vector3(0.05f, -0.0578f, 0.1701f);
-            Vector3 originalRotation = new Vector3(20.84f, -161.87f, 100f);
-            Vector3 aimingPosition = new Vector3(0.05f, -0.0578f, 0.1701f);
-            Vector3 aimingRotation = new Vector3(20.84f, -161.87f, 100f);
-
-            switch (currentWeapon.gunType)
-            {
-                case GunType.Melee:
-                    originalPosition = new Vector3(0.05f, -0.0578f, 0.1701f);
-                    originalRotation = new Vector3(20.84f, -161.87f, 100f);
-                    break;
-                case GunType.Pistol:
-                    originalPosition = new Vector3(0.18f, -0.12f, 0.46f);
-                    originalRotation = new Vector3(3f, 5f, 0);
-                    aimingPosition = new Vector3(0, -0.07f, 0.52f);
-                    aimingRotation = new Vector3(0, 0, 0);
-                    break;
-                case GunType.Revolver:
-                    originalPosition = new Vector3(0.19f, -0.22f, 0.35f);
-                    originalRotation = new Vector3(-90f, 5f, 0);
-                    aimingPosition = new Vector3(0, -0.173f, 0.4f);
-                    aimingRotation = new Vector3(-87f, 0, 0);
-                    break;
-                case GunType.Shotgun:
-                    originalPosition = new Vector3(0.16f, -0.23f, 0.44f);
-                    originalRotation = new Vector3(3f, 5f, 0);
-                    aimingPosition = new Vector3(0.015f, -0.15f, 0.56f);
-                    aimingRotation = new Vector3(5f, 0.5f, 0);
-                    break;
-                case GunType.Rifle:
-                    originalPosition = new Vector3(0.16f, -0.27f, 0.25f);
-                    originalRotation = new Vector3(3f, 5f, 0);
-                    aimingPosition = new Vector3(0, -0.17f, 0.47f);
-                    aimingRotation = new Vector3(0, 0, 0);
-                    break;
-                case GunType.Sniper:
-                    originalPosition = new Vector3(0.12f, -0.23f, 0.45f);
-                    originalRotation = new Vector3(3f, 5f, 0);
-                    aimingPosition = new Vector3(0.0119f, -0.14f, 0.5f);
-                    aimingRotation = new Vector3(0, 0, 0);
-                    break;
-                case GunType.Grenade:
-                    originalPosition = new Vector3(0.16f, -0.15f, 0.3f);
-                    originalRotation = new Vector3(3f, 0, 0);
-                    aimingPosition = new Vector3(0.16f, -0.15f, 0.3f);
-                    aimingRotation = new Vector3(3f, 0, 0);
-                    break;
-                case GunType.Flashbang:
-                    originalPosition = new Vector3(0.16f, -0.15f, 0.3f);
-                    originalRotation = new Vector3(3f, 0, 0);
-                    aimingPosition = new Vector3(0.16f, -0.15f, 0.3f);
-                    aimingRotation = new Vector3(3f, 0, 0);
-                    break;
-                case GunType.Smoke:
-                    originalPosition = new Vector3(0.16f, -0.15f, 0.3f);
-                    originalRotation = new Vector3(3f, 0, 0);
-                    aimingPosition = new Vector3(0.16f, -0.15f, 0.3f);
-                    aimingRotation = new Vector3(3f, 0, 0);
-                    break;
-                case GunType.Molotov:
-                    originalPosition = new Vector3(0.12f, -0.16f, 0.17f);
-                    originalRotation = new Vector3(3f, 0, 0);
-                    aimingPosition = new Vector3(0.12f, -0.16f, 0.17f);
-                    aimingRotation = new Vector3(3f, 0, 0);
-                    break;
-            }
+            Dictionary<GunType, (Vector3 position, Vector3 rotation, Vector3 aimingPosition, Vector3 aimingRotation)> positions = currentWeapon.GunTypePositions;
+            (Vector3 position, Vector3 rotation, Vector3 aimingPosition, Vector3 aimingRotation) = positions[currentWeapon.gunType];
 
             if (Input.GetMouseButton(1) && currentWeapon.gunStyle != GunStyle.Melee && !playerMotor.isRunning)
             {
@@ -535,8 +468,8 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                 if (weapon != null)
                 {
-                    weapon.localPosition = originalPosition;
-                    weapon.localRotation = Quaternion.Euler(originalRotation);
+                    weapon.localPosition = position;
+                    weapon.localRotation = Quaternion.Euler(rotation);
                 }
                 if (currentWeapon.gunType == GunType.Sniper)
                     sniperCam.gameObject.SetActive(false);
