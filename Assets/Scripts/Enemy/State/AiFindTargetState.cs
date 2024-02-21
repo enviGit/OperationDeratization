@@ -44,6 +44,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
                         agent.stateMachine.ChangeState(AiStateId.Patrol);
                 }
             }
+
+            agent.CheckAndPlayRandomClip();
         }
         public void Exit(AiAgent agent)
         {

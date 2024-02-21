@@ -38,16 +38,22 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                         movementSound.pitch = Random.Range(0.35f, 0.65f);
                         movementSound.volume = 0.5f;
                         movementSound.maxDistance = 15f;
+                        movementSound.Play();
+                        audioEventManager.NotifyAudioEvent(movementSound);
                     }
                     else if(agent.velocity.magnitude > 1f && agent.velocity.magnitude != 0f)
                     {
                         movementSound.pitch = Random.Range(0.85f, 1.15f);
                         movementSound.volume = 1f;
                         movementSound.maxDistance = 30f;
+                        movementSound.Play();
+                        audioEventManager.NotifyAudioEvent(movementSound);
                     }
-
-                    movementSound.Play();
-                    audioEventManager.NotifyAudioEvent(movementSound);
+                    else
+                    {
+                        movementSound.maxDistance = 1.1f;
+                        movementSound.Stop();
+                    }
                 }
             }
             else

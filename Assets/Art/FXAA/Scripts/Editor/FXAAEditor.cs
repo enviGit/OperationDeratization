@@ -113,7 +113,7 @@ public class FXAAEditor : Editor
 			}
 			else
 			{
-				if( !m_webRequest.isNetworkError && !m_webRequest.isHttpError )
+				if( m_webRequest.result == UnityWebRequest.Result.Success )
 				{
 					m_info = BannerInfo.CreateFromJSON( m_webRequest.downloadHandler.text );
 					this.Repaint();
@@ -137,7 +137,7 @@ public class FXAAEditor : Editor
 			}
 			else
 			{
-				if( !m_webRequest.isNetworkError && !m_webRequest.isHttpError )
+				if( m_webRequest.result == UnityWebRequest.Result.Success )
 				{
 					Texture2D myTexture = ( (DownloadHandlerTexture)m_webRequest.downloadHandler ).texture;
 					m_fetchedImage = new Texture2D( myTexture.width, myTexture.height, TextureFormat.RGB24, false, true );

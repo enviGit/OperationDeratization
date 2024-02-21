@@ -1,6 +1,8 @@
+using Random = UnityEngine.Random;
 using RatGamesStudios.OperationDeratization.Enemy.State;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -29,6 +31,11 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         [HideInInspector] public EnemyHealth health;
         [HideInInspector] public AiAudioSensor audioSensor;
         public List<CriticalLocations> locations = new List<CriticalLocations>();
+        [SerializeField] private AudioSource talkSound;
+        [SerializeField] private AudioClip[] searchStateClips = new AudioClip[5];
+        [SerializeField] private AudioClip[] attackStateClips = new AudioClip[5];
+        private Dictionary<AiStateId, AudioClip[]> stateClipMap = new Dictionary<AiStateId, AudioClip[]>();
+        private float lastPlayTime = 0f;
 
         private void Start()
         {
@@ -51,15 +58,40 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             stateMachine.RegisterState(new AiPatrolState());
             stateMachine.RegisterState(new AiInvestigateSoundState());
             stateMachine.ChangeState(initialState);
+            stateClipMap[AiStateId.FindTarget] = searchStateClips;
+            stateClipMap[AiStateId.InvestigateSound] = searchStateClips;
+            stateClipMap[AiStateId.AttackTarget] = attackStateClips;
         }
         private void Update()
         {
             stateMachine.Update();
             currentState = stateMachine.currentState;
         }
+        public void CheckAndPlayRandomClip()
+        {
+            if (!talkSound.isPlaying && stateClipMap.ContainsKey(currentState)) // Check if the talkSound audio source is not currently playing any sound
+            {
+                float timeSinceLastPlay = Time.time - lastPlayTime;
+                float minTimeBetweenPlays = (currentState == AiStateId.FindTarget || currentState == AiStateId.InvestigateSound) ? 25f : 5f;
+
+                if (timeSinceLastPlay >= minTimeBetweenPlays)
+                {
+                    StartCoroutine(PlayRandomClipCoroutine(stateClipMap[currentState]));
+                    lastPlayTime = Time.time;
+                }
+            }
+        }
+        private IEnumerator PlayRandomClipCoroutine(AudioClip[] clipsToUse)
+        {
+            yield return new WaitForSeconds(Random.Range(0f, 0.5f));
+
+            AudioClip randomClip = clipsToUse[Random.Range(0, clipsToUse.Length)];
+            talkSound.clip = randomClip;
+            talkSound.Play();
+        }
         private void OnDrawGizmos()
         {
-            if(locations != null)
+            if (locations != null)
             {
                 foreach (var location in locations)
                 {

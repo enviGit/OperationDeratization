@@ -30,6 +30,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
             agent.navMeshAgent.destination = agent.targeting.TargetPosition;
             UpdateFiring(agent);
             UpdateLowAmmo(agent);
+            agent.CheckAndPlayRandomClip();
         }
         private void UpdateFiring(AiAgent agent)
         {
