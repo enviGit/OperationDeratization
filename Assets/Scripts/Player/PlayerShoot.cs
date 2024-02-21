@@ -121,8 +121,14 @@ namespace RatGamesStudios.OperationDeratization.Player
             if (Input.GetKeyDown(KeyCode.R) && currentWeapon.magazineSize != currentWeapon.currentAmmoCount && currentWeapon.maxAmmoCount != 0 && !isReloading &&
                 (currentWeapon.gunStyle != GunStyle.Primary || currentWeapon.gunStyle != GunStyle.Secondary))
             {
+
                 weaponReload = currentWeapon;
                 StartCoroutine(ReloadCoroutine());
+            }
+            if (weaponReload != null && weaponReload != currentWeapon)
+            {
+                gunReloadAudio.Stop();
+                isReloading = false;
             }
         }
         private void GetAnimator()
@@ -408,31 +414,29 @@ namespace RatGamesStudios.OperationDeratization.Player
             audioEventManager.NotifyAudioEvent(gunReloadAudio);
 
             yield return new WaitForSeconds(currentWeapon.reloadTime);
-            
+
             if (weaponReload.currentAmmoCount == weaponReload.magazineSize)
-                yield break;
-
-            int ammoNeeded = weaponReload.magazineSize - weaponReload.currentAmmoCount;
-            int ammoAvailable = Mathf.Min(weaponReload.maxAmmoCount, ammoNeeded);
-
-            if (ammoAvailable == 0)
-                yield break;
-
-            int startingAmmoCount = weaponReload.currentAmmoCount;
-            int startingMaxAmmoCount = weaponReload.maxAmmoCount;
-
-            if (weaponReload != currentWeapon)
             {
-                gunReloadAudio.Stop();
-                weaponReload.currentAmmoCount = startingAmmoCount;
-                weaponReload.maxAmmoCount = startingMaxAmmoCount;
                 isReloading = false;
 
                 yield break;
             }
 
-            weaponReload.currentAmmoCount += ammoAvailable;
-            weaponReload.maxAmmoCount -= weaponReload.magazineSize;
+            int ammoNeeded = weaponReload.magazineSize - weaponReload.currentAmmoCount;
+            int ammoAvailable = Mathf.Min(weaponReload.maxAmmoCount, ammoNeeded);
+
+            if (ammoAvailable == 0)
+            {
+                isReloading = false;
+
+                yield break;
+            }
+            if(isReloading)
+            {
+                weaponReload.currentAmmoCount += ammoAvailable;
+                weaponReload.maxAmmoCount -= weaponReload.magazineSize;
+            }
+            
             isReloading = false;
         }
         private void PointerPosition()
