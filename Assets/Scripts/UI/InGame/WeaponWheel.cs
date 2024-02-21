@@ -267,13 +267,9 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                 Cursor.visible = false;
 
                 if (selectedIndex == 0)
-                {
                     HandleTrackerActivation();
-                }
                 else
-                {
                     HandleWeaponSelection();
-                }
 
                 selectedIndex = -1;
             }
@@ -290,13 +286,15 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         {
             if (inventory.weapons[selectedIndex - 1] != null)
             {
-                inventory.SetCurrentWeapon(selectedIndex - 1);
-                inventory.UpdateWeaponImages();
+                if (!inventory.isSwitchingWeapon)
+                {
+                    StartCoroutine(inventory.SwitchWeapon(selectedIndex - 1));
 
-                if (selectedIndex > 3)
-                    inventory.currentItemIndex = selectedIndex - 4;
-                else
-                    inventory.currentItemIndex = -1;
+                    if (selectedIndex > 3)
+                        inventory.currentItemIndex = selectedIndex - 4;
+                    else
+                        inventory.currentItemIndex = -1;
+                }
             }
         }
         private void AdjustTimeScaleAndAudioPitch()
@@ -316,7 +314,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                     child.SetFloat("Pitch", 1f);
             }
         }
-        
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

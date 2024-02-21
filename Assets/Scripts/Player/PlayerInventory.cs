@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         [HideInInspector] public int flashbangCount = 0;
         [HideInInspector] public int smokeCount = 0;
         [HideInInspector] public int molotovCount = 0;
+        public bool isSwitchingWeapon = false;
         public Gun CurrentWeapon
         {
             get
@@ -57,7 +59,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             SwitchItem();
             RemoveItem();
-            GrenadesCount();       
+            GrenadesCount();
         }
         private void GrenadesCount()
         {
@@ -160,7 +162,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 }
                 if (newItem.gunStyle == GunStyle.Primary || newItem.gunStyle == GunStyle.Secondary)
                 {
-                    Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
+                    Vector3 dropPosition = transform.position + transform.forward * 1f + transform.up * 1f;
                     GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
                     newWeapon.layer = LayerMask.NameToLayer("Interactable");
                     SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
@@ -173,13 +175,13 @@ namespace RatGamesStudios.OperationDeratization.Player
                     newWeapon.transform.rotation = randomRotation;
                 }
             }
-
+            
             weapons[newItemIndex] = newItem;
-            UpdateWeaponImages();
+            StartCoroutine(PullOutWeapon(newItemIndex));
         }
         public void SwitchItem()
         {
-            if (playerShoot.isAiming == false && !wheels.activeSelf)
+            if (playerShoot.isAiming == false && !wheels.activeSelf && !isSwitchingWeapon)
             {
                 int scrollDelta = (int)Input.mouseScrollDelta.y;
 
@@ -189,8 +191,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                     if (newWeaponIndex != currentWeaponIndex)
                     {
-                        SetCurrentWeapon(newWeaponIndex);
-                        UpdateWeaponImages();
+                        StartCoroutine(SwitchWeapon(newWeaponIndex));
 
                         if (newWeaponIndex >= 3 && newWeaponIndex <= 6)
                             currentItemIndex = newWeaponIndex - 3;
@@ -202,20 +203,17 @@ namespace RatGamesStudios.OperationDeratization.Player
                 {
                     if (Input.GetKeyDown(KeyCode.Alpha1))
                     {
-                        SetCurrentWeapon(0);
-                        UpdateWeaponImages();
+                        StartCoroutine(SwitchWeapon(0));
                         currentItemIndex = -1;
                     }
                     else if (Input.GetKeyDown(KeyCode.Alpha2))
                     {
-                        SetCurrentWeapon(1);
-                        UpdateWeaponImages();
+                        StartCoroutine(SwitchWeapon(1));
                         currentItemIndex = -1;
                     }
                     else if (Input.GetKeyDown(KeyCode.Alpha3))
                     {
-                        SetCurrentWeapon(2);
-                        UpdateWeaponImages();
+                        StartCoroutine(SwitchWeapon(2));
                         currentItemIndex = -1;
                     }
                     else if (Input.GetKeyDown(KeyCode.Alpha4))
@@ -233,11 +231,68 @@ namespace RatGamesStudios.OperationDeratization.Player
                             newWeaponIndex = currentItemIndex + 3;
                         }
 
-                        SetCurrentWeapon(newWeaponIndex);
-                        UpdateWeaponImages();
+                        StartCoroutine(SwitchWeapon(newWeaponIndex));
                     }
                 }
             }
+        }
+        public IEnumerator SwitchWeapon(int newIndex)
+        {
+            if(newIndex == currentWeaponIndex)
+                yield break;
+
+            isSwitchingWeapon = true;
+            Vector3 startPosition = weaponHolder.localPosition;
+            Vector3 targetPosition = startPosition - new Vector3(0f, 0.5f, 0f);
+            float elapsedTime = 0f;
+            float duration = 0.25f;
+
+            while (elapsedTime < duration)
+            {
+                weaponHolder.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            weaponHolder.localPosition = targetPosition;
+            SetCurrentWeapon(newIndex);
+            UpdateWeaponImages();
+            targetPosition = Vector3.zero;
+            elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                weaponHolder.localPosition = Vector3.Lerp(startPosition - new Vector3(0f, 0.5f, 0f), targetPosition, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            weaponHolder.localPosition = startPosition;
+            isSwitchingWeapon = false;
+        }
+        public IEnumerator PullOutWeapon(int newIndex)
+        {
+            isSwitchingWeapon = true;
+            Vector3 startPosition = weaponHolder.localPosition;
+            Vector3 targetPosition = startPosition;
+            startPosition -= new Vector3(0f, 0.5f, 0f);
+            float elapsedTime = 0f;
+            float duration = 0.25f;
+
+            while (elapsedTime < duration)
+            {
+                weaponHolder.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            weaponHolder.localPosition = targetPosition;
+            SetCurrentWeapon(newIndex);
+            UpdateWeaponImages();
+            isSwitchingWeapon = false;
         }
         private int FindNextWeaponIndex(int scrollDelta)
         {
