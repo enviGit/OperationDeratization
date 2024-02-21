@@ -190,13 +190,21 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             yield return new WaitForSeconds(currentWeapon.reloadTime);
 
             if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)
+            {
+                isReloading = false;
+
                 yield break;
+            }
 
             int ammoNeeded = currentWeapon.magazineSize - currentWeapon.currentAmmoCount;
             int ammoAvailable = Mathf.Min(currentWeapon.maxAmmoCount, ammoNeeded);
 
             if (ammoAvailable == 0)
+            {
+                isReloading = false;
+
                 yield break;
+            }
 
             currentWeapon.currentAmmoCount += ammoAvailable;
             currentWeapon.maxAmmoCount -= currentWeapon.magazineSize;
