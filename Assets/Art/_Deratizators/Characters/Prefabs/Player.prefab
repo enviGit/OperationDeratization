@@ -919,7 +919,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0db59f417e5190c4989d70f6541c1d2c, type: 3}
   - {fileID: 8300000, guid: bd8175f4761d291498ee7b4891ae1b6c, type: 3}
   - {fileID: 8300000, guid: 1a80109f83c2f5b448c2a631a4cf9c25, type: 3}
-  isTutorialActive: 0
   deathClips:
   - {fileID: 8300000, guid: cd7e050a08181b44ebb5b7a2e749d416, type: 3}
   - {fileID: 8300000, guid: 959bdafb8db80bc40b67d46e2881df3b, type: 3}
@@ -998,10 +997,12 @@ MonoBehaviour:
   melee: {fileID: 11400000, guid: 3880d37e7cc547a41b35abfa981276dd, type: 2}
   weapons: []
   currentWeaponIndex: -1
+  currentItemIndex: 0
   grenadeCount: 0
   flashbangCount: 0
   smokeCount: 0
   molotovCount: 0
+  isSwitchingWeapon: 0
 --- !u!114 &1148401328078746728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8160,7 +8161,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 1
   field of view: 80
   orthographic: 0
   orthographic size: 5
@@ -8173,7 +8174,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -8300,7 +8301,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
