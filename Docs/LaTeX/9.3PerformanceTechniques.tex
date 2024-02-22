@@ -1,5 +1,5 @@
 \subsubsection{Wyszukiwanie Obiektów}
-Podczas programowania w Unity, efektywne wyszukiwanie obiektów w scenie jest kluczowe dla wydajności gry. Unikamy zasobożernych funkcji, takich jak \textbf{FindObjectOfType}, szczególnie w każdej klatce, aby uniknąć zbędnego obciążenia.\\ \\
+Podczas programowania w Unity, efektywne wyszukiwanie obiektów w scenie jest kluczowe dla wydajności gry. Unikamy zasobożernych funkcji, takich jak \textbf{FindObjectOfType}, szczególnie w każdej klatce, aby uniknąć zbędnego obciążenia. Ostatecznie wyeliminowaliśmy wszystkie użycia tej funkcji z kilku prostych powodów, ale m.in. dlatego, że funkcja ta przeszukuje całą scenę (mówimy tu o wszystkich obiektach gry i o wszystkich ich komponentach!) oraz nie jest ograniczona do konkretnego obszaru lub hierarchii.\\ \\
 Zamiast tego, zalecamy korzystanie z bardziej efektywnych metod, takich jak:
 \begin{itemize}
     \item \textbf{Bezpośrednie Referencje w Edytorze Unity:} Przypisywanie referencji bezpośrednio w inspektorze Unity może być bardzo efektywne. Jeśli dany obiekt jest dostępny bezpośrednio poprzez referencję, nie trzeba korzystać z funkcji wyszukujących.

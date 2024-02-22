@@ -37,14 +37,15 @@ Wzorzec stanu jest używany, gdy obiekt ma zmieniające się zachowanie w zależ
 \begin{lstlisting}[language={[Sharp]C}, label={listing:AiState.cs}]
 public enum AiStateId
 {
-    ChasePlayer,
     Death,
     Idle,
     FindWeapon,
     AttackTarget,
     FindTarget,
     FindFirstAidKit,
-    FindAmmo
+    FindAmmo,
+    Patrol,
+    InvestigateSound
 }
 public interface AiState
 {

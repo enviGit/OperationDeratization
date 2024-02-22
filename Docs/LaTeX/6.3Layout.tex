@@ -2,7 +2,7 @@
 To tutaj kształtuje się świat gry, definiując główne obszary, trasy poruszania się gracza oraz punkty kluczowe. Zrozumienie tej struktury jest kluczowe dla zapewnienia płynności i logiczności rozgrywki. W tym kontekście, zajmiemy się analizą, jak zorganizować przestrzeń, aby stworzyć poziom, który nie tylko przyciąga wzrok, ale również dynamicznie reaguje na decyzje gracza.\\
 W celu zapewnienia dynamiki naszemu poziomowi, postawiliśmy na rozwiązanie pozwalające uniknąć nadmiernego wczytywania - czyli umieszczenie wszystkich segmentów poziomu - w obrębie jednej sceny Unity.
 Dodatkowo zastosowanie asynchronicznego ładowania sceny pozwoliło na stworzenie dużego poziomu bez większych problemów pod kątem wydajności.\\
-Rozwiązanie to ma jednak swoje ograniczenia - utrudnia wprowadzanie zmian w scenie więcej niż jednej osobie ze względu na sposób przechowywania danych na temat sceny w jednym pliku - więc potencjalne jednoczesne wprowadzania zmian może prowadzić do niemożliwości otwarcia sceny/problemów przy commitach.
+Rozwiązanie to ma jednak swoje ograniczenia - utrudnia wprowadzanie zmian w scenie więcej niż jednej osobie ze względu na sposób przechowywania danych na temat sceny w jednym pliku - więc potencjalne jednoczesne wprowadzania zmian może prowadzić do niemożliwości otwarcia sceny/problemów z wprowadzaniem zmian.
 Wszelkie obiekty umieszczone na scenie znajdują się w hierarchii sceny tutaj:\\
 \begin{figure}[h!]
     \centering
@@ -15,13 +15,11 @@ Wszelkie obiekty umieszczone na scenie znajdują się w hierarchii sceny tutaj:\
     \centering
     \includegraphics[width=0.65\linewidth]{Images/terrain.png}
     \caption{Ustawienia drzew na mapie - z poziomu terenu}
-    \label{fig:enter-label}
 \end{figure}
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.65\linewidth]{Images/image.png}
     \caption{Użyte tekstury}
-    \label{fig:enter-label}
 \end{figure}
 \newpage
 \subsubsection{Sekcje i Obszary Kluczowe}
@@ -34,14 +32,13 @@ Strefy które możemy wyróżnić w grze to:
     \item Farma
     \item Radiostacja
 \end{itemize}
-Wszystkie lokacje połączone są z sobą - dostep do nich jest nieograniczony - co daje graczowi dowolność w kolejności odwiedzania.
+Wszystkie lokacje połączone są z sobą - dostęp do nich jest nieograniczony - co daje graczowi dowolność w kolejności odwiedzania.
 
 Wszystkie obiekty związane z danymi lokacjami są odpowiednio pogrupowane w celu ułatwienia nawigacji przy potencjalnym wprowadzaniu zmian:
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\linewidth]{Images/cityexamplehierarchy.png}
     \caption{Przykład hierarchii dla sekcji miasta}
-    \label{fig:enter-label}
 \end{figure}
 Każda z sekcji jest również rozbita na obszary kluczowe dla niej - główne punkty uwagi gracza, które będą najczęściej odwiedzane
 Są to:
@@ -57,9 +54,9 @@ Są to:
     \end{itemize}
     \item Sekcja cmentarza jest podzielona na:
     \begin{itemize}
-        \item Sekcja wejściowa- brama praz nagrobki
+        \item Sekcja wejściowa - brama praz nagrobki
         \item Sekcja środkowa - ołtarz oraz kolumny
-        \item Sekcja tylnia- kurhany, mniejszy wydzielony fragment z nagrobkami
+        \item Sekcja tylna - kurhany, mniejszy wydzielony fragment z nagrobkami
     \end{itemize}
     \item Farma została podzielona na
     \begin{itemize}
@@ -80,20 +77,19 @@ Połączenia między sekcjami muszą być zarówno interesujące pod kątem posi
 Jednocześnie w dalszym ciągu powinny być łatwo widoczne oraz intuicyjne dla gracza.
 Ze względu na rozmiar mapy  jak i zastosowanie minimapy intuicyjność wyboru ścieżki i miejsca dokąd prowadzi nie stanowi żadnego wyzwania pod kątem tworzenia poziomu - gdyż lokacje są widoczne.\\
 W ramach zachęty do stosowania przez gracza wytyczonych ścieżek - pozostałe trasy posiadają dużą ilość drzew.
-Powoduje to znaczne spowolnienie w przemierzaniu terenu - jednakże gwarantuje większą ochronę - gdyż drzewa posiadają collidery, co sprawia że pocisk wystrzelony w strone gracza może zatrzymać się na obiekcie drzewa.\\
-Zastosowane w grze ściezki zostały wykonane przez naniesienie odpowiedniej, różnej od pozostałej powierzchni, tekstury - by za pomocą skojarzeń z dnia codziennego przekazać informacje "to jest ścieżka" graczowi.
+Powoduje to znaczne spowolnienie w przemierzaniu terenu - jednakże gwarantuje większą ochronę - gdyż drzewa posiadają collidery, co sprawia że pocisk wystrzelony w stronę gracza może zatrzymać się na obiekcie drzewa.\\
+Zastosowane w grze ścieżki zostały wykonane przez naniesienie odpowiedniej, różnej od pozostałej powierzchni, tekstury - by za pomocą skojarzeń z dnia codziennego przekazać informacje "to jest ścieżka" graczowi.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{Images/paths.png}
-    \caption{Sciezki naniesione na teren za pomoca tekstury}
-    \label{fig:enter-label}
+    \caption{Ścieżki naniesione na teren za pomocą tekstury}
 \end{figure}
 
-W celu urozmaicenia podróży gracza, na przecięciu najważniejszych ścieżek prowadzących do głównych sekcji wymienionych wyżej, została wprowadzona nowa podlokacja - Park.
-Umieszczenie kilku ławek, koszy oraz latarnii z dodaną emisją sprawiło że ścieżka nie sprawia wrażenie pustej, świat wydaje się żywszy i realniejszy.
+W celu urozmaicenia podróży gracza, na przecięciu najważniejszych ścieżek prowadzących do głównych sekcji wymienionych wyżej, została wprowadzona nowa mniejsza lokacja - Park.
+Umieszczenie kilku ławek, koszy oraz latarni z dodaną emisją sprawiło że ścieżka nie sprawia wrażenie pustej, świat wydaje się żywszy i realniejszy.
 Dodatkowo gracz może znaleźć po drodze na kilka broni - co okazało się konieczne w sytuacjach gdzie AI w agresywny sposób wykorzystało dostępne na mapie zasoby i zmusiło gracza do ucieczki - pozwoliło to uniknąć sytuacji gdzie gracz ginie bez możliwości sensownej obrony.
 
-Warto również wspomnieć że wszelkie lokalizacje mijane po drodze posiadają również teleportery, będace punktami startowymi dla gracza oraz botów. Poszczególne lokacje posiadają różne warianty kolorystyczne owych teleporterów, co może być swego rodzaju informacją dla gracza dzięki dobraniu kolorów powodującym skojarzenia:
+Warto również wspomnieć że wszelkie lokalizacje mijane po drodze posiadają również teleportery, będące punktami startowymi dla gracza oraz botów. Poszczególne lokacje posiadają różne warianty kolorystyczne owych teleporterów, co może być swego rodzaju informacją dla gracza dzięki dobraniu kolorów powodującym skojarzenia:
 \begin{itemize}
     \item Cmentarz \& kościół - pomarańczowy
     \item Radiostacja \& okolice - niebieski
