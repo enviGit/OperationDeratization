@@ -14,7 +14,6 @@ namespace RatGamesStudios.OperationDeratization.Player
         [HideInInspector] public Image backHealthBar;
         private Image frontArmorBar;
         [HideInInspector] public Image backArmorBar;
-        public Transform inventoryUI;
         [SerializeField] private GameObject miniMapCanvas;
         [SerializeField] private Camera miniMapCamera;
         private PlayerInventory inventory;

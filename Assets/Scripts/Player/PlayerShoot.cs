@@ -172,28 +172,15 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (weapon != null)
                         Destroy(weapon.gameObject);
                     if (currentWeapon.gunStyle == GunStyle.Grenade)
-                    {
                         inventory.weapons[inventory.currentWeaponIndex] = null;
-                        inventory.grenadeWeaponImage.gameObject.SetActive(false);
-                    }
                     if (currentWeapon.gunStyle == GunStyle.Flashbang)
-                    {
                         inventory.weapons[inventory.currentWeaponIndex] = null;
-                        inventory.flashbangWeaponImage.gameObject.SetActive(false);
-                    }
                     if (currentWeapon.gunStyle == GunStyle.Smoke)
-                    {
                         inventory.weapons[inventory.currentWeaponIndex] = null;
-                        inventory.smokeWeaponImage.gameObject.SetActive(false);
-                    }
                     if (currentWeapon.gunStyle == GunStyle.Molotov)
-                    {
                         inventory.weapons[inventory.currentWeaponIndex] = null;
-                        inventory.molotovWeaponImage.gameObject.SetActive(false);
-                    }
 
                     inventory.SetCurrentWeapon(0);
-                    inventory.UpdateWeaponImages();
 
                     return;
                 }

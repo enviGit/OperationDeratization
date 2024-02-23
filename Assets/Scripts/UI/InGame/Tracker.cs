@@ -12,9 +12,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
 {
     public class Tracker : MonoBehaviour
     {
-        [SerializeField] private Image cooldownFillImage;
         [SerializeField] private Image cooldownWheelFillImage;
-        [SerializeField] private TextMeshProUGUI trackerCooldownText;
         [SerializeField] private TextMeshProUGUI trackerCooldownWheelText;
         [SerializeField] private PauseMenu playerUI;
         public float trackingCooldown = 31f;
@@ -162,9 +160,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void UpdateCooldownFillAmount()
         {
-            cooldownFillImage.fillAmount = 1 - (currentCooldownTime / trackingCooldown);
             cooldownWheelFillImage.fillAmount = 1 - (currentCooldownTime / trackingCooldown);
-            trackerCooldownText.text = Mathf.CeilToInt(currentCooldownTime).ToString() != "0" ? Mathf.CeilToInt(currentCooldownTime).ToString() : "";
             trackerCooldownWheelText.text = Mathf.CeilToInt(currentCooldownTime).ToString() != "0" ? Mathf.CeilToInt(currentCooldownTime).ToString() : "";
         }
         public void MarkOpponentAsDead(GameObject opponent)

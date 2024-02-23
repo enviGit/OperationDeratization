@@ -225,7 +225,6 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
             weaponObject.transform.SetSiblingIndex(childIndex);
             inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
-            inventory.UpdateWeaponImages();
         }
         private IEnumerator DestroyAfterPickup(MeshRenderer mesh)
         {
