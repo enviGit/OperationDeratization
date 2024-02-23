@@ -69,7 +69,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                 audioEventManager.NotifyAudioEvent(gunFireAudio);
                 currentWeapon.currentAmmoCount--;
                 Transform muzzle = null;
-                string[] bonePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig10:", "mixamorig:" };
+                string[] bonePrefixes = { "mixamorig:", "mixamorig1:", "mixamorig4:", "mixamorig6:", "mixamorig7:", "mixamorig9:", "mixamorig10:", "mixamorig12:" };
 
                 foreach (string prefix in bonePrefixes)
                 {
