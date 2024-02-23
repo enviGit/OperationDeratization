@@ -89,10 +89,10 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                 }
             }
         }
-        // private void DestroyObject()
-        // {
-        //     Destroy(gameObject);
-        // }
+        private void DestroyObject()
+        {
+            Destroy(gameObject);
+        }
         private void OnCollisionEnter(Collision other)
         {
             if (other.gameObject.CompareTag("Glass"))
