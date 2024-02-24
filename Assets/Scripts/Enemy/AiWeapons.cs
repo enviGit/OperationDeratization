@@ -54,9 +54,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private WeaponIk weaponIk;
         private Transform currentTarget;
         public bool weaponActive = false;
-        //
         public float inaccuracy = 0.4f;
-        //
 
         private void Start()
         {
@@ -162,10 +160,14 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
                 if (currentWeapon)
                 {
-                    if (currentWeapon.GetComponent<Weapon>().gun.gunType == GunType.Pistol)
+                    GunType gunType = currentWeapon.GetComponent<Weapon>().gun.gunType;
+
+                    if (gunType == GunType.Pistol)
                         currentWeapon.transform.localPosition = new Vector3(0.0836f, -0.0644f, -0.0415f);
-                    else if (currentWeapon.GetComponent<Weapon>().gun.gunType == GunType.Revolver)
+                    else if (gunType == GunType.Revolver)
                         currentWeapon.transform.localPosition = new Vector3(0.1347f, -0.0921f, -0.1241f);
+                    else if(gunType == GunType.Sniper)
+                        currentWeapon.transform.localPosition = new Vector3(0.1012f, 0.039f, 0.196f);
                     else
                         currentWeapon.transform.localPosition = Vector3.zero;
                 }
@@ -173,10 +175,10 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         public void SetTarget(Transform target)
         {
-            weaponIk.SetTargetTransform(target);
-            currentTarget = target;
+            //weaponIk.SetTargetTransform(target);
+            //currentTarget = target;
 
-            /*if (target != null)
+            if (target != null)
             {
                 Collider[] hitboxes = target.GetComponentsInChildren<Collider>();
 
@@ -192,9 +194,21 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
                     if (hitboxesWithHitboxLayer.Count > 0)
                     {
-                        Collider randomHitbox = hitboxesWithHitboxLayer[Random.Range(0, hitboxesWithHitboxLayer.Count)];
-                        weaponIk.SetTargetTransform(randomHitbox.transform);
-                        currentTarget = randomHitbox.transform;
+                        List<string> preferredParts = new List<string> { "head", "spine" };
+                        List<Collider> preferredHitboxes = new List<Collider>();
+
+                        foreach (string part in preferredParts)
+                            preferredHitboxes.AddRange(hitboxesWithHitboxLayer.FindAll(hitbox => hitbox.name.ToLower().Contains(part)));
+
+                        Collider chosenHitbox;
+
+                        if (preferredHitboxes.Count > 0)
+                            chosenHitbox = preferredHitboxes[Random.Range(0, preferredHitboxes.Count)];
+                        else
+                            chosenHitbox = hitboxesWithHitboxLayer[Random.Range(0, hitboxesWithHitboxLayer.Count)];
+
+                        weaponIk.SetTargetTransform(chosenHitbox.transform);
+                        currentTarget = chosenHitbox.transform;
                     }
                 }
             }
@@ -202,7 +216,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             {
                 weaponIk.SetTargetTransform(target);
                 currentTarget = target;
-            }*/
+            }
         }
         public void RefillAmmo(int magazineSize)
         {
