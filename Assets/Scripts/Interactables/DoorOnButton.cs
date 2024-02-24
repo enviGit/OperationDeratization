@@ -40,6 +40,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         }
         private void Update()
         {
+            ShouldOpenDoors();
+        }
+        private void ShouldOpenDoors()
+        {
             if (leftDoor != null || rightDoor != null)
             {
                 if (DetectEnemyNearby())

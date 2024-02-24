@@ -43,6 +43,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         }
         private void Update()
         {
+            PlayerRaycast();
+        }
+        private void PlayerRaycast()
+        {
             LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
             if(interact != null)
@@ -221,7 +225,6 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
             weaponObject.transform.SetSiblingIndex(childIndex);
             inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
-            inventory.UpdateWeaponImages();
         }
         private IEnumerator DestroyAfterPickup(MeshRenderer mesh)
         {

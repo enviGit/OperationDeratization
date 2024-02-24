@@ -16,6 +16,10 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void Update()
         {
+            Check();
+        }
+        private void Check()
+        {
             if (_text == null)
                 return;
             if (weapon == null)

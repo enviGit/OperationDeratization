@@ -44,6 +44,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         }
         private void Update()
         {
+            ShouldOpenDoors();
+        }
+        private void ShouldOpenDoors()
+        {
             List<float> distance = new List<float>();
             int count = 0;
 

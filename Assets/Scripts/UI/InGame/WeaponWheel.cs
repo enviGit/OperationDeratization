@@ -61,52 +61,41 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private Vector2 mousePos;
         public bool WheelEnabled => m_WheelEnabled;
 
-        private void OnDrawGizmos()
+        private void Start()
         {
-            Gizmos.color = Color.red;
+            DisableWheel();
+            player = GameObject.FindGameObjectWithTag("Player");
+            inventory = player.GetComponent<PlayerInventory>();
+            health = player.GetComponent<PlayerHealth>();
+            playerCamera = Camera.main;
 
-            for (int i = 0; i < pos.Length - 1; ++i)
-                Gizmos.DrawLine(dots[i].position, dots[i + 1].position);
-
-            Gizmos.DrawLine(dots[pos.Length - 1].position, dots[0].position);
-            Vector3 center = transform.position;
-
-            for (int i = 0; i < pos.Length; ++i)
-                Gizmos.DrawLine(center, dots[i].position);
+            for (int i = 0; i < wheels.Length; i++)
+            {
+                if (wheels[i].wheel != null)
+                    wheels[i].NormalSprite = wheels[i].wheel.sprite;
+            }
+            for (int i = 0; i < dots.Length; i++)
+            {
+                pos[i].x = dots[i].position.x;
+                pos[i].y = dots[i].position.y;
+            }
         }
-        private void OnDrawGizmosSelected()
+        private void Update()
         {
-            start.x = pos[0].x;
-            start.y = pos[0].y;
-            start.z = dots[0].position.z;
+            bool isCoverActive = CheckForCoverActive();
 
-            for (int i = 0; i < pos.Length; ++i)
+            if (!isCoverActive && health.isAlive)
             {
-                end.x = pos[i].x;
-                end.y = pos[i].y;
-                end.z = dots[i].position.z;
-                Debug.DrawLine(start, end, Color.red);
+                HandleWheelActivation();
+                HandleWheelDeactivation();
             }
-            for (int i = 0; i < pos.Length - 1; ++i)
+            else
             {
-                start.x = pos[i].x;
-                start.y = pos[i].y;
-                start.z = dots[i].position.z;
-                end.x = pos[i + 1].x;
-                end.y = pos[i + 1].y;
-                end.z = dots[i + 1].position.z;
-                Debug.DrawLine(start, end, Color.red);
+                DisableWheel();
+                selectedIndex = -1;
             }
 
-            //For the Last Triangle
-            start.x = pos[8].x;
-            start.y = pos[8].y;
-            start.z = dots[8].position.z;
-            end.x = pos[1].x;
-            end.y = pos[1].y;
-            end.z = dots[1].position.z;
-            Debug.DrawLine(start, end, Color.red);
-
+            AdjustTimeScaleAndAudioPitch();
         }
         private float Area(Vector2 v1, Vector2 v2, Vector2 v3)
         {
@@ -215,25 +204,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             nameToDisplay.text = nameDisplayBuilder.ToString();  // Update the TextMeshPro text
             EnableHighlight(selectedIndex);
         }
-        private void Start()
-        {
-            DisableWheel();
-            player = GameObject.FindGameObjectWithTag("Player");
-            inventory = player.GetComponent<PlayerInventory>();
-            health = player.GetComponent<PlayerHealth>();
-            playerCamera = Camera.main;
-
-            for (int i = 0; i < wheels.Length; i++)
-            {
-                if (wheels[i].wheel != null)
-                    wheels[i].NormalSprite = wheels[i].wheel.sprite;
-            }
-            for (int i = 0; i < dots.Length; i++)
-            {
-                pos[i].x = dots[i].position.x;
-                pos[i].y = dots[i].position.y;
-            }
-        }
         private void EnableWheel()
         {
             wheelParent.SetActive(true);
@@ -242,7 +212,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            for(int i = 0; i < icons.Length; i++)
+            for (int i = 0; i < icons.Length; i++)
             {
                 if (inventory.weapons[i + 1] != null)
                 {
@@ -269,63 +239,73 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             if (blur != null)
                 blur.SetActive(false);
         }
-        private void Update()
+        private bool CheckForCoverActive()
         {
-            bool isCoverActive = false;
-
             foreach (GameObject coverCanvas in pause_options_victory)
             {
                 if (coverCanvas.activeSelf)
                 {
-                    isCoverActive = true;
-                    break;
+                    return true;
                 }
             }
-
-            if (!isCoverActive && health.isAlive)
+            return false;
+        }
+        private void HandleWheelActivation()
+        {
+            if (Input.GetKey(wheelKey))
             {
-                // Check for wheel activation
-                if (Input.GetKey(wheelKey))
-                {
-                    EnableWheel();
-                    CheckForCurrentWeapon();
-                }
-                else if (Input.GetKeyUp(wheelKey))
-                {
-                    DisableWheel();
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-
-                    if (selectedIndex == 0)
-                    {
-                        if (!tracker.isTracking && !tracker.isOnCooldown && tracker.opponents.Count > 0)
-                        {
-                            tracker.StartTracking();
-                            StartCoroutine(tracker.SceneScanning());
-                        }
-                    }
-                    else
-                    {
-                        if (inventory.weapons[selectedIndex - 1] != null)   
-                            inventory.SetCurrentWeapon(selectedIndex - 1);
-                    }
-
-                    selectedIndex = -1;
-                }
+                EnableWheel();
+                CheckForCurrentWeapon();
             }
-            else
+        }
+        private void HandleWheelDeactivation()
+        {
+            if (Input.GetKeyUp(wheelKey))
             {
-                // If cover is active, close the wheel
                 DisableWheel();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+
+                if (selectedIndex == 0)
+                    HandleTrackerActivation();
+                else
+                    HandleWeaponSelection();
+
                 selectedIndex = -1;
             }
+        }
+        private void HandleTrackerActivation()
+        {
+            if (!tracker.isTracking && !tracker.isOnCooldown && tracker.opponents.Count > 0)
+            {
+                tracker.StartTracking();
+                StartCoroutine(tracker.SceneScanning());
+            }
+        }
+        private void HandleWeaponSelection()
+        {
+            if (inventory.weapons[selectedIndex - 1] != null)
+            {
+                if (!inventory.isSwitchingWeapon)
+                {
+                    StartCoroutine(inventory.SwitchWeapon(selectedIndex - 1));
+
+                    if (selectedIndex > 3)
+                        inventory.currentItemIndex = selectedIndex - 4;
+                    else
+                        inventory.currentItemIndex = -1;
+                }
+            }
+        }
+        private void AdjustTimeScaleAndAudioPitch()
+        {
             if (m_WheelEnabled)
             {
                 Time.timeScale = Mathf.SmoothDamp(Time.timeScale, targetTimeScale, ref m_TimeV, timeToGoToTargetTimeScale);
 
-                foreach(AudioMixer child in mixers)
+                foreach (AudioMixer child in mixers)
                     child.SetFloat("Pitch", targetTimeScale * 10f * 5);
-            } 
+            }
             else
             {
                 Time.timeScale = Mathf.SmoothDamp(Time.timeScale, 1f, ref m_TimeV, timeToGoToTargetTimeScale / 10f);
@@ -333,6 +313,54 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
                 foreach (AudioMixer child in mixers)
                     child.SetFloat("Pitch", 1f);
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+
+            for (int i = 0; i < pos.Length - 1; ++i)
+                Gizmos.DrawLine(dots[i].position, dots[i + 1].position);
+
+            Gizmos.DrawLine(dots[pos.Length - 1].position, dots[0].position);
+            Vector3 center = transform.position;
+
+            for (int i = 0; i < pos.Length; ++i)
+                Gizmos.DrawLine(center, dots[i].position);
+        }
+        private void OnDrawGizmosSelected()
+        {
+            start.x = pos[0].x;
+            start.y = pos[0].y;
+            start.z = dots[0].position.z;
+
+            for (int i = 0; i < pos.Length; ++i)
+            {
+                end.x = pos[i].x;
+                end.y = pos[i].y;
+                end.z = dots[i].position.z;
+                Debug.DrawLine(start, end, Color.red);
+            }
+            for (int i = 0; i < pos.Length - 1; ++i)
+            {
+                start.x = pos[i].x;
+                start.y = pos[i].y;
+                start.z = dots[i].position.z;
+                end.x = pos[i + 1].x;
+                end.y = pos[i + 1].y;
+                end.z = dots[i + 1].position.z;
+                Debug.DrawLine(start, end, Color.red);
+            }
+
+            //For the Last Triangle
+            start.x = pos[8].x;
+            start.y = pos[8].y;
+            start.z = dots[8].position.z;
+            end.x = pos[1].x;
+            end.y = pos[1].y;
+            end.z = dots[1].position.z;
+            Debug.DrawLine(start, end, Color.red);
+
         }
     }
 }

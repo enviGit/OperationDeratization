@@ -31,6 +31,14 @@ namespace RatGamesStudios.OperationDeratization.Equipment
 
         private void Update()
         {
+            Assignments();
+            GetInput();
+            SwayOffset();
+            SwayRotation();
+            CompositePositionRotation();
+        }
+        private void Assignments()
+        {
             timeScale = Time.timeScale;
             isAiming = playerShoot.isAiming;
             isMoving = playerMotor.isMoving;
@@ -46,11 +54,6 @@ namespace RatGamesStudios.OperationDeratization.Equipment
                 multiplier = Vector3.one * 1f;
             else
                 multiplier = Vector3.one * 0f;
-
-            GetInput();
-            SwayOffset();
-            SwayRotation();
-            CompositePositionRotation();
         }
         private void GetInput()
         {

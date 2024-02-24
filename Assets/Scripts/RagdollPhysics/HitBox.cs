@@ -28,7 +28,7 @@ namespace RatGamesStudios.OperationDeratization.RagdollPhysics
         { "RightArm", 0.75f },
         { "RightForeArm", 0.7f },
     };
-        private string[] bonePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig10:", "mixamorig:" };
+        private string[] bonePrefixes = { "mixamorig:", "mixamorig1:", "mixamorig4:", "mixamorig6:", "mixamorig7:", "mixamorig9:", "mixamorig10:", "mixamorig12:" };
 
         public void OnRaycastHit(Gun weapon, Vector3 direction, GameObject shooter)
         {

@@ -88,7 +88,6 @@ stringstyle=\color{rose},
 %-------------------------------------------
 %keywords like string, int, false, true ...
 keywordstyle=\color{blue},
-%morekeywords={partial, var, value, get, set, LateUpdate},
 %-------------------------------------------
 %keywords like struct, vector3
 emphstyle=\color{grassgreen},
@@ -100,19 +99,19 @@ emph={[2]if, else, return, throw, switch, case, while, foreach, do, for, in, bre
 %-------------------------------------------
 %Collection of your local and global variables
 emphstyle={[3]\color{lightblue}},
-emph={[3]bone, boneWeight, targetPosition, i, j, hit, obstacleMask, rigidBody, force, agent, objectToSpawn, spawnPosition, spawnRotation, poolType, pool, p, spawnableObj, parentObject, obj, objName, index, asyncOperation, progress, elapsedTime, distanceToCamera, distance, dollyCart, pathPosition, count, target, indicator},
+emph={[3]bone, boneWeight, targetPosition, i, j, hit, obstacleMask, rigidBody, force, agent, objectToSpawn, spawnPosition, spawnRotation, poolType, pool, p, spawnableObj, parentObject, obj, objName, index, asyncOperation, progress, elapsedTime, distanceToCamera, distance, dollyCart, pathPosition, count, target, indicator, instance, Instance, name, Name, OnAudioEvent, audioSource, timeToDespawn, _timerCoroutine, deltaTime, gameObject, transform, parent, indicatorPrefab, holder, Death, Idle, FindWeapon, AttackTarget, FindTarget, FindFirstAidKit, FindAmmo, Patrol, InvestigateSound, useEvents, prompt, OnInteract, ObjectPools, LookupString, InactiveObjects, position, rotation, Length, aimTransform, targetTransform, iterations, boneTransforms, humanBones, weight, rigidBodies, isKinematic, animator, enabled, isUsingCameraCheck, vCamera, m_PathPosition, allowSceneActivation, isDone, progressSlider, zero, identity, unRegister},
 %-------------------------------------------
 %Collection of your class types
 emphstyle={[4]\color{aqua}},
-emph={[4]WeaponIk, PlayerMotor, Input, Physics, PlayerStance, MonoBehaviour, Transform, Range, GameObject, Serializable, Ragdoll, Rigidbody, AiAgent, InteractionEvent, SerializeField, Interactable, Header, ObjectPoolManager, PooledObjectInfo, Debug, SceneLoader, Slider, AsyncOperation, SceneManager, Time, ReturnToPoolOnAnimationEnd, ReturnToPoolAfterTimer, Coroutine, ReturnParticlesToPool, CinemachineTrackedDolly, DoorMotionSensor, DISystem, DamageIndicator, RectTransform},
+emph={[4]WeaponIk, PlayerMotor, Input, Physics, PlayerStance, MonoBehaviour, Transform, Range, GameObject, Serializable, Ragdoll, Rigidbody, AiAgent, InteractionEvent, SerializeField, Interactable, Header, ObjectPoolManager, PooledObjectInfo, Debug, SceneLoader, Slider, AsyncOperation, SceneManager, Time, ReturnToPoolOnAnimationEnd, ReturnToPoolAfterTimer, Coroutine, ReturnParticlesToPool, CinemachineTrackedDolly, DoorMotionSensor, DISystem, DamageIndicator, RectTransform, AudioEventManager, Action, AudioSource},
 %-------------------------------------------
 %Collection of build-in methods
 emphstyle={[5]\color{blue}},
-emph={[5]Start, Awake, FixedUpdate, LateUpdate, var, OnEnable, OnParticleSystemStopped},
+emph={[5]Start, Awake, FixedUpdate, LateUpdate, var, OnEnable, OnParticleSystemStopped, get, set, partial, var, value},
 %-------------------------------------------
 %Collection of your methods
 emphstyle={[6]\color{lightgreen}},
-emph={[6]AimAtTarget, GetTargetPosition, Raycast, NameToPlayer, GetKeyDown, CrouchToggle, ActivateRagdoll, ApplyForce, GetBoneTransform, GetComponent, AddForce, Enter, Update, Exit, GetId, Invoke, Interact, BaseInteract, OnLook, SpawnObject, FirstOrDefault, Add, SetParentObject, Instantiate, SetParent, Remove, SetActive, ReturnObjectToPool, Substring, LogWarning, LoadScene, StartCoroutine, LoadScene_Coroutine, LoadSceneAsync, MoveTowards, DestroyParent, ReturnToPoolAfterTime, OnParticleSystemStopped, GetCinemachineComponent, Distance, Create, Countdown},
+emph={[6]AimAtTarget, GetTargetPosition, Raycast, NameToPlayer, GetKeyDown, CrouchToggle, ActivateRagdoll, ApplyForce, GetBoneTransform, GetComponent, AddForce, Enter, Update, Exit, GetId, Invoke, Interact, BaseInteract, OnLook, SpawnObject, FirstOrDefault, Add, SetParentObject, Instantiate, SetParent, Remove, SetActive, ReturnObjectToPool, Substring, LogWarning, LoadScene, StartCoroutine, LoadScene_Coroutine, LoadSceneAsync, MoveTowards, DestroyParent, ReturnToPoolAfterTime, OnParticleSystemStopped, GetCinemachineComponent, Distance, Create, Countdown, FindGameObjectWithTag, AddComponent, NotifyAudioEvent},
 }
 
 \newtcolorbox{codebox}{

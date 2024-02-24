@@ -36,6 +36,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         }
         private void Update()
         {
+            IsFilling();
+        }
+        private void IsFilling()
+        {
             if (isFilling)
             {
                 ammoBoxAnimator.SetTrigger("isLooting");

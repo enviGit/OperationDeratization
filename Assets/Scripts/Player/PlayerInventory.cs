@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,13 +7,6 @@ namespace RatGamesStudios.OperationDeratization.Player
     public class PlayerInventory : MonoBehaviour
     {
         [Header("Weapon images")]
-        [SerializeField] private Image meleeWeaponImage;
-        [SerializeField] private Image primaryWeaponImage;
-        [SerializeField] private Image secondaryWeaponImage;
-        public Image grenadeWeaponImage;
-        public Image flashbangWeaponImage;
-        public Image smokeWeaponImage;
-        public Image molotovWeaponImage;
         private PlayerUI playerUI;
         private PlayerShoot playerShoot;
         [SerializeField] private Transform weaponHolder;
@@ -22,11 +16,12 @@ namespace RatGamesStudios.OperationDeratization.Player
         [SerializeField] private Gun melee;
         public Gun[] weapons;
         public int currentWeaponIndex = -1;
-        private int currentItemIndex = 0;
+        [HideInInspector] public int currentItemIndex = 0;
         [HideInInspector] public int grenadeCount = 0;
         [HideInInspector] public int flashbangCount = 0;
         [HideInInspector] public int smokeCount = 0;
         [HideInInspector] public int molotovCount = 0;
+        public bool isSwitchingWeapon = false;
         public Gun CurrentWeapon
         {
             get
@@ -40,7 +35,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void Start()
         {
-            playerShoot = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShoot>();
+            playerShoot = GetComponent<PlayerShoot>();
             playerUI = GetComponent<PlayerUI>();
             weapons = new Gun[7];
             weapons[0] = melee;
@@ -51,13 +46,15 @@ namespace RatGamesStudios.OperationDeratization.Player
             weapons[5] = null;
             weapons[6] = null;
             currentWeaponIndex = 0;
-            UpdateWeaponImages();
         }
         private void Update()
         {
             SwitchItem();
             RemoveItem();
-
+            GrenadesCount();
+        }
+        private void GrenadesCount()
+        {
             if (weapons[3] != null)
                 grenadeCount = weapons[3].currentAmmoCount;
             else
@@ -157,7 +154,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                 }
                 if (newItem.gunStyle == GunStyle.Primary || newItem.gunStyle == GunStyle.Secondary)
                 {
-                    Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
+                    Vector3 dropPosition = transform.position + transform.forward * 1f + transform.up * 1f;
                     GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
                     newWeapon.layer = LayerMask.NameToLayer("Interactable");
                     SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
@@ -170,13 +167,13 @@ namespace RatGamesStudios.OperationDeratization.Player
                     newWeapon.transform.rotation = randomRotation;
                 }
             }
-
+            
             weapons[newItemIndex] = newItem;
-            UpdateWeaponImages();
+            StartCoroutine(PullOutWeapon(newItemIndex));
         }
         public void SwitchItem()
         {
-            if (playerShoot.isAiming == false && !wheels.activeSelf)
+            if (playerShoot.isAiming == false && !wheels.activeSelf && !isSwitchingWeapon)
             {
                 int scrollDelta = (int)Input.mouseScrollDelta.y;
 
@@ -186,48 +183,106 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                     if (newWeaponIndex != currentWeaponIndex)
                     {
-                        SetCurrentWeapon(newWeaponIndex);
-                        UpdateWeaponImages();
-                        currentItemIndex = newWeaponIndex - 3;
+                        StartCoroutine(SwitchWeapon(newWeaponIndex));
+
+                        if (newWeaponIndex >= 3 && newWeaponIndex <= 6)
+                            currentItemIndex = newWeaponIndex - 3;
+                        else
+                            currentItemIndex = -1;
                     }
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                else
                 {
-                    SetCurrentWeapon(0);
-                    UpdateWeaponImages();
-                    currentItemIndex = -1;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    SetCurrentWeapon(1);
-                    UpdateWeaponImages();
-                    currentItemIndex = -1;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
-                {
-                    SetCurrentWeapon(2);
-                    UpdateWeaponImages();
-                    currentItemIndex = -1;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha4))
-                {
-                    currentItemIndex++;
-
-                    if (currentItemIndex > 3)
-                        currentItemIndex = 0;
-
-                    int newWeaponIndex = currentItemIndex + 3;
-
-                    while (weapons[newWeaponIndex] == null && currentItemIndex < 4)
+                    if (Input.GetKeyDown(KeyCode.Alpha1))
+                    {
+                        StartCoroutine(SwitchWeapon(0));
+                        currentItemIndex = -1;
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha2))
+                    {
+                        StartCoroutine(SwitchWeapon(1));
+                        currentItemIndex = -1;
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha3))
+                    {
+                        StartCoroutine(SwitchWeapon(2));
+                        currentItemIndex = -1;
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha4))
                     {
                         currentItemIndex++;
-                        newWeaponIndex = currentItemIndex + 3;
-                    }
 
-                    SetCurrentWeapon(newWeaponIndex);
-                    UpdateWeaponImages();
+                        if (currentItemIndex > 3)
+                            currentItemIndex = 0;
+
+                        int newWeaponIndex = currentItemIndex + 3;
+
+                        while (weapons[newWeaponIndex] == null && currentItemIndex < 4)
+                        {
+                            currentItemIndex++;
+                            newWeaponIndex = currentItemIndex + 3;
+                        }
+
+                        StartCoroutine(SwitchWeapon(newWeaponIndex));
+                    }
                 }
             }
+        }
+        public IEnumerator SwitchWeapon(int newIndex)
+        {
+            if(newIndex == currentWeaponIndex)
+                yield break;
+
+            isSwitchingWeapon = true;
+            Vector3 startPosition = weaponHolder.localPosition;
+            Vector3 targetPosition = startPosition - new Vector3(0f, 0.5f, 0f);
+            float elapsedTime = 0f;
+            float duration = 0.25f;
+
+            while (elapsedTime < duration)
+            {
+                weaponHolder.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            weaponHolder.localPosition = targetPosition;
+            SetCurrentWeapon(newIndex);
+            targetPosition = Vector3.zero;
+            elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                weaponHolder.localPosition = Vector3.Lerp(startPosition - new Vector3(0f, 0.5f, 0f), targetPosition, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            weaponHolder.localPosition = startPosition;
+            isSwitchingWeapon = false;
+        }
+        public IEnumerator PullOutWeapon(int newIndex)
+        {
+            isSwitchingWeapon = true;
+            Vector3 startPosition = weaponHolder.localPosition;
+            Vector3 targetPosition = startPosition;
+            startPosition -= new Vector3(0f, 0.5f, 0f);
+            float elapsedTime = 0f;
+            float duration = 0.25f;
+
+            while (elapsedTime < duration)
+            {
+                weaponHolder.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            weaponHolder.localPosition = targetPosition;
+            SetCurrentWeapon(newIndex);
+            isSwitchingWeapon = false;
         }
         private int FindNextWeaponIndex(int scrollDelta)
         {
@@ -253,36 +308,6 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                 if (droppedWeapon != null)
                 {
-                    Image weaponImage = null;
-
-                    switch (droppedWeapon.gunStyle)
-                    {
-                        case GunStyle.Melee:
-                            weaponImage = meleeWeaponImage;
-                            break;
-                        case GunStyle.Primary:
-                            weaponImage = primaryWeaponImage;
-                            break;
-                        case GunStyle.Secondary:
-                            weaponImage = secondaryWeaponImage;
-                            break;
-                        case GunStyle.Grenade:
-                            weaponImage = grenadeWeaponImage;
-                            break;
-                        case GunStyle.Flashbang:
-                            weaponImage = flashbangWeaponImage;
-                            break;
-                        case GunStyle.Smoke:
-                            weaponImage = smokeWeaponImage;
-                            break;
-                        case GunStyle.Molotov:
-                            weaponImage = molotovWeaponImage;
-                            break;
-                    }
-
-                    if (weaponImage != null)
-                        weaponImage.gameObject.SetActive(false);
-
                     Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
                     GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity);
                     newWeapon.layer = LayerMask.NameToLayer("Interactable");
@@ -307,7 +332,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                 }
 
                 SetCurrentWeapon(0);
-                UpdateWeaponImages();
             }
         }
         public static void SetLayerRecursively(GameObject obj, int layer)
@@ -336,97 +360,6 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             if (weapons[currentWeaponIndex].gunType == GunType.Sniper)
                 playerShoot.sniperCam = transform.Find("Camera/Main Camera/WeaponHolder/" + weapons[currentWeaponIndex].gunPrefab.name + "(Clone)/Mesh/SVD/Camera").GetComponent<Camera>();
-        }
-        public void UpdateWeaponImages()
-        {
-            if (meleeWeaponImage != null)
-            {
-                if (CurrentWeapon.gunStyle != GunStyle.Melee)
-                    meleeWeaponImage.sprite = weapons[0].gunIcon;
-                else
-                {
-                    meleeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
-                    meleeWeaponImage.gameObject.SetActive(true);
-                }
-            }
-            if (primaryWeaponImage != null)
-            {
-                if (CurrentWeapon.gunStyle != GunStyle.Primary)
-                {
-                    if (weapons[1] != null)
-                        primaryWeaponImage.sprite = weapons[1].gunIcon;
-                }
-                else
-                {
-                    primaryWeaponImage.sprite = CurrentWeapon.activeGunIcon;
-                    primaryWeaponImage.gameObject.SetActive(true);
-                }
-            }
-            if (secondaryWeaponImage != null)
-            {
-                if (CurrentWeapon.gunStyle != GunStyle.Secondary)
-                {
-                    if (weapons[2] != null)
-                        secondaryWeaponImage.sprite = weapons[2].gunIcon;
-                }
-                else
-                {
-                    secondaryWeaponImage.sprite = CurrentWeapon.activeGunIcon;
-                    secondaryWeaponImage.gameObject.SetActive(true);
-                }
-            }
-            if (grenadeWeaponImage != null)
-            {
-                if (CurrentWeapon.gunStyle != GunStyle.Grenade)
-                {
-                    if (weapons[3] != null)
-                        grenadeWeaponImage.sprite = weapons[3].gunIcon;
-                }
-                else
-                {
-                    grenadeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
-                    grenadeWeaponImage.gameObject.SetActive(true);
-                }
-            }
-            if (flashbangWeaponImage != null)
-            {
-                if (CurrentWeapon.gunStyle != GunStyle.Flashbang)
-                {
-                    if (weapons[4] != null)
-                        flashbangWeaponImage.sprite = weapons[4].gunIcon;
-                }
-                else
-                {
-                    flashbangWeaponImage.sprite = CurrentWeapon.activeGunIcon;
-                    flashbangWeaponImage.gameObject.SetActive(true);
-                }
-            }
-            if (smokeWeaponImage != null)
-            {
-                if (CurrentWeapon.gunStyle != GunStyle.Smoke)
-                {
-                    if (weapons[5] != null)
-                        smokeWeaponImage.sprite = weapons[5].gunIcon;
-                }
-                else
-                {
-                    smokeWeaponImage.sprite = CurrentWeapon.activeGunIcon;
-                    smokeWeaponImage.gameObject.SetActive(true);
-                }
-            }
-            if (molotovWeaponImage != null)
-            {
-                if (CurrentWeapon.gunStyle != GunStyle.Molotov)
-                {
-                    if (weapons[6] != null)
-                        molotovWeaponImage.sprite = weapons[6].gunIcon;
-                }
-                else
-                {
-                    molotovWeaponImage.sprite = CurrentWeapon.activeGunIcon;
-                    molotovWeaponImage.gameObject.SetActive(true);
-                }
-            }
         }
         public bool HasWeaponOfSameCategory(Gun newGun)
         {

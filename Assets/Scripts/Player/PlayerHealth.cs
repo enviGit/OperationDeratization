@@ -14,13 +14,10 @@ namespace RatGamesStudios.OperationDeratization.Player
         [HideInInspector] public Image backHealthBar;
         private Image frontArmorBar;
         [HideInInspector] public Image backArmorBar;
-        private Ragdoll ragdoll;
-        public Transform inventoryUI;
         [SerializeField] private GameObject miniMapCanvas;
         [SerializeField] private Camera miniMapCamera;
         private PlayerInventory inventory;
         private AudioEventManager audioEventManager;
-        private Transform sounds;
 
         [Header("Impact Sounds")]
         public Material vignetteMaterial;
@@ -31,7 +28,6 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         [Header("Death")]
         private Transform cam;
-        [SerializeField] private bool isTutorialActive = false;
         private AudioSource deathSounds;
         [SerializeField] private AudioClip[] deathClips = new AudioClip[2];
 
@@ -56,9 +52,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             heartbeatSound = transform.Find("Sounds/Heartbeat").GetComponent<AudioSource>();
             impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
             deathSounds = transform.Find("Sounds/Death").GetComponent<AudioSource>();
-            ragdoll = GetComponent<Ragdoll>();
             inventory = GetComponent<PlayerInventory>();
-            sounds = transform.Find("Sounds");
             frontHealthBar = healthBar.transform.GetChild(2).GetComponent<Image>();
             backHealthBar = healthBar.transform.GetChild(1).GetComponent<Image>();
             frontArmorBar = armorBar.transform.GetChild(2).GetComponent<Image>();
@@ -84,6 +78,10 @@ namespace RatGamesStudios.OperationDeratization.Player
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
             currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
             UpdateHealthUI();
+            Heartbeat();
+        }
+        private void Heartbeat()
+        {
             float healthPercentage = currentHealth / maxHealth;
 
             if (healthPercentage <= 0.3f && isAlive == true)

@@ -47,7 +47,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
             bang.Play();
             float delayBeforeDestroy = bang.clip.length;
             Invoke("DestroyObject", delayBeforeDestroy);
-            ObjectPoolManager.SpawnObject(smokeEffect, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);
+            ObjectPoolManager.SpawnObject(smokeEffect, transform.position, transform.rotation, ObjectPoolManager.PoolType.VFX);
         }
         private void DestroyObject()
         {

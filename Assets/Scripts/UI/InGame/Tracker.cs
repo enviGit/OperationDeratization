@@ -12,9 +12,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
 {
     public class Tracker : MonoBehaviour
     {
-        [SerializeField] private Image cooldownFillImage;
         [SerializeField] private Image cooldownWheelFillImage;
-        [SerializeField] private TextMeshProUGUI trackerCooldownText;
         [SerializeField] private TextMeshProUGUI trackerCooldownWheelText;
         [SerializeField] private PauseMenu playerUI;
         public float trackingCooldown = 31f;
@@ -47,18 +45,29 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void Update()
         {
+            HandleInput();
+            UpdateTracking();
+            CalculateTargetRotation();
+            indicator.rotation = Quaternion.RotateTowards(indicator.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            //indicator.rotation = Quaternion.Slerp(indicator.rotation, Quaternion.LookRotation(nearestOpponent.transform.position - player.position) * Quaternion.Euler(-15, 1, 60), rotationSpeed * Time.deltaTime);
+        }
+        private void HandleInput()
+        {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                if (!isTracking && !isOnCooldown && opponents.Count > 0)
+                if (Input.GetKeyDown(KeyCode.Z))
                 {
-                    StartTracking();
-                    StartCoroutine(SceneScanning());
-                    trackerSound.Play();
+                    if (!isTracking && !isOnCooldown && opponents.Count > 0)
+                    {
+                        StartTracking();
+                        StartCoroutine(SceneScanning());
+                        trackerSound.Play();
+                    }
                 }
             }
-
-            UpdateTracking();
-
+        }
+        private void CalculateTargetRotation()
+        {
             if (nearestOpponent != null)
             {
                 Vector3 direction = nearestOpponent.transform.position - player.position;
@@ -77,13 +86,6 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             }
             else
                 indicator.GetChild(0).gameObject.SetActive(false);
-
-            RotateIndicator();
-        }
-        private void RotateIndicator()
-        {
-            indicator.rotation = Quaternion.RotateTowards(indicator.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            //indicator.rotation = Quaternion.Slerp(indicator.rotation, Quaternion.LookRotation(nearestOpponent.transform.position - player.position) * Quaternion.Euler(-15, 1, 60), rotationSpeed * Time.deltaTime);
         }
         public void StartTracking()
         {
@@ -158,9 +160,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void UpdateCooldownFillAmount()
         {
-            cooldownFillImage.fillAmount = 1 - (currentCooldownTime / trackingCooldown);
             cooldownWheelFillImage.fillAmount = 1 - (currentCooldownTime / trackingCooldown);
-            trackerCooldownText.text = Mathf.CeilToInt(currentCooldownTime).ToString() != "0" ? Mathf.CeilToInt(currentCooldownTime).ToString() : "";
             trackerCooldownWheelText.text = Mathf.CeilToInt(currentCooldownTime).ToString() != "0" ? Mathf.CeilToInt(currentCooldownTime).ToString() : "";
         }
         public void MarkOpponentAsDead(GameObject opponent)

@@ -21,7 +21,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         public void Update(AiAgent agent)
         {
             if (!agent.audioSensor.LastDetectedSoundAudible)
-                agent.stateMachine.RevertToPreviousState();
+                agent.stateMachine.ChangeState(AiStateId.Patrol);
             if (agent.targeting.HasTarget)
             {
                 agent.stateMachine.ChangeState(AiStateId.AttackTarget);
@@ -48,6 +48,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
                     }
                 }
             }
+
+            agent.CheckAndPlayRandomClip();
         }
         public void Exit(AiAgent agent)
         {

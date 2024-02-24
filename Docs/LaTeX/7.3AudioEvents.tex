@@ -1,0 +1,60 @@
+Aby umożliwić agentom AI reakcję na zdarzenia dźwiękowe w środowisku gry, wykorzystujemy skrypt \texttt{AudioEventManager}. Ten skrypt odpowiada za zarządzanie przekazywaniem informacji o zdarzeniach dźwiękowych agentom AI.
+
+\begin{codebox}
+\begin{lstlisting}[language={[Sharp]C}, label={listing:AudioEventManager.cs}]
+public class AudioEventManager : MonoBehaviour
+{
+    private static AudioEventManager instance;
+    public static AudioEventManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = GameObject.FindGameObjectWithTag("AudioEventManager")
+                .GetComponent<AudioEventManager>();
+                
+                if (instance == null)
+                {
+                    GameObject obj = new GameObject();
+                    obj.name = typeof(AudioEventManager).Name;
+                    instance = obj.AddComponent<AudioEventManager>();
+                }
+            }
+            
+            return instance;
+        }
+    }
+    public event Action<AudioSource> OnAudioEvent;
+    
+    public void NotifyAudioEvent(AudioSource audioSource)
+    {
+        if (OnAudioEvent != null)
+            OnAudioEvent(audioSource);
+    }
+}
+\end{lstlisting}
+\end{codebox}
+\captionof{lstlisting}{Zarządzanie zdarzeniami dźwiękowymi w klasie AudioEventManager}
+
+\subsubsection{Opis Skryptu}
+
+Skrypt \texttt{AudioEventManager} jest odpowiedzialny za zarządzanie zdarzeniami dźwiękowymi w grze. Jest to skrypt jednostki w Unity, który można przypisać do dowolnego obiektu w scenie.
+
+\subsubsection{Kluczowe Elementy}
+
+\begin{itemize}
+    \item \textbf{Singleton Instance:} Skrypt zawiera mechanizm singletona, który zapewnia dostęp do jednej instancji obiektu \texttt{AudioEventManager} w całej grze. Jest to osiągane poprzez statyczną właściwość \texttt{Instance}, która zwraca referencję do tej instancji.
+    
+    \item \textbf{Zdarzenie Dźwiękowe (\texttt{OnAudioEvent}):} Jest to zdarzenie publiczne typu \texttt{Action}, które może być subskrybowane przez inne skrypty. Gdy zostanie wywołane, wysyła informacje o źródle dźwięku (\texttt{AudioSource}) do wszystkich subskrybentów.
+    
+    \item \textbf{Metoda \texttt{NotifyAudioEvent}:} Jest to publiczna metoda, która służy do powiadamiania o zdarzeniach dźwiękowych. Przyjmuje jako parametr obiekt \texttt{AudioSource}, który reprezentuje źródło dźwięku, które wywołało zdarzenie. Po otrzymaniu zdarzenia, metoda wysyła informacje o tym zdarzeniu do wszystkich subskrybentów zdarzenia dźwiękowego.
+\end{itemize}
+
+\subsubsection{Wykorzystanie}
+
+Aby skorzystać ze skryptu \texttt{AudioEventManager.cs} w grze, należy przypisać go do dowolnego obiektu w scenie. Następnie, inne skrypty mogą subskrybować zdarzenie dźwiękowe \texttt{OnAudioEvent} i reagować na wykryte dźwięki poprzez implementację odpowiednich metod obsługi zdarzeń.
+
+\subsubsection{Przykładowe Zastosowanie}
+
+Skrypt \texttt{AiAudioSensor.cs} korzysta z \texttt{AudioEventManager} do reakcji na zdarzenia dźwiękowe w otoczeniu agenta AI. Gdy \texttt{AudioEventManager} wykryje dźwięk, informacja o tym zdarzeniu jest przekazywana do \texttt{AiAudioSensor}, który podejmuje odpowiednie działania na podstawie otrzymanych danych.

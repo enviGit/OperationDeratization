@@ -56,61 +56,31 @@ namespace RatGamesStudios.OperationDeratization.Equipment
             float delayBeforeDestroy = bang.clip.length;
             Invoke("DestroyObject", delayBeforeDestroy);
             ObjectPoolManager.SpawnObject(explosionEffect, transform.position, transform.rotation, ObjectPoolManager.PoolType.ParticleSystem);
-            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing") | 1 << LayerMask.NameToLayer("Interactable"));
-            Collider[] collidersToMove = Physics.OverlapSphere(transform.position, radius);
+            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Postprocessing") | 1 << LayerMask.NameToLayer("Interactable"));
+            Collider[] colliders = Physics.OverlapSphere(transform.position, radius, obstacleMask);
 
-            foreach (Collider nearbyObject in collidersToMove)
+            foreach (Collider nearbyObject in colliders)
             {
                 Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
-
-                if (rb != null)
-                    rb.AddExplosionForce(force, transform.position, radius);
-            }
-
-            Collider[] glassColliders = Physics.OverlapSphere(transform.position, radius);
-
-            foreach (Collider nearbyObject in glassColliders)
-            {
                 Glass glass = nearbyObject.GetComponent<Glass>();
+                HitBox hitBox = nearbyObject.GetComponent<HitBox>();
+                // Destructible dest = nearbyObject.GetComponent<Destructible>();
 
+                // if (dest != null)
+                //     dest.Destroy();
+                if (rb != null && glass == null)
+                    rb.AddExplosionForce(force, transform.position, radius);
                 if (glass != null)
                     glass.BreakFromGrenade(transform.position, force);
-            }
-
-            /*Collider[] collidersToDestroy = Physics.OverlapSphere(transform.position, radius);
-
-            foreach (Collider nearbyObject in collidersToDestroy)
-            {
-                Destructible dest = nearbyObject.GetComponent<Destructible>();
-
-                if (dest != null)
-                    dest.Destroy();
-            }*/
-
-            Collider[] collidersToDamage = Physics.OverlapSphere(transform.position, radius);
-
-            foreach (Collider nearbyObject in collidersToDamage)
-            {
-                HitBox hitBox = nearbyObject.GetComponent<HitBox>();
-                float distance = Vector3.Distance(nearbyObject.transform.position, transform.position);
-                float damageRatio = Mathf.Clamp01(1f - (distance / radius));
-                float damage = grenade.minimumDamage + (damageRatio * (grenade.maximumDamage - grenade.minimumDamage));
-                int damageInt = Mathf.RoundToInt(damage);
-
                 if (hitBox != null)
                 {
-                    /*RaycastHit hit;
+                    float distance = Vector3.Distance(nearbyObject.transform.position, transform.position);
+                    float damageRatio = Mathf.Clamp01(1f - (distance / radius));
+                    float damage = grenade.minimumDamage + (damageRatio * (grenade.maximumDamage - grenade.minimumDamage));
+                    int damageInt = Mathf.RoundToInt(damage);
 
-                    if (Physics.Raycast(transform.position, nearbyObject.transform.position - transform.position, out hit, radius, obstacleMask))
-                    {
-                        if (hit.collider != nearbyObject)
-                            continue;
-                    }*/
                     if (nearbyObject.CompareTag("Enemy"))
-                    {
                         hitBox.OnExplosion(damageInt, transform.forward);
-                        //ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, hit.collider.transform);
-                    }
                     if (nearbyObject.CompareTag("Player"))
                     {
                         hitBox.OnExplosionPlayer(damageInt);

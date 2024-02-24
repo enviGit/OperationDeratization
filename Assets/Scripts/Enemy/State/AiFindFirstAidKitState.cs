@@ -44,6 +44,8 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
                 Vector3 randomPoint = RandomNavmeshLocation(wanderRadius, agent);
                 agent.navMeshAgent.SetDestination(randomPoint);
             }
+            if(agent.targeting.HasTarget)
+                agent.stateMachine.ChangeState(AiStateId.AttackTarget);
             if (!agent.health.IsLowHealth())
                 agent.stateMachine.ChangeState(AiStateId.Patrol);
         }

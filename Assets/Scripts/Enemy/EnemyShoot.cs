@@ -69,7 +69,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                 audioEventManager.NotifyAudioEvent(gunFireAudio);
                 currentWeapon.currentAmmoCount--;
                 Transform muzzle = null;
-                string[] bonePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig10:", "mixamorig:" };
+                string[] bonePrefixes = { "mixamorig:", "mixamorig1:", "mixamorig4:", "mixamorig6:", "mixamorig7:", "mixamorig9:", "mixamorig10:", "mixamorig12:" };
 
                 foreach (string prefix in bonePrefixes)
                 {
@@ -186,21 +186,25 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             gunReloadAudio.clip = currentWeapon.gunAudioClips[2];
             gunReloadAudio.Play();
             audioEventManager.NotifyAudioEvent(gunFireAudio);
+            
+            yield return new WaitForSeconds(currentWeapon.reloadTime);
 
-            if (currentWeapon.gunType == GunType.Pistol)
-                yield return new WaitForSeconds(2f);
-            else if (currentWeapon.gunType == GunType.Revolver || currentWeapon.gunType == GunType.Rifle)
-                yield return new WaitForSeconds(3f);
-            else if (currentWeapon.gunType == GunType.Shotgun || currentWeapon.gunType == GunType.Sniper)
-                yield return new WaitForSeconds(4f);
             if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)
+            {
+                isReloading = false;
+
                 yield break;
+            }
 
             int ammoNeeded = currentWeapon.magazineSize - currentWeapon.currentAmmoCount;
             int ammoAvailable = Mathf.Min(currentWeapon.maxAmmoCount, ammoNeeded);
 
             if (ammoAvailable == 0)
+            {
+                isReloading = false;
+
                 yield break;
+            }
 
             currentWeapon.currentAmmoCount += ammoAvailable;
             currentWeapon.maxAmmoCount -= currentWeapon.magazineSize;

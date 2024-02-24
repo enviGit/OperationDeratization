@@ -18,6 +18,10 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         }
         private void Update()
         {
+            HandleInput();
+        }
+        private void HandleInput()
+        {
             if (Input.GetKey(KeyCode.F1))
             {
                 if (!isF1Held)

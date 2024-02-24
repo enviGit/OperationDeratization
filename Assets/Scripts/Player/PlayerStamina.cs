@@ -37,6 +37,11 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         private void Update()
         {
+            Check();
+            UpdateStaminaUI();
+        }  
+        private void Check()
+        {
             if (playerMotor.isRunning && playerMotor.isMoving)
                 UseStamina(sprintStaminaCost * Time.deltaTime);
             if (!playerMotor.isRunning && playerMotor.isGrounded)
@@ -47,8 +52,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                     currentStamina = Mathf.Clamp(currentStamina + staminaRegenRate * Time.deltaTime, 0, maxStamina);
                 }
             }
-
-            UpdateStaminaUI();
         }
         private void UpdateStaminaUI()
         {

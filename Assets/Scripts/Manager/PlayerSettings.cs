@@ -41,6 +41,7 @@ namespace RatGamesStudios.OperationDeratization.Manager
                 volume = .001f;
 
             musicMixer.SetFloat("MusicVolume", Mathf.Log10(volume / 100) * 20f);
+            musicMixer.SetFloat("Pitch", 1f);
         }
         private void ApplySfxVolume(float volume)
         {
@@ -48,6 +49,7 @@ namespace RatGamesStudios.OperationDeratization.Manager
                 sfxVolume = .001f;
 
             sfxMixer.SetFloat("SfxVolume", Mathf.Log10(sfxVolume / 100) * 20f);
+            sfxMixer.SetFloat("Pitch", 1f);
         }
         private void ApplyBrightness()
         {
