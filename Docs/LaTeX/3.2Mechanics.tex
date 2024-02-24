@@ -2,177 +2,177 @@ Przeanalizujemy kluczowe mechaniki gry, które wpływają na doświadczenie grac
 
 \subsubsection{Mechanika Sztucznej Inteligencji (AI)}
 
-\textbf{Klasa \texttt{WeaponIk -}}
-Skrypt \texttt{WeaponIk} jest odpowiedzialny za obsługę kinematyki odwrotnej (IK) związanej z celowaniem broni. Kluczowe funkcje obejmują:
+Klasa WeaponIk -
+Skrypt WeaponIk jest odpowiedzialny za obsługę kinematyki odwrotnej (IK) związanej z celowaniem broni. Kluczowe funkcje obejmują:
 \begin{itemize}
-\item \textbf{Metoda \texttt{LateUpdate}:} Dostosowuje rotacje kości na podstawie pozycji celu.
-\item \textbf{Metoda \texttt{AimAtTarget}:} Oblicza i stosuje rotacje do kości, aby celować w cel.
-\item \textbf{Metoda \texttt{GetTargetPosition}:} Oblicza pozycję celu, uwzględniając ograniczenia kątowe i odległościowe.
-\item \textbf{Metoda \texttt{SetTargetTransform}:} Ustawia transformację celu do celowania.
-\item \textbf{Metoda \texttt{SetAimTransform}:} Ustawia transformację celu (lufa) do celowania bronią.
+\item Metoda LateUpdate: Dostosowuje rotacje kości na podstawie pozycji celu.
+\item Metoda AimAtTarget: Oblicza i stosuje rotacje do kości, aby celować w cel.
+\item Metoda GetTargetPosition: Oblicza pozycję celu, uwzględniając ograniczenia kątowe i odległościowe.
+\item Metoda SetTargetTransform: Ustawia transformację celu do celowania.
+\item Metoda SetAimTransform: Ustawia transformację celu (lufa) do celowania bronią.
 \end{itemize}
 
-\textbf{Klasa \texttt{EnemyShoot -}}
-Skrypt \texttt{EnemyShoot} zarządza zachowaniem strzelania przeciwników AI. Kluczowe funkcje obejmują:
+Klasa EnemyShoot -
+Skrypt EnemyShoot zarządza zachowaniem strzelania przeciwników AI. Kluczowe funkcje obejmują:
 \begin{itemize}
-\item \textbf{Metoda \texttt{Update}:} Sprawdza obecną broń i ją konfiguruje.
-\item \textbf{Metoda \texttt{StartFiring}:} Inicjuje stan strzelania.
-\item \textbf{Metoda \texttt{StopFiring}:} Zatrzymuje stan strzelania.
-\item \textbf{Metoda \texttt{Shoot}:} Wykonuje logikę strzelania, w tym raycasting i efekty uderzenia.
-\item \textbf{Metoda \texttt{ReloadCoroutine}:} Zarządza korutyną do przeładowania broni.
-\item \textbf{Metoda \texttt{SetCurrentWeapon}:} Ustawia obecną broń na podstawie wyposażonej broni przeciwnika AI.
+\item Metoda Update: Sprawdza obecną broń i ją konfiguruje.
+\item Metoda StartFiring: Inicjuje stan strzelania.
+\item Metoda StopFiring: Zatrzymuje stan strzelania.
+\item Metoda Shoot: Wykonuje logikę strzelania, w tym raycasting i efekty uderzenia.
+\item Metoda ReloadCoroutine: Zarządza korutyną do przeładowania broni.
+\item Metoda SetCurrentWeapon: Ustawia obecną broń na podstawie wyposażonej broni przeciwnika AI.
 \end{itemize}
 
-\textbf{Klasa \texttt{EnemyHealth -}}
-Skrypt \texttt{EnemyHealth} zarządza zdrowiem i zachowaniami związanymi ze śmiercią przeciwników AI. Kluczowe funkcje obejmują:
+Klasa EnemyHealth -
+Skrypt EnemyHealth zarządza zdrowiem i zachowaniami związanymi ze śmiercią przeciwników AI. Kluczowe funkcje obejmują:
 \begin{itemize}
-\item \textbf{Metoda \texttt{Update}:} Obsługuje efekty związane ze śmiercią, jeśli przeciwnik nie żyje i jest blisko gracza.
-\item \textbf{Metoda \texttt{TakeDamage}:} Przetwarza obrażenia, uwzględnia pancerz i wywołuje śmierć, jeśli zdrowie spadnie poniżej zera.
-\item \textbf{Metoda \texttt{IsLowHealth}:} Sprawdza, czy przeciwnik ma niskie zdrowie.
-\item \textbf{Metoda \texttt{Die}:} Inicjuje stan śmierci dla przeciwnika.
-\item \textbf{Coroutine \texttt{HandleDeathEffects}:} Zarządza efektami wizualnymi i czyszczeniem po śmierci przeciwnika.
-\item \textbf{Coroutine \texttt{FadeOutPromptText}:} Stopniowo wygasza tekst zachęty po śmierci.
-\item \textbf{Metoda \texttt{SetShaderParameters}:} Dostosowuje parametry shadera dla efektów wizualnych.
-\item \textbf{Metoda \texttt{RestoreHealth}:} Przywraca zdrowie przeciwnika.
-\item \textbf{Metoda \texttt{PickupArmor}:} Podnosi pancerz, jeśli przeciwnik żyje i pancerz nie jest maksymalny.
+\item Metoda Update: Obsługuje efekty związane ze śmiercią, jeśli przeciwnik nie żyje i jest blisko gracza.
+\item Metoda TakeDamage: Przetwarza obrażenia, uwzględnia pancerz i wywołuje śmierć, jeśli zdrowie spadnie poniżej zera.
+\item Metoda IsLowHealth: Sprawdza, czy przeciwnik ma niskie zdrowie.
+\item Metoda Die: Inicjuje stan śmierci dla przeciwnika.
+\item Coroutine HandleDeathEffects: Zarządza efektami wizualnymi i czyszczeniem po śmierci przeciwnika.
+\item Coroutine FadeOutPromptText: Stopniowo wygasza tekst zachęty po śmierci.
+\item Metoda SetShaderParameters: Dostosowuje parametry shadera dla efektów wizualnych.
+\item Metoda RestoreHealth: Przywraca zdrowie przeciwnika.
+\item Metoda PickupArmor: Podnosi pancerz, jeśli przeciwnik żyje i pancerz nie jest maksymalny.
 \end{itemize}
 
-\textbf{Klasa \texttt{AiWeapons -}}
-Skrypt \texttt{AiWeapons} zarządza funkcjonalnościami związanymi z bronią AI. Kluczowe cechy obejmują:
+Klasa AiWeapons -
+Skrypt AiWeapons zarządza funkcjonalnościami związanymi z bronią AI. Kluczowe cechy obejmują:
 \begin{itemize}
-\item \textbf{Metoda \texttt{Update}:} Obsługuje namierzanie i strzelanie na podstawie obecnego celu i broni.
-\item \textbf{Metoda \texttt{SetFiring}:} Rozpoczyna lub zatrzymuje strzelanie na podstawie wejścia.
-\item \textbf{Metoda \texttt{StartShootingCoroutine}:} Inicjuje korutynę do strzelania.
-\item \textbf{Metoda \texttt{StopShootingCoroutine}:} Zatrzymuje korutynę strzelania.
-\item \textbf{Metoda \texttt{Shoot}:} Realizuje logikę strzelania, w tym wywołuje metody strzelania dla konkretnej broni.
+\item Metoda Update: Obsługuje namierzanie i strzelanie na podstawie obecnego celu i broni.
+\item Metoda SetFiring: Rozpoczyna lub zatrzymuje strzelanie na podstawie wejścia.
+\item Metoda StartShootingCoroutine: Inicjuje korutynę do strzelania.
+\item Metoda StopShootingCoroutine: Zatrzymuje korutynę strzelania.
+\item Metoda Shoot: Realizuje logikę strzelania, w tym wywołuje metody strzelania dla konkretnej broni.
 \end{itemize}
 
-\textbf{Klasa \texttt{AiAudioSensor -}}
-Skrypt \texttt{AiSightSensor} odpowiada za wykrywanie dźwięków w otoczeniu agenta AI. Kluczowe funkcje obejmują:
+Klasa AiAudioSensor -
+Skrypt AiSightSensor odpowiada za wykrywanie dźwięków w otoczeniu agenta AI. Kluczowe funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Start:} Inicjuje komponenty i subskrybuje się do zdarzenia audio.
-  \item \textbf{Metoda HandleAudioEvent:} Obsługuje zdarzenie dźwiękowe, sprawdzając, czy agent jest żywy, czy dźwięk jest słyszalny oraz czy należy zareagować na dźwięk wysokiego priorytetu.
-  \item \textbf{Metoda IsAudioAudible:} Określa czy dźwięk jest słyszalny przez agenta, biorąc pod uwagę odległość oraz parametry dźwięku.
-  \item \textbf{Metoda IsChildOfMyObject:} Sprawdza, czy dany obiekt jest dzieckiem obiektu kontrolującego sensor audio.
-  \item \textbf{Metoda IsHighPrioritySound:} Określa, czy dany dźwięk jest dźwiękiem wysokiego priorytetu.
-  \item \textbf{Metoda GetGameObjectPath:} Zwraca pełną ścieżkę do obiektu w hierarchii sceny.
-  \item \textbf{Metoda OnDrawGizmosSelected:} Rysuje pomocnicze obiekty w edytorze Unity w celu wizualizacji zasięgu działania sensora.
+  \item Metoda Start: Inicjuje komponenty i subskrybuje się do zdarzenia audio.
+  \item Metoda HandleAudioEvent: Obsługuje zdarzenie dźwiękowe, sprawdzając, czy agent jest żywy, czy dźwięk jest słyszalny oraz czy należy zareagować na dźwięk wysokiego priorytetu.
+  \item Metoda IsAudioAudible: Określa czy dźwięk jest słyszalny przez agenta, biorąc pod uwagę odległość oraz parametry dźwięku.
+  \item Metoda IsChildOfMyObject: Sprawdza, czy dany obiekt jest dzieckiem obiektu kontrolującego sensor audio.
+  \item Metoda IsHighPrioritySound: Określa, czy dany dźwięk jest dźwiękiem wysokiego priorytetu.
+  \item Metoda GetGameObjectPath: Zwraca pełną ścieżkę do obiektu w hierarchii sceny.
+  \item Metoda OnDrawGizmosSelected: Rysuje pomocnicze obiekty w edytorze Unity w celu wizualizacji zasięgu działania sensora.
 \end{itemize}
 
-\textbf{Klasa \texttt{AiSightSensor -}}
-Skrypt \texttt{AiSightSensor} reprezentuje komponent sensoryczny odpowiedzialny za wykrywanie celów. Kluczowe funkcje obejmują:
+Klasa AiSightSensor -
+Skrypt AiSightSensor reprezentuje komponent sensoryczny odpowiedzialny za wykrywanie celów. Kluczowe funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Start:} Inicjalizuje interwał skanowania sensora.
-  \item \textbf{Metoda Update:} Wywołuje okresowe skany i aktualizuje listę wykrytych obiektów.
-  \item \textbf{Metoda Scan:} Przeprowadza skan w celu zidentyfikowania ważnych celów w polu widzenia sensora.
-  \item \textbf{Metoda IsValidTarget:} Sprawdza, czy wykryty obiekt jest ważnym celem na podstawie tagów i warstw.
-  \item \textbf{Metoda IsInSight:} Określa, czy obiekt jest w polu widzenia sensora.
-  \item \textbf{Metoda CreateWedgeMesh:} Generuje siatkę reprezentującą pole widzenia sensora.
-  \item \textbf{Metoda OnValidate:} Aktualizuje siatkę i interwał skanowania podczas walidacji.
-  \item \textbf{Metoda Filter:} Filtruje obiekty na podstawie kryteriów warstw i tagów.
+  \item Metoda Start: Inicjalizuje interwał skanowania sensora.
+  \item Metoda Update: Wywołuje okresowe skany i aktualizuje listę wykrytych obiektów.
+  \item Metoda Scan: Przeprowadza skan w celu zidentyfikowania ważnych celów w polu widzenia sensora.
+  \item Metoda IsValidTarget: Sprawdza, czy wykryty obiekt jest ważnym celem na podstawie tagów i warstw.
+  \item Metoda IsInSight: Określa, czy obiekt jest w polu widzenia sensora.
+  \item Metoda CreateWedgeMesh: Generuje siatkę reprezentującą pole widzenia sensora.
+  \item Metoda OnValidate: Aktualizuje siatkę i interwał skanowania podczas walidacji.
+  \item Metoda Filter: Filtruje obiekty na podstawie kryteriów warstw i tagów.
 \end{itemize}
 
-\textbf{Klasa \texttt{AiTargetingSystem -}}
-Skrypt \texttt{AiTargetingSystem} zarządza systemem celowania i procesem podejmowania decyzji przez sztuczną inteligencję. Kluczowe funkcje obejmują:
+Klasa AiTargetingSystem -
+Skrypt AiTargetingSystem zarządza systemem celowania i procesem podejmowania decyzji przez sztuczną inteligencję. Kluczowe funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Aktualizuje pamięć sensoryczną AI i ocenia wyniki celowania.
-  \item \textbf{Metoda EvaluateScores:} Określa najlepszy cel na podstawie wyników obliczonych z pamięci sensorycznej.
-  \item \textbf{Metoda Normalize:} Normalizuje wartość względem maksymalnej wartości.
-  \item \textbf{Metoda CalculateScore:} Oblicza wynik celu na podstawie odległości, kąta i wieku.
+  \item Metoda Update: Aktualizuje pamięć sensoryczną AI i ocenia wyniki celowania.
+  \item Metoda EvaluateScores: Określa najlepszy cel na podstawie wyników obliczonych z pamięci sensorycznej.
+  \item Metoda Normalize: Normalizuje wartość względem maksymalnej wartości.
+  \item Metoda CalculateScore: Oblicza wynik celu na podstawie odległości, kąta i wieku.
 \end{itemize}
 
-\textbf{Klasa \texttt{AiSensoryMemory -}}
-Skrypt \texttt{AiSensoryMemory} zarządza pamięcią AI dotyczącą wykrytych celów. Kluczowe funkcje obejmują:
+Klasa AiSensoryMemory -
+Skrypt AiSensoryMemory zarządza pamięcią AI dotyczącą wykrytych celów. Kluczowe funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda UpdateSenses:} Aktualizuje pamięć sensoryczną na podstawie wejściowego sensora.
-  \item \textbf{Metoda RefreshMemory:} Odświeża lub tworzy wpis w pamięci dla wykrytego celu.
-  \item \textbf{Metoda FetchMemory:} Pobiera wpis w pamięci dla określonego celu.
-  \item \textbf{Metoda ForgetMemories:} Usuwa wspomnienia, które są starsze niż określony próg lub związane z nieistniejącymi celami.
+  \item Metoda UpdateSenses: Aktualizuje pamięć sensoryczną na podstawie wejściowego sensora.
+  \item Metoda RefreshMemory: Odświeża lub tworzy wpis w pamięci dla wykrytego celu.
+  \item Metoda FetchMemory: Pobiera wpis w pamięci dla określonego celu.
+  \item Metoda ForgetMemories: Usuwa wspomnienia, które są starsze niż określony próg lub związane z nieistniejącymi celami.
 \end{itemize}
 
 \subsubsection{Opisy Mechaniki Maszyny Stanów Sztucznej Inteligencji}
 Maszyna stanów została szerzej opisana w podrozdziale o Wzorcach Projektowych, możesz się tam przenieść klikając tutaj \nameref{subsubsec:state}. \\\\
-\textbf{Klasa \texttt{AiAttackTargetState -}}
-Klasa \texttt{AiAttackTargetState} reprezentuje stan, w którym wróg sterowany przez sztuczną inteligencję aktywnie zaangażowany jest w atakowanie celu. Główne cechy obejmują:
+Klasa AiAttackTargetState -
+Klasa AiAttackTargetState reprezentuje stan, w którym wróg sterowany przez sztuczną inteligencję aktywnie zaangażowany jest w atakowanie celu. Główne cechy obejmują:
 \begin{itemize}
-  \item \textbf{Zachowanie:} Sztuczna inteligencja skupia się na atakowaniu określonego celu za pomocą swojej wyposażonej broni.
-  \item \textbf{Warunki Przejścia:}
+  \item Zachowanie: Sztuczna inteligencja skupia się na atakowaniu określonego celu za pomocą swojej wyposażonej broni.
+  \item Warunki Przejścia:
     \begin{itemize}
       \item Przechodzi do innego stanu, jeśli cel nie znajduje się już w zasięgu detekcji sensora.
-      \item Przechodzi do stanu \texttt{FindWeapon}, jeśli sztuczna inteligencja skończy amunicję podczas ataku.
+      \item Przechodzi do stanu FindWeapon, jeśli sztuczna inteligencja skończy amunicję podczas ataku.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{AiDeathState -}}
-Stan \texttt{AiDeathState} reprezentuje zachowanie sztucznej inteligencji po śmierci. Główne cechy tego stanu obejmują:
+Klasa AiDeathState -
+Stan AiDeathState reprezentuje zachowanie sztucznej inteligencji po śmierci. Główne cechy tego stanu obejmują:
 \begin{itemize}
-  \item \textbf{Zachowanie:} AI przestaje poruszać się i aktywuje efekt ragdoll, aby zasymulować upadek ciała. Dodatkowo, AI odrzuca broń.
-  \item \textbf{Warunki Przejścia:} Brak warunków przejścia, stan ten jest końcowym stanem AI po śmierci.
+  \item Zachowanie: AI przestaje poruszać się i aktywuje efekt ragdoll, aby zasymulować upadek ciała. Dodatkowo, AI odrzuca broń.
+  \item Warunki Przejścia: Brak warunków przejścia, stan ten jest końcowym stanem AI po śmierci.
 \end{itemize}
 
-\textbf{Klasa \texttt{AiFindWeaponState -}}
-Klasa \texttt{AiFindWeaponState} oznacza stan, w którym sztuczna inteligencja poszukuje nowej broni. Główne cechy obejmują:
+Klasa AiFindWeaponState -
+Klasa AiFindWeaponState oznacza stan, w którym sztuczna inteligencja poszukuje nowej broni. Główne cechy obejmują:
 \begin{itemize}
-  \item \textbf{Zachowanie:} Sztuczna inteligencja bada otoczenie, aby zlokalizować i zdobyć nową broń.
-  \item \textbf{Warunki Przejścia:}
+  \item Zachowanie: Sztuczna inteligencja bada otoczenie, aby zlokalizować i zdobyć nową broń.
+  \item Warunki Przejścia:
     \begin{itemize}
-      \item Przechodzi do stanu \texttt{AttackTarget} po skutecznym zdobyciu broni.
+      \item Przechodzi do stanu AttackTarget po skutecznym zdobyciu broni.
       \item Przechodzi do innych stanów w zależności od zmieniających się okoliczności, takich jak znalezienie amunicji lub apteczki.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{AiFindAmmoState -}}
-Klasa \texttt{AiFindAmmoState} reprezentuje stan, w którym sztuczna inteligencja poszukuje amunicji do swojej obecnie wyposażonej broni. Główne cechy obejmują:
+Klasa AiFindAmmoState -
+Klasa AiFindAmmoState reprezentuje stan, w którym sztuczna inteligencja poszukuje amunicji do swojej obecnie wyposażonej broni. Główne cechy obejmują:
 \begin{itemize}
-  \item \textbf{Zachowanie:} Sztuczna inteligencja bada otoczenie, aby zlokalizować i zebrać amunicję.
-  \item \textbf{Warunki Przejścia:}
+  \item Zachowanie: Sztuczna inteligencja bada otoczenie, aby zlokalizować i zebrać amunicję.
+  \item Warunki Przejścia:
     \begin{itemize}
-      \item Powraca do stanu \texttt{AttackTarget} po zdobyciu wystarczającej ilości amunicji.
+      \item Powraca do stanu AttackTarget po zdobyciu wystarczającej ilości amunicji.
       \item Przechodzi do innych stanów w zależności od zmieniających się okoliczności, takich jak znalezienie lepszej broni lub apteczki.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{AiFindFirstAidKitState -}}
-Klasa \texttt{AiFindFirstAidKitState} oznacza stan, w którym sztuczna inteligencja poszukuje apteczki w celu przywrócenia zdrowia. Główne cechy obejmują:
+Klasa AiFindFirstAidKitState -
+Klasa AiFindFirstAidKitState oznacza stan, w którym sztuczna inteligencja poszukuje apteczki w celu przywrócenia zdrowia. Główne cechy obejmują:
 \begin{itemize}
-  \item \textbf{Zachowanie:} Sztuczna inteligencja porusza się po otoczeniu, aby znaleźć i skorzystać z apteczki.
-  \item \textbf{Warunki Przejścia:}
+  \item Zachowanie: Sztuczna inteligencja porusza się po otoczeniu, aby znaleźć i skorzystać z apteczki.
+  \item Warunki Przejścia:
     \begin{itemize}
-      \item Powraca do stanu \texttt{AttackTarget} po udanym uleczeniu.
+      \item Powraca do stanu AttackTarget po udanym uleczeniu.
       \item Przechodzi do innych stanów w zależności od zmieniających się okoliczności, takich jak znalezienie broni czy amunicji.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{AiFindTargetState -}}
-Klasa \texttt{AiFindTargetState} reprezentuje stan, w którym sztuczna inteligencja aktywnie poszukuje potencjalnych celów do zaangażowania. Główne cechy obejmują:
+Klasa AiFindTargetState -
+Klasa AiFindTargetState reprezentuje stan, w którym sztuczna inteligencja aktywnie poszukuje potencjalnych celów do zaangażowania. Główne cechy obejmują:
 \begin{itemize}
-  \item \textbf{Zachowanie:} Sztuczna inteligencja bada otoczenie, aby zidentyfikować i priorytetyzować potencjalne cele na podstawie predefiniowanych kryteriów.
-  \item \textbf{Warunki Przejścia:}
+  \item Zachowanie: Sztuczna inteligencja bada otoczenie, aby zidentyfikować i priorytetyzować potencjalne cele na podstawie predefiniowanych kryteriów.
+  \item Warunki Przejścia:
     \begin{itemize}
-      \item Przechodzi do stanu \texttt{AttackTarget} po zidentyfikowaniu odpowiedniego celu.
+      \item Przechodzi do stanu AttackTarget po zidentyfikowaniu odpowiedniego celu.
       \item Przechodzi do innych stanów na podstawie różnych wskazań otoczenia, takich jak znalezienie broni czy amunicji.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{AiInvestigateSoundState -}}
-Klasa \texttt{AiInvestigateSoundState} reprezentuje zachowanie sztucznej inteligencji, gdy ta wykryje dźwięk i rozpoczyna dochodzenie w jego kierunku. Główne cechy tego stanu obejmują:
+Klasa AiInvestigateSoundState -
+Klasa AiInvestigateSoundState reprezentuje zachowanie sztucznej inteligencji, gdy ta wykryje dźwięk i rozpoczyna dochodzenie w jego kierunku. Główne cechy tego stanu obejmują:
 \begin{itemize}
-  \item \textbf{Zachowanie:} AI aktywnie porusza się w kierunku ostatniego wykrytego dźwięku, aby zbadać jego źródło.
-  \item \textbf{Warunki Przejścia:}
+  \item Zachowanie: AI aktywnie porusza się w kierunku ostatniego wykrytego dźwięku, aby zbadać jego źródło.
+  \item Warunki Przejścia:
     \begin{itemize}
       \item AI powraca do poprzedniego stanu, jeśli nie ma już ścieżki do dźwięku lub dźwięk nie jest już słyszalny.
-      \item Jeśli AI wykryje cel w trakcie dochodzenia do dźwięku, przejdzie do stanu \texttt{AttackTarget}.
+      \item Jeśli AI wykryje cel w trakcie dochodzenia do dźwięku, przejdzie do stanu AttackTarget.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{AiPatrolState -}}
-Stan \texttt{AiPatrolState} reprezentuje zachowanie sztucznej inteligencji podczas patrolowania okolicy. Główne cechy tego stanu obejmują:
+Klasa AiPatrolState -
+Stan AiPatrolState reprezentuje zachowanie sztucznej inteligencji podczas patrolowania okolicy. Główne cechy tego stanu obejmują:
 \begin{itemize}
-  \item \textbf{Zachowanie:} AI porusza się po okolicy w poszukiwaniu potencjalnych celów.
-  \item \textbf{Warunki Przejścia:}
+  \item Zachowanie: AI porusza się po okolicy w poszukiwaniu potencjalnych celów.
+  \item Warunki Przejścia:
     \begin{itemize}
-      \item Jeśli AI wykryje cel podczas patrolowania, przejdzie do stanu \texttt{AttackTarget}.
-      \item Jeśli AI wykryje źródło podejrzanego dźwięku, przejdzie do stanu \texttt{InvestigateSound}.
+      \item Jeśli AI wykryje cel podczas patrolowania, przejdzie do stanu AttackTarget.
+      \item Jeśli AI wykryje źródło podejrzanego dźwięku, przejdzie do stanu InvestigateSound.
     \end{itemize}
 \end{itemize}
 
@@ -180,340 +180,343 @@ Te opisy stanów AI pokazują, jakie zachowania są realizowane przez AI w róż
 
 \subsubsection{Mechanika Wyposażenia}
 
-\textbf{Klasa \texttt{Destructible -}}
-Skrypt \texttt{Destructible} zarządza zachowaniem destrukcji obiektów. Główne funkcje obejmują:
+Klasa Destructible -
+Skrypt Destructible zarządza zachowaniem destrukcji obiektów. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Destroy:} Niszczy obiekt, tworząc zastępcę, jeśli dostępny, i zwraca obiekt do puli obiektów.
+  \item Metoda Destroy: Niszczy obiekt, tworząc zastępcę, jeśli dostępny, i zwraca obiekt do puli obiektów.
 \end{itemize}
 
-\textbf{Klasa \texttt{Flashbang -}}
-Skrypt \texttt{Flashbang} zarządza zachowaniem granatów ogłuszających. Główne funkcje obejmują:
+Klasa Flashbang -
+Skrypt Flashbang zarządza zachowaniem granatów ogłuszających. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Aktualizuje odliczanie do eksplozji granatu ogłuszającego.
-  \item \textbf{Metoda DestroyObject:} Niszczy obiekt granatu ogłuszającego.
-  \item \textbf{Metoda Flash:} Inicjuje efekt oślepiania na podstawie pozycji, kąta i odległości gracza.
-  \item \textbf{Metoda FlashCoroutine:} Zarządza korutyną dla efektu oślepiania.
-  \item \textbf{Metoda OnCollisionEnter:} Obsługuje kolizje, sprawdzając szkło i dostosowując prędkość.
+  \item Metoda Update: Aktualizuje odliczanie do eksplozji granatu ogłuszającego.
+  \item Metoda DestroyObject: Niszczy obiekt granatu ogłuszającego.
+  \item Metoda Flash: Inicjuje efekt oślepiania na podstawie pozycji, kąta i odległości gracza.
+  \item Metoda FlashCoroutine: Zarządza korutyną dla efektu oślepiania.
+  \item Metoda OnCollisionEnter: Obsługuje kolizje, sprawdzając szkło i dostosowując prędkość.
 \end{itemize}
 
-\textbf{Klasa \texttt{Grenade -}}
-Skrypt \texttt{Grenade} zarządza zachowaniem wybuchowych granatów. Główne funkcje obejmują:
+Klasa Grenade -
+Skrypt Grenade zarządza zachowaniem wybuchowych granatów. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Aktualizuje odliczanie do eksplozji granatu.
-  \item \textbf{Metoda Explode:} Inicjuje efekt eksplozji, uszkadzając pobliskie obiekty i stosując siły.
-  \item \textbf{Metoda DestroyObject:} Niszczy obiekt granatu.
-  \item \textbf{Metoda OnCollisionEnter:} Obsługuje kolizje, sprawdzając szkło i dostosowując prędkość.
+  \item Metoda Update: Aktualizuje odliczanie do eksplozji granatu.
+  \item Metoda Explode: Inicjuje efekt eksplozji, uszkadzając pobliskie obiekty i stosując siły.
+  \item Metoda DestroyObject: Niszczy obiekt granatu.
+  \item Metoda OnCollisionEnter: Obsługuje kolizje, sprawdzając szkło i dostosowując prędkość.
 \end{itemize}
 
-\textbf{Klasa \texttt{GrenadeIndicator -}}
-Skrypt \texttt{GrenadeIndicator} zarządza wyświetlaniem wskaźników odległości granatów. Główne funkcje obejmują:
+Klasa GrenadeIndicator -
+Skrypt GrenadeIndicator zarządza wyświetlaniem wskaźników odległości granatów. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Aktualizuje odległość wskaźnika na podstawie pozycji gracza.
-  \item \textbf{Metoda FixedUpdate:} Aktualizuje obrotu wskaźnika na podstawie kamery gracza.
+  \item Metoda Update: Aktualizuje odległość wskaźnika na podstawie pozycji gracza.
+  \item Metoda FixedUpdate: Aktualizuje obrotu wskaźnika na podstawie kamery gracza.
 \end{itemize}
 
-\textbf{Klasa \texttt{Molotov -}}
-Skrypt \texttt{Molotov} zarządza zachowaniem koktajli Mołotowa. Główne funkcje obejmują:
+Klasa Molotov -
+Skrypt Molotov zarządza zachowaniem koktajli Mołotowa. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Explode:} Inicjuje efekt eksplozji i ognia koktajlu Mołotowa.
-  \item \textbf{Metoda DestroyObject:} Niszczy obiekt koktajlu Mołotowa.
-  \item \textbf{Metoda OnCollisionEnter:} Obsługuje kolizje, sprawdzając szkło i uruchamiając eksplozję koktajlu Mołotowa.
+  \item Metoda Explode: Inicjuje efekt eksplozji i ognia koktajlu Mołotowa.
+  \item Metoda DestroyObject: Niszczy obiekt koktajlu Mołotowa.
+  \item Metoda OnCollisionEnter: Obsługuje kolizje, sprawdzając szkło i uruchamiając eksplozję koktajlu Mołotowa.
 \end{itemize}
 
-\textbf{Klasa \texttt{Smoke -}}
-Skrypt \texttt{Smoke} zarządza zachowaniem dymnych granatów. Główne funkcje obejmują:
+Klasa Smoke -
+Skrypt Smoke zarządza zachowaniem dymnych granatów. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Aktualizuje odliczanie do efektu dymu.
-  \item \textbf{Metoda SmokeOn:} Inicjuje efekt dymu.
-  \item \textbf{Metoda DestroyObject:} Niszczy obiekt dymnego granatu.
-  \item \textbf{Metoda OnCollisionEnter:} Obsługuje kolizje, sprawdzając szkło i dostosowując prędkość.
+  \item Metoda Update: Aktualizuje odliczanie do efektu dymu.
+  \item Metoda SmokeOn: Inicjuje efekt dymu.
+  \item Metoda DestroyObject: Niszczy obiekt dymnego granatu.
+  \item Metoda OnCollisionEnter: Obsługuje kolizje, sprawdzając szkło i dostosowując prędkość.
 \end{itemize}
 
-\textbf{Klasa \texttt{WeaponRecoil -}}
-Skrypt \texttt{WeaponRecoil} zarządza zachowaniem odrzutu broni. Główne funkcje obejmują:
+Klasa WeaponRecoil -
+Skrypt WeaponRecoil zarządza zachowaniem odrzutu broni. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Aktualizuje efekt odrzutu na podstawie statusu celowania i właściwości broni.
-  \item \textbf{Metoda RecoilFire:} Zastosowuje odrzut podczas strzału bronią.
+  \item Metoda Update: Aktualizuje efekt odrzutu na podstawie statusu celowania i właściwości broni.
+  \item Metoda RecoilFire: Zastosowuje odrzut podczas strzału bronią.
 \end{itemize}
 
-\textbf{Klasa \texttt{WeaponSway -}}
-Skrypt \texttt{WeaponSway} zarządza zachowaniem kołysania broni. Główne funkcje obejmują:
+Klasa WeaponSway -
+Skrypt WeaponSway zarządza zachowaniem kołysania broni. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Aktualizuje efekt kołysania na podstawie wejścia gracza i ruchu.
-  \item \textbf{Metoda GetInput:} Pobiera wejście dotyczące chodzenia i patrzenia.
-  \item \textbf{Metoda CompositePositionRotation:} Łączy położenie i obroty kołysania.
-  \item \textbf{Metoda SwayOffset:} Oblicza przesunięcie kołysania na podstawie ruchu i prędkości.
-  \item \textbf{Metoda SwayRotation:} Oblicza obroty kołysania na podstawie ruchu i prędkości.
+  \item Metoda Update: Aktualizuje efekt kołysania na podstawie wejścia gracza i ruchu.
+  \item Metoda GetInput: Pobiera wejście dotyczące chodzenia i patrzenia.
+  \item Metoda CompositePositionRotation: Łączy położenie i obroty kołysania.
+  \item Metoda SwayOffset: Oblicza przesunięcie kołysania na podstawie ruchu i prędkości.
+  \item Metoda SwayRotation: Oblicza obroty kołysania na podstawie ruchu i prędkości.
 \end{itemize}
 
 \subsubsection{Mechanika Interaktywnych Obiektów}
 
 Klasa interaktywnych obiektów została szczegółowo opisana w podrozdziale o Wzorcach Projektowych, możesz się tam przenieść klikając tutaj \nameref{subsubsec:tempMeth}
-\textbf{Klasa \texttt{AmmoBox -}}
-Skrypt \texttt{AmmoBox} reprezentuje interaktywną skrzynię z amunicją. Główne funkcje obejmują:
+Klasa AmmoBox -
+Skrypt AmmoBox reprezentuje interaktywną skrzynię z amunicją. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Zarządza aktualizacjami związanymi z łupieniem i komunikatami.
-  \item \textbf{Metoda Interact:} Inicjuje proces uzupełniania amunicji dla odpowiednich broni.
-  \item \textbf{Metoda OnTriggerEnter:} Wykrywa interakcję wroga, uruchamiając uzupełnianie amunicji dla broni AI.
+  \item Metoda Update: Zarządza aktualizacjami związanymi z łupieniem i komunikatami.
+  \item Metoda Interact: Inicjuje proces uzupełniania amunicji dla odpowiednich broni.
+  \item Metoda OnTriggerEnter: Wykrywa interakcję wroga, uruchamiając uzupełnianie amunicji dla broni AI.
 \end{itemize}
 
-\textbf{Klasa \texttt{ArrowIndicator -}}
-Skrypt \texttt{ArrowIndicator} kontroluje wskaźniki strzałek. Główne funkcje obejmują:
+Klasa ArrowIndicator -
+Skrypt ArrowIndicator kontroluje wskaźniki strzałek. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Start:} Inicjuje właściwości wskaźnika strzałki.
-  \item \textbf{Metoda PlayArrowAnimation:} Rozpoczyna sekwencję animacji strzałki.
-  \item \textbf{Metoda OnDestroy:} Zatrzymuje aktywne tweensy, gdy obiekt nadrzędny jest niszczony.
+  \item Metoda Start: Inicjuje właściwości wskaźnika strzałki.
+  \item Metoda PlayArrowAnimation: Rozpoczyna sekwencję animacji strzałki.
+  \item Metoda OnDestroy: Zatrzymuje aktywne tweensy, gdy obiekt nadrzędny jest niszczony.
 \end{itemize}
 
-\textbf{Klasa \texttt{BodyArmor -}}
-Skrypt \texttt{BodyArmor} reprezentuje interaktywny pickup pancerza. Główne funkcje obejmują:
+Klasa BodyArmor -
+Skrypt BodyArmor reprezentuje interaktywny pickup pancerza. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Interact:} Inicjuje proces podnoszenia pancerza dla gracza.
-  \item \textbf{Coroutine DestroyAfterSound:} Niszczy obiekt pancerza po odtworzeniu efektu dźwiękowego.
-  \item \textbf{Metoda TryDifferentBonePrefixes:} Próbuje różnych prefiksów kości do przyczepienia pancerza.
-  \item \textbf{Metoda SetShaderParameters:} Dostosowuje parametry shadera dla zniknięcia pancerza.
-  \item \textbf{Metoda OnTriggerEnter:} Wykrywa interakcję wroga, uruchamiając podnoszenie pancerza dla przeciwników.
+  \item Metoda Interact: Inicjuje proces podnoszenia pancerza dla gracza.
+  \item Coroutine DestroyAfterSound: Niszczy obiekt pancerza po odtworzeniu efektu dźwiękowego.
+  \item Metoda TryDifferentBonePrefixes: Próbuje różnych prefiksów kości do przyczepienia pancerza.
+  \item Metoda SetShaderParameters: Dostosowuje parametry shadera dla zniknięcia pancerza.
+  \item Metoda OnTriggerEnter: Wykrywa interakcję wroga, uruchamiając podnoszenie pancerza dla przeciwników.
 \end{itemize}
 
-\textbf{Klasa \texttt{Container -}}
-Skrypt \texttt{Container} reprezentuje interaktywny kontener. Główne funkcje obejmują:
+Klasa Container -
+Skrypt Container reprezentuje interaktywny kontener. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Zarządza aktualizacjami związanymi z otwarciem i komunikatami.
-  \item \textbf{Metoda Interact:} Przełącza stan otwarcia/zamknięcia kontenera i odtwarza dźwięk.
-  \item \textbf{Metoda DetectEnemyNearby:} Sprawdza, czy w pobliżu są wrogowie, i otwiera kontener, jeśli są wykryci.
+  \item Metoda Update: Zarządza aktualizacjami związanymi z otwarciem i komunikatami.
+  \item Metoda Interact: Przełącza stan otwarcia/zamknięcia kontenera i odtwarza dźwięk.
+  \item Metoda DetectEnemyNearby: Sprawdza, czy w pobliżu są wrogowie, i otwiera kontener, jeśli są wykryci.
 \end{itemize}
 
-\textbf{Klasa \texttt{Coffin -}}
-Skrypt \texttt{Coffin} działa podobnie do skryptu \texttt{Container}, ale obsługuje różne obiekty na scenie. Udostępnia te same funkcje co skrypt \texttt{Container}.
+Klasa Coffin -
+Skrypt Coffin działa podobnie do skryptu Container}, ale obsługuje różne obiekty na scenie. Udostępnia te same funkcje co skrypt Container}.
 
-Należy zauważyć, że istnieje skrypt \texttt{Coffin}, który działa identycznie jak skrypt \texttt{Container}, ale jest przeznaczony dla różnych obiektów na scenie, a jego użycie jest wymienne z \texttt{Container}.
+Należy zauważyć, że istnieje skrypt Coffin}, który działa identycznie jak skrypt Container}, ale jest przeznaczony dla różnych obiektów na scenie, a jego użycie jest wymienne z Container}.
 
-\textbf{Klasa \texttt{DoorMotionSensor -}}
-Skrypt \texttt{DoorMotionSensor} zarządza otwieraniem i zamykaniem drzwi na podstawie bliskości gracza, kamery i wrogów. Główne funkcje obejmują:
+Klasa DoorMotionSensor -
+Skrypt DoorMotionSensor zarządza otwieraniem i zamykaniem drzwi na podstawie bliskości gracza, kamery i wrogów. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Monitoruje odległości do gracza, kamery i wrogów, aby określić, czy drzwi powinny być otwarte czy zamknięte.
-  \item \textbf{Metoda OpenDoors:} Rozpoczyna sekwencję otwierania drzwi.
-  \item \textbf{Metoda CloseDoors:} Rozpoczyna sekwencję zamykania drzwi.
-  \item \textbf{Metoda SlideDoors:} Przesuwa drzwi poziomo na podstawie podanej ilości.
-  \item \textbf{Metoda ScaleDoors:} Skaluje drzwi na podstawie podanej ilości i stanu otwarcia.
-  \item \textbf{Coroutine LerpDoorPosition:} Lerpuje pozycję drzwi w czasie dla płynnego przesuwania.
-  \item \textbf{Coroutine LerpDoorScale:} Lerpuje skalę drzwi w czasie dla płynnego skalowania.
+  \item Metoda Update: Monitoruje odległości do gracza, kamery i wrogów, aby określić, czy drzwi powinny być otwarte czy zamknięte.
+  \item Metoda OpenDoors: Rozpoczyna sekwencję otwierania drzwi.
+  \item Metoda CloseDoors: Rozpoczyna sekwencję zamykania drzwi.
+  \item Metoda SlideDoors: Przesuwa drzwi poziomo na podstawie podanej ilości.
+  \item Metoda ScaleDoors: Skaluje drzwi na podstawie podanej ilości i stanu otwarcia.
+  \item Coroutine LerpDoorPosition: Lerpuje pozycję drzwi w czasie dla płynnego przesuwania.
+  \item Coroutine LerpDoorScale: Lerpuje skalę drzwi w czasie dla płynnego skalowania.
 \end{itemize}
 
-\textbf{Klasa \texttt{FirstAidKit -}}
-Skrypt \texttt{FirstAidKit} reprezentuje interaktywny zestaw apteczny. Główne funkcje obejmują:
+Klasa FirstAidKit -
+Skrypt FirstAidKit reprezentuje interaktywny zestaw apteczny. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Interact:} Inicjuje proces przywracania zdrowia dla gracza.
-  \item \textbf{Coroutine DestroyAfterSound:} Niszczy obiekt zestawu aptecznego po odtworzeniu efektu dźwiękowego.
-  \item \textbf{Metoda SetShaderParameters:} Dostosowuje parametry shadera dla zniknięcia zestawu aptecznego.
-  \item \textbf{Metoda OnTriggerEnter:} Wykrywa interakcję wroga, uruchamiając przywracanie zdrowia dla przeciwników.
+  \item Metoda Interact: Inicjuje proces przywracania zdrowia dla gracza.
+  \item Coroutine DestroyAfterSound: Niszczy obiekt zestawu aptecznego po odtworzeniu efektu dźwiękowego.
+  \item Metoda SetShaderParameters: Dostosowuje parametry shadera dla zniknięcia zestawu aptecznego.
+  \item Metoda OnTriggerEnter: Wykrywa interakcję wroga, uruchamiając przywracanie zdrowia dla przeciwników.
 \end{itemize}
 
-\textbf{Klasa \texttt{Gate -}}
-Skrypt \texttt{Gate} reprezentuje interaktywną bramę. Główne funkcje obejmują:
+Klasa Gate -
+Skrypt Gate reprezentuje interaktywną bramę. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Zarządza aktualizacjami związanymi z otwartością bramy i komunikatami.
-  \item \textbf{Metoda Interact:} Przełącza stan otwarcia/zamknięcia bramy.
-  \item \textbf{Metoda DetectEnemyNearby:} Sprawdza, czy w pobliżu są wrogowie, i otwiera bramę, jeśli są wykryci.
+  \item Metoda Update: Zarządza aktualizacjami związanymi z otwartością bramy i komunikatami.
+  \item Metoda Interact: Przełącza stan otwarcia/zamknięcia bramy.
+  \item Metoda DetectEnemyNearby: Sprawdza, czy w pobliżu są wrogowie, i otwiera bramę, jeśli są wykryci.
 \end{itemize}
 
-\textbf{Klasa \texttt{Glass -}}
-Skrypt \texttt{Glass} obsługuje rozbijanie szklanych obiektów. Główne funkcje obejmują:
+Klasa Glass -
+Skrypt Glass obsługuje rozbijanie szklanych obiektów. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Break:} Rozpoczyna rozbijanie szkła za pomocą pocisku.
-  \item \textbf{Metoda BreakFromGrenade:} Rozpoczyna rozbijanie szkła za pomocą eksplozji granatu.
+  \item Metoda Break: Rozpoczyna rozbijanie szkła za pomocą pocisku.
+  \item Metoda BreakFromGrenade: Rozpoczyna rozbijanie szkła za pomocą eksplozji granatu.
 \end{itemize}
 
-\textbf{Klasa \texttt{Interactable -}}
-Skrypt \texttt{Interactable} służy jako klasa podstawowa dla wszystkich obiektów do oddziaływania. Główne funkcje obejmują:
+Klasa Interactable -
+Skrypt Interactable służy jako klasa podstawowa dla wszystkich obiektów do oddziaływania. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda OnLook:} Udostępnia tekst komunikatu o interakcji.
-  \item \textbf{Metoda BaseInteract:} Obsługuje podstawową logikę interakcji.
-  \item \textbf{Metoda Interact:} Metoda abstrakcyjna do konkretnej logiki interakcji w klasach pochodnych.
+  \item Metoda OnLook: Udostępnia tekst komunikatu o interakcji.
+  \item Metoda BaseInteract: Obsługuje podstawową logikę interakcji.
+  \item Metoda Interact: Metoda abstrakcyjna do konkretnej logiki interakcji w klasach pochodnych.
 \end{itemize}
 
-\textbf{Klasa \texttt{LadderTrigger -}}
-Skrypt \texttt{LadderTrigger} reprezentuje interaktywną drabinę. Główne funkcje obejmują:
+Klasa LadderTrigger -
+Skrypt LadderTrigger reprezentuje interaktywną drabinę. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Interact:} Przełącza stan wspinaczki gracza.
-  \item \textbf{Metoda AttachToLadder:} Przyczepia gracza do drabiny.
-  \item \textbf{Metoda DetachFromLadder:} Odczepia gracza od drabiny.
-  \item \textbf{Metoda FixedUpdate:} Obsługuje logikę wspinaczki i ruchu gracza podczas korzystania z drabiny.
+  \item Metoda Interact: Przełącza stan wspinaczki gracza.
+  \item Metoda AttachToLadder: Przyczepia gracza do drabiny.
+  \item Metoda DetachFromLadder: Odczepia gracza od drabiny.
+  \item Metoda FixedUpdate: Obsługuje logikę wspinaczki i ruchu gracza podczas korzystania z drabiny.
 \end{itemize}
 
-\textbf{Klasa \texttt{ShatteredGlass -}}
-Skrypt \texttt{ShatteredGlass} obsługuje rozbijanie szklanych obiektów na rozdrobnione kawałki. Główne funkcje obejmują:
+Klasa ShatteredGlass -
+Skrypt ShatteredGlass obsługuje rozbijanie szklanych obiektów na rozdrobnione kawałki. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda ApplyForce:} Stosuje siłę na rozdrobnione kawałki szkła za pomocą pocisku.
-  \item \textbf{Metoda ApplyForceFromGrenade:} Stosuje siłę na rozdrobnione kawałki szkła za pomocą eksplozji granatu.
-  \item \textbf{Metoda DestroyObject:} Niszczy obiekt rozdrobnionego szkła po pewnym czasie.
+  \item Metoda ApplyForce: Stosuje siłę na rozdrobnione kawałki szkła za pomocą pocisku.
+  \item Metoda ApplyForceFromGrenade: Stosuje siłę na rozdrobnione kawałki szkła za pomocą eksplozji granatu.
+  \item Metoda DestroyObject: Niszczy obiekt rozdrobnionego szkła po pewnym czasie.
 \end{itemize}
 
-\textbf{Klasa \texttt{Weapon -}}
-Skrypt \texttt{Weapon} reprezentuje interaktywną broń. Główne funkcje obejmują:
+Klasa Weapon -
+Skrypt Weapon reprezentuje interaktywną broń. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Metoda Update:} Monitoruje trafienia raycastów, aby określić odpowiedni komunikat o interakcji.
-  \item \textbf{Metoda Interact:} Obsługuje podnoszenie i zarządzanie bronią w inwentarzu.
-  \item \textbf{Coroutine DestroyAfterPickup:} Niszczy obiekt broni po jej podniesieniu.
-  \item \textbf{Metoda SetShaderParameters:} Dostosowuje parametry shadera dla zniknięcia broni.
-  \item \textbf{Metoda OnTriggerEnter:} Wykrywa interakcję wroga, uruchamiając podnoszenie broni dla przeciwników.
+  \item Metoda Update: Monitoruje trafienia raycastów, aby określić odpowiedni komunikat o interakcji.
+  \item Metoda Interact: Obsługuje podnoszenie i zarządzanie bronią w inwentarzu.
+  \item Coroutine DestroyAfterPickup: Niszczy obiekt broni po jej podniesieniu.
+  \item Metoda SetShaderParameters: Dostosowuje parametry shadera dla zniknięcia broni.
+  \item Metoda OnTriggerEnter: Wykrywa interakcję wroga, uruchamiając podnoszenie broni dla przeciwników.
 \end{itemize}
 
 \subsubsection{Mechaniki Środowiska}
 
-\textbf{Klasa \texttt{Skybox}} \label{subsubsec:skybox}
-\texttt{- } Skrypt \texttt{Skybox} zarządza aspektem wizualnym środowiska. Główna funkcja skryptu to rotacja chmur Skybox w czasie.
+Klasa Skybox \label{subsubsec:skybox}
+-  Skrypt Skybox zarządza aspektem wizualnym środowiska. Główna funkcja skryptu to rotacja chmur Skybox w czasie.
 
-\textbf{Klasa \texttt{SpawnPosition -}}
-Skrypt \texttt{SpawnPosition} organizuje losowe umieszczanie gracza i przeciwników w świecie gry. Główne funkcje obejmują:
+Klasa WeaponRandomizer
+- Skrypt WeaponRandomizer losuje na starcie gry pozycje startowe dla wszystkich broni przez co każda rozgrywka będzie wiązała się z innymi doświadczeniami
+
+Klasa SpawnPosition -
+Skrypt SpawnPosition organizuje losowe umieszczanie gracza i przeciwników w świecie gry. Główne funkcje obejmują:
 \begin{itemize}
-  \item \textbf{Pozycja Startowa Gracza:} Losowo umieszcza gracza w dostępnych punktach teleportacji.
-  \item \textbf{Spawn Przeciwnika:} Losowo pozycjonuje przeciwników w punktach teleportacji, zapewniając zróżnicowane lokalizacje startowe.
+  \item Pozycja Startowa Gracza: Losowo umieszcza gracza w dostępnych punktach teleportacji.
+  \item Spawn Przeciwnika: Losowo pozycjonuje przeciwników w punktach teleportacji, zapewniając zróżnicowane lokalizacje startowe.
 \end{itemize}
 
-Skrypty \texttt{Skybox} i \texttt{SpawnPosition} wspólnie konfigurują wirtualne środowisko, kontrolując aspekty wizualne i zapewniając dynamiczne punkty startowe dla fascynującego doświadczenia gry.
+Skrypty Skybox, WeaponRandomizer oraz SpawnPosition wspólnie konfigurują wirtualne środowisko, kontrolując aspekty wizualne i zapewniając dynamiczną rozgrywkę dla fascynującego doświadczenia gry.
 
 \subsubsection{Mechaniki Gracza}
 
-\textbf{Klasa \texttt{PlayerHealth -}}
-Skrypt \texttt{PlayerHealth} zarządza zdrowiem, pancerzem oraz efektami wizualnymi związanymi z graczem. Kluczowe funkcje to:
+Klasa PlayerHealth -
+Skrypt PlayerHealth zarządza zdrowiem, pancerzem oraz efektami wizualnymi związanymi z graczem. Kluczowe funkcje to:
 \begin{itemize}
-  \item \textbf{Aktualizacje Zdrowia i Pancerza:} Regularnie aktualizuje i ogranicza wartości zdrowia i pancerza gracza.
-  \item \textbf{Obsługa Obrażeń:} Przetwarza różne rodzaje obrażeń (standardowe, upadkowe, od gazu, od ognia) i uruchamia odpowiednie reakcje.
-  \item \textbf{Informacje Wizualne:} Modyfikuje efekty wizualne, takie jak intensywność vignette w zależności od procentu zdrowia.
-  \item \textbf{Obsługa Śmierci:} Rozpoczyna sekwencję śmierci gracza z efektami dźwiękowymi i upuszczaniem przedmiotów.
+  \item Aktualizacje Zdrowia i Pancerza: Regularnie aktualizuje i ogranicza wartości zdrowia i pancerza gracza.
+  \item Obsługa Obrażeń: Przetwarza różne rodzaje obrażeń (standardowe, upadkowe, od gazu, od ognia) i uruchamia odpowiednie reakcje.
+  \item Informacje Wizualne: Modyfikuje efekty wizualne, takie jak intensywność vignette w zależności od procentu zdrowia.
+  \item Obsługa Śmierci: Rozpoczyna sekwencję śmierci gracza z efektami dźwiękowymi i upuszczaniem przedmiotów.
 \end{itemize}
 
-\textbf{Klasa \texttt{PlayerInteract -}}
-Skrypt \texttt{PlayerInteract} umożliwia interakcję gracza z otoczeniem gry. Kluczowe funkcje to:
+Klasa PlayerInteract -
+Skrypt PlayerInteract umożliwia interakcję gracza z otoczeniem gry. Kluczowe funkcje to:
 \begin{itemize}
-  \item \textbf{Promieniowanie:} Używa promieniowania do identyfikacji obiektów możliwych do zinterakcjonowania w otoczeniu.
-  \item \textbf{Czas Odnowienia Interakcji:} Wprowadza czas odnowienia, aby zapobiec szybkim interakcjom.
-  \item \textbf{Interakcja z Obiektami:} Uruchamia interakcje na podstawie wejścia gracza (np. naciśnięcie klawisza F).
+  \item Promieniowanie: Używa promieniowania do identyfikacji obiektów możliwych do zinterakcjonowania w otoczeniu.
+  \item Czas Odnowienia Interakcji: Wprowadza czas odnowienia, aby zapobiec szybkim interakcjom.
+  \item Interakcja z Obiektami: Uruchamia interakcje na podstawie wejścia gracza (np. naciśnięcie klawisza F).
 \end{itemize}
 
-\textbf{Klasa \texttt{PlayerInventory -}}
-Skrypt \texttt{PlayerInventory} zarządza inwentarzem gracza i zmianą broni. Kluczowe funkcje to:
+Klasa PlayerInventory -
+Skrypt PlayerInventory zarządza inwentarzem gracza i zmianą broni. Kluczowe funkcje to:
 \begin{itemize}
-  \item \textbf{Dodawanie i Usuwanie Przedmiotów:} Obsługuje dodawanie i usuwanie broni oraz przedmiotów.
-  \item \textbf{Zmiana Broni:} Pozwala graczowi na zmianę broni przy użyciu różnych wejść.
-  \item \textbf{Upuszczanie Przedmiotów:} Wprowadza upuszczanie broni z efektami fizycznymi.
+  \item Dodawanie i Usuwanie Przedmiotów: Obsługuje dodawanie i usuwanie broni oraz przedmiotów.
+  \item Zmiana Broni: Pozwala graczowi na zmianę broni przy użyciu różnych wejść.
+  \item Upuszczanie Przedmiotów: Wprowadza upuszczanie broni z efektami fizycznymi.
 \end{itemize}
 
-\textbf{Klasa \texttt{PlayerLeaning -}}
-Skrypt \texttt{PlayerLeaning} odpowiada za obsługę mechaniki pochylenia gracza. Kluczowe funkcje to:
+Klasa PlayerLeaning -
+Skrypt PlayerLeaning odpowiada za obsługę mechaniki pochylenia gracza. Kluczowe funkcje to:
 \begin{itemize}
-  \item \textbf{Wykrywanie Wejścia:}
+  \item Wykrywanie Wejścia:
     \begin{itemize}
       \item Monitoruje wejście gracza, aby określić, czy gracz pochyla się w lewo czy w prawo (klawisze Q i E).
     \end{itemize}
-  \item \textbf{Obliczenia Pochylenia:}
+  \item Obliczenia Pochylenia:
     \begin{itemize}
       \item Dostosowuje kąt pochylenia gracza na podstawie wejścia, stosując płynną interpolację dla bardziej naturalnego uczucia.
       \item Aktualizuje lokalną rotację gracza, aby symulować pochylenie.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{PlayerMotor -}}
-Skrypt \texttt{PlayerMotor} zarządza ruchem gracza oraz różnymi związanymi z nim mechanikami. Kluczowe funkcje to:
+Klasa PlayerMotor -
+Skrypt PlayerMotor zarządza ruchem gracza oraz różnymi związanymi z nim mechanikami. Kluczowe funkcje to:
 \begin{itemize}
-  \item \textbf{Ruch:}
+  \item Ruch:
     \begin{itemize}
       \item Zbiera dane wejściowe dla ruchu gracza (klawisze W, A, S, D).
       \item Rozróżnia pomiędzy chodzeniem, biegiem i kucaniem na podstawie działań gracza.
     \end{itemize}
-  \item \textbf{Kucanie:}
+  \item Kucanie:
     \begin{itemize}
       \item Dostosowuje wysokość gracza oraz pozycję kamery podczas kucania.
       \item Obsługuje przełączanie pomiędzy kucaniem a staniem na podstawie wejścia.
     \end{itemize}
-  \item \textbf{Skakanie:}
+  \item Skakanie:
     \begin{itemize}
       \item Wykrywa wejście skoku i wykonuje skoki, uwzględniając przeszkody oraz wytrzymałość gracza.
     \end{itemize}
-  \item \textbf{Grawitacja:}
+  \item Grawitacja:
     \begin{itemize}
       \item Symuluje grawitację dla gracza, uwzględniając czas spadania oraz potencjalne obrażenia z upadku.
     \end{itemize}
-  \item \textbf{Bieganie:}
+  \item Bieganie:
     \begin{itemize}
       \item Pozwala graczowi na sprintowanie przytrzymując klawisz Shift i spełnieniu określonych warunków.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{PlayerShoot -}}
-Skrypt \texttt{PlayerShoot} zarządza mechaniką strzelania gracza oraz interakcjami z bronią. Kluczowe funkcje to:
+Klasa PlayerShoot -
+Skrypt PlayerShoot zarządza mechaniką strzelania gracza oraz interakcjami z bronią. Kluczowe funkcje to:
 \begin{itemize}
-  \item \textbf{Strzelanie:}
+  \item Strzelanie:
     \begin{itemize}
       \item Obsługuje mechanikę strzelania, w tym oddawanie strzałów, zarządzanie amunicją i trajektorie pocisków.
       \item Zarządza trybami automatycznego i pojedynczego strzału.
     \end{itemize}
-  \item \textbf{Przeładowywanie:}
+  \item Przeładowywanie:
     \begin{itemize}
       \item Inicjuje i wykonuje sekwencję przeładowywania broni, uwzględniając różne typy broni.
     \end{itemize}
-  \item \textbf{Celowanie:}
+  \item Celowanie:
     \begin{itemize}
       \item Dostosowuje widok gracza oraz pozycję broni na podstawie wejścia celowania.
       \item Wprowadza dynamiczne pole widzenia dla karabinów snajperskich.
     \end{itemize}
-  \item \textbf{Zmiana Broni:}
+  \item Zmiana Broni:
     \begin{itemize}
       \item Obsługuje zmianę broni, odtwarzając odpowiednie dźwięki.
     \end{itemize}
-  \item \textbf{Ataki Wręcz:}
+  \item Ataki Wręcz:
     \begin{itemize}
       \item Wprowadza ataki wręcz z zużyciem wytrzymałości oraz blokowanie kolejnych ataków podczas przeładowywania.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{PlayerStamina -}}
-Skrypt \texttt{PlayerStamina} zarządza wytrzymałością gracza, interfejsem użytkownika wytrzymałości oraz funkcjonalnościami związanymi. Kluczowe cechy to:
+Klasa PlayerStamina -
+Skrypt PlayerStamina zarządza wytrzymałością gracza, interfejsem użytkownika wytrzymałości oraz funkcjonalnościami związanymi. Kluczowe cechy to:
 \begin{itemize}
-  \item \textbf{System Wytrzymałości:}
+  \item System Wytrzymałości:
     \begin{itemize}
       \item Śledzi wytrzymałość gracza, w tym maksymalną wytrzymałość, koszty sprintu, skoku i ataku.
       \item Wprowadza regenerację wytrzymałości z upływem czasu.
       \item Blokuje regenerację wytrzymałości w określonych warunkach.
     \end{itemize}
-  \item \textbf{Elementy Interfejsu Użytkownika:}
+  \item Elementy Interfejsu Użytkownika:
     \begin{itemize}
       \item Zarządza wizualną reprezentacją paska wytrzymałości z płynnymi przejściami.
       \item Aktualizuje elementy interfejsu, takie jak tekst wytrzymałości i kolor w zależności od bieżącej wytrzymałości.
       \item Wyświetla komunikaty i odtwarza efekty dźwiękowe związane ze stanem wytrzymałości.
     \end{itemize}
-  \item \textbf{Zużycie Wytrzymałości:}
+  \item Zużycie Wytrzymałości:
     \begin{itemize}
       \item Odbiera wytrzymałość podczas sprintu, skoku lub ataków.
       \item Dostosowuje elementy interfejsu zgodnie z tym oraz uruchamia blokowanie regeneracji wytrzymałości przy wyczerpaniu wytrzymałości.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{PlayerStance -}}
-Skrypt \texttt{PlayerStance} definiuje różne postawy gracza i ich powiązane właściwości. Kluczowe cechy to:
+Klasa PlayerStance -
+Skrypt PlayerStance definiuje różne postawy gracza i ich powiązane właściwości. Kluczowe cechy to:
 \begin{itemize}
-  \item \textbf{Definicja Postawy:}
+  \item Definicja Postawy:
     \begin{itemize}
       \item Wymienia różne postawy gracza, w tym spoczynku, chodzenia, kucania i biegania.
       \item Przypisuje konkretne wartości wysokości kamery dla każdej postawy.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{PlayerUI -}}
-Skrypt \texttt{PlayerUI} obsługuje elementy interfejsu użytkownika gracza, takie jak komunikaty, wyświetlacze amunicji i informacje zwrotne dotyczące interakcji. Kluczowe funkcje to:
+Klasa PlayerUI -
+Skrypt PlayerUI obsługuje elementy interfejsu użytkownika gracza, takie jak komunikaty, wyświetlacze amunicji i informacje zwrotne dotyczące interakcji. Kluczowe funkcje to:
 \begin{itemize}
-  \item \textbf{Elementy Interfejsu Użytkownika:}
+  \item Elementy Interfejsu Użytkownika:
     \begin{itemize}
       \item Zarządza i aktualizuje elementy interfejsu, takie jak teksty komunikatów, teksty amunicji i suwak przeładowywania.
       \item Obsługuje dynamiczne wyświetlanie informacji o amunicji dla różnych typów broni.
     \end{itemize}
-  \item \textbf{Uzupełnianie Amunicji:}
+  \item Uzupełnianie Amunicji:
     \begin{itemize}
       \item Inicjuje i wykonuje sekwencje uzupełniania amunicji, w tym informacje zwrotne wizualne i aktualizacje inwentarza.
       \item Wyświetla komunikaty dotyczące limitów granatów i ograniczeń uzupełniania amunicji.
     \end{itemize}
-  \item \textbf{Obsługa Coroutine:}
+  \item Obsługa Coroutine:
     \begin{itemize}
       \item Wprowadza korutyny dla płynnych przejść i efektów zanikania w komunikatach interfejsu.
       \item Zarządza czasem trwania i timingiem zanikania elementów interfejsu.
@@ -524,83 +527,83 @@ Te skrypty wspólnie przyczyniają się do złożonej mechaniki gracza, zarządz
 
 \subsubsection{Mechaniki Interakcji Środowiskowej}
 
-\textbf{Klasa \texttt{FireParticleTrigger -}}
-Skrypt \texttt{FireParticleTrigger} obsługuje aktywację i efekty cząsteczek ognia. Kluczowe funkcje to:
+Klasa FireParticleTrigger -
+Skrypt FireParticleTrigger obsługuje aktywację i efekty cząsteczek ognia. Kluczowe funkcje to:
 \begin{itemize}
-\item \textbf{Aktywacja Cząsteczek:}
+\item Aktywacja Cząsteczek:
     \begin{itemize}
          \item Aktywuje cząsteczki ognia po zderzeniu z wrogiem lub graczem.
-         \item Zarządza słownikiem (\texttt{characterVfxMap}), śledząc aktywne postaci i ich efekty wizualne.
+         \item Zarządza słownikiem (characterVfxMap), śledząc aktywne postaci i ich efekty wizualne.
     \end{itemize}
-\item \textbf{Obrażenia w Czasie:}
+\item Obrażenia w Czasie:
     \begin{itemize}
          \item Zadaje obrażenia ogniowe w czasie wrogom w zasięgu cząsteczki.
          \item Wykorzystuje korutyny do stosowania okresowych obrażeń i efektów wizualnych.
     \end{itemize}
-\item \textbf{Obrażenia Gracza:}
+\item Obrażenia Gracza:
     \begin{itemize}
          \item Inicjuje i obsługuje ciągłe obrażenia ogniowe dla gracza po kolizji.
          \item Wykorzystuje korutyny do okresowych obrażeń gracza.
     \end{itemize}
-\item \textbf{Oczyszczanie przy Wyłączeniu:}
+\item Oczyszczanie przy Wyłączeniu:
     \begin{itemize}
         \item Zatrzymuje korutyny i resetuje efekty wizualne po wyłączeniu skryptu.
         \item Zapewnia właściwe oczyszczanie zasobów.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{GasParticleTrigger -}}
-Skrypt \texttt{GasParticleTrigger} zarządza efektami cząsteczek gazu i ich wpływem na gracza. Kluczowe funkcje to:
+Klasa GasParticleTrigger -
+Skrypt GasParticleTrigger zarządza efektami cząsteczek gazu i ich wpływem na gracza. Kluczowe funkcje to:
 \begin{itemize}
-\item \textbf{Aktywacja Gazu:}
+\item Aktywacja Gazu:
     \begin{itemize}
         \item Aktywuje okresowe obrażenia gazowe, gdy gracz wchodzi w obszar cząsteczek gazu.
-        \item Wykorzystuje \texttt{InvokeRepeating} do ciągłego zadawania obrażeń.
+        \item Wykorzystuje InvokeRepeating do ciągłego zadawania obrażeń.
     \end{itemize}
-\item \textbf{Obrażenia w Czasie:}
+\item Obrażenia w Czasie:
     \begin{itemize}
         \item Zadaje okresowe obrażenia gazowe graczowi w obszarze gazu.
         \item Stosuje losowe wartości obrażeń, aby symulować zmienną intensywność gazu.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{HitBox -}}
-Skrypt \texttt{HitBox} reprezentuje hitboksy na postaciach i obsługuje obliczenia obrażeń. Kluczowe funkcje to:
+Klasa HitBox -
+Skrypt HitBox reprezentuje hitboksy na postaciach i obsługuje obliczenia obrażeń. Kluczowe funkcje to:
 \begin{itemize}
-\item \textbf{Obsługa Obrażeń:}
+\item Obsługa Obrażeń:
     \begin{itemize}
         \item Oblicza obrażenia na podstawie lokalizacji hitboxu i właściwości broni.
         \item Uwzględnia mnożniki obrażeń dla różnych obszarów hitboxu.
     \end{itemize}
-\item \textbf{Obrażenia od Eksplozji:}
+\item Obrażenia od Eksplozji:
     \begin{itemize}
         \item Pozwala na bezpośrednie zadawanie obrażeń od eksplozji postaciom.
-        \item Wykorzystuje metody \texttt{OnExplosion} do obrażeń związanych z eksplozją.
+        \item Wykorzystuje metody OnExplosion do obrażeń związanych z eksplozją.
     \end{itemize}
-\item \textbf{Obrażenia Gracza:}
+\item Obrażenia Gracza:
     \begin{itemize}
         \item Zadaje obrażenia graczowi, jeśli spełnione są warunki hitboxu i broni.
         \item Uwzględnia mnożniki obrażeń i specyficzne dla broni czynniki.
     \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{Ragdoll -}}
-Skrypt \texttt{Ragdoll} zarządza aktywacją i dezaktywacją fizyki ragdoll na postaci. Kluczowe funkcje to:
+Klasa Ragdoll -
+Skrypt Ragdoll zarządza aktywacją i dezaktywacją fizyki ragdoll na postaci. Kluczowe funkcje to:
 \begin{itemize}
-\item \textbf{Aktywacja Ragdolla:}
+\item Aktywacja Ragdolla:
     \begin{itemize}
         \item Aktywuje fizykę ragdoll na postaci, umożliwiając realistyczne interakcje fizyczne.
-        \item Wykorzystuje komponenty \texttt{Rigidbody} i wyłącza Animator.
+        \item Wykorzystuje komponenty Rigidbody i wyłącza Animator.
     \end{itemize}
-\item \textbf{Dezaktywacja Ragdolla:}
+\item Dezaktywacja Ragdolla:
     \begin{itemize}
         \item Dezaktywuje fizykę ragdoll, umożliwiając kontrolę animacji przez Animatora.
-        \item Przywraca komponenty \texttt{Rigidbody} do kinematycznego stanu i włącza Animatora.
+        \item Przywraca komponenty Rigidbody do kinematycznego stanu i włącza Animatora.
     \end{itemize}
-\item \textbf{Zastosowanie Siły:}
+\item Zastosowanie Siły:
     \begin{itemize}
         \item Stosuje zewnętrzne siły do ragdolla, symulując wpływy lub eksplozje.
-        \item Używa \texttt{Rigidbody} Hips do zastosowania siły.
+        \item Używa Rigidbody Hips do zastosowania siły.
     \end{itemize}
 \end{itemize}
 
@@ -608,96 +611,96 @@ Te skrypty wspólnie przyczyniają się do efektów środowiskowych, interakcji 
 
 \subsubsection{Interfejs Użytkownika i Mechaniki Interakcji}
 
-\textbf{Klasa \texttt{DamageIndicator -}}
-Skrypt \texttt{DamageIndicator} zarządza wskaźnikami obrażeń, które pojawiają się na ekranie, aby pokazać kierunek nadchodzących obrażeń. Kluczowe funkcje to:
+Klasa DamageIndicator -
+Skrypt DamageIndicator zarządza wskaźnikami obrażeń, które pojawiają się na ekranie, aby pokazać kierunek nadchodzących obrażeń. Kluczowe funkcje to:
 \begin{itemize}
-\item \textbf{Dynamiczna Rotacja:}
+\item Dynamiczna Rotacja:
 \begin{itemize}
 \item Dynamicznie obraca wskaźnik obrażeń w kierunku źródła obrażeń.
-\item Wykorzystuje korutynę (\texttt{RotateToTheTarget()}) dla płynnych aktualizacji rotacji.
+\item Wykorzystuje korutynę (RotateToTheTarget()) dla płynnych aktualizacji rotacji.
 \end{itemize}
-\item \textbf{Mechanizm Odliczania:}
+\item Mechanizm Odliczania:
 \begin{itemize}
 \item Inicjuje mechanizm odliczania dla czasu widoczności wskaźnika obrażeń.
-\item Płynnie zanika i pojawia się, używając wartości alfa w \texttt{CanvasGroup}.
+\item Płynnie zanika i pojawia się, używając wartości alfa w CanvasGroup.
 \end{itemize}
-\item \textbf{Pula Obiektów:}
+\item Pula Obiektów:
 \begin{itemize}
 \item Wykorzystuje pulę obiektów do efektywnego zarządzania i ponownego użycia instancji wskaźnika obrażeń.
 \item Zwraca obiekt do puli po zakończeniu odliczania.
 \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{DISystem -}}
-Skrypt \texttt{DISystem} zarządza Systemem Wskaźników Obrażeń, orchestrą tworzenia i ponownego użycia wskaźników obrażeń. Kluczowe funkcje to:
+Klasa DISystem -
+Skrypt DISystem zarządza Systemem Wskaźników Obrażeń, orchestrą tworzenia i ponownego użycia wskaźników obrażeń. Kluczowe funkcje to:
 \begin{itemize}
-\item \textbf{Dynamiczne Tworzenie Wskaźników:}
+\item Dynamiczne Tworzenie Wskaźników:
 \begin{itemize}
 \item Dynamicznie tworzy wskaźniki obrażeń na podstawie celu.
 \item Wykorzystuje pulę obiektów do efektywnego tworzenia i zarządzania.
 \end{itemize}
-\item \textbf{Ponowne Użycie Wskaźników:}
+\item Ponowne Użycie Wskaźników:
 \begin{itemize}
 \item Ponownie używa istniejących wskaźników, gdy ten sam cel jest ponownie trafiony.
 \item Resetuje odliczanie wskaźnika dla ponownie używanych instancji.
 \end{itemize}
-\item \textbf{Integracja z Systemem Akcji:}
+\item Integracja z Systemem Akcji:
 \begin{itemize}
 \item Integracja z systemem akcji w celu wywołania tworzenia wskaźników obrażeń.
-\item Nasłuchuje akcji \texttt{CreateIndicator}.
+\item Nasłuchuje akcji CreateIndicator.
 \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{Tracker -}}
-Skrypt \texttt{Tracker} obsługuje mechanizm śledzenia, dostarczając funkcji śledzenia przeciwników, aktualizacji wskaźników i sprawdzania warunków zwycięstwa. Kluczowe funkcje to:
+Klasa Tracker -
+Skrypt Tracker obsługuje mechanizm śledzenia, dostarczając funkcji śledzenia przeciwników, aktualizacji wskaźników i sprawdzania warunków zwycięstwa. Kluczowe funkcje to:
 \begin{itemize}
-\item \textbf{Inicjacja Śledzenia:}
+\item Inicjacja Śledzenia:
 \begin{itemize}
-\item Inicjuje śledzenie po naciśnięciu określonego klawisza (np. \texttt{Z}).
+\item Inicjuje śledzenie po naciśnięciu klawisza Z.
 \item Rozpoczyna korutynę śledzenia i odtwarza efekt dźwiękowy.
 \end{itemize}
-\item \textbf{Śledzenie Przeciwników:}
+\item Śledzenie Przeciwników:
 \begin{itemize}
 \item Ciągle aktualizuje kierunek śledzenia na podstawie pozycji najbliższego przeciwnika.
 \item Obraca wskaźnik, aby pokazać kierunek najbliższego przeciwnika.
 \end{itemize}
-\item \textbf{Czas Odprężania i Czas Trwania:}
+\item Czas Odnowienia i Czas Trwania:
 \begin{itemize}
-\item Wprowadza mechanizmy czasu odprężania i czasu trwania zdolności śledzenia.
-\item Zarządza inicjacją, zatrzymaniem i czasem odprężania śledzenia.
+\item Wprowadza mechanizmy czasu odnowienia i czasu trwania zdolności śledzenia.
+\item Zarządza inicjacją, zatrzymaniem i czasem odnowienia śledzenia.
 \end{itemize}
-\item \textbf{Skanowanie Sceny:}
+\item Skanowanie Sceny:
 \begin{itemize}
 \item Inicjuje korutynę skanowania sceny dla efektów wizualnych podczas śledzenia.
 \item Wykonuje wiele skanów z różnymi poziomami przezroczystości i zasięgiem.
 \end{itemize}
-\item \textbf{Warunki Zwycięstwa:}
+\item Warunki Zwycięstwa:
 \begin{itemize}
 \item Sprawdza warunki zwycięstwa na podstawie eliminacji wszystkich przeciwników.
 \item Aktywuje ekran zwycięstwa, gdy wszyscy przeciwnicy zostaną wyeliminowani.
 \end{itemize}
 \end{itemize}
 
-\textbf{Klasa \texttt{WeaponWheel -}}
-Skrypt \texttt{WeaponWheel} zarządza funkcjonalnością koła broni gracza, umożliwiając wybór broni i dostarczając informacje wizualne. Kluczowe funkcje to:
+Klasa WeaponWheel -
+Skrypt WeaponWheel zarządza funkcjonalnością koła broni gracza, umożliwiając wybór broni i dostarczając informacje wizualne. Kluczowe funkcje to:
 \begin{itemize}
-\item \textbf{Aktywacja Koła:}
+\item Aktywacja Koła:
 \begin{itemize}
 \item Aktywuje koło broni po naciśnięciu określonego klawisza.
 \item Wyświetla ikony broni i związane z nimi informacje.
 \end{itemize}
-\item \textbf{Interakcja z Kołem:}
+\item Interakcja z Kołem:
 \begin{itemize}
 \item Umożliwia interakcję z kołem za pomocą pozycji myszy i kliknięć.
 \item Podświetla wybraną broń i wyświetla jej szczegóły.
 \end{itemize}
-\item \textbf{Wybór Broni:}
+\item Wybór Broni:
 \begin
 {itemize}
 \item Pozwala graczowi na wybór broni z koła.
 \item Wywołuje odpowiednią akcję na podstawie wybranego przedmiotu.
 \end{itemize}
-\item \textbf{Skalowanie Czasu:}
+\item Skalowanie Czasu:
 \begin{itemize}
 \item Dynamicznie dostosowuje skalę czasu w zależności od aktywacji koła.
 \item Modyfikuje dźwięk za pomocą tablicy mikserów audio.
