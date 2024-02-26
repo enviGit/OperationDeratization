@@ -12,8 +12,7 @@ The game features simple and intuitive controls, including WASD movement and mou
 - Set in a 3D environment with one map featuring various spawn points and locations.
 - Players can activate a tracker to point them to the nearest opponent.
 - No crosshair, and reloading with a partially filled magazine results in wasted ammo.
-- Detailed main menu and options menu to adjust settings like resolution, fullscreen, volume, sensitivity and brightness.
-- Arena mode where players can face off against waves of enemies or individual opponents.
+- Detailed main menu and options menu to adjust settings like resolution, graphic quality, volume, sensitivity and brightness.
 
 ## Preview Images
 ![Equipment selection wheel](https://github.com/enviGit/OperationDeratization/assets/80624809/5979f6ae-65c4-49d6-b2ff-3731d9856ef9)
