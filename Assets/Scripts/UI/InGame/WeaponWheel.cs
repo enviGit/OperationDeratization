@@ -19,7 +19,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private PlayerHealth health;
         private bool m_WheelEnabled;
         private Camera playerCamera;
-        [SerializeField] private float targetTimeScale = 0.1f, timeToGoToTargetTimeScale = 0.01f;
+        [SerializeField] private float targetTimeScale = 0.05f, timeToGoToTargetTimeScale = 0.1f;
         private float m_TimeV;
         private int selectedIndex = -1;
         [SerializeField] private GameObject wheelAmmoCount;
@@ -139,10 +139,7 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             nameDisplayBuilder.Clear();  // Clear the StringBuilder before building the new text
 
             for (int i = 0; i < pos.Length; i++)
-            {
-                //Changing World coordinates to screen coordinates
-                pos[i] = playerCamera.WorldToScreenPoint(dots[i].position);
-            }
+                pos[i] = playerCamera.WorldToScreenPoint(dots[i].position);  // Changing World coordinates to screen coordinates
 
             mousePos = Input.mousePosition;
 
@@ -242,12 +239,9 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
         private bool CheckForCoverActive()
         {
             foreach (GameObject coverCanvas in pause_options_victory)
-            {
                 if (coverCanvas.activeSelf)
-                {
                     return true;
-                }
-            }
+
             return false;
         }
         private void HandleWheelActivation()
@@ -302,19 +296,20 @@ namespace RatGamesStudios.OperationDeratization.UI.InGame
             if (m_WheelEnabled)
             {
                 Time.timeScale = Mathf.SmoothDamp(Time.timeScale, targetTimeScale, ref m_TimeV, timeToGoToTargetTimeScale);
+                Time.fixedDeltaTime = Time.timeScale * 0.02f;
 
                 foreach (AudioMixer child in mixers)
-                    child.SetFloat("Pitch", targetTimeScale * 10f * 5);
+                    child.SetFloat("Pitch", Mathf.Clamp(targetTimeScale, 0.5f, 1f));
             }
             else
             {
-                Time.timeScale = Mathf.SmoothDamp(Time.timeScale, 1f, ref m_TimeV, timeToGoToTargetTimeScale / 10f);
+                Time.timeScale = Mathf.SmoothDamp(Time.timeScale, 1f, ref m_TimeV, timeToGoToTargetTimeScale);
+                Time.fixedDeltaTime = Time.timeScale * 0.02f;
 
                 foreach (AudioMixer child in mixers)
                     child.SetFloat("Pitch", 1f);
             }
         }
-
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
