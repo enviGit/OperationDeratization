@@ -1,121 +1,116 @@
 using RatGamesStudios.OperationDeratization.Manager;
+using RatGamesStudios.OperationDeratization.UI.InGame;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Player
 {
     public class PlayerStamina : MonoBehaviour
     {
-        [Header("References")]
-        private PlayerMotor playerMotor;
-        public GameObject staminaBar;
-        private Image frontStaminaBar;
-        private Image backStaminaBar;
-        private AudioSource heavyBreathingSound;
-        private AudioEventManager audioEventManager;
+        [Header("Components")]
+        [SerializeField] private PlayerMotor playerMotor;
+        [SerializeField] private ResourceBar staminaBarUI;
+        [SerializeField] private AudioSource heavyBreathingSound;
 
-        [Header("Stamina bar")]
+        [Header("Settings")]
         public float maxStamina = 150f;
+        public float currentStamina = 100f;
+        public float staminaRegenRate = 25f;
+        
+        [Header("Costs")]
         public float sprintStaminaCost = 5f;
         public float jumpStaminaCost = 10f;
         public float attackStaminaCost = 15f;
-        public float staminaRegenRate = 25f;
-        public float currentStamina = 100f;
-        private float lerpTimer;
-        public float chipSpeed = 2f;
+
         public bool isStaminaRegenBlocked = false;
+        private AudioEventManager audioEventManager;
 
         private void Start()
         {
-            playerMotor = GetComponent<PlayerMotor>();
-            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
-            frontStaminaBar = staminaBar.transform.GetChild(3).GetComponent<Image>();
-            backStaminaBar = staminaBar.transform.GetChild(2).GetComponent<Image>();
+            if(playerMotor == null) playerMotor = GetComponent<PlayerMotor>();
+            if(heavyBreathingSound == null) heavyBreathingSound = transform.Find("Sounds/HeavyBreathing")?.GetComponent<AudioSource>();
+            
+            var audioMgr = GameObject.FindGameObjectWithTag("AudioEventManager");
+            if(audioMgr) audioEventManager = audioMgr.GetComponent<AudioEventManager>();
+
             currentStamina = maxStamina;
-            staminaBar.SetActive(false);
-            heavyBreathingSound = transform.Find("Sounds/HeavyBreathing").GetComponent<AudioSource>();
+            if(staminaBarUI) staminaBarUI.SetActive(false);
         }
+
         private void Update()
         {
-            Check();
-            UpdateStaminaUI();
+            HandleStaminaRegen();
+            UpdateUI();
         }  
-        private void Check()
+
+        private void HandleStaminaRegen()
         {
             if (playerMotor.isRunning && playerMotor.isMoving)
-                UseStamina(sprintStaminaCost * Time.deltaTime);
-            if (!playerMotor.isRunning && playerMotor.isGrounded)
             {
-                if (!isStaminaRegenBlocked)
+                UseStamina(sprintStaminaCost * Time.deltaTime);
+            }
+            else if (!playerMotor.isRunning && playerMotor.isGrounded)
+            {
+                if (!isStaminaRegenBlocked && currentStamina < maxStamina)
                 {
-                    backStaminaBar.color = new Color(0.88f, 0.31f, 0.12f, 1f);
+                    if(staminaBarUI) staminaBarUI.SetBackColor(new Color(0.88f, 0.31f, 0.12f, 1f));
                     currentStamina = Mathf.Clamp(currentStamina + staminaRegenRate * Time.deltaTime, 0, maxStamina);
                 }
             }
         }
-        private void UpdateStaminaUI()
+
+        private void UpdateUI()
         {
-            if (currentStamina == maxStamina)
-                staminaBar.SetActive(false);
+            if (staminaBarUI == null) return;
+
+            if (currentStamina >= maxStamina)
+            {
+                staminaBarUI.SetActive(false);
+            }
             else
             {
-                staminaBar.SetActive(true);
-
-                float fillF = frontStaminaBar.fillAmount;
-                float fillB = backStaminaBar.fillAmount;
-                float hFraction = currentStamina / maxStamina;
-                float hFractionNormalized = hFraction * 0.25f;
-
-                if (fillB > hFractionNormalized)
-                {
-                    frontStaminaBar.fillAmount = hFractionNormalized;
-                    lerpTimer += Time.deltaTime;
-                    float percentComplete = lerpTimer / chipSpeed;
-                    percentComplete = percentComplete * percentComplete;
-                    backStaminaBar.fillAmount = Mathf.Lerp(fillB, hFractionNormalized, percentComplete);
-                }
-                if (fillF < hFractionNormalized)
-                {
-                    backStaminaBar.fillAmount = hFractionNormalized;
-                    lerpTimer += Time.deltaTime;
-                    float percentComplete = lerpTimer / chipSpeed;
-                    percentComplete = percentComplete * percentComplete;
-                    frontStaminaBar.fillAmount = Mathf.Lerp(fillF, backStaminaBar.fillAmount, percentComplete);
-                }
+                staminaBarUI.SetActive(true);
+                staminaBarUI.UpdateBar(currentStamina, maxStamina);
             }
         }
+
         public bool HasStamina(float amount)
         {
             return currentStamina >= amount;
         }
+
         public void UseStamina(float amount)
         {
-            backStaminaBar.color = Color.gray;
+            if(staminaBarUI) staminaBarUI.SetBackColor(Color.gray);
+            
             currentStamina = Mathf.Clamp(currentStamina - amount, 0, maxStamina);
-            lerpTimer = 0f;
-            UpdateStaminaUI();
 
-            if (currentStamina == 0)
+            if (currentStamina <= 0.1f)
             {
-                isStaminaRegenBlocked = true;
-                heavyBreathingSound.Play();
-                audioEventManager.NotifyAudioEvent(heavyBreathingSound);
-                Invoke("UnblockStaminaRegen", 4f);
+                BlockStaminaRegen(4f);
+                if (!heavyBreathingSound.isPlaying)
+                {
+                    heavyBreathingSound.Play();
+                    audioEventManager?.NotifyAudioEvent(heavyBreathingSound);
+                }
             }
         }
+
+        public void BlockStaminaOnAttack()
+        {
+            BlockStaminaRegen(currentStamina <= 0 ? 4f : 2f);
+        }
+
+        private void BlockStaminaRegen(float duration)
+        {
+            isStaminaRegenBlocked = true;
+            CancelInvoke(nameof(UnblockStaminaRegen));
+            Invoke(nameof(UnblockStaminaRegen), duration);
+        }
+
         private void UnblockStaminaRegen()
         {
             isStaminaRegenBlocked = false;
             heavyBreathingSound.Stop();
-        }
-        public void BlockStaminaOnAttack()
-        {
-            isStaminaRegenBlocked = true;
-
-            if (currentStamina == 0)
-                Invoke("UnblockStaminaRegen", 4f);
-            else
-                Invoke("UnblockStaminaRegen", 2f);
         }
     }
 }

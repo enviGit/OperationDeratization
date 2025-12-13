@@ -1,245 +1,180 @@
 using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
+using RatGamesStudios.OperationDeratization.UI.InGame;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Player
 {
     public class PlayerHealth : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private GameObject healthBar;
-        [SerializeField] private GameObject armorBar;
-        private Image frontHealthBar;
-        [HideInInspector] public Image backHealthBar;
-        private Image frontArmorBar;
-        [HideInInspector] public Image backArmorBar;
+        [Header("UI Components")]
+        [SerializeField] private ResourceBar healthBarUI;
+        [SerializeField] private ResourceBar armorBarUI;
+
+        [Header("Visuals & Audio References")]
         [SerializeField] private GameObject miniMapCanvas;
         [SerializeField] private Camera miniMapCamera;
-        private PlayerInventory inventory;
-        private AudioEventManager audioEventManager;
+        [SerializeField] private Material vignetteMaterial;
 
-        [Header("Impact Sounds")]
-        public Material vignetteMaterial;
-        private AudioSource heartbeatSound;
-        private AudioSource impactSound;
-        [SerializeField] private AudioClip[] impactClips = new AudioClip[3];
-        [SerializeField] private AudioClip[] gasClips = new AudioClip[3];
+        [SerializeField] private AudioSource heartbeatSound;
+        [SerializeField] private AudioSource impactSound;
+        [SerializeField] private AudioSource deathSounds;
 
-        [Header("Death")]
-        private Transform cam;
-        private AudioSource deathSounds;
-        [SerializeField] private AudioClip[] deathClips = new AudioClip[2];
+        [Header("Audio Clips")]
+        [SerializeField] private AudioClip[] impactClips;
+        [SerializeField] private AudioClip[] gasClips;
+        [SerializeField] private AudioClip[] deathClips;
 
-        [Header("Health")]
+        [Header("Stats")]
         public float currentHealth;
-        private float lerpTimer;
         public float maxHealth = 100f;
-        public float chipSpeed = 2f;
-        public bool isAlive = true;
-
-        [Header("Armor")]
         public float currentArmor = 0;
         public float maxArmor = 100f;
-        [SerializeField] private Transform armorSocket;
+        public bool isAlive = true;
 
-        [Header("Heartbeat")]
+        private PlayerInventory inventory;
+        private AudioEventManager audioEventManager;
+        private Transform cam;
+
         private float heartbeatMultiplier = 1.2f;
         private float initialMultiplier = 0.05f;
 
         private void Start()
         {
-            heartbeatSound = transform.Find("Sounds/Heartbeat").GetComponent<AudioSource>();
-            impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
-            deathSounds = transform.Find("Sounds/Death").GetComponent<AudioSource>();
-            inventory = GetComponent<PlayerInventory>();
-            frontHealthBar = healthBar.transform.GetChild(2).GetComponent<Image>();
-            backHealthBar = healthBar.transform.GetChild(1).GetComponent<Image>();
-            frontArmorBar = armorBar.transform.GetChild(2).GetComponent<Image>();
-            backArmorBar = armorBar.transform.GetChild(1).GetComponent<Image>();
-            cam = Camera.main.transform;
-            var rigidBodies = GetComponentsInChildren<Rigidbody>();
-            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
+            if (heartbeatSound == null) heartbeatSound = transform.Find("Sounds/Heartbeat")?.GetComponent<AudioSource>();
+            if (impactSound == null) impactSound = transform.Find("Sounds/Impact")?.GetComponent<AudioSource>();
+            if (deathSounds == null) deathSounds = transform.Find("Sounds/Death")?.GetComponent<AudioSource>();
 
+            inventory = GetComponent<PlayerInventory>();
+            cam = Camera.main.transform;
+
+            var audioManagerObj = GameObject.FindGameObjectWithTag("AudioEventManager");
+            if (audioManagerObj) audioEventManager = audioManagerObj.GetComponent<AudioEventManager>();
+
+            SetupHitboxes();
+            ResetVignette();
+        }
+
+        private void SetupHitboxes()
+        {
+            var rigidBodies = GetComponentsInChildren<Rigidbody>();
             foreach (var rigidBody in rigidBodies)
             {
                 HitBox hitBox = rigidBody.gameObject.AddComponent<HitBox>();
                 hitBox.playerHealth = this;
-
                 if (hitBox.gameObject != gameObject)
                     hitBox.gameObject.layer = LayerMask.NameToLayer("Hitbox");
             }
-
-            vignetteMaterial.SetFloat("_VoronoiIntensity", 0);
-            vignetteMaterial.SetFloat("_VignetteRadiusPower", 10);
         }
+
         private void Update()
         {
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
             currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
-            UpdateHealthUI();
-            Heartbeat();
-        }
-        private void Heartbeat()
-        {
-            float healthPercentage = currentHealth / maxHealth;
 
-            if (healthPercentage <= 0.3f && isAlive == true)
+            if (healthBarUI != null) healthBarUI.UpdateBar(currentHealth, maxHealth);
+
+            if (isAlive)
             {
-                if (!heartbeatSound.isPlaying)
-                    heartbeatSound.Play();
-
-                float pitchJumpMultiplier = Mathf.Lerp(initialMultiplier, 1f, 1f - healthPercentage);
-                float volumeMultiplier = Mathf.Lerp(initialMultiplier, 1f, 1f - healthPercentage);
-                heartbeatSound.volume = Mathf.Lerp(0.5f, 0.75f, 1f - healthPercentage) * heartbeatMultiplier * volumeMultiplier;
-                heartbeatSound.pitch = Mathf.Lerp(1f, 1.5f, 1f - healthPercentage) * heartbeatMultiplier * pitchJumpMultiplier;
+                if (armorBarUI != null) armorBarUI.UpdateBar(currentArmor, maxArmor);
             }
             else
-                heartbeatSound.Stop();
+            {
+                if (armorBarUI != null) armorBarUI.UpdateBar(0, maxArmor);
+            }
+
+            HandleHeartbeat();
         }
-        public void UpdateHealthUI()
+
+        private void HandleHeartbeat()
         {
-            float fillF = frontHealthBar.fillAmount;
-            float fillB = backHealthBar.fillAmount;
-            float hFraction = currentHealth / maxHealth;
-            float hFractionNormalized = hFraction * 0.738f;
+            if (!isAlive) { heartbeatSound.Stop(); return; }
 
-            if (fillB > hFractionNormalized)
-            {
-                frontHealthBar.fillAmount = hFractionNormalized;
-                lerpTimer += Time.deltaTime;
-                float percentComplete = lerpTimer / chipSpeed;
-                percentComplete = percentComplete * percentComplete;
-                backHealthBar.fillAmount = Mathf.Lerp(fillB, hFractionNormalized, percentComplete);
-            }
-            if (fillF < hFractionNormalized)
-            {
-                backHealthBar.fillAmount = hFractionNormalized;
-                lerpTimer += Time.deltaTime;
-                float percentComplete = lerpTimer / chipSpeed;
-                percentComplete = percentComplete * percentComplete;
-                frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete);
-            }
-            if (!isAlive)
-            {
-                backArmorBar.fillAmount = 0;
+            float healthPercentage = currentHealth / maxHealth;
 
-                return;
-            }
-
-            float fillAF = frontArmorBar.fillAmount;
-            float fillAB = backArmorBar.fillAmount;
-            float aFraction = currentArmor / maxArmor;
-            float aFractionNormalized = aFraction * 0.25f;
-
-            if (fillAB > aFractionNormalized)
+            if (healthPercentage <= 0.3f)
             {
-                frontArmorBar.fillAmount = aFractionNormalized;
-                lerpTimer += Time.deltaTime;
-                float percentComplete = lerpTimer / chipSpeed;
-                percentComplete = percentComplete * percentComplete;
-                backArmorBar.fillAmount = Mathf.Lerp(fillAB, aFractionNormalized, percentComplete);
+                if (!heartbeatSound.isPlaying) heartbeatSound.Play();
+
+                float t = 1f - healthPercentage;
+                float pitchJump = Mathf.Lerp(initialMultiplier, 1f, t);
+                float volMult = Mathf.Lerp(initialMultiplier, 1f, t);
+
+                heartbeatSound.volume = Mathf.Lerp(0.5f, 0.75f, t) * heartbeatMultiplier * volMult;
+                heartbeatSound.pitch = Mathf.Lerp(1f, 1.5f, t) * heartbeatMultiplier * pitchJump;
             }
-            if (fillAF < aFractionNormalized)
+            else
             {
-                backArmorBar.fillAmount = aFractionNormalized;
-                lerpTimer += Time.deltaTime;
-                float percentComplete = lerpTimer / chipSpeed;
-                percentComplete = percentComplete * percentComplete;
-                frontArmorBar.fillAmount = Mathf.Lerp(fillAF, backArmorBar.fillAmount, percentComplete);
+                heartbeatSound.Stop();
             }
         }
+
         public void TakeDamage(float damage)
         {
-            if (!isAlive)
-                return;
+            if (!isAlive) return;
 
-            backHealthBar.color = Color.red;
-            backArmorBar.color = Color.gray;
+            if (healthBarUI) healthBarUI.SetBackColor(Color.red);
+            if (armorBarUI) armorBarUI.SetBackColor(Color.gray);
+
             float damageToHealth = damage;
 
             if (currentArmor > 0)
             {
-                float armorMultiplier = 0.5f;
-                damageToHealth = damage * armorMultiplier;
-                currentArmor -= damage;
-                currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
+                damageToHealth = damage * 0.5f;
+                currentArmor = Mathf.Clamp(currentArmor - damage, 0, maxArmor);
             }
 
-            currentHealth -= damageToHealth;
-            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-            lerpTimer = 0f;
+            currentHealth = Mathf.Clamp(currentHealth - damageToHealth, 0, maxHealth);
             UpdateVignette();
 
-            if (impactClips.Length > 0)
-            {
-                int randomIndex = Random.Range(0, impactClips.Length - 1);
-                impactSound.pitch = Random.Range(0.85f, 1.15f);
-                impactSound.PlayOneShot(impactClips[randomIndex]);
-                audioEventManager.NotifyAudioEvent(impactSound);
-            }
-            if (currentHealth <= 0)
-                Die();
+            PlayImpactSound(impactClips);
+
+            if (currentHealth <= 0) Die();
         }
+
+        private void PlayImpactSound(AudioClip[] clips)
+        {
+            if (clips != null && clips.Length > 0)
+            {
+                int randomIndex = Random.Range(0, clips.Length);
+                impactSound.pitch = Random.Range(0.85f, 1.15f);
+                impactSound.PlayOneShot(clips[randomIndex], 1.0f);
+                audioEventManager?.NotifyAudioEvent(impactSound);
+            }
+        }
+
         public void TakeFallingDamage(float damage)
         {
-            if (!isAlive)
-                return;
+            if (!isAlive) return;
+            if (healthBarUI) healthBarUI.SetBackColor(Color.red);
 
-            backHealthBar.color = Color.red;
             currentHealth -= damage;
-            lerpTimer = 0f;
             UpdateVignette();
 
-            if (impactClips.Length > 0)
+            if (impactClips.Length > 2)
             {
                 impactSound.pitch = Random.Range(0.85f, 1.15f);
                 impactSound.PlayOneShot(impactClips[2], 0.5f);
-                audioEventManager.NotifyAudioEvent(impactSound);
+                audioEventManager?.NotifyAudioEvent(impactSound);
             }
-            if (currentHealth <= 0)
-                Die();
+
+            if (currentHealth <= 0) Die();
         }
+
         public void TakeGasDamage(float damage)
         {
-            if (!isAlive)
-                return;
+            if (!isAlive) return;
+            if (healthBarUI) healthBarUI.SetBackColor(Color.red);
 
-            backHealthBar.color = Color.red;
             currentHealth -= damage;
-            lerpTimer = 0f;
             UpdateVignette();
+            PlayImpactSound(gasClips);
 
-            if (impactClips.Length > 0)
-            {
-                int randomIndex = Random.Range(0, gasClips.Length - 1);
-                impactSound.pitch = Random.Range(0.85f, 1.15f);
-                impactSound.PlayOneShot(gasClips[randomIndex]);
-                audioEventManager.NotifyAudioEvent(impactSound);
-            }
-            if (currentHealth <= 0)
-                Die();
+            if (currentHealth <= 0) Die();
         }
-        public void TakeFireDamage(float damage)
-        {
-            if (!isAlive)
-                return;
 
-            backHealthBar.color = Color.red;
-            currentHealth -= damage;
-            lerpTimer = 0f;
-            UpdateVignette();
+        public void TakeFireDamage(float damage) => TakeDamage(damage);
 
-            if (impactClips.Length > 0)
-            {
-                int randomIndex = Random.Range(0, impactClips.Length - 1);
-                impactSound.pitch = Random.Range(0.85f, 1.15f);
-                impactSound.PlayOneShot(impactClips[randomIndex]);
-                audioEventManager.NotifyAudioEvent(impactSound);
-            }
-            if (currentHealth <= 0)
-                Die();
-        }
         private void Die()
         {
             isAlive = false;
@@ -250,32 +185,33 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 deathSounds.clip = deathClips[0];
                 deathSounds.Play();
-                audioEventManager.NotifyAudioEvent(deathSounds);
-            }
-            if (deathClips.Length > 1)
-            {
-                float delay = deathClips[0].length;
-                Invoke("PlaySecondDeathClip", delay);
+                audioEventManager?.NotifyAudioEvent(deathSounds);
+
+                if (deathClips.Length > 1) Invoke(nameof(PlaySecondDeathClip), deathClips[0].length);
             }
 
+            DropWeaponsOnDeath();
+            DisablePlayerComponents();
+        }
+
+        private void DropWeaponsOnDeath()
+        {
             foreach (Gun weapon in inventory.weapons)
             {
                 if (weapon != null && weapon.gunStyle != GunStyle.Melee)
                 {
-                    GameObject newWeapon = Instantiate(weapon.gunPrefab, transform.position + new Vector3(0f, 1f, 0f), Quaternion.identity);
-                    Rigidbody rb;
-
-                    if (newWeapon.GetComponent<Rigidbody>() != null)
-                        rb = newWeapon.GetComponent<Rigidbody>();
-                    else
-                        rb = newWeapon.AddComponent<Rigidbody>();
+                    GameObject newWeapon = Instantiate(weapon.gunPrefab, transform.position + Vector3.up, Quaternion.identity);
+                    if (!newWeapon.TryGetComponent(out Rigidbody rb)) rb = newWeapon.AddComponent<Rigidbody>();
 
                     rb.mass = 2f;
                     rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 }
             }
-            foreach(Transform child in cam.transform)
-                child.gameObject.SetActive(false);
+        }
+
+        private void DisablePlayerComponents()
+        {
+            foreach (Transform child in cam) child.gameObject.SetActive(false);
 
             GetComponent<CharacterController>().enabled = false;
             GetComponent<PlayerMotor>().enabled = false;
@@ -283,6 +219,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             GetComponent<PlayerInventory>().enabled = false;
             GetComponent<PlayerShoot>().enabled = false;
         }
+
         private void PlaySecondDeathClip()
         {
             if (deathClips.Length > 1)
@@ -291,51 +228,51 @@ namespace RatGamesStudios.OperationDeratization.Player
                 deathSounds.Play();
             }
         }
+
         public void RestoreHealth(float healAmount)
         {
-            if (!isAlive)
-                return;
+            if (!isAlive) return;
+
+            if (healthBarUI) healthBarUI.SetBackColor(new Color(0.25f, 0.5f, 0f, 1f));
 
             currentHealth += healAmount;
-            lerpTimer = 0f;
+            currentHealth = Mathf.Min(currentHealth, maxHealth);
             UpdateVignette();
         }
-        private void UpdateVignette()
-        {
-            if (vignetteMaterial != null)
-            {
-                if (currentHealth < 50)
-                {
-                    float percent = currentHealth / maxHealth;
-                    float voronoiIntensity = Mathf.Lerp(0f, 0.3f, 1 - percent);
-                    float vignetteRadiusPower = Mathf.Lerp(10f, 7f, 1 - percent);
-                    vignetteMaterial.SetFloat("_VoronoiIntensity", voronoiIntensity);
-                    vignetteMaterial.SetFloat("_VignetteRadiusPower", vignetteRadiusPower);
-                }
-                else
-                {
-                    vignetteMaterial.SetFloat("_VoronoiIntensity", 0f);
-                    vignetteMaterial.SetFloat("_VignetteRadiusPower", 0f);
-                }
-            }
-        }
+
         public void PickupArmor()
         {
-            if (!isAlive)
-                return;
-            if (currentArmor > 99f)
-                return;
+            if (!isAlive || currentArmor > 99f) return;
+
+            if (armorBarUI) armorBarUI.SetBackColor(new Color(0f, 0.44f, 0.78f, 1f));
 
             currentArmor = 100;
-            lerpTimer = 0f;
         }
-        private void OnDisable()
+
+        private void UpdateVignette()
         {
-            if (vignetteMaterial != null)
+            if (vignetteMaterial == null) return;
+
+            if (currentHealth < 50)
             {
-                vignetteMaterial.SetFloat("_VoronoiIntensity", 0);
-                vignetteMaterial.SetFloat("_VignetteRadiusPower", 10f);
+                float percent = currentHealth / maxHealth;
+                float invPercent = 1 - percent;
+                vignetteMaterial.SetFloat("_VoronoiIntensity", Mathf.Lerp(0f, 0.3f, invPercent));
+                vignetteMaterial.SetFloat("_VignetteRadiusPower", Mathf.Lerp(10f, 7f, invPercent));
+            }
+            else
+            {
+                ResetVignette();
             }
         }
+
+        private void ResetVignette()
+        {
+            if (vignetteMaterial == null) return;
+            vignetteMaterial.SetFloat("_VoronoiIntensity", 0f);
+            vignetteMaterial.SetFloat("_VignetteRadiusPower", 10f);
+        }
+
+        private void OnDisable() => ResetVignette();
     }
 }

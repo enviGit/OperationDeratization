@@ -10,99 +10,101 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     public class BodyArmor : Interactable
     {
         [Header("References")]
-        private GameObject player;
-        private PlayerHealth playerArmor;
+        private PlayerHealth playerHealth;
+        private AudioEventManager audioEventManager;
         private AudioSource pickingArmorSound;
-        private float delayBeforeDestroy = 1f;
+
+        [Header("Settings")]
+        [SerializeField] private float delayBeforeDestroy = 1f;
+
         private bool used = false;
         private List<MeshRenderer> meshes = new List<MeshRenderer>();
-        private AudioEventManager audioEventManager;
 
         private void Start()
         {
-            player = GameObject.FindGameObjectWithTag("Player");
+            var playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj) playerHealth = playerObj.GetComponent<PlayerHealth>();
 
-            if (player != null)
-                playerArmor = player.GetComponent<PlayerHealth>();
+            var audioManagerObj = GameObject.FindGameObjectWithTag("AudioEventManager");
+            if (audioManagerObj) audioEventManager = audioManagerObj.GetComponent<AudioEventManager>();
 
             pickingArmorSound = GetComponent<AudioSource>();
-            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
 
             foreach (Transform child in transform)
             {
-                MeshRenderer mr = child.GetComponent<MeshRenderer>();
-
-                if (mr != null)
-                    meshes.Add(mr);
+                if (child.TryGetComponent(out MeshRenderer mr)) meshes.Add(mr);
             }
         }
+
         protected override void Interact()
         {
-            if (!used && playerArmor.currentArmor <= 99)
+            if (used || playerHealth == null) return;
+
+            if (playerHealth.currentArmor <= 99)
             {
-                playerArmor.backArmorBar.color = new Color(0f, 0.44f, 0.78f, 1f);
-                playerArmor.PickupArmor();
+                playerHealth.PickupArmor();
+
                 prompt = "";
-                StartCoroutine(DestroyAfterSound());
                 used = true;
+                StartCoroutine(DestroySequence());
             }
         }
-        private IEnumerator DestroyAfterSound()
+
+        private IEnumerator DestroySequence()
         {
-            pickingArmorSound.Play();
-            audioEventManager.NotifyAudioEvent(pickingArmorSound);
-            SetShaderParameters(0);
-            float elapsedTime = 0f;
-            float duration = delayBeforeDestroy;
-
-            while (elapsedTime < duration)
+            if (pickingArmorSound)
             {
-                SetShaderParameters(elapsedTime / duration);
-                elapsedTime += Time.deltaTime;
+                pickingArmorSound.Play();
+                audioEventManager?.NotifyAudioEvent(pickingArmorSound);
+            }
 
+            SetShaderDissolve(0);
+            float elapsedTime = 0f;
+
+            while (elapsedTime < delayBeforeDestroy)
+            {
+                SetShaderDissolve(elapsedTime / delayBeforeDestroy);
+                elapsedTime += Time.deltaTime;
                 yield return null;
             }
 
             Destroy(gameObject);
         }
-        private void TryDifferentBonePrefixes(Transform character)
+
+        private void SetShaderDissolve(float value)
         {
-            string[] possiblePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig:", "mixamorig10:" };
-
-            foreach (var prefix in possiblePrefixes)
+            foreach (var mesh in meshes)
             {
-                Transform armorSocket = character.transform.Find($"{prefix}Hips/{prefix}Spine/{prefix}Spine1/ArmorSocket");
-
-                if (armorSocket != null)
-                {
-                    armorSocket.GetChild(0).gameObject.SetActive(true);
-
-                    break;
-                }
+                if (mesh) foreach (var mat in mesh.materials) mat.SetFloat("_dissolve", value);
             }
         }
-        private void SetShaderParameters(float disappearIntensity)
-        {
-            foreach (MeshRenderer meshRenderer in meshes)
-            {
-                Material[] materials = meshRenderer.materials;
 
-                foreach (var material in materials)
-                    material.SetFloat("_dissolve", disappearIntensity);
-            }
-        }
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Enemy"))
             {
                 EnemyHealth health = other.GetComponent<EnemyHealth>();
 
-                if (!used && health.currentArmor <= 99f && health.isAlive)
+                if (!used && health != null && health.currentArmor <= 99f && health.isAlive)
                 {
                     health.PickupArmor();
-                    StartCoroutine(DestroyAfterSound());
                     used = true;
+                    StartCoroutine(DestroySequence());
                     TryDifferentBonePrefixes(health.transform);
+                }
+            }
+        }
+
+        private void TryDifferentBonePrefixes(Transform character)
+        {
+            string[] possiblePrefixes = { "mixamorig9:", "mixamorig4:", "mixamorig:", "mixamorig10:" };
+            foreach (var prefix in possiblePrefixes)
+            {
+                Transform armorSocket = character.transform.Find($"{prefix}Hips/{prefix}Spine/{prefix}Spine1/ArmorSocket");
+                if (armorSocket != null)
+                {
+                    if (armorSocket.childCount > 0) armorSocket.GetChild(0).gameObject.SetActive(true);
+                    break;
                 }
             }
         }

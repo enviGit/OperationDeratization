@@ -9,70 +9,79 @@ namespace RatGamesStudios.OperationDeratization.Interactables
     public class FirstAidKit : Interactable
     {
         [Header("References")]
-        private GameObject player;
         private PlayerHealth playerHealth;
-        public float hpToRestore = 15f;
-        private float delayBeforeDestroy = 3.5f;
-        private AudioSource restoreHealthSound;
-        private bool used = false;
-        private MeshRenderer mesh;
         private AudioEventManager audioEventManager;
+        private AudioSource restoreHealthSound;
+        private MeshRenderer mesh;
+
+        [Header("Settings")]
+        public float hpToRestore = 15f;
+        [SerializeField] private float delayBeforeDestroy = 3.5f;
+
+        private bool used = false;
 
         private void Start()
         {
-            player = GameObject.FindGameObjectWithTag("Player");
-            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
+            var playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj) playerHealth = playerObj.GetComponent<PlayerHealth>();
 
-            if (player != null)
-                playerHealth = player.GetComponent<PlayerHealth>();
+            var audioManagerObj = GameObject.FindGameObjectWithTag("AudioEventManager");
+            if (audioManagerObj) audioEventManager = audioManagerObj.GetComponent<AudioEventManager>();
 
             restoreHealthSound = GetComponent<AudioSource>();
             mesh = GetComponent<MeshRenderer>();
         }
+
         protected override void Interact()
         {
-            if (!used && playerHealth.currentHealth < 99f)
+            if (used || playerHealth == null) return;
+
+            if (playerHealth.currentHealth < 99f)
             {
-                playerHealth.backHealthBar.color = new Color(0.25f, 0.5f, 0f, 1f);
                 playerHealth.RestoreHealth(hpToRestore);
+
                 prompt = "";
-                StartCoroutine(DestroyAfterSound());
                 used = true;
+                StartCoroutine(DestroySequence());
             }
         }
-        private IEnumerator DestroyAfterSound()
+
+        private IEnumerator DestroySequence()
         {
-            restoreHealthSound.Play();
-            audioEventManager.NotifyAudioEvent(restoreHealthSound);
-            SetShaderParameters(0);
-            float elapsedTime = 0f;
-            float duration = delayBeforeDestroy;
-
-            while (elapsedTime < duration)
+            if (restoreHealthSound)
             {
-                SetShaderParameters(elapsedTime / duration);
-                elapsedTime += Time.deltaTime;
+                restoreHealthSound.Play();
+                audioEventManager?.NotifyAudioEvent(restoreHealthSound);
+            }
 
+            SetShaderDissolve(0);
+            float elapsedTime = 0f;
+
+            while (elapsedTime < delayBeforeDestroy)
+            {
+                SetShaderDissolve(elapsedTime / delayBeforeDestroy);
+                elapsedTime += Time.deltaTime;
                 yield return null;
             }
 
-            Destroy(transform.parent.gameObject);
+            Destroy(transform.parent != null ? transform.parent.gameObject : gameObject);
         }
-        private void SetShaderParameters(float disappearIntensity)
+
+        private void SetShaderDissolve(float value)
         {
-            mesh.material.SetFloat("_dissolve", disappearIntensity);
+            if (mesh) mesh.material.SetFloat("_dissolve", value);
         }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Enemy"))
             {
                 EnemyHealth health = other.GetComponent<EnemyHealth>();
-
-                if (!used && health.currentHealth <= 99f && health.isAlive)
+                if (!used && health != null && health.currentHealth <= 99f && health.isAlive)
                 {
                     health.RestoreHealth(hpToRestore);
-                    StartCoroutine(DestroyAfterSound());
                     used = true;
+                    StartCoroutine(DestroySequence());
                 }
             }
         }
