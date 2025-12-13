@@ -6,37 +6,49 @@ namespace RatGamesStudios.OperationDeratization.UI
 {
     public class AmmoDisplay : MonoBehaviour
     {
-        private TextMeshProUGUI _text;
-        public Gun weapon;
+        [SerializeField] private TextMeshProUGUI _text;
+        [SerializeField] private bool isAlwaysUpdated = true;
+
+        private Gun currentWeapon;
         private StringBuilder ammoStringBuilder = new StringBuilder();
 
         private void Start()
         {
-            _text = GetComponent<TextMeshProUGUI>();
+            if (_text == null) _text = GetComponent<TextMeshProUGUI>();
         }
+
         private void Update()
         {
-            Check();
-        }
-        private void Check()
-        {
-            if (_text == null)
-                return;
-            if (weapon == null)
-                _text.text = "";
-            else
+            if (isAlwaysUpdated && currentWeapon != null)
+            {
                 UpdateAmmoText();
+            }
         }
+
+        public void SetWeapon(Gun weapon)
+        {
+            currentWeapon = weapon;
+            UpdateAmmoText();
+        }
+
         private void UpdateAmmoText()
         {
-            ammoStringBuilder.Clear();  // Clear the StringBuilder before building the new text
+            if (_text == null) return;
 
-            if (weapon.gunStyle == GunStyle.Primary || weapon.gunStyle == GunStyle.Secondary)
-                ammoStringBuilder.Append(weapon.currentAmmoCount).Append(" / ").Append(weapon.maxAmmoCount);
+            ammoStringBuilder.Clear();
+
+            if (currentWeapon == null || currentWeapon.gunStyle == GunStyle.Melee)
+            {
+                _text.text = "";
+                return;
+            }
+
+            if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
+                ammoStringBuilder.Append(currentWeapon.currentAmmoCount).Append(" / ").Append(currentWeapon.maxAmmoCount);
             else
-                ammoStringBuilder.Append(weapon.currentAmmoCount);
+                ammoStringBuilder.Append(currentWeapon.currentAmmoCount);
 
-            _text.text = ammoStringBuilder.ToString();  // Update the TextMeshPro text
+            _text.text = ammoStringBuilder.ToString();
         }
     }
 }

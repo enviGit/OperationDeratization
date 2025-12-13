@@ -1,14 +1,16 @@
+using RatGamesStudios.OperationDeratization.UI;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Player
 {
     public class PlayerInventory : MonoBehaviour
     {
-        [Header("Weapon images")]
-        private PlayerUI playerUI;
         private PlayerShoot playerShoot;
+        private PlayerRefillHandler refillHandler;
+        [SerializeField] private AmmoDisplay ammoDisplay;
+
+        [Header("Weapon images")]
         [SerializeField] private Transform weaponHolder;
         [SerializeField] private GameObject wheels;
 
@@ -36,7 +38,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         private void Start()
         {
             playerShoot = GetComponent<PlayerShoot>();
-            playerUI = GetComponent<PlayerUI>();
+            refillHandler = GetComponent<PlayerRefillHandler>();
             weapons = new Gun[7];
             weapons[0] = melee;
             weapons[1] = null;
@@ -117,7 +119,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (newItem.currentAmmoCount < newItem.editorAmmoValue)
                         newItem.currentAmmoCount = newItem.editorAmmoValue;
                     else
-                        playerUI.ShowGrenadePrompt(newItem.gunName);
+                        if (refillHandler) refillHandler.ShowWarning($"You cannot carry more {newItem.gunName}s!");
                 }
                 else if (newItem.gunStyle == GunStyle.Flashbang)
                 {
@@ -128,7 +130,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (newItem.currentAmmoCount < newItem.editorAmmoValue)
                         newItem.currentAmmoCount = newItem.editorAmmoValue;
                     else
-                        playerUI.ShowGrenadePrompt(newItem.gunName);
+                        if (refillHandler) refillHandler.ShowWarning($"You cannot carry more {newItem.gunName}s!");
                 }
                 else if (newItem.gunStyle == GunStyle.Smoke)
                 {
@@ -139,7 +141,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (newItem.currentAmmoCount < newItem.editorAmmoValue)
                         newItem.currentAmmoCount = newItem.editorAmmoValue;
                     else
-                        playerUI.ShowGrenadePrompt(newItem.gunName);
+                        if (refillHandler) refillHandler.ShowWarning($"You cannot carry more {newItem.gunName}s!");
                 }
                 else if (newItem.gunStyle == GunStyle.Molotov)
                 {
@@ -150,7 +152,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (newItem.currentAmmoCount < newItem.editorAmmoValue)
                         newItem.currentAmmoCount = newItem.editorAmmoValue;
                     else
-                        playerUI.ShowGrenadePrompt(newItem.gunName);
+                        if (refillHandler) refillHandler.ShowWarning($"You cannot carry more {newItem.gunName}s!");
                 }
                 if (newItem.gunStyle == GunStyle.Primary || newItem.gunStyle == GunStyle.Secondary)
                 {
@@ -167,7 +169,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                     newWeapon.transform.rotation = randomRotation;
                 }
             }
-            
+
             weapons[newItemIndex] = newItem;
             StartCoroutine(PullOutWeapon(newItemIndex));
         }
@@ -230,7 +232,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         }
         public IEnumerator SwitchWeapon(int newIndex)
         {
-            if(newIndex == currentWeaponIndex)
+            if (newIndex == currentWeaponIndex)
                 yield break;
 
             isSwitchingWeapon = true;
@@ -357,6 +359,11 @@ namespace RatGamesStudios.OperationDeratization.Player
             }
 
             currentWeaponIndex = index;
+
+            if (ammoDisplay != null)
+            {
+                ammoDisplay.SetWeapon(weapons[currentWeaponIndex]);
+            }
 
             if (weapons[currentWeaponIndex].gunType == GunType.Sniper)
                 playerShoot.sniperCam = transform.Find("Camera/Main Camera/WeaponHolder/" + weapons[currentWeaponIndex].gunPrefab.name + "(Clone)/Mesh/SVD/Camera").GetComponent<Camera>();

@@ -1,7 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy.State;
 using RatGamesStudios.OperationDeratization.Manager;
-using RatGamesStudios.OperationDeratization.Optimization;
-using RatGamesStudios.OperationDeratization.Player;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using RatGamesStudios.OperationDeratization.UI;
 using System.Collections;
@@ -14,263 +12,203 @@ namespace RatGamesStudios.OperationDeratization.Enemy
     public class EnemyHealth : MonoBehaviour
     {
         [Header("References")]
-        private GameObject player;
+        private Transform playerTransform;
+        private Camera cam;
+        private AiAgent agent;
+        private WeaponIk weaponIk;
+        private AudioEventManager audioEventManager;
+        private KillFeedbackUI killFeedbackUI;
+
+        [Header("Visuals")]
         private List<SkinnedMeshRenderer> skinnedMeshRenderers = new List<SkinnedMeshRenderer>();
         private List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
-        private WeaponIk weaponIk;
-        private AiAgent agent;
-        private Camera cam;
-        private AudioEventManager audioEventManager;
+        public Transform armorSocket;
 
-        [Header("Tracker")]
-        [SerializeField] private Tracker tracker;
-        private AudioSource markSound;
-        private GameObject markText;
-
-        [Header("Dmg popup")]
-        [SerializeField] private bool isTutorialActive = false;
-        [SerializeField] private GameObject damageTextPrefab;
-        private TextMeshPro textToDisplay;
-        private GameObject damageTextInstance;
-
-        [Header("Enemy health")]
+        [Header("Stats")]
         [SerializeField] private EnemyStats enemyStats;
         public float currentHealth;
-        private float lowHealth = 15f;
-        private AudioSource impactSound;
-        [SerializeField] private AudioClip[] impactClips;
+        [SerializeField] private float lowHealthThreshold = 15f;
+        public float currentArmor = 0;
+        public float maxArmor = 100f;
         public bool isAlive = true;
         public bool isMarkedAsDead = false;
 
-        [Header("Armor")]
-        public float currentArmor = 0;
-        public float maxArmor = 100f;
-        public Transform armorSocket;
+        [Header("Audio")]
+        [SerializeField] private AudioSource impactSound;
+        [SerializeField] private AudioClip[] impactClips;
+        private AudioSource markSound;
+        private AudioClip[] markClips;
+        [Header("Settings")]
+        [SerializeField] private Tracker tracker;
 
         private void Start()
         {
             agent = GetComponent<AiAgent>();
             weaponIk = GetComponent<WeaponIk>();
             cam = Camera.main;
-            player = GameObject.FindGameObjectWithTag("Player");
-            markText = player.GetComponent<PlayerUI>().markText.gameObject;
-            impactSound = transform.Find("Sounds/Impact").GetComponent<AudioSource>();
-            markSound = player.transform.Find("Sounds/OpponentMarking").GetComponent<AudioSource>();
-            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
-            currentHealth = enemyStats.maxHealth;
-            var rigidBodies = GetComponentsInChildren<Rigidbody>();
 
-            foreach (var rigidBody in rigidBodies)
+            var playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj)
             {
-                HitBox hitBox = rigidBody.gameObject.AddComponent<HitBox>();
-                hitBox.health = this;
+                playerTransform = playerObj.transform;
+                markSound = playerTransform.Find("Sounds/OpponentMarking")?.GetComponent<AudioSource>();
+            }
 
+            killFeedbackUI = FindFirstObjectByType<KillFeedbackUI>();
+
+            var audioMgr = GameObject.FindGameObjectWithTag("AudioEventManager");
+            if (audioMgr) audioEventManager = audioMgr.GetComponent<AudioEventManager>();
+
+            if (impactSound == null) impactSound = transform.Find("Sounds/Impact")?.GetComponent<AudioSource>();
+
+            currentHealth = enemyStats.maxHealth;
+
+            SetupVisualsAndHitboxes();
+
+            LoadMarkSounds();
+        }
+        private void SetupVisualsAndHitboxes()
+        {
+            foreach (var rb in GetComponentsInChildren<Rigidbody>())
+            {
+                HitBox hitBox = rb.gameObject.AddComponent<HitBox>();
+                hitBox.health = this;
                 if (hitBox.gameObject != gameObject)
                     hitBox.gameObject.layer = LayerMask.NameToLayer("Hitbox");
             }
-            foreach (Transform child in transform)
-            {
-                SkinnedMeshRenderer smr = child.GetComponent<SkinnedMeshRenderer>();
 
-                if (smr != null)
-                    skinnedMeshRenderers.Add(smr);
-            }
-            foreach (Transform child in armorSocket.GetChild(0))
-            {
-                MeshRenderer mr = child.GetComponent<MeshRenderer>();
+            GetComponentsInChildren(true, skinnedMeshRenderers);
 
-                if (mr != null)
-                    meshRenderers.Add(mr);
+            if (armorSocket && armorSocket.childCount > 0)
+            {
+                var armorRenderers = armorSocket.GetChild(0).GetComponentsInChildren<MeshRenderer>();
+                meshRenderers.AddRange(armorRenderers);
             }
+        }
+
+        private void LoadMarkSounds()
+        {
+            markClips = Resources.LoadAll<AudioClip>("Audio/Tracker");
         }
         private void Update()
         {
-            if (!isAlive && !isMarkedAsDead && Vector3.Distance(transform.position, player.transform.position) < 3f)
-                StartCoroutine(HandleDeathEffects());
+            if (!isAlive && !isMarkedAsDead && playerTransform != null)
+            {
+                if (Vector3.Distance(transform.position, playerTransform.position) < 3f)
+                {
+                    StartCoroutine(HandleDeathConfirmation());
+                }
+            }
         }
         public void TakeDamage(int damage, Vector3 direction, bool isAttackedByPlayer)
         {
-            if (!isAlive)
-                return;
+            if (!isAlive) return;
 
+            ApplyDamage(damage);
+            PlayImpactSound();
+
+            if (currentHealth <= 0) Die(direction);
+        }
+        private void PlayImpactSound()
+        {
+            if (impactClips.Length > 0 && impactSound)
+            {
+                impactSound.pitch = Random.Range(0.85f, 1.15f);
+                impactSound.PlayOneShot(impactClips[Random.Range(0, impactClips.Length)]);
+                audioEventManager?.NotifyAudioEvent(impactSound);
+            }
+        }
+        private void ApplyDamage(float damage)
+        {
             float damageToHealth = damage;
 
             if (currentArmor > 0)
             {
-                float armorMultiplier = 0.5f;
-                damageToHealth = damage * armorMultiplier;
-                currentArmor -= damage;
-                currentArmor = Mathf.Clamp(currentArmor, 0, maxArmor);
+                damageToHealth = damage * 0.5f;
+                currentArmor = Mathf.Clamp(currentArmor - damage, 0, maxArmor);
             }
-            else
+            else if (armorSocket && armorSocket.childCount > 0)
+            {
                 armorSocket.GetChild(0).gameObject.SetActive(false);
-
-            currentHealth -= damageToHealth;
-            currentHealth = Mathf.Clamp(currentHealth, 0, enemyStats.maxHealth);
-
-            if (impactClips.Length > 0)
-            {
-                int randomIndex = Random.Range(0, impactClips.Length - 1);
-                impactSound.pitch = Random.Range(0.85f, 1.15f);
-                impactSound.PlayOneShot(impactClips[randomIndex]);
-                audioEventManager.NotifyAudioEvent(impactSound);
             }
-            if (currentHealth <= 0)
-                Die(direction);
-            if (isAttackedByPlayer && isAlive && isTutorialActive)
-            {
-                float distance = Vector3.Distance(cam.transform.position, transform.position);
-                damageTextInstance = ObjectPoolManager.SpawnObject(damageTextPrefab, transform.position + new Vector3(0f, 2f, 0f), cam.transform.rotation, transform);
-                textToDisplay = damageTextInstance.transform.GetChild(0).GetComponent<TextMeshPro>();
-                float minScale = 0.2f;
-                float midScale = 1f;
-                float maxScale = 5f;
-                float t = Mathf.Clamp01((distance - 2f) / (30f - 2f));
-                damageTextInstance.transform.localScale = Vector3.Lerp(new Vector3(minScale, minScale, minScale), new Vector3(midScale, midScale, midScale), t);
-                damageTextInstance.transform.localScale = Vector3.Lerp(new Vector3(minScale, minScale, minScale), new Vector3(maxScale, maxScale, maxScale), t);
-                textToDisplay.text = damage.ToString("0");
 
-                if (!IsObjectVisible(damageTextInstance.transform.GetChild(0).gameObject) && distance < 5f)
-                {
-                    Vector3 directionToTarget = (transform.position - cam.transform.position).normalized;
-                    float xOffset = 0f;
-                    float zOffset = 0f;
-                    float angle = Mathf.Atan2(directionToTarget.x, directionToTarget.z) * Mathf.Rad2Deg;
-
-                    if (angle > -45f && angle <= 45f)
-                        xOffset = 0.45f;
-                    else if (angle > 45f && angle <= 135f)
-                        zOffset = -0.45f;
-                    else if (angle > -135f && angle <= -45f)
-                        zOffset = 0.45f;
-                    else
-                        xOffset = -0.45f;
-
-                    float cameraAngle = cam.transform.rotation.eulerAngles.x;
-                    float offsetY;
-
-                    if (cameraAngle > 0f && cameraAngle <= 180f)
-                        offsetY = Mathf.Lerp(-0.7f, -1f, cameraAngle / 180f);
-                    else
-                        offsetY = Mathf.Lerp(-0.7f, -0.5f, (360f - cameraAngle) / 180f);
-
-                    damageTextInstance.transform.position += new Vector3(xOffset, offsetY, zOffset);
-                }
-
-                damageTextInstance.transform.GetChild(0).GetComponent<Animator>().enabled = true;
-            }
-        }
-        private bool IsObjectVisible(GameObject obj)
-        {
-            Renderer renderer = obj.GetComponent<Renderer>();
-
-            if (renderer == null)
-                return false;
-
-            return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(cam), renderer.bounds);
+            currentHealth = Mathf.Clamp(currentHealth - damageToHealth, 0, enemyStats.maxHealth);
         }
         public bool IsLowHealth()
         {
-            return currentHealth < lowHealth;
+            return currentHealth <= lowHealthThreshold;
         }
         private void Die(Vector3 direction)
         {
-            if (isAlive)
+            if (!isAlive) return;
+
+            isAlive = false;
+            if (weaponIk) weaponIk.enabled = false;
+
+            if (agent && agent.stateMachine != null)
             {
-                isAlive = false;
-                weaponIk.enabled = false;
-                AiDeathState deathState = agent.stateMachine.GetState(AiStateId.Death) as AiDeathState;
-                deathState.direction = direction;
-                agent.stateMachine.ChangeState(AiStateId.Death);
+                var deathState = agent.stateMachine.GetState(AiStateId.Death) as AiDeathState;
+                if (deathState != null)
+                {
+                    deathState.direction = direction;
+                    agent.stateMachine.ChangeState(AiStateId.Death);
+                }
             }
         }
-        private IEnumerator HandleDeathEffects()
+        private IEnumerator HandleDeathConfirmation()
         {
             isMarkedAsDead = true;
-            StartCoroutine(FadeOutPromptText());
-            tracker.MarkOpponentAsDead(gameObject);
 
-            if (!markSound.isPlaying)
+            if (tracker) tracker.MarkOpponentAsDead(gameObject);
+
+            if (killFeedbackUI) killFeedbackUI.ShowNeutralizedMessage();
+
+            if (markSound && markClips != null && markClips.Length > 0)
             {
-                markSound.clip = Resources.Load<AudioClip>("Audio/Tracker/Mark" + Random.Range(1, 9));
+                markSound.clip = markClips[Random.Range(0, markClips.Length)];
                 markSound.Play();
             }
 
-            SetShaderParameters(0);
-            float elapsedTime = 0f;
             float duration = 5f;
-
             yield return new WaitForSeconds(2f);
 
+            float elapsedTime = 0f;
             while (elapsedTime < duration)
             {
-                SetShaderParameters(elapsedTime / duration);
+                float t = elapsedTime / duration;
+                SetShaderDissolve(t);
                 elapsedTime += Time.deltaTime;
-
                 yield return null;
             }
 
             Destroy(gameObject);
         }
-        private IEnumerator FadeOutPromptText()
-        {
-            float duration = 3f;
-            float elapsedTime = 0f;
-            markText.SetActive(true);
-
-            while (elapsedTime < duration)
-            {
-                elapsedTime += Time.deltaTime;
-
-                yield return null;
-            }
-
-            markText.SetActive(false);
-        }
-        private void SetShaderParameters(float disappearIntensity)
+        private void SetShaderDissolve(float intensity)
         {
             float minDissolve = -1.5f;
             float maxDissolve = 3f;
+            float mappedDissolve = Mathf.Lerp(minDissolve, maxDissolve, Mathf.Clamp01(intensity));
 
-            foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
-            {
-                Material[] materials = skinnedMeshRenderer.materials;
+            foreach (var smr in skinnedMeshRenderers)
+                foreach (var mat in smr.materials)
+                    mat.SetFloat("_dissolveAmount", mappedDissolve);
 
-                foreach (var material in materials)
-                {
-                    float clampedDisapperIntensity = Mathf.Clamp(disappearIntensity, 0f, 1f);
-                    float mappedDissolve = Mathf.Lerp(minDissolve, maxDissolve, clampedDisapperIntensity);
-                    material.SetFloat("_dissolveAmount", mappedDissolve);
-                }
-            }
-            foreach (MeshRenderer meshRenderer in meshRenderers)
-            {
-                Material[] materials = meshRenderer.materials;
-
-                foreach (var material in materials)
-                {
-                    float clampedDisapperIntensity = Mathf.Clamp(disappearIntensity, 0f, 1f);
-                    float mappedDissolve = Mathf.Lerp(minDissolve, maxDissolve, clampedDisapperIntensity);
-                    material.SetFloat("_dissolveAmount", mappedDissolve);
-                }
-            }
+            foreach (var mr in meshRenderers)
+                foreach (var mat in mr.materials)
+                    mat.SetFloat("_dissolveAmount", mappedDissolve);
         }
         public void RestoreHealth(float healAmount)
         {
-            if (!isAlive)
-                return;
-
-            currentHealth += healAmount;
-            currentHealth = Mathf.Min(currentHealth, enemyStats.maxHealth);
+            if (!isAlive) return;
+            currentHealth = Mathf.Min(currentHealth + healAmount, enemyStats.maxHealth);
         }
+
         public void PickupArmor()
         {
-            if (!isAlive)
-                return;
-            if (currentArmor > 99f)
-                return;
-
+            if (!isAlive || currentArmor > 99f) return;
             currentArmor = 100;
+
+            if (armorSocket && armorSocket.childCount > 0) armorSocket.GetChild(0).gameObject.SetActive(true);
         }
     }
 }

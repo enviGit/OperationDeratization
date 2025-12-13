@@ -198,34 +198,49 @@ namespace RatGamesStudios.OperationDeratization.UI
                     nameDisplayBuilder.Append(inventory.weapons[6].gunName);
             }
 
-            nameToDisplay.text = nameDisplayBuilder.ToString();  // Update the TextMeshPro text
+            nameToDisplay.text = nameDisplayBuilder.ToString();
             EnableHighlight(selectedIndex);
         }
         private void EnableWheel()
         {
             wheelParent.SetActive(true);
-            wheelAmmoCount.SetActive(true);
+            if (wheelAmmoCount) wheelAmmoCount.SetActive(true);
+            if (blur) blur.SetActive(true);
+
             m_WheelEnabled = true;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            for (int i = 0; i < icons.Length; i++)
-            {
-                if (inventory.weapons[i + 1] != null)
-                {
-                    icons[i].enabled = true;
-                    icons[i].sprite = inventory.weapons[i + 1].activeGunIcon;
-                }
-                else
-                    icons[i].enabled = false;
-            }
-            for (int i = 0; i < 2; i++)
-                ammoText[i].weapon = inventory.weapons[i + 1];
-            for (int i = 2; i < ammoText.Length; i++)
-                ammoText[i].weapon = inventory.weapons[i + 1];
+            for (int i = 0; i < dots.Length; i++)
+                pos[i] = playerCamera.WorldToScreenPoint(dots[i].position);
 
-            if (blur != null)
-                blur.SetActive(true);
+            UpdateWheelContent();
+        }
+        private void UpdateWheelContent()
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                int weaponIndex = i + 1;
+                Gun gun = inventory.weapons[weaponIndex];
+
+                if (i < icons.Length && icons[i] != null)
+                {
+                    if (gun != null)
+                    {
+                        icons[i].enabled = true;
+                        icons[i].sprite = gun.activeGunIcon;
+                    }
+                    else
+                    {
+                        icons[i].enabled = false;
+                    }
+                }
+
+                if (i < ammoText.Length && ammoText[i] != null)
+                {
+                    ammoText[i].SetWeapon(gun);
+                }
+            }
         }
         private void DisableWheel()
         {

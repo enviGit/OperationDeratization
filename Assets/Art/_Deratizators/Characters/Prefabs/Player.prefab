@@ -965,7 +965,7 @@ MonoBehaviour:
   miniMapCanvas: {fileID: 0}
   miniMapCamera: {fileID: 8886410643329760533}
   vignetteMaterial: {fileID: 2100000, guid: d544e29ae9b83fb4d83b080385bd6bf4, type: 2}
-  heartbeatSound: {fileID: 7677999045563553846}
+  heartbeatSound: {fileID: 7677999044750833648}
   impactSound: {fileID: 7677999044985606055}
   deathSounds: {fileID: 6174921854564940668}
   impactClips:
@@ -1008,8 +1008,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9633b99f809406444a4fa9f7abd1c2d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 2
+  interactDistance: 2.5
   interactCooldown: 0.5
+  interactMask:
+    serializedVersion: 2
+    m_Bits: 0
+  checkRate: 0.05
+  cam: {fileID: 8691292380173245579}
+  interactionUI: {fileID: 0}
 --- !u!114 &1148401328078746726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,12 +1028,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9210faa998c024a4db6b5469bf7e62ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammoRefill: {fileID: 0}
-  promptText: {fileID: 0}
-  markText: {fileID: 0}
-  ammoText: {fileID: 0}
-  ammoRefillPrompt: {fileID: 0}
-  loadingSlider: {fileID: 0}
+  interact: {fileID: 1148401328078746725}
+  inventory: {fileID: 1148401328078746727}
+  loadingSliderObject: {fileID: 0}
+  sliderMaterial: {fileID: 2100000, guid: 3b2859f321108894f9e0ca00ccc21a95, type: 2}
+  sliderValueText: {fileID: 0}
+  warningText: {fileID: 0}
 --- !u!114 &1148401328078746727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1040,6 +1046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef56b20cc5c1aec4687581ae549d2fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ammoDisplay: {fileID: 0}
   weaponHolder: {fileID: 8691292381907960946}
   wheels: {fileID: 0}
   melee: {fileID: 11400000, guid: 3880d37e7cc547a41b35abfa981276dd, type: 2}
@@ -1110,7 +1117,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1148401328078746731}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ffd032207a7c1cb439f9619165ebad61, type: 3}
   m_Name: 

@@ -1,284 +1,148 @@
 using RatGamesStudios.OperationDeratization.Enemy;
 using RatGamesStudios.OperationDeratization.Player;
+using RatGamesStudios.OperationDeratization.Enemy.State;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.UI;
 
 namespace RatGamesStudios.OperationDeratization.Interactables
 {
     public class Weapon : Interactable
     {
-        [Header("References")]
+        [Header("Weapon Data")]
         public Gun gun;
-        [SerializeField] private Image upperImage;
-        [SerializeField] private Image bottomImage;
-        private GameObject player;
-        private PlayerInteract interact;
-        private PlayerInventory inventory;
-        private PlayerShoot shoot;
-        private MeshSockets sockets;
         public RuntimeAnimatorController animator;
 
+        [Header("References")]
+        private PlayerInventory inventory;
+        
         private void Start()
         {
-            player = GameObject.FindGameObjectWithTag("Player");
-
-            if (player != null)
-            {
-                interact = player.GetComponent<PlayerInteract>();
-                inventory = player.GetComponent<PlayerInventory>();
-                shoot = player.GetComponent<PlayerShoot>();
-            }
+            var player = GameObject.FindGameObjectWithTag("Player");
+            if (player) inventory = player.GetComponent<PlayerInventory>();
             
-            GameObject upperImageObject = GameObject.FindGameObjectWithTag("UpperImage");
-            GameObject bottomImageObject = GameObject.FindGameObjectWithTag("BottomImage");
-
-            if (upperImageObject != null)
-                upperImage = upperImageObject.GetComponent<Image>();
-            if (bottomImageObject != null)
-                bottomImage = bottomImageObject.GetComponent<Image>();
+            if (gun) prompt = $"Pick up {gun.gunName}";
         }
-        private void Update()
-        {
-            PlayerRaycast();
-        }
-        private void PlayerRaycast()
-        {
-            LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player"));
 
-            if(interact != null)
-            {
-                if (Physics.Raycast(interact.ray, out interact.hitInfo, interact.distance, obstacleMask) && interact.hitInfo.transform.GetComponent<Weapon>() && shoot.isAiming == false)
-                {
-                    if (upperImage != null)
-                    {
-                        if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Molotov)
-                        {
-                            upperImage.gameObject.SetActive(true);
-                            upperImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
-                        }
-
-                    }
-                    if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade && interact.hitInfo.transform.childCount != 0)
-                        prompt = "Refill Explosive Grenades";
-                    else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang && interact.hitInfo.transform.childCount != 0)
-                        prompt = "Refill Flashbang Grenades";
-                    else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && interact.hitInfo.transform.childCount != 0)
-                        prompt = "Refill Smoke Grenades";
-                    else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Molotov && interact.hitInfo.transform.childCount != 0)
-                        prompt = "Refill Molotov Cocktails";
-                    else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Primary || interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Secondary)
-                        prompt = "Pick up " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
-                    else
-                        prompt = "";
-                    if (inventory.HasWeaponOfSameCategory(interact.hitInfo.transform.GetComponent<Weapon>().gun) && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Grenade &&
-                        interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Flashbang && interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Smoke && 
-                        interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle != GunStyle.Molotov)
-                    {
-                        Gun inventoryWeapon = null;
-
-                        foreach (Gun gun in inventory.weapons)
-                        {
-                            if (gun != null && gun.gunStyle == interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle)
-                                inventoryWeapon = gun;
-                        }
-
-                        //prompt = "Swap " + inventoryWeapon.gunName + "\n\n\n\nfor " + interact.hitInfo.transform.GetComponent<Weapon>().gun.gunName;
-                        prompt = "Swap\n\n\n\nfor";
-
-                        if (upperImage != null)
-                        {
-                            upperImage.gameObject.SetActive(true);
-                            upperImage.sprite = inventoryWeapon.activeGunIcon;
-                        }
-                        if (bottomImage != null)
-                        {
-                            bottomImage.gameObject.SetActive(true);
-                            bottomImage.sprite = interact.hitInfo.transform.GetComponent<Weapon>().gun.activeGunIcon;
-                        }
-                    }
-                }
-                else
-                {
-                    if (upperImage != null || bottomImage != null)
-                    {
-                        upperImage.gameObject.SetActive(false);
-
-                        if (bottomImage != null)
-                            bottomImage.gameObject.SetActive(false);
-
-                        prompt = "";
-                    }
-                }
-            }
-        }
         protected override void Interact()
         {
-            Transform parent = transform.parent;
+            if (inventory == null || gun == null) return;
 
+            if (IsOwnedByEnemy()) return;
+
+            if (IsGrenadeType())
+            {
+                HandleGrenadePickup();
+            }
+            else if (gun.gunStyle == GunStyle.Primary || gun.gunStyle == GunStyle.Secondary)
+            {
+                PickupWeapon();
+                Destroy(gameObject);
+            }
+        }
+
+        private bool IsOwnedByEnemy()
+        {
+            Transform parent = transform.parent;
             while (parent != null)
             {
-                if (parent.CompareTag("Enemy"))
-                    return;
-
+                if (parent.CompareTag("Enemy")) return true;
                 parent = parent.parent;
             }
-
-            if ((interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Grenade && inventory.grenadeCount < 3) ||
-        (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Flashbang && inventory.flashbangCount < 3) ||
-        (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Smoke && inventory.smokeCount < 3) ||
-        (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Molotov && inventory.molotovCount < 3))
-            {
-                List<Transform> grenadeObjects = new List<Transform>();
-
-                foreach (Transform child in interact.hitInfo.transform)
-                    grenadeObjects.Add(child);
-
-                if (grenadeObjects.Count == 0)
-                    return;
-                if (grenadeObjects.Count >= 3)
-                {
-                    List<Transform> selectedGrenades = new List<Transform>();
-                    List<Transform> usedGrenades = new List<Transform>();
-                    grenadeObjects.Shuffle();
-
-                    foreach (Transform grenade in grenadeObjects)
-                    {
-                        if (selectedGrenades.Count >= 3)
-                            break;
-                        if (!usedGrenades.Contains(grenade))
-                        {
-                            bool dissolveSet = false;
-
-                            foreach (Transform child in grenade.Find("Mesh"))
-                            {
-                                MeshRenderer renderer = child.GetComponent<MeshRenderer>();
-
-                                if (renderer != null)
-                                {
-                                    float dissolveValue = renderer.material.GetFloat("_dissolve");
-
-                                    if (dissolveValue < 1f)
-                                    {
-                                        StartCoroutine(DestroyAfterPickup(renderer));
-                                        dissolveSet = true;
-                                    }
-                                }
-                            }
-                            if (dissolveSet)
-                            {
-                                selectedGrenades.Add(grenade);
-                                usedGrenades.Add(grenade);
-                            }
-                        }
-                    }
-                }
-            }
-            else if (interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Primary || interact.hitInfo.transform.GetComponent<Weapon>().gun.gunStyle == GunStyle.Secondary)
-                Destroy(gameObject);
-
-            inventory.AddItem(gun);
-            GameObject weaponObject = Instantiate(gun.gunPrefab, Vector3.zero, Quaternion.identity, Camera.main.transform.Find("WeaponHolder"));
-            weaponObject.layer = LayerMask.NameToLayer("Player");
-            var script = weaponObject.GetComponent<Weapon>();
-            Destroy(script);
-            weaponObject.transform.localPosition = Vector3.zero;
-            weaponObject.transform.localRotation = Quaternion.identity;
-            Transform mesh = weaponObject.transform.Find("Mesh");
-
-            foreach (Transform child in mesh)
-            {
-                SkinnedMeshRenderer skinnedMeshRenderer = child.GetComponent<SkinnedMeshRenderer>();
-                MeshRenderer meshRenderer = child.GetComponent<MeshRenderer>();
-
-                if (skinnedMeshRenderer != null)
-                {
-                    skinnedMeshRenderer.shadowCastingMode = ShadowCastingMode.Off;
-                    skinnedMeshRenderer.receiveShadows = false;
-                }
-                if (meshRenderer != null)
-                {
-                    meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
-                    meshRenderer.receiveShadows = false;
-                }
-            }
-
-            int childIndex = 0;
-
-            if (gun.gunStyle == GunStyle.Melee)
-                childIndex = 0;
-            else if (gun.gunStyle == GunStyle.Primary)
-                childIndex = 1;
-            else if (gun.gunStyle == GunStyle.Secondary)
-                childIndex = 2;
-            else if (gun.gunStyle == GunStyle.Grenade)
-                childIndex = 3;
-            else if (gun.gunStyle == GunStyle.Flashbang)
-                childIndex = 4;
-            else if (gun.gunStyle == GunStyle.Smoke)
-                childIndex = 5;
-            else
-                childIndex = 6;
-
-            weaponObject.transform.SetSiblingIndex(childIndex);
-            inventory.SetCurrentWeapon(Array.IndexOf(inventory.weapons, gun));
+            return false;
         }
+
+        private bool IsGrenadeType()
+        {
+            return gun.gunStyle == GunStyle.Grenade || 
+                   gun.gunStyle == GunStyle.Flashbang || 
+                   gun.gunStyle == GunStyle.Smoke || 
+                   gun.gunStyle == GunStyle.Molotov;
+        }
+
+        private void HandleGrenadePickup()
+        {
+            inventory.AddItem(gun);
+            
+            if (transform.childCount > 0)
+            {
+                StartCoroutine(DestroyAfterPickup(transform.GetChild(0).GetComponent<MeshRenderer>()));
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void PickupWeapon()
+        {
+            inventory.AddItem(gun);
+            
+            Transform weaponHolder = Camera.main.transform.Find("WeaponHolder");
+            if (weaponHolder)
+            {
+                GameObject weaponObject = Instantiate(gun.gunPrefab, weaponHolder);
+                weaponObject.layer = LayerMask.NameToLayer("Player");
+                
+                Destroy(weaponObject.GetComponent<Weapon>());
+                
+                weaponObject.transform.localPosition = Vector3.zero;
+                weaponObject.transform.localRotation = Quaternion.identity;
+                
+                DisableShadows(weaponObject.transform);
+                
+                int childIndex = (int)gun.gunStyle;
+                weaponObject.transform.SetSiblingIndex(childIndex);
+            }
+        }
+
+        private void DisableShadows(Transform parent)
+        {
+            foreach (var r in parent.GetComponentsInChildren<Renderer>())
+            {
+                r.shadowCastingMode = ShadowCastingMode.Off;
+                r.receiveShadows = false;
+            }
+        }
+
         private IEnumerator DestroyAfterPickup(MeshRenderer mesh)
         {
-            SetShaderParameters(0, mesh);
-            float elapsedTime = 0f;
+            if (mesh == null) yield break;
+            
             float duration = 0.45f;
-
-            while (elapsedTime < duration)
+            float time = 0;
+            
+            while (time < duration)
             {
-                SetShaderParameters(elapsedTime / duration, mesh);
-                elapsedTime += Time.deltaTime;
-
+                if (mesh) mesh.material.SetFloat("_dissolve", time / duration);
+                time += Time.deltaTime;
                 yield return null;
             }
-
-            if (mesh != null)
-                Destroy(mesh.transform.parent.parent.gameObject);
+            
+            if (mesh) Destroy(mesh.gameObject);
+            
+            if (transform.childCount == 0) Destroy(gameObject);
         }
-        private void SetShaderParameters(float disappearIntensity, MeshRenderer mesh)
-        {
-            MeshRenderer meshRenderer = mesh;
 
-            if (meshRenderer != null)
-                meshRenderer.material.SetFloat("_dissolve", disappearIntensity);
-        }
         private void OnTriggerEnter(Collider other)
         {
-            AiWeapons weapons = other.gameObject.GetComponent<AiWeapons>();
-            sockets = other.gameObject.GetComponentInChildren<MeshSockets>();
-
-            if (weapons != null && weapons.GetComponent<AiAgent>().stateMachine.currentState != AiStateId.Death)
+            if (other.CompareTag("Enemy"))
             {
-                if ((gun.gunStyle == GunStyle.Primary || gun.gunStyle == GunStyle.Secondary) && weapons.currentWeapon == null)
+                var aiAgent = other.GetComponent<AiAgent>();
+                var aiWeapons = other.GetComponent<AiWeapons>();
+                
+                if (aiAgent && aiWeapons && aiAgent.stateMachine.currentState != AiStateId.Death)
                 {
-                    GameObject newWeapon = Instantiate(gun.gunPrefab);
-                    weapons.Equip(newWeapon, sockets);
-                    Destroy(gameObject);
+                    if ((gun.gunStyle == GunStyle.Primary || gun.gunStyle == GunStyle.Secondary) && aiWeapons.currentWeapon == null)
+                    {
+                        var sockets = other.GetComponentInChildren<MeshSockets>();
+                        GameObject newWeapon = Instantiate(gun.gunPrefab);
+                        aiWeapons.Equip(newWeapon, sockets);
+                        Destroy(gameObject);
+                    }
                 }
-            }
-        }
-    }
-    public static class ListExtensions
-    {
-        public static void Shuffle<T>(this IList<T> list)
-        {
-            int n = list.Count;
-
-            while (n > 1)
-            {
-                n--;
-                int k = UnityEngine.Random.Range(0, n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
             }
         }
     }

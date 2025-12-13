@@ -11248,6 +11248,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000,
         type: 0}
+    - target: {fileID: 408975199743235051, guid: c42df57823e46094f89f9c8888a19f31,
+        type: 3}
+      propertyPath: m_Name
+      value: SinglePickupIcon
+      objectReference: {fileID: 0}
     - target: {fileID: 471792627861574700, guid: c42df57823e46094f89f9c8888a19f31,
         type: 3}
       propertyPath: m_fontAsset
@@ -12852,6 +12857,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &241916229 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7063169468551231681, guid: c42df57823e46094f89f9c8888a19f31,
+    type: 3}
+  m_PrefabInstance: {fileID: 241916226}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe9113674057b1943b634c3b7e8be2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RatGamesStudios.OperationDeratization.UI.AmmoDisplay
+--- !u!114 &241916230 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6810006011917508660, guid: c42df57823e46094f89f9c8888a19f31,
+    type: 3}
+  m_PrefabInstance: {fileID: 241916226}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241916231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f41d32b130b7c944a2f618e093f234f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RatGamesStudios.OperationDeratization.UI.InteractionUI
 --- !u!1 &241916231 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 512255613189244491, guid: c42df57823e46094f89f9c8888a19f31,
@@ -56746,12 +56775,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 844300206}
   m_Mesh: {fileID: 4300000, guid: 88c57df8d6d8a884395f01b21a7c5367, type: 2}
---- !u!82 &845533410 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 7677999044985606055, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1148401327527850815}
-  m_PrefabAsset: {fileID: 0}
 --- !u!23 &846346702
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -62249,12 +62272,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1890482490}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &979983640 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 6174921854564940668, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1148401327527850815}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &980034020
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71397,12 +71414,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.725159, y: 1.1001043, z: 0.19034527}
   m_Center: {x: 0.000007769104, y: 0.55005217, z: 0.014608491}
---- !u!82 &1107722272 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 7677999044750833648, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1148401327527850815}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1107986592
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -91265,6 +91276,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1505679813}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1505679818 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1037279482812505057, guid: 4316cbe286d85594084cde551dc553b6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1505679813}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1506193618
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -146938,36 +146961,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: aiming
-      value: 
-      objectReference: {fileID: 1148401327527850816}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: health
-      value: 
-      objectReference: {fileID: 559548252}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: stamina
-      value: 
-      objectReference: {fileID: 1148401327527850820}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: movementSound
-      value: 
-      objectReference: {fileID: 1148401327527850819}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: standCamHeight
-      value: 3.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: crouchCamHeight
-      value: 2.4
-      objectReference: {fileID: 0}
     - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: armorBar
@@ -146985,19 +146978,9 @@ PrefabInstance:
       objectReference: {fileID: 1806681277}
     - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
-      propertyPath: deathSounds
-      value: 
-      objectReference: {fileID: 979983640}
-    - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
       propertyPath: healthBarUI
       value: 
       objectReference: {fileID: 361327357}
-    - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: impactSound
-      value: 
-      objectReference: {fileID: 845533410}
     - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: inventoryUI
@@ -147028,11 +147011,11 @@ PrefabInstance:
       propertyPath: frontHealthBar
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
+    - target: {fileID: 1148401328078746725, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
-      propertyPath: heartbeatSound
+      propertyPath: interactionUI
       value: 
-      objectReference: {fileID: 1107722272}
+      objectReference: {fileID: 241916230}
     - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: ammoText
@@ -147050,19 +147033,39 @@ PrefabInstance:
       objectReference: {fileID: 1906855689}
     - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
+      propertyPath: warningText
+      value: 
+      objectReference: {fileID: 1218905550}
+    - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
+        type: 3}
       propertyPath: loadingSlider
       value: 
       objectReference: {fileID: 1505679815}
     - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
+      propertyPath: sliderValueText
+      value: 
+      objectReference: {fileID: 1505679818}
+    - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
+        type: 3}
       propertyPath: ammoRefillPrompt
       value: 
       objectReference: {fileID: 1218905550}
+    - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
+        type: 3}
+      propertyPath: loadingSliderObject
+      value: 
+      objectReference: {fileID: 1505679816}
     - target: {fileID: 1148401328078746727, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: wheels
       value: 
       objectReference: {fileID: 1505679817}
+    - target: {fileID: 1148401328078746727, guid: 9d264e62c5078fd43a45445fafa0b975,
+        type: 3}
+      propertyPath: ammoDisplay
+      value: 
+      objectReference: {fileID: 241916229}
     - target: {fileID: 1148401328078746727, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: meleeWeaponImage
@@ -147105,11 +147108,6 @@ PrefabInstance:
       objectReference: {fileID: 1732048684}
     - target: {fileID: 1148401328078746729, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
-      propertyPath: playerMotor
-      value: 
-      objectReference: {fileID: 1148401327527850818}
-    - target: {fileID: 1148401328078746729, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
       propertyPath: staminaBarUI
       value: 
       objectReference: {fileID: 1732048686}
@@ -147118,11 +147116,6 @@ PrefabInstance:
       propertyPath: staminaBarFill
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 1148401328078746729, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: heavyBreathingSound
-      value: 
-      objectReference: {fileID: 1107722272}
     - target: {fileID: 1148401328078746730, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: leanAngle
@@ -147856,36 +147849,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef56b20cc5c1aec4687581ae549d2fea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1148401327527850818 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1148401327527850815}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb27cf4d6ced774f86cb26e0e71572c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!82 &1148401327527850819 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 2113712777305962805, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1148401327527850815}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1148401327527850820 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1148401328078746729, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1148401327527850815}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 407ecc3f24bb75846a815723db786a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!33 &1148476111190186448

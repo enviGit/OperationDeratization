@@ -439,56 +439,6 @@ RectTransform:
   m_AnchoredPosition: {x: 764, y: 344}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &934025260559448286
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 557746695036953188}
-  - component: {fileID: 6077899435011749903}
-  m_Layer: 6
-  m_Name: WeaponImgs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!4 &557746695036953188
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 934025260559448286}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1905.0381, y: -993.73846, z: -960.9713}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1455075441942041296}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6077899435011749903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 934025260559448286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7573a5f98a84ca345a6ba95fb77ac296, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  useEvents: 0
-  prompt: Pick up pistol
-  gun: {fileID: 0}
-  upperImage: {fileID: 0}
-  bottomImage: {fileID: 0}
-  animator: {fileID: 0}
 --- !u!1 &999094192722122840
 GameObject:
   m_ObjectHideFlags: 0
@@ -680,7 +630,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -714,7 +664,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9113674057b1943b634c3b7e8be2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 0}
+  _text: {fileID: 0}
+  isAlwaysUpdated: 1
 --- !u!1 &1278457589838154248
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,7 +883,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5469808816599653435}
-  - {fileID: 557746695036953188}
   - {fileID: 1455075442023942817}
   - {fileID: 5978103290471797767}
   - {fileID: 9069453125322835701}
@@ -1647,7 +1597,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -2297,7 +2247,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -2331,7 +2281,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9113674057b1943b634c3b7e8be2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 0}
+  _text: {fileID: 0}
+  isAlwaysUpdated: 1
 --- !u!1 &4169215742512897017
 GameObject:
   m_ObjectHideFlags: 0
@@ -2952,7 +2903,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -2986,7 +2937,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9113674057b1943b634c3b7e8be2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 0}
+  _text: {fileID: 0}
+  isAlwaysUpdated: 1
 --- !u!1 &5469808815749344266
 GameObject:
   m_ObjectHideFlags: 0
@@ -3752,7 +3704,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -3786,7 +3738,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9113674057b1943b634c3b7e8be2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 0}
+  _text: {fileID: 0}
+  isAlwaysUpdated: 1
 --- !u!1 &6214417197851971350
 GameObject:
   m_ObjectHideFlags: 0
@@ -4650,7 +4603,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -4822,7 +4775,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9113674057b1943b634c3b7e8be2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 0}
+  _text: {fileID: 0}
+  isAlwaysUpdated: 1
 --- !u!1 &7845860652283802684
 GameObject:
   m_ObjectHideFlags: 0
@@ -4939,7 +4893,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -4973,7 +4927,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9113674057b1943b634c3b7e8be2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: 6db3c116061b00844b29785e59fb7759, type: 2}
+  _text: {fileID: 0}
+  isAlwaysUpdated: 1
 --- !u!1 &7985162363588549539
 GameObject:
   m_ObjectHideFlags: 0

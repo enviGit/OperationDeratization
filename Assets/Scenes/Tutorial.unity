@@ -443,6 +443,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 408975199743235051, guid: c42df57823e46094f89f9c8888a19f31,
+        type: 3}
+      propertyPath: m_Name
+      value: SinglePickupIcon
+      objectReference: {fileID: 0}
     - target: {fileID: 471792627861574700, guid: c42df57823e46094f89f9c8888a19f31,
         type: 3}
       propertyPath: m_fontAsset
@@ -690,6 +695,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 512255613661719665, guid: c42df57823e46094f89f9c8888a19f31,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 512255613695395440, guid: c42df57823e46094f89f9c8888a19f31,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -719,6 +729,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 512255614592837749, guid: c42df57823e46094f89f9c8888a19f31,
+        type: 3}
+      propertyPath: m_Name
+      value: ComparisonPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 767514810791201078, guid: c42df57823e46094f89f9c8888a19f31,
+        type: 3}
+      propertyPath: m_text
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 767514810791201078, guid: c42df57823e46094f89f9c8888a19f31,
         type: 3}
@@ -1052,6 +1072,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: RatGamesStudios.OperationDeratization.Manager.SceneLoader, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 5986697411189565213, guid: c42df57823e46094f89f9c8888a19f31,
+        type: 3}
+      propertyPath: m_Name
+      value: Img
+      objectReference: {fileID: 0}
     - target: {fileID: 6178000624175201264, guid: c42df57823e46094f89f9c8888a19f31,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1117,6 +1142,22 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7414297258377307588, guid: c42df57823e46094f89f9c8888a19f31,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee,
+        type: 2}
+    - target: {fileID: 7414297258377307588, guid: c42df57823e46094f89f9c8888a19f31,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 7414297258377307588, guid: c42df57823e46094f89f9c8888a19f31,
+        type: 3}
+      propertyPath: m_ActiveFontFeatures.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7414297258494140670, guid: c42df57823e46094f89f9c8888a19f31,
         type: 3}
@@ -1231,10 +1272,23 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7572996808513198589, guid: c42df57823e46094f89f9c8888a19f31, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c42df57823e46094f89f9c8888a19f31, type: 3}
+--- !u!114 &8918564 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6810006011917508660, guid: c42df57823e46094f89f9c8888a19f31,
+    type: 3}
+  m_PrefabInstance: {fileID: 8918563}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087512477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f41d32b130b7c944a2f618e093f234f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RatGamesStudios.OperationDeratization.UI.InteractionUI
 --- !u!114 &8918576 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 471792627861574700, guid: c42df57823e46094f89f9c8888a19f31,
@@ -19530,6 +19584,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 602029350}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &605855734 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7063169468551231681, guid: c42df57823e46094f89f9c8888a19f31,
+    type: 3}
+  m_PrefabInstance: {fileID: 8918563}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe9113674057b1943b634c3b7e8be2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RatGamesStudios.OperationDeratization.UI.AmmoDisplay
 --- !u!1001 &606035648
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23319,6 +23385,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 850030076}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &853585620 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1037279482812505057, guid: 4316cbe286d85594084cde551dc553b6,
+    type: 3}
+  m_PrefabInstance: {fileID: 4912131589386957424}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &854238406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44356,6 +44434,11 @@ PrefabInstance:
       propertyPath: isTutorialActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1148401328078746725, guid: 9d264e62c5078fd43a45445fafa0b975,
+        type: 3}
+      propertyPath: interactionUI
+      value: 
+      objectReference: {fileID: 8918564}
     - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: ammoText
@@ -44373,19 +44456,39 @@ PrefabInstance:
       objectReference: {fileID: 8918577}
     - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
+      propertyPath: warningText
+      value: 
+      objectReference: {fileID: 8918576}
+    - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
+        type: 3}
       propertyPath: loadingSlider
       value: 
       objectReference: {fileID: 4912131589386957425}
     - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
+      propertyPath: sliderValueText
+      value: 
+      objectReference: {fileID: 853585620}
+    - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
+        type: 3}
       propertyPath: ammoRefillPrompt
       value: 
       objectReference: {fileID: 8918576}
+    - target: {fileID: 1148401328078746726, guid: 9d264e62c5078fd43a45445fafa0b975,
+        type: 3}
+      propertyPath: loadingSliderObject
+      value: 
+      objectReference: {fileID: 1240378928}
     - target: {fileID: 1148401328078746727, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: wheels
       value: 
       objectReference: {fileID: 1676895815}
+    - target: {fileID: 1148401328078746727, guid: 9d264e62c5078fd43a45445fafa0b975,
+        type: 3}
+      propertyPath: ammoDisplay
+      value: 
+      objectReference: {fileID: 605855734}
     - target: {fileID: 1148401328078746727, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: meleeWeaponImage
@@ -44435,11 +44538,6 @@ PrefabInstance:
         type: 3}
       propertyPath: staminaBarFill
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1148401328078746730, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1148401328078746731, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
@@ -91544,6 +91642,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 934025260559448286, guid: 4316cbe286d85594084cde551dc553b6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1037279482812505057, guid: 4316cbe286d85594084cde551dc553b6,
         type: 3}
       propertyPath: m_fontSizeBase
@@ -91894,7 +91997,8 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 934025260559448286, guid: 4316cbe286d85594084cde551dc553b6, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4316cbe286d85594084cde551dc553b6, type: 3}
@@ -105905,20 +106009,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a01533564517f4f935f82c5adf5620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tracker: {fileID: 1135979700189572682}
-  isTutorialActive: 1
-  damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
-    type: 3}
+  armorSocket: {fileID: 7260659217945350382}
   enemyStats: {fileID: 11400000, guid: b814ba57ff6005f43affefca8842c408, type: 2}
   currentHealth: 0
+  lowHealthThreshold: 15
+  currentArmor: 0
+  maxArmor: 100
+  isAlive: 1
+  isMarkedAsDead: 0
+  impactSound: {fileID: 7260659219050351667}
   impactClips:
   - {fileID: 8300000, guid: ab94d8c7886d39b45ac77316ef59c334, type: 3}
   - {fileID: 8300000, guid: 7d8e352d2f2c4764e844d8cfc8763ead, type: 3}
-  isAlive: 1
-  isMarkedAsDead: 0
-  currentArmor: 0
-  maxArmor: 100
-  armorSocket: {fileID: 7260659217945350382}
+  tracker: {fileID: 1135979700189572682}
 --- !u!195 &7260659217882866514
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -108971,20 +109074,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a01533564517f4f935f82c5adf5620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tracker: {fileID: 1135979700189572682}
-  isTutorialActive: 1
-  damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
-    type: 3}
+  armorSocket: {fileID: 7260659217822937637}
   enemyStats: {fileID: 11400000, guid: 93cbabee000240e48a27e3d1204767de, type: 2}
   currentHealth: 0
+  lowHealthThreshold: 15
+  currentArmor: 0
+  maxArmor: 100
+  isAlive: 0
+  isMarkedAsDead: 0
+  impactSound: {fileID: 0}
   impactClips:
   - {fileID: 8300000, guid: ab94d8c7886d39b45ac77316ef59c334, type: 3}
   - {fileID: 8300000, guid: 7d8e352d2f2c4764e844d8cfc8763ead, type: 3}
-  isAlive: 0
-  isMarkedAsDead: 0
-  currentArmor: 0
-  maxArmor: 100
-  armorSocket: {fileID: 7260659217822937637}
+  tracker: {fileID: 1135979700189572682}
 --- !u!95 &7260659218005279131
 Animator:
   serializedVersion: 7
@@ -116058,20 +116160,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a01533564517f4f935f82c5adf5620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tracker: {fileID: 1135979700189572682}
-  isTutorialActive: 1
-  damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
-    type: 3}
+  armorSocket: {fileID: 7260659218487801966}
   enemyStats: {fileID: 11400000, guid: b814ba57ff6005f43affefca8842c408, type: 2}
   currentHealth: 0
+  lowHealthThreshold: 15
+  currentArmor: 0
+  maxArmor: 100
+  isAlive: 1
+  isMarkedAsDead: 0
+  impactSound: {fileID: 7260659219597386931}
   impactClips:
   - {fileID: 8300000, guid: ab94d8c7886d39b45ac77316ef59c334, type: 3}
   - {fileID: 8300000, guid: 7d8e352d2f2c4764e844d8cfc8763ead, type: 3}
-  isAlive: 1
-  isMarkedAsDead: 0
-  currentArmor: 0
-  maxArmor: 100
-  armorSocket: {fileID: 7260659218487801966}
+  tracker: {fileID: 1135979700189572682}
 --- !u!195 &7260659218418486226
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -120013,20 +120114,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a01533564517f4f935f82c5adf5620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tracker: {fileID: 1135979700189572682}
-  isTutorialActive: 1
-  damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
-    type: 3}
+  armorSocket: {fileID: 7260659218282829408}
   enemyStats: {fileID: 11400000, guid: 93cbabee000240e48a27e3d1204767de, type: 2}
   currentHealth: 0
+  lowHealthThreshold: 15
+  currentArmor: 0
+  maxArmor: 100
+  isAlive: 0
+  isMarkedAsDead: 0
+  impactSound: {fileID: 0}
   impactClips:
   - {fileID: 8300000, guid: ab94d8c7886d39b45ac77316ef59c334, type: 3}
   - {fileID: 8300000, guid: 7d8e352d2f2c4764e844d8cfc8763ead, type: 3}
-  isAlive: 0
-  isMarkedAsDead: 0
-  currentArmor: 0
-  maxArmor: 100
-  armorSocket: {fileID: 7260659218282829408}
+  tracker: {fileID: 1135979700189572682}
 --- !u!114 &7260659218623456736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124786,20 +124886,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a01533564517f4f935f82c5adf5620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tracker: {fileID: 1135979700189572682}
-  isTutorialActive: 1
-  damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
-    type: 3}
+  armorSocket: {fileID: 7260659219078376515}
   enemyStats: {fileID: 11400000, guid: b814ba57ff6005f43affefca8842c408, type: 2}
   currentHealth: 0
+  lowHealthThreshold: 15
+  currentArmor: 0
+  maxArmor: 100
+  isAlive: 1
+  isMarkedAsDead: 0
+  impactSound: {fileID: 7260659218035896478}
   impactClips:
   - {fileID: 8300000, guid: ab94d8c7886d39b45ac77316ef59c334, type: 3}
   - {fileID: 8300000, guid: 7d8e352d2f2c4764e844d8cfc8763ead, type: 3}
-  isAlive: 1
-  isMarkedAsDead: 0
-  currentArmor: 0
-  maxArmor: 100
-  armorSocket: {fileID: 7260659219078376515}
+  tracker: {fileID: 1135979700189572682}
 --- !u!95 &7260659218897330173
 Animator:
   serializedVersion: 7
@@ -128524,20 +128623,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a01533564517f4f935f82c5adf5620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tracker: {fileID: 1135979700189572682}
-  isTutorialActive: 1
-  damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
-    type: 3}
+  armorSocket: {fileID: 7260659218987001849}
   enemyStats: {fileID: 11400000, guid: b814ba57ff6005f43affefca8842c408, type: 2}
   currentHealth: 0
+  lowHealthThreshold: 15
+  currentArmor: 0
+  maxArmor: 100
+  isAlive: 1
+  isMarkedAsDead: 0
+  impactSound: {fileID: 7260659217873746724}
   impactClips:
   - {fileID: 8300000, guid: ab94d8c7886d39b45ac77316ef59c334, type: 3}
   - {fileID: 8300000, guid: 7d8e352d2f2c4764e844d8cfc8763ead, type: 3}
-  isAlive: 1
-  isMarkedAsDead: 0
-  currentArmor: 0
-  maxArmor: 100
-  armorSocket: {fileID: 7260659218987001849}
+  tracker: {fileID: 1135979700189572682}
 --- !u!95 &7260659219059971143
 Animator:
   serializedVersion: 7
@@ -135494,20 +135592,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a01533564517f4f935f82c5adf5620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tracker: {fileID: 1135979700189572682}
-  isTutorialActive: 1
-  damageTextPrefab: {fileID: 6583104846332073042, guid: c82e21342ecaf58408691e9f4e5ed350,
-    type: 3}
+  armorSocket: {fileID: 7260659219636226637}
   enemyStats: {fileID: 11400000, guid: 93cbabee000240e48a27e3d1204767de, type: 2}
   currentHealth: 0
+  lowHealthThreshold: 15
+  currentArmor: 0
+  maxArmor: 100
+  isAlive: 0
+  isMarkedAsDead: 0
+  impactSound: {fileID: 0}
   impactClips:
   - {fileID: 8300000, guid: ab94d8c7886d39b45ac77316ef59c334, type: 3}
   - {fileID: 8300000, guid: 7d8e352d2f2c4764e844d8cfc8763ead, type: 3}
-  isAlive: 0
-  isMarkedAsDead: 0
-  currentArmor: 0
-  maxArmor: 100
-  armorSocket: {fileID: 7260659219636226637}
+  tracker: {fileID: 1135979700189572682}
 --- !u!95 &7260659219413318131
 Animator:
   serializedVersion: 7

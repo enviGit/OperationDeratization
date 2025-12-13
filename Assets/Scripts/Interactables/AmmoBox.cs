@@ -12,7 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         public TextMeshProUGUI ammoRefillPrompt;
         private GameObject player;
         private PlayerInventory inventory;
-        private PlayerUI ui;
+        private PlayerRefillHandler refillHandler;
         private AudioSource lootingSound;
         public Animator ammoBoxAnimator;
         private AudioEventManager audioEventManager;
@@ -24,19 +24,42 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
         private void Start()
         {
-            lootingSound = GetComponent<AudioSource>();
-            player = GameObject.FindGameObjectWithTag("Player");
-            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
+            if (lootingSound == null) lootingSound = GetComponent<AudioSource>();
+            if (ammoBoxAnimator == null) ammoBoxAnimator = GetComponent<Animator>();
 
+            player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
-                inventory = player.GetComponent<PlayerInventory>();
-                ui = player.GetComponent<PlayerUI>();
+                refillHandler = player.GetComponent<PlayerRefillHandler>();
             }
+
+            var audioMgr = GameObject.FindGameObjectWithTag("AudioEventManager");
+            if (audioMgr) audioEventManager = audioMgr.GetComponent<AudioEventManager>();
+
+            prompt = "Refill ammo";
         }
         private void Update()
         {
-            IsFilling();
+            HandleState();
+        }
+        private void HandleState()
+        {
+            if (isFilling)
+            {
+                prompt = "";
+
+                if (!lootingSound.isPlaying)
+                {
+                    lootingSound.Play();
+                    audioEventManager?.NotifyAudioEvent(lootingSound);
+                    ammoBoxAnimator.SetTrigger("isLooting");
+                }
+            }
+            else
+            {
+                prompt = "Refill ammo";
+                if (lootingSound.isPlaying) lootingSound.Stop();
+            }
         }
         private void IsFilling()
         {
@@ -53,38 +76,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         }
         protected override void Interact()
         {
-            if (inventory != null)
+            if (refillHandler != null && !isFilling)
             {
-                foreach (Gun gun in inventory.weapons)
-                {
-                    if (gun != null && gun.gunStyle != GunStyle.Melee && gun.gunStyle != GunStyle.Grenade && gun.gunStyle != GunStyle.Flashbang && gun.gunStyle != GunStyle.Smoke)
-                    {
-                        allWeapons++;
-
-                        if (gun.maxAmmoCount >= gun.magazineSize * 3)
-                        {
-                            weaponsFullAmmo++;
-                            ui.ShowAmmoRefillPrompt(gun.gunName);
-                        }
-                    }
-                }
+                StartCoroutine(refillHandler.ProcessRefill(this));
             }
-            if (weaponsFullAmmo == allWeapons)
-            {
-                allWeapons = 0;
-                weaponsFullAmmo = 0;
-
-                return;
-            }
-            if (!isFilling)
-            {
-                lootingSound.Play();
-                audioEventManager.NotifyAudioEvent(lootingSound);
-                StartCoroutine(ui.RefillAmmo());
-            }
-
-            allWeapons = 0;
-            weaponsFullAmmo = 0;
         }
         private void OnTriggerEnter(Collider other)
         {
