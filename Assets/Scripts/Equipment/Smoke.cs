@@ -1,5 +1,5 @@
 using RatGamesStudios.OperationDeratization.Interactables;
-using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
+using RatGamesStudios.OperationDeratization.Optimization;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Equipment

@@ -3,7 +3,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering.RenderGraphModule;
 
-namespace RatGamesStudios.OperationDeratization.UI.InGame
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class Blit : ScriptableRendererFeature
     {

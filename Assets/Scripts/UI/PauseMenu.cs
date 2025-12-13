@@ -1,7 +1,7 @@
 using RatGamesStudios.OperationDeratization.Player;
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.UI.Menu
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class PauseMenu : MonoBehaviour
     {
@@ -43,7 +43,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
         }
         private void LateUpdate()
         {
-            if(pauseMenuUI.activeSelf)
+            if (pauseMenuUI.activeSelf)
             {
                 Time.timeScale = 0f;
                 GameIsPaused = true;

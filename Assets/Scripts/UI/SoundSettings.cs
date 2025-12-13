@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-namespace RatGamesStudios.OperationDeratization.UI.Menu
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class SoundSettings : MonoBehaviour
     {

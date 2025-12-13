@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace RatGamesStudios.OperationDeratization.UI.Menu
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class RunInBackground : MonoBehaviour
     {

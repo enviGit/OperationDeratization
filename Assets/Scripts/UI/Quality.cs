@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace RatGamesStudios.OperationDeratization
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class Quality : MonoBehaviour
     {

@@ -4,7 +4,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-namespace RatGamesStudios.OperationDeratization.UI.Menu
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class Brightness : MonoBehaviour
     {
@@ -20,7 +20,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
             brightnessSlider.value = originalBrightness - 1;
             sliderText.text = (brightnessSlider.value + 1).ToString("0");
 
-            for(int i = 0; i < postProcessing.Length; i++)
+            for (int i = 0; i < postProcessing.Length; i++)
             {
                 if (postProcessing[i].TryGet<ColorAdjustments>(out colorAdj[i]))
                 {
@@ -28,11 +28,11 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
                     brightnessSlider.onValueChanged.AddListener(OnBrightnessSliderChanged);
                 }
             }
-            
+
         }
         private void OnBrightnessSliderChanged(float value)
         {
-            foreach(ColorAdjustments child in colorAdj)
+            foreach (ColorAdjustments child in colorAdj)
                 child.postExposure.value = Mathf.Clamp(value, -4f, 2f) + 1;
 
             sliderText.text = (value + 1).ToString("0");

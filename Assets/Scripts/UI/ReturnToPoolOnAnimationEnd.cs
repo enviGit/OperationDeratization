@@ -1,7 +1,7 @@
-using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
+using RatGamesStudios.OperationDeratization.Optimization;
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.UI.InGame
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class ReturnToPoolOnAnimationEnd : MonoBehaviour
     {

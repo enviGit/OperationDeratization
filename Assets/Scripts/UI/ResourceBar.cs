@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace RatGamesStudios.OperationDeratization.UI.InGame
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class ResourceBar : MonoBehaviour
     {

@@ -1,9 +1,9 @@
-using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
+using RatGamesStudios.OperationDeratization.Optimization;
 using System;
 using System.Collections;
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.UI.InGame
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class DamageIndicator : MonoBehaviour
     {

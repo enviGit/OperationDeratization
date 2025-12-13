@@ -1,5 +1,5 @@
 using Random = System.Random;
-using RatGamesStudios.OperationDeratization.UI.InGame;
+using RatGamesStudios.OperationDeratization.UI;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

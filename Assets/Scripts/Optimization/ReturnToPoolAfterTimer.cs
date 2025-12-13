@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.Optimization.ObjectPooling
+namespace RatGamesStudios.OperationDeratization.Optimization
 {
     public class ReturnToPoolAfterTimer : MonoBehaviour
     {
@@ -16,7 +16,7 @@ namespace RatGamesStudios.OperationDeratization.Optimization.ObjectPooling
         {
             float elapsedTime = 0f;
 
-            while(elapsedTime < timeToDespawn)
+            while (elapsedTime < timeToDespawn)
             {
                 elapsedTime += Time.deltaTime;
 

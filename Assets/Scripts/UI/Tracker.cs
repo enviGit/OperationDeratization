@@ -1,6 +1,5 @@
 using RatGamesStudios.OperationDeratization.Enemy;
 using RatGamesStudios.OperationDeratization.Manager;
-using RatGamesStudios.OperationDeratization.UI.Menu;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,7 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace RatGamesStudios.OperationDeratization.UI.InGame
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class Tracker : MonoBehaviour
     {

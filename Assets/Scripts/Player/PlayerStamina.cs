@@ -1,5 +1,5 @@
 using RatGamesStudios.OperationDeratization.Manager;
-using RatGamesStudios.OperationDeratization.UI.InGame;
+using RatGamesStudios.OperationDeratization.UI;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Player
@@ -15,7 +15,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         public float maxStamina = 150f;
         public float currentStamina = 100f;
         public float staminaRegenRate = 25f;
-        
+
         [Header("Costs")]
         public float sprintStaminaCost = 5f;
         public float jumpStaminaCost = 10f;
@@ -26,21 +26,21 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void Start()
         {
-            if(playerMotor == null) playerMotor = GetComponent<PlayerMotor>();
-            if(heavyBreathingSound == null) heavyBreathingSound = transform.Find("Sounds/HeavyBreathing")?.GetComponent<AudioSource>();
-            
+            if (playerMotor == null) playerMotor = GetComponent<PlayerMotor>();
+            if (heavyBreathingSound == null) heavyBreathingSound = transform.Find("Sounds/HeavyBreathing")?.GetComponent<AudioSource>();
+
             var audioMgr = GameObject.FindGameObjectWithTag("AudioEventManager");
-            if(audioMgr) audioEventManager = audioMgr.GetComponent<AudioEventManager>();
+            if (audioMgr) audioEventManager = audioMgr.GetComponent<AudioEventManager>();
 
             currentStamina = maxStamina;
-            if(staminaBarUI) staminaBarUI.SetActive(false);
+            if (staminaBarUI) staminaBarUI.SetActive(false);
         }
 
         private void Update()
         {
             HandleStaminaRegen();
             UpdateUI();
-        }  
+        }
 
         private void HandleStaminaRegen()
         {
@@ -52,7 +52,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             {
                 if (!isStaminaRegenBlocked && currentStamina < maxStamina)
                 {
-                    if(staminaBarUI) staminaBarUI.SetBackColor(new Color(0.88f, 0.31f, 0.12f, 1f));
+                    if (staminaBarUI) staminaBarUI.SetBackColor(new Color(0.88f, 0.31f, 0.12f, 1f));
                     currentStamina = Mathf.Clamp(currentStamina + staminaRegenRate * Time.deltaTime, 0, maxStamina);
                 }
             }
@@ -80,8 +80,8 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         public void UseStamina(float amount)
         {
-            if(staminaBarUI) staminaBarUI.SetBackColor(Color.gray);
-            
+            if (staminaBarUI) staminaBarUI.SetBackColor(Color.gray);
+
             currentStamina = Mathf.Clamp(currentStamina - amount, 0, maxStamina);
 
             if (currentStamina <= 0.1f)

@@ -1,4 +1,4 @@
-using RatGamesStudios.OperationDeratization.UI.Menu;
+using RatGamesStudios.OperationDeratization.UI;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,10 +42,10 @@ namespace RatGamesStudios.OperationDeratization.Manager
         {
             foreach (GameObject child in gObjectsToDeactivate)
             {
-                if(child.activeSelf)
+                if (child.activeSelf)
                     child.SetActive(false);
             }
-            
+
             PauseMenu.GameIsPaused = false;
             Time.timeScale = 1f;
             AudioListener.pause = false;

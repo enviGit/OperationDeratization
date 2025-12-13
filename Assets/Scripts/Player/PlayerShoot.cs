@@ -1,7 +1,7 @@
 using RatGamesStudios.OperationDeratization.Equipment;
 using RatGamesStudios.OperationDeratization.Interactables;
 using RatGamesStudios.OperationDeratization.Manager;
-using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
+using RatGamesStudios.OperationDeratization.Optimization;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
 using System.Collections;
 using System.Collections.Generic;

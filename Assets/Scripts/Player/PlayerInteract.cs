@@ -1,4 +1,5 @@
 using RatGamesStudios.OperationDeratization.Interactables;
+using RatGamesStudios.OperationDeratization.UI;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Player

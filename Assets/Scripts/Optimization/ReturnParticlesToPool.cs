@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.Optimization.ObjectPooling
+namespace RatGamesStudios.OperationDeratization.Optimization
 {
     public class ReturnParticlesToPool : MonoBehaviour
     {

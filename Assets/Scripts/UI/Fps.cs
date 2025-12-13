@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.UI.InGame
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class Fps : MonoBehaviour
     {

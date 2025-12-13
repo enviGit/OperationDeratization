@@ -1,6 +1,6 @@
 using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
-using RatGamesStudios.OperationDeratization.UI.InGame;
+using RatGamesStudios.OperationDeratization.UI;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Player

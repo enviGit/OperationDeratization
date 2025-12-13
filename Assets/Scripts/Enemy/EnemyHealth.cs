@@ -1,9 +1,9 @@
 using RatGamesStudios.OperationDeratization.Enemy.State;
 using RatGamesStudios.OperationDeratization.Manager;
-using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
+using RatGamesStudios.OperationDeratization.Optimization;
 using RatGamesStudios.OperationDeratization.Player;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
-using RatGamesStudios.OperationDeratization.UI.InGame;
+using RatGamesStudios.OperationDeratization.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;

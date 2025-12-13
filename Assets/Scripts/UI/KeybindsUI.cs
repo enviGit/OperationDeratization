@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.UI.InGame
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class KeybindsUI : MonoBehaviour
     {

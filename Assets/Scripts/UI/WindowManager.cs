@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace RatGamesStudios.OperationDeratization.UI.Menu
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class WindowManager : MonoBehaviour
     {
@@ -99,7 +99,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.Quit();
+            Application.Quit();
 #endif
         }
     }

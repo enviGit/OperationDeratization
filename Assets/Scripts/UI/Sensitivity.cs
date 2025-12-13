@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace RatGamesStudios.OperationDeratization.UI.Menu
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class Sensitivity : MonoBehaviour
     {
@@ -48,7 +48,7 @@ namespace RatGamesStudios.OperationDeratization.UI.Menu
             originalSensitivity = sensitivitySlider.value;
             Settings.Sensitivity = originalSensitivity;
 
-            if(pointerSensitivity != null)
+            if (pointerSensitivity != null)
                 pointerSensitivity.sensitivity = 3f * Settings.Sensitivity;
         }
     }

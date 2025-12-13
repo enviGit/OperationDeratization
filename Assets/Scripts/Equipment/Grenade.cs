@@ -1,8 +1,8 @@
 using RatGamesStudios.OperationDeratization.Interactables;
 using RatGamesStudios.OperationDeratization.Manager;
-using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
+using RatGamesStudios.OperationDeratization.Optimization;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
-using RatGamesStudios.OperationDeratization.UI.InGame;
+using RatGamesStudios.OperationDeratization.UI;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Equipment

@@ -1,8 +1,8 @@
 using RatGamesStudios.OperationDeratization.Interactables;
 using RatGamesStudios.OperationDeratization.Manager;
-using RatGamesStudios.OperationDeratization.Optimization.ObjectPooling;
+using RatGamesStudios.OperationDeratization.Optimization;
 using RatGamesStudios.OperationDeratization.RagdollPhysics;
-using RatGamesStudios.OperationDeratization.UI.InGame;
+using RatGamesStudios.OperationDeratization.UI;
 using System.Collections;
 using UnityEngine;
 
@@ -186,7 +186,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             gunReloadAudio.clip = currentWeapon.gunAudioClips[2];
             gunReloadAudio.Play();
             audioEventManager.NotifyAudioEvent(gunFireAudio);
-            
+
             yield return new WaitForSeconds(currentWeapon.reloadTime);
 
             if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)

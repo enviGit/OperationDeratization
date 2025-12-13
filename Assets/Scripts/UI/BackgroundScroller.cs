@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RatGamesStudios.OperationDeratization.UI.Menu
+namespace RatGamesStudios.OperationDeratization.UI
 {
     public class BackgroundScroller : MonoBehaviour
     {
