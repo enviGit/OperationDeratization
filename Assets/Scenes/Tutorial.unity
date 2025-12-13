@@ -8062,12 +8062,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1214164372}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &369362856 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 2113712777305962805, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1214164372}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &370597987
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44302,36 +44296,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: aiming
-      value: 
-      objectReference: {fileID: 1214164376}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: health
-      value: 
-      objectReference: {fileID: 1214164373}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: stamina
-      value: 
-      objectReference: {fileID: 1214164388}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: movementSound
-      value: 
-      objectReference: {fileID: 369362856}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: standCamHeight
-      value: 3.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: crouchCamHeight
-      value: 2.4
-      objectReference: {fileID: 0}
     - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: armorBar
@@ -44349,19 +44313,9 @@ PrefabInstance:
       objectReference: {fileID: 4912131589386957428}
     - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
-      propertyPath: deathSounds
-      value: 
-      objectReference: {fileID: 1214164377}
-    - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
       propertyPath: healthBarUI
       value: 
       objectReference: {fileID: 4912131589386957429}
-    - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: impactSound
-      value: 
-      objectReference: {fileID: 1214164380}
     - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: inventoryUI
@@ -44397,11 +44351,6 @@ PrefabInstance:
       propertyPath: frontHealthBar
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: heartbeatSound
-      value: 
-      objectReference: {fileID: 1214164381}
     - target: {fileID: 1148401328078746723, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
       propertyPath: isTutorialActive
@@ -44479,11 +44428,6 @@ PrefabInstance:
       objectReference: {fileID: 103240458}
     - target: {fileID: 1148401328078746729, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
-      propertyPath: playerMotor
-      value: 
-      objectReference: {fileID: 1214164378}
-    - target: {fileID: 1148401328078746729, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
       propertyPath: staminaBarUI
       value: 
       objectReference: {fileID: 4912131589386957427}
@@ -44491,16 +44435,6 @@ PrefabInstance:
         type: 3}
       propertyPath: staminaBarFill
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1148401328078746729, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: heavyBreathingSound
-      value: 
-      objectReference: {fileID: 1214164379}
-    - target: {fileID: 1148401328078746730, guid: 9d264e62c5078fd43a45445fafa0b975,
-        type: 3}
-      propertyPath: leanAngle
-      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1148401328078746730, guid: 9d264e62c5078fd43a45445fafa0b975,
         type: 3}
@@ -44696,42 +44630,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b60c7c1477e19814eae1a0bb09bfba3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!82 &1214164377 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 6174921854564940668, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1214164372}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1214164378 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1148401328078746722, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1214164372}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb27cf4d6ced774f86cb26e0e71572c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!82 &1214164379 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 7677999044750833648, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1214164372}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &1214164380 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 7677999044985606055, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1214164372}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &1214164381 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 7677999045563553846, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1214164372}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1214164385 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1148401328078746727, guid: 9d264e62c5078fd43a45445fafa0b975,
@@ -44742,18 +44640,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef56b20cc5c1aec4687581ae549d2fea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1214164388 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1148401328078746729, guid: 9d264e62c5078fd43a45445fafa0b975,
-    type: 3}
-  m_PrefabInstance: {fileID: 1214164372}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 407ecc3f24bb75846a815723db786a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1215422526

@@ -145,12 +145,28 @@ namespace RatGamesStudios.OperationDeratization.Player
         {
             if (movementSound == null || movementClips.Length == 0) return;
 
-            movementSound.pitch = Random.Range(0.85f, 1.1f);
+            CancelInvoke(nameof(StopFootstepSound));
+
+            movementSound.pitch = Random.Range(0.85f, 1.15f);
             movementSound.volume = isCrouching ? 0.3f : (isRunning ? 1f : 0.6f);
 
-            movementSound.PlayOneShot(isRunning && movementClips.Length > 1 ? movementClips[1] : movementClips[0]);
+            AudioClip clipToPlay = isRunning && movementClips.Length > 1 ? movementClips[1] : movementClips[0];
+
+            movementSound.clip = clipToPlay;
+            movementSound.Play();
+
+            float cutOffTime = isRunning ? 0.35f : 0.6f;
+            Invoke(nameof(StopFootstepSound), cutOffTime);
 
             audioEventManager?.NotifyAudioEvent(movementSound);
+        }
+
+        private void StopFootstepSound()
+        {
+            if (movementSound.isPlaying)
+            {
+                movementSound.Stop();
+            }
         }
 
         private void HandleGravity()
