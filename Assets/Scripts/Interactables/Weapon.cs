@@ -1,11 +1,9 @@
 using RatGamesStudios.OperationDeratization.Enemy;
 using RatGamesStudios.OperationDeratization.Player;
-using RatGamesStudios.OperationDeratization.Enemy.State;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace RatGamesStudios.OperationDeratization.Interactables
 {
@@ -17,30 +15,118 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
         [Header("References")]
         private PlayerInventory inventory;
-        
+
+        private List<Renderer> availableGrenadeModels = new List<Renderer>();
+
         private void Start()
         {
             var player = GameObject.FindGameObjectWithTag("Player");
             if (player) inventory = player.GetComponent<PlayerInventory>();
-            
+
             if (gun) prompt = $"Pick up {gun.gunName}";
+
+            if (IsGrenadeType())
+            {
+                var allRenderers = GetComponentsInChildren<Renderer>().ToList();
+
+                var parentRenderer = GetComponent<Renderer>();
+
+                if (parentRenderer != null)
+                {
+                    allRenderers.Remove(parentRenderer);
+                }
+
+                availableGrenadeModels = allRenderers;
+            }
         }
 
         protected override void Interact()
         {
             if (inventory == null || gun == null) return;
-
             if (IsOwnedByEnemy()) return;
 
             if (IsGrenadeType())
             {
-                HandleGrenadePickup();
+                HandleSmartGrenadePickup();
             }
-            else if (gun.gunStyle == GunStyle.Primary || gun.gunStyle == GunStyle.Secondary)
+            else
             {
-                PickupWeapon();
-                Destroy(gameObject);
+                if (inventory.AddItem(gun))
+                {
+                    Destroy(gameObject);
+                }
             }
+        }
+
+        private void HandleSmartGrenadePickup()
+        {
+            if (availableGrenadeModels.Count == 0) return;
+
+            int currentAmmo = 0;
+            int slotIdx = (int)gun.gunStyle;
+
+            currentAmmo = inventory.GetGrenadeCount(slotIdx);
+
+            int maxCapacity = gun.maxAmmoCount > 0 ? gun.maxAmmoCount : 3;
+
+            int spaceLeft = maxCapacity - currentAmmo;
+
+            if (spaceLeft <= 0)
+            {
+                return;
+            }
+
+            int amountToTake = Mathf.Min(availableGrenadeModels.Count, spaceLeft);
+
+            var modelsToCheck = new List<Renderer>(availableGrenadeModels);
+
+            for (int i = 0; i < amountToTake; i++)
+            {
+                Renderer model = modelsToCheck[i];
+
+                bool success = inventory.AddItem(gun);
+
+                if (success)
+                {
+                    availableGrenadeModels.Remove(model);
+                    StartCoroutine(DissolveAndDestroySingle(model));
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (availableGrenadeModels.Count == 0)
+            {
+                DisableInteraction();
+            }
+        }
+
+        private IEnumerator DissolveAndDestroySingle(Renderer r)
+        {
+            if (r == null) yield break;
+
+            float duration = 0.45f;
+            float time = 0;
+
+            while (time < duration)
+            {
+                if (r == null) yield break;
+                r.material.SetFloat("_dissolve", time / duration);
+                time += Time.deltaTime;
+                yield return null;
+            }
+
+            if (r != null) Destroy(r.gameObject);
+        }
+
+        private void DisableInteraction()
+        {
+            var col = GetComponent<Collider>();
+            if (col) col.enabled = false;
+
+            prompt = "";
         }
 
         private bool IsOwnedByEnemy()
@@ -56,74 +142,10 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
         private bool IsGrenadeType()
         {
-            return gun.gunStyle == GunStyle.Grenade || 
-                   gun.gunStyle == GunStyle.Flashbang || 
-                   gun.gunStyle == GunStyle.Smoke || 
+            return gun.gunStyle == GunStyle.Grenade ||
+                   gun.gunStyle == GunStyle.Flashbang ||
+                   gun.gunStyle == GunStyle.Smoke ||
                    gun.gunStyle == GunStyle.Molotov;
-        }
-
-        private void HandleGrenadePickup()
-        {
-            inventory.AddItem(gun);
-            
-            if (transform.childCount > 0)
-            {
-                StartCoroutine(DestroyAfterPickup(transform.GetChild(0).GetComponent<MeshRenderer>()));
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-
-        private void PickupWeapon()
-        {
-            inventory.AddItem(gun);
-            
-            Transform weaponHolder = Camera.main.transform.Find("WeaponHolder");
-            if (weaponHolder)
-            {
-                GameObject weaponObject = Instantiate(gun.gunPrefab, weaponHolder);
-                weaponObject.layer = LayerMask.NameToLayer("Player");
-                
-                Destroy(weaponObject.GetComponent<Weapon>());
-                
-                weaponObject.transform.localPosition = Vector3.zero;
-                weaponObject.transform.localRotation = Quaternion.identity;
-                
-                DisableShadows(weaponObject.transform);
-                
-                int childIndex = (int)gun.gunStyle;
-                weaponObject.transform.SetSiblingIndex(childIndex);
-            }
-        }
-
-        private void DisableShadows(Transform parent)
-        {
-            foreach (var r in parent.GetComponentsInChildren<Renderer>())
-            {
-                r.shadowCastingMode = ShadowCastingMode.Off;
-                r.receiveShadows = false;
-            }
-        }
-
-        private IEnumerator DestroyAfterPickup(MeshRenderer mesh)
-        {
-            if (mesh == null) yield break;
-            
-            float duration = 0.45f;
-            float time = 0;
-            
-            while (time < duration)
-            {
-                if (mesh) mesh.material.SetFloat("_dissolve", time / duration);
-                time += Time.deltaTime;
-                yield return null;
-            }
-            
-            if (mesh) Destroy(mesh.gameObject);
-            
-            if (transform.childCount == 0) Destroy(gameObject);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -132,7 +154,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             {
                 var aiAgent = other.GetComponent<AiAgent>();
                 var aiWeapons = other.GetComponent<AiWeapons>();
-                
+
                 if (aiAgent && aiWeapons && aiAgent.stateMachine.currentState != AiStateId.Death)
                 {
                     if ((gun.gunStyle == GunStyle.Primary || gun.gunStyle == GunStyle.Secondary) && aiWeapons.currentWeapon == null)

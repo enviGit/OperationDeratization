@@ -1,382 +1,344 @@
+using RatGamesStudios.OperationDeratization.Equipment;
 using RatGamesStudios.OperationDeratization.UI;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace RatGamesStudios.OperationDeratization.Player
 {
     public class PlayerInventory : MonoBehaviour
     {
-        private PlayerShoot playerShoot;
-        private PlayerRefillHandler refillHandler;
-        [SerializeField] private AmmoDisplay ammoDisplay;
-
-        [Header("Weapon images")]
+        [Header("References")]
         [SerializeField] private Transform weaponHolder;
         [SerializeField] private GameObject wheels;
+        [SerializeField] private AmmoDisplay ammoDisplay;
 
-        [Header("Weapon")]
-        [SerializeField] private Gun melee;
-        public Gun[] weapons;
+        private Collider playerCollider;
+        private PlayerWeaponController weaponController;
+        private PlayerGrenadeController grenadeController;
+        private PlayerRefillHandler refillHandler;
+
+        [Header("Weapon Models Setup")]
+        public List<WeaponModelEntry> allAvailableModels = new List<WeaponModelEntry>();
+
+        [System.Serializable]
+        public class WeaponModelEntry
+        {
+            public string id;
+            public GameObject modelPrefab;
+        }
+
+        private GameObject[] activeSlotModels = new GameObject[7];
+
+        [Header("Inventory Data")]
+        [SerializeField] private Gun meleeData;
+        public Gun[] weapons = new Gun[7];
+
         public int currentWeaponIndex = -1;
         [HideInInspector] public int currentItemIndex = 0;
-        [HideInInspector] public int grenadeCount = 0;
-        [HideInInspector] public int flashbangCount = 0;
-        [HideInInspector] public int smokeCount = 0;
-        [HideInInspector] public int molotovCount = 0;
         public bool isSwitchingWeapon = false;
-        public Gun CurrentWeapon
+
+        public int GetGrenadeCount(int index)
         {
-            get
-            {
-                if (currentWeaponIndex >= 0 && currentWeaponIndex < weapons.Length)
-                    return weapons[currentWeaponIndex];
-                else
-                    return null;
-            }
+            if (!IsIndexValid(index) || activeSlotModels[index] == null) return 0;
+            var logic = activeSlotModels[index].GetComponentInChildren<ActiveWeapon>();
+            return logic ? logic.TotalAmmo : 0;
         }
+
+        public int grenadeCount => GetGrenadeCount(3);
+        public int flashbangCount => GetGrenadeCount(4);
+        public int smokeCount => GetGrenadeCount(5);
+        public int molotovCount => GetGrenadeCount(6);
+
+        public GameObject CurrentWeaponModel => IsIndexValid(currentWeaponIndex) ? activeSlotModels[currentWeaponIndex] : null;
+        public Gun CurrentWeapon => IsIndexValid(currentWeaponIndex) ? weapons[currentWeaponIndex] : null;
+
+        private bool IsIndexValid(int i) => i >= 0 && i < weapons.Length;
 
         private void Start()
         {
-            playerShoot = GetComponent<PlayerShoot>();
+            weaponController = GetComponent<PlayerWeaponController>();
+            grenadeController = GetComponent<PlayerGrenadeController>();
             refillHandler = GetComponent<PlayerRefillHandler>();
-            weapons = new Gun[7];
-            weapons[0] = melee;
-            weapons[1] = null;
-            weapons[2] = null;
-            weapons[3] = null;
-            weapons[4] = null;
-            weapons[5] = null;
-            weapons[6] = null;
-            currentWeaponIndex = 0;
+
+            playerCollider = GetComponent<Collider>();
+            if (!playerCollider) playerCollider = GetComponentInChildren<Collider>();
+
+            DisableAllPhysicalModels();
+            if (meleeData != null) AddItem(meleeData);
+            StartCoroutine(SwitchWeapon(0));
         }
+
+        public bool HasWeaponOfSameCategory(Gun newGun)
+        {
+            if (newGun == null) return false;
+
+            int idx = (int)newGun.gunStyle;
+
+            if (idx >= 0 && idx < weapons.Length)
+            {
+                return weapons[idx] != null;
+            }
+            return false;
+        }
+
+        private void DisableAllPhysicalModels()
+        {
+            foreach (var entry in allAvailableModels)
+                if (entry.modelPrefab != null) entry.modelPrefab.SetActive(false);
+        }
+
         private void Update()
         {
-            SwitchItem();
-            RemoveItem();
-            GrenadesCount();
+            HandleInput();
+            HandleDrop();
         }
-        private void GrenadesCount()
-        {
-            if (weapons[3] != null)
-                grenadeCount = weapons[3].currentAmmoCount;
-            else
-                grenadeCount = 0;
-            if (weapons[4] != null)
-                flashbangCount = weapons[4].currentAmmoCount;
-            else
-                flashbangCount = 0;
-            if (weapons[5] != null)
-                smokeCount = weapons[5].currentAmmoCount;
-            else
-                smokeCount = 0;
-            if (weapons[6] != null)
-                molotovCount = weapons[6].currentAmmoCount;
-            else
-                molotovCount = 0;
-        }
-        public void AddItem(Gun newItem)
-        {
-            int newItemIndex = (int)newItem.gunStyle;
 
-            if (weapons[newItemIndex] != null)
+        public bool AddItem(Gun newItem)
+        {
+            if (newItem == null) return false;
+
+            int slotIndex = (int)newItem.gunStyle;
+            if (slotIndex < 0 || slotIndex >= weapons.Length) return false;
+
+            if (weapons[slotIndex] != null)
             {
-                if (newItem.gunStyle == GunStyle.Melee)
+                if (IsGrenade(newItem.gunStyle))
                 {
-                    Transform melee = transform.Find("Camera/Main Camera/WeaponHolder/Knife_00(Clone)");
-
-                    if (melee != null)
-                        Destroy(melee.gameObject);
-                }
-                else if (newItem.gunStyle == GunStyle.Primary)
-                {
-                    Transform pistol = transform.Find("Camera/Main Camera/WeaponHolder/Pistol_00(Clone)");
-                    Transform revolver = transform.Find("Camera/Main Camera/WeaponHolder/Revolver_00(Clone)");
-
-                    if (pistol != null)
-                        Destroy(pistol.gameObject);
-                    if (revolver != null)
-                        Destroy(revolver.gameObject);
-                }
-                else if (newItem.gunStyle == GunStyle.Secondary)
-                {
-                    Transform shotgun = transform.Find("Camera/Main Camera/WeaponHolder/Shotgun_00(Clone)");
-                    Transform rifle = transform.Find("Camera/Main Camera/WeaponHolder/Rifle_00(Clone)");
-                    Transform sniper = transform.Find("Camera/Main Camera/WeaponHolder/Sniper_00(Clone)");
-
-                    if (shotgun != null)
-                        Destroy(shotgun.gameObject);
-                    if (rifle != null)
-                        Destroy(rifle.gameObject);
-                    if (sniper != null)
-                        Destroy(sniper.gameObject);
-                }
-                else if (newItem.gunStyle == GunStyle.Grenade)
-                {
-                    Transform grenade = transform.Find("Camera/Main Camera/WeaponHolder/Grenade_00(Clone)");
-
-                    if (grenade != null)
-                        Destroy(grenade.gameObject);
-                    if (newItem.currentAmmoCount < newItem.editorAmmoValue)
-                        newItem.currentAmmoCount = newItem.editorAmmoValue;
-                    else
-                        if (refillHandler) refillHandler.ShowWarning($"You cannot carry more {newItem.gunName}s!");
-                }
-                else if (newItem.gunStyle == GunStyle.Flashbang)
-                {
-                    Transform flashbang = transform.Find("Camera/Main Camera/WeaponHolder/Flashbang_00(Clone)");
-
-                    if (flashbang != null)
-                        Destroy(flashbang.gameObject);
-                    if (newItem.currentAmmoCount < newItem.editorAmmoValue)
-                        newItem.currentAmmoCount = newItem.editorAmmoValue;
-                    else
-                        if (refillHandler) refillHandler.ShowWarning($"You cannot carry more {newItem.gunName}s!");
-                }
-                else if (newItem.gunStyle == GunStyle.Smoke)
-                {
-                    Transform smoke = transform.Find("Camera/Main Camera/WeaponHolder/Smoke_00(Clone)");
-
-                    if (smoke != null)
-                        Destroy(smoke.gameObject);
-                    if (newItem.currentAmmoCount < newItem.editorAmmoValue)
-                        newItem.currentAmmoCount = newItem.editorAmmoValue;
-                    else
-                        if (refillHandler) refillHandler.ShowWarning($"You cannot carry more {newItem.gunName}s!");
-                }
-                else if (newItem.gunStyle == GunStyle.Molotov)
-                {
-                    Transform molotov = transform.Find("Camera/Main Camera/WeaponHolder/Molotov_00(Clone)");
-
-                    if (molotov != null)
-                        Destroy(molotov.gameObject);
-                    if (newItem.currentAmmoCount < newItem.editorAmmoValue)
-                        newItem.currentAmmoCount = newItem.editorAmmoValue;
-                    else
-                        if (refillHandler) refillHandler.ShowWarning($"You cannot carry more {newItem.gunName}s!");
-                }
-                if (newItem.gunStyle == GunStyle.Primary || newItem.gunStyle == GunStyle.Secondary)
-                {
-                    Vector3 dropPosition = transform.position + transform.forward * 1f + transform.up * 1f;
-                    GameObject newWeapon = Instantiate(weapons[newItemIndex].gunPrefab, dropPosition, Quaternion.identity);
-                    newWeapon.layer = LayerMask.NameToLayer("Interactable");
-                    SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
-                    newWeapon.tag = "Weapon";
-                    Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
-                    weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
-                    weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-                    weaponRigidbody.mass = 2f;
-                    Quaternion randomRotation = Random.rotation;
-                    newWeapon.transform.rotation = randomRotation;
-                }
-            }
-
-            weapons[newItemIndex] = newItem;
-            StartCoroutine(PullOutWeapon(newItemIndex));
-        }
-        public void SwitchItem()
-        {
-            if (playerShoot.isAiming == false && !wheels.activeSelf && !isSwitchingWeapon)
-            {
-                int scrollDelta = (int)Input.mouseScrollDelta.y;
-
-                if (scrollDelta != 0)
-                {
-                    int newWeaponIndex = FindNextWeaponIndex(scrollDelta);
-
-                    if (newWeaponIndex != currentWeaponIndex)
+                    GameObject existingModel = activeSlotModels[slotIndex];
+                    if (existingModel != null)
                     {
-                        StartCoroutine(SwitchWeapon(newWeaponIndex));
-
-                        if (newWeaponIndex >= 3 && newWeaponIndex <= 6)
-                            currentItemIndex = newWeaponIndex - 3;
-                        else
-                            currentItemIndex = -1;
-                    }
-                }
-                else
-                {
-                    if (Input.GetKeyDown(KeyCode.Alpha1))
-                    {
-                        StartCoroutine(SwitchWeapon(0));
-                        currentItemIndex = -1;
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha2))
-                    {
-                        StartCoroutine(SwitchWeapon(1));
-                        currentItemIndex = -1;
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha3))
-                    {
-                        StartCoroutine(SwitchWeapon(2));
-                        currentItemIndex = -1;
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha4))
-                    {
-                        currentItemIndex++;
-
-                        if (currentItemIndex > 3)
-                            currentItemIndex = 0;
-
-                        int newWeaponIndex = currentItemIndex + 3;
-
-                        while (weapons[newWeaponIndex] == null && currentItemIndex < 4)
+                        ActiveWeapon logic = existingModel.GetComponentInChildren<ActiveWeapon>();
+                        if (logic != null)
                         {
-                            currentItemIndex++;
-                            newWeaponIndex = currentItemIndex + 3;
+                            return logic.AddAmmo(1);
                         }
+                    }
+                    return false;
+                }
+                DropWeapon(slotIndex);
+            }
 
-                        StartCoroutine(SwitchWeapon(newWeaponIndex));
+            GameObject modelForThisGun = null;
+            var entry = allAvailableModels.FirstOrDefault(x => x.id == newItem.gunName);
+
+            if (entry != null) modelForThisGun = entry.modelPrefab;
+            else
+            {
+                Debug.LogError($"[Inventory] Missing model for '{newItem.gunName}'!");
+                return false;
+            }
+
+            weapons[slotIndex] = newItem;
+            activeSlotModels[slotIndex] = modelForThisGun;
+
+            if (modelForThisGun != null)
+            {
+                ActiveWeapon logic = modelForThisGun.GetComponentInChildren<ActiveWeapon>();
+                if (logic != null)
+                {
+                    if (IsGrenade(newItem.gunStyle))
+                    {
+                        logic.InitializeAsSinglePickup();
+                    }
+                    else
+                    {
+                        logic.InitializeAmmo();
                     }
                 }
             }
+
+            if (slotIndex == currentWeaponIndex || ((newItem.gunStyle == GunStyle.Primary || newItem.gunStyle == GunStyle.Secondary) && currentWeaponIndex == 0))
+            {
+                StartCoroutine(PullOutWeapon(slotIndex));
+            }
+
+            return true;
         }
+
+        private void HandleInput()
+        {
+            if ((weaponController != null && weaponController.isAiming) || (wheels != null && wheels.activeSelf) || isSwitchingWeapon) return;
+
+            int scrollDelta = (int)Input.mouseScrollDelta.y;
+            if (scrollDelta != 0)
+            {
+                int newIndex = FindNextWeaponIndex(scrollDelta);
+                if (newIndex != currentWeaponIndex && newIndex != -1)
+                {
+                    StartCoroutine(SwitchWeapon(newIndex));
+                    UpdateGrenadeIndex(newIndex);
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha1)) SwitchToSlot(0);
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) SwitchToSlot(1);
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) SwitchToSlot(2);
+            else if (Input.GetKeyDown(KeyCode.Alpha4)) CycleGrenades();
+        }
+
+        private void SwitchToSlot(int index)
+        {
+            if (!IsIndexValid(index) || weapons[index] == null) return;
+            StartCoroutine(SwitchWeapon(index));
+            currentItemIndex = -1;
+        }
+
+        private void CycleGrenades()
+        {
+            currentItemIndex++;
+            if (currentItemIndex > 3) currentItemIndex = 0;
+            int attempts = 0;
+            int newWeaponIndex = currentItemIndex + 3;
+            while ((!IsIndexValid(newWeaponIndex) || weapons[newWeaponIndex] == null) && attempts < 4)
+            {
+                currentItemIndex++;
+                if (currentItemIndex > 3) currentItemIndex = 0;
+                newWeaponIndex = currentItemIndex + 3;
+                attempts++;
+            }
+            if (IsIndexValid(newWeaponIndex) && weapons[newWeaponIndex] != null) StartCoroutine(SwitchWeapon(newWeaponIndex));
+        }
+
+        private void UpdateGrenadeIndex(int newIndex)
+        {
+            if (newIndex >= 3 && newIndex <= 6) currentItemIndex = newIndex - 3;
+            else currentItemIndex = -1;
+        }
+
+        public void HandleDrop()
+        {
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                if (CurrentWeapon != null && (CurrentWeapon.gunStyle == GunStyle.Primary || CurrentWeapon.gunStyle == GunStyle.Secondary))
+                {
+                    DropWeapon(currentWeaponIndex);
+                    StartCoroutine(SwitchWeapon(0));
+                }
+            }
+        }
+
+        private void DropWeapon(int index)
+        {
+            if (!IsIndexValid(index)) return;
+            Gun weaponToDrop = weapons[index];
+            if (weaponToDrop == null) return;
+
+            if (weaponToDrop.gunPrefab != null)
+            {
+                Vector3 dropPos = transform.position + transform.forward * 1.0f + Vector3.up * 1.5f;
+                GameObject pickup = Instantiate(weaponToDrop.gunPrefab, dropPos, Quaternion.identity);
+                Collider pickUpCollider = pickup.GetComponent<Collider>();
+                if (playerCollider != null && pickup != null)
+                {
+                    Physics.IgnoreCollision(playerCollider, pickUpCollider, true);
+                }
+                pickup.layer = LayerMask.NameToLayer("Interactable");
+                SetLayerRecursively(pickup, pickup.layer);
+                Rigidbody rb = pickup.AddComponent<Rigidbody>();
+                rb.mass = 2f;
+                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                rb.AddForce((transform.forward * 2f + Vector3.up * 1f), ForceMode.Impulse);
+                float tumbleForce = 0.5f;
+
+                rb.AddTorque(new Vector3(
+                    Random.Range(-1f, 1f),
+                    0f,
+                    Random.Range(-0.2f, 0.2f)
+                ) * tumbleForce, ForceMode.Impulse);
+            }
+            if (activeSlotModels[index] != null)
+            {
+                activeSlotModels[index].SetActive(false);
+                activeSlotModels[index] = null;
+            }
+            weapons[index] = null;
+        }
+
         public IEnumerator SwitchWeapon(int newIndex)
         {
-            if (newIndex == currentWeaponIndex)
-                yield break;
-
+            if (!IsIndexValid(newIndex) || weapons[newIndex] == null) yield break;
+            if (newIndex == currentWeaponIndex && activeSlotModels[newIndex] != null && activeSlotModels[newIndex].activeSelf) yield break;
             isSwitchingWeapon = true;
-            Vector3 startPosition = weaponHolder.localPosition;
-            Vector3 targetPosition = startPosition - new Vector3(0f, 0.5f, 0f);
-            float elapsedTime = 0f;
-            float duration = 0.25f;
+            yield return MoveWeaponHolder(new Vector3(0f, -0.5f, 0f), 0.2f);
+            if (IsIndexValid(currentWeaponIndex) && activeSlotModels[currentWeaponIndex] != null) activeSlotModels[currentWeaponIndex].SetActive(false);
+            currentWeaponIndex = newIndex;
+            GameObject nextModel = activeSlotModels[currentWeaponIndex];
+            if (nextModel != null) nextModel.SetActive(true);
 
-            while (elapsedTime < duration)
-            {
-                weaponHolder.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
-                elapsedTime += Time.deltaTime;
+            Gun newGunData = weapons[currentWeaponIndex];
+            ActiveWeapon activeLogic = null;
+            if (nextModel != null) activeLogic = nextModel.GetComponentInChildren<ActiveWeapon>();
 
-                yield return null;
-            }
+            if (ammoDisplay) ammoDisplay.SetWeapon(newGunData, activeLogic);
+            if (weaponController) weaponController.OnWeaponChanged(newGunData, nextModel);
+            if (grenadeController) grenadeController.OnWeaponChanged(newGunData, nextModel);
 
-            weaponHolder.localPosition = targetPosition;
-            SetCurrentWeapon(newIndex);
-            targetPosition = Vector3.zero;
-            elapsedTime = 0f;
-
-            while (elapsedTime < duration)
-            {
-                weaponHolder.localPosition = Vector3.Lerp(startPosition - new Vector3(0f, 0.5f, 0f), targetPosition, elapsedTime / duration);
-                elapsedTime += Time.deltaTime;
-
-                yield return null;
-            }
-
-            weaponHolder.localPosition = startPosition;
+            yield return MoveWeaponHolder(Vector3.zero, 0.2f);
             isSwitchingWeapon = false;
         }
+
         public IEnumerator PullOutWeapon(int newIndex)
         {
+            if (!IsIndexValid(newIndex) || weapons[newIndex] == null) yield break;
             isSwitchingWeapon = true;
-            Vector3 startPosition = weaponHolder.localPosition;
-            Vector3 targetPosition = startPosition;
-            startPosition -= new Vector3(0f, 0.5f, 0f);
-            float elapsedTime = 0f;
-            float duration = 0.25f;
-
-            while (elapsedTime < duration)
-            {
-                weaponHolder.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
-                elapsedTime += Time.deltaTime;
-
-                yield return null;
-            }
-
-            weaponHolder.localPosition = targetPosition;
-            SetCurrentWeapon(newIndex);
+            if (IsIndexValid(currentWeaponIndex) && activeSlotModels[currentWeaponIndex] != null) activeSlotModels[currentWeaponIndex].SetActive(false);
+            currentWeaponIndex = newIndex;
+            GameObject nextModel = activeSlotModels[currentWeaponIndex];
+            if (nextModel != null) nextModel.SetActive(true);
+            Gun newGunData = weapons[currentWeaponIndex];
+            ActiveWeapon activeLogic = null;
+            if (nextModel != null) activeLogic = nextModel.GetComponentInChildren<ActiveWeapon>();
+            if (ammoDisplay) ammoDisplay.SetWeapon(newGunData, activeLogic);
+            if (weaponController) weaponController.OnWeaponChanged(newGunData, nextModel);
+            if (grenadeController) grenadeController.OnWeaponChanged(newGunData, nextModel);
+            weaponHolder.localPosition = new Vector3(0f, -0.5f, 0f);
+            yield return MoveWeaponHolder(Vector3.zero, 0.25f);
             isSwitchingWeapon = false;
         }
-        private int FindNextWeaponIndex(int scrollDelta)
+
+        private IEnumerator MoveWeaponHolder(Vector3 targetPos, float duration)
+        {
+            Vector3 startPos = weaponHolder.localPosition;
+            float time = 0;
+            while (time < duration)
+            {
+                weaponHolder.localPosition = Vector3.Lerp(startPos, targetPos, time / duration);
+                time += Time.deltaTime;
+                yield return null;
+            }
+            weaponHolder.localPosition = targetPos;
+        }
+
+        private int FindNextWeaponIndex(int dir)
         {
             int newIndex = currentWeaponIndex;
-
+            if (weapons.Length == 0) return -1;
+            int loopSafety = 0;
             do
             {
-                newIndex = (newIndex + scrollDelta) % weapons.Length;
-
-                if (newIndex < 0)
-                    newIndex += weapons.Length;
-            }
-            while (weapons[newIndex] == null && newIndex != currentWeaponIndex);
-
-            return newIndex;
+                newIndex = (newIndex + dir) % weapons.Length;
+                if (newIndex < 0) newIndex += weapons.Length;
+                loopSafety++;
+                if (loopSafety > weapons.Length * 2) return currentWeaponIndex;
+            } while (weapons[newIndex] == null && newIndex != currentWeaponIndex);
+            return weapons[newIndex] == null ? -1 : newIndex;
         }
-        public void RemoveItem()
-        {
-            if (Input.GetKeyDown(KeyCode.G) && (CurrentWeapon.gunStyle == GunStyle.Primary || CurrentWeapon.gunStyle == GunStyle.Secondary))
-            {
-                Gun droppedWeapon = CurrentWeapon;
-                weapons[currentWeaponIndex] = null;
 
-                if (droppedWeapon != null)
-                {
-                    Vector3 dropPosition = transform.position + transform.forward * 0.5f + transform.up * 1f;
-                    GameObject newWeapon = Instantiate(droppedWeapon.gunPrefab, dropPosition, Quaternion.identity);
-                    newWeapon.layer = LayerMask.NameToLayer("Interactable");
-                    SetLayerRecursively(newWeapon, LayerMask.NameToLayer("Interactable"));
-                    newWeapon.tag = "Weapon";
-                    Rigidbody weaponRigidbody = newWeapon.AddComponent<Rigidbody>();
-                    weaponRigidbody.AddForce(transform.forward * 3f, ForceMode.Impulse);
-                    weaponRigidbody.mass = 2f;
-                    weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-                    Quaternion randomRotation = Random.rotation;
-                    newWeapon.transform.rotation = randomRotation;
-
-                    foreach (Transform child in weaponHolder)
-                    {
-                        if (child.gameObject.name == droppedWeapon.gunPrefab.name + "(Clone)")
-                        {
-                            Destroy(child.gameObject);
-
-                            break;
-                        }
-                    }
-                }
-
-                SetCurrentWeapon(0);
-            }
-        }
+        private bool IsGrenade(GunStyle style) => style == GunStyle.Grenade || style == GunStyle.Flashbang || style == GunStyle.Smoke || style == GunStyle.Molotov;
         public static void SetLayerRecursively(GameObject obj, int layer)
         {
             obj.layer = layer;
-
-            foreach (Transform child in obj.transform)
-                SetLayerRecursively(child.gameObject, layer);
+            foreach (Transform child in obj.transform) SetLayerRecursively(child.gameObject, layer);
         }
-        public void SetCurrentWeapon(int index)
+
+        public void RemoveItem()
         {
-            if (index < 0 || index >= weapons.Length || weapons[index] == null)
-                return;
-
-            foreach (Transform weapon in weaponHolder)
+            if (IsIndexValid(currentWeaponIndex))
             {
-                if (weapon.gameObject.name != weapons[index].gunPrefab.name + "(Clone)")
-                    weapon.gameObject.SetActive(false);
-                else
-                    weapon.gameObject.SetActive(true);
-
-                weapon.tag = "Untagged";
+                if (activeSlotModels[currentWeaponIndex] != null) activeSlotModels[currentWeaponIndex].SetActive(false);
+                weapons[currentWeaponIndex] = null;
             }
-
-            currentWeaponIndex = index;
-
-            if (ammoDisplay != null)
-            {
-                ammoDisplay.SetWeapon(weapons[currentWeaponIndex]);
-            }
-
-            if (weapons[currentWeaponIndex].gunType == GunType.Sniper)
-                playerShoot.sniperCam = transform.Find("Camera/Main Camera/WeaponHolder/" + weapons[currentWeaponIndex].gunPrefab.name + "(Clone)/Mesh/SVD/Camera").GetComponent<Camera>();
-        }
-        public bool HasWeaponOfSameCategory(Gun newGun)
-        {
-            foreach (Gun gun in weapons)
-            {
-                if (gun != null && gun.gunStyle == newGun.gunStyle)
-                    return true;
-            }
-
-            return false;
         }
     }
 }

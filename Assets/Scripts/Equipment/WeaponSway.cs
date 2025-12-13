@@ -9,7 +9,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         [SerializeField] private CharacterController mover;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private PlayerMotor playerMotor;
-        [SerializeField] private PlayerShoot playerShoot;
+        [SerializeField] private PlayerWeaponController playerShoot;
 
         [Header("Sway")]
         public float speedCurve;

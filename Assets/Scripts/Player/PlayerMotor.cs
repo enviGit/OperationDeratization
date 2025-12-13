@@ -10,7 +10,7 @@ namespace RatGamesStudios.OperationDeratization.Player
         [SerializeField] private Transform feet;
         [SerializeField] private PlayerStamina stamina;
         [SerializeField] private PlayerHealth health;
-        [SerializeField] private PlayerShoot aiming;
+        [SerializeField] private PlayerWeaponController aiming;
 
         [SerializeField] private AudioSource movementSound;
         [SerializeField] private AudioClip[] movementClips;
@@ -65,7 +65,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
             if (stamina == null) stamina = GetComponent<PlayerStamina>();
             if (health == null) health = GetComponent<PlayerHealth>();
-            if (aiming == null) aiming = GetComponent<PlayerShoot>();
+            if (aiming == null) aiming = GetComponent<PlayerWeaponController>();
 
             playerMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing") | 1 << LayerMask.NameToLayer("Hitbox"));
 

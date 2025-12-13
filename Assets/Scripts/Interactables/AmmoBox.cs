@@ -1,26 +1,30 @@
+using RatGamesStudios.OperationDeratization.Equipment;
 using RatGamesStudios.OperationDeratization.Enemy;
 using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Player;
-using TMPro;
+using System.Collections;
 using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Interactables
 {
     public class AmmoBox : Interactable
     {
+        [Header("Settings")]
+        [SerializeField] private float refillTime = 2f;
+        [SerializeField] private float maxDistance = 3.0f;
+
         [Header("References")]
-        public TextMeshProUGUI ammoRefillPrompt;
-        private GameObject player;
-        private PlayerInventory inventory;
-        private PlayerRefillHandler refillHandler;
-        private AudioSource lootingSound;
         public Animator ammoBoxAnimator;
+        private AudioSource lootingSound;
         private AudioEventManager audioEventManager;
 
-        [Header("Ammo")]
-        public bool isFilling = false;
-        private int allWeapons = 0;
-        private int weaponsFullAmmo = 0;
+        private GameObject player;
+        private PlayerInventory inventory;
+        private PlayerRefillHandler uiHandler;
+
+        private bool isFilling = false;
+        private bool canRefillCurrent = false;
+        private ActiveWeapon currentActiveLogic;
 
         private void Start()
         {
@@ -30,73 +34,154 @@ namespace RatGamesStudios.OperationDeratization.Interactables
             player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
-                refillHandler = player.GetComponent<PlayerRefillHandler>();
+                inventory = player.GetComponent<PlayerInventory>();
+                uiHandler = player.GetComponent<PlayerRefillHandler>();
             }
 
             var audioMgr = GameObject.FindGameObjectWithTag("AudioEventManager");
             if (audioMgr) audioEventManager = audioMgr.GetComponent<AudioEventManager>();
-
-            prompt = "Refill ammo";
         }
+
         private void Update()
         {
-            HandleState();
-        }
-        private void HandleState()
-        {
-            if (isFilling)
-            {
-                prompt = "";
+            if (inventory == null) return;
 
-                if (!lootingSound.isPlaying)
-                {
-                    lootingSound.Play();
-                    audioEventManager?.NotifyAudioEvent(lootingSound);
-                    ammoBoxAnimator.SetTrigger("isLooting");
-                }
-            }
-            else
-            {
-                prompt = "Refill ammo";
-                if (lootingSound.isPlaying) lootingSound.Stop();
-            }
-        }
-        private void IsFilling()
-        {
             if (isFilling)
             {
-                ammoBoxAnimator.SetTrigger("isLooting");
+                CheckIfShouldCancel();
+                return;
+            }
+
+            CheckCurrentWeaponStatus();
+        }
+
+        private void CheckCurrentWeaponStatus()
+        {
+            Gun currentGun = inventory.CurrentWeapon;
+            GameObject model = inventory.CurrentWeaponModel;
+
+            currentActiveLogic = null;
+            prompt = "";
+            canRefillCurrent = false;
+
+            if (currentGun == null || currentGun.gunStyle == GunStyle.Melee || IsGrenade(currentGun.gunStyle))
+            {
                 prompt = "";
+                return;
+            }
+
+            if (model != null)
+                currentActiveLogic = model.GetComponentInChildren<ActiveWeapon>();
+
+            if (currentActiveLogic == null)
+            {
+                prompt = "Cannot refill";
+                return;
+            }
+
+            if (currentActiveLogic.IsFull())
+            {
+                prompt = "Ammo Full";
             }
             else
             {
-                lootingSound.Stop();
-                prompt = "Refill ammo";
+                prompt = "Refill Ammo";
+                canRefillCurrent = true;
             }
         }
+
         protected override void Interact()
         {
-            if (refillHandler != null && !isFilling)
+            if (!isFilling && canRefillCurrent && currentActiveLogic != null)
             {
-                StartCoroutine(refillHandler.ProcessRefill(this));
+                StartCoroutine(RefillRoutine());
             }
         }
+
+        private IEnumerator RefillRoutine()
+        {
+            isFilling = true;
+            prompt = "";
+
+            if (uiHandler) uiHandler.SetSliderVisible(true);
+
+            if (ammoBoxAnimator) ammoBoxAnimator.SetTrigger("isLooting");
+            if (lootingSound && !lootingSound.isPlaying)
+            {
+                lootingSound.Play();
+                if (audioEventManager) audioEventManager.NotifyAudioEvent(lootingSound);
+            }
+
+            float timer = 0f;
+            while (timer < refillTime)
+            {
+                timer += Time.deltaTime;
+                float progress = timer / refillTime;
+
+                if (uiHandler) uiHandler.UpdateSlider(progress, refillTime);
+
+                yield return null;
+            }
+
+            if (currentActiveLogic != null)
+            {
+                currentActiveLogic.RefillAmmo(999);
+            }
+
+            StopRefill();
+        }
+
+        private void CheckIfShouldCancel()
+        {
+            if (player != null)
+            {
+                float distance = Vector3.Distance(transform.position, player.transform.position);
+
+                if (distance > maxDistance)
+                {
+                    StopAllCoroutines();
+                    StopRefill();
+                }
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                StopAllCoroutines();
+                StopRefill();
+            }
+        }
+
+        private void StopRefill()
+        {
+            isFilling = false;
+            if (uiHandler) uiHandler.SetSliderVisible(false);
+            if (lootingSound && lootingSound.isPlaying) lootingSound.Stop();
+
+            CheckCurrentWeaponStatus();
+        }
+
+        private bool IsGrenade(GunStyle style)
+        {
+            return style == GunStyle.Grenade || style == GunStyle.Flashbang || style == GunStyle.Smoke || style == GunStyle.Molotov;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Enemy"))
             {
                 AiWeapons weapons = other.GetComponent<AiWeapons>();
-
-                if (weapons.currentWeapon != null)
+                if (weapons != null && weapons.currentWeapon != null)
                 {
-                    weapons.RefillAmmo(weapons.currentWeapon.GetComponent<Weapon>().gun.magazineSize);
-
-                    if (weapons.hasLootedAmmo)
+                    var wScript = weapons.currentWeapon.GetComponent<Weapon>();
+                    if (wScript && wScript.gun)
                     {
-                        ammoBoxAnimator.SetTrigger("isLooting");
-                        lootingSound.Play();
-                        audioEventManager.NotifyAudioEvent(lootingSound);
-                        weapons.hasLootedAmmo = false;
+                        weapons.RefillAmmo(wScript.gun.magazineSize);
+                        if (weapons.hasLootedAmmo)
+                        {
+                            ammoBoxAnimator.SetTrigger("isLooting");
+                            lootingSound.Play();
+                            if (audioEventManager) audioEventManager.NotifyAudioEvent(lootingSound);
+                            weapons.hasLootedAmmo = false;
+                        }
                     }
                 }
             }

@@ -20,6 +20,7 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         public RaycastHit CurrentHit { get; private set; }
         public AmmoBox CurrentAmmoBox { get; private set; }
+        public Interactable CurrentInteractable => currentInteractable;
 
         private float lastCheckTime;
         private float lastInteractTime;

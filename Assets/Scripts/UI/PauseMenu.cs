@@ -13,7 +13,7 @@ namespace RatGamesStudios.OperationDeratization.UI
         [SerializeField] private WindowManager windowManager;
         private GameObject player;
         private PlayerHealth playerHealth;
-        private PlayerShoot playerShoot;
+        private PlayerWeaponController playerShoot;
         private PlayerInventory playerInventory;
 
         private void Start()
@@ -21,7 +21,7 @@ namespace RatGamesStudios.OperationDeratization.UI
             GameIsPaused = false;
             player = GameObject.FindGameObjectWithTag("Player");
             playerHealth = player.GetComponent<PlayerHealth>();
-            playerShoot = player.GetComponent<PlayerShoot>();
+            playerShoot = player.GetComponent<PlayerWeaponController>();
             playerInventory = player.GetComponent<PlayerInventory>();
         }
         private void Update()

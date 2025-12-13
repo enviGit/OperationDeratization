@@ -1,5 +1,8 @@
-﻿using RatGamesStudios.OperationDeratization.Player;
+﻿using RatGamesStudios.OperationDeratization.Equipment;
+using RatGamesStudios.OperationDeratization.Player;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -136,10 +139,10 @@ namespace RatGamesStudios.OperationDeratization.UI
             if (playerCamera == null)
                 return;
 
-            nameDisplayBuilder.Clear();  // Clear the StringBuilder before building the new text
+            nameDisplayBuilder.Clear();
 
             for (int i = 0; i < pos.Length; i++)
-                pos[i] = playerCamera.WorldToScreenPoint(dots[i].position);  // Changing World coordinates to screen coordinates
+                pos[i] = playerCamera.WorldToScreenPoint(dots[i].position);
 
             mousePos = Input.mousePosition;
 
@@ -218,17 +221,22 @@ namespace RatGamesStudios.OperationDeratization.UI
         }
         private void UpdateWheelContent()
         {
+            var allActiveWeaponsOnPlayer = player.GetComponentsInChildren<ActiveWeapon>(true);
+
             for (int i = 0; i < 6; i++)
             {
                 int weaponIndex = i + 1;
-                Gun gun = inventory.weapons[weaponIndex];
+
+                if (weaponIndex >= inventory.weapons.Length) continue;
+
+                Gun gunAsset = inventory.weapons[weaponIndex];
 
                 if (i < icons.Length && icons[i] != null)
                 {
-                    if (gun != null)
+                    if (gunAsset != null)
                     {
                         icons[i].enabled = true;
-                        icons[i].sprite = gun.activeGunIcon;
+                        icons[i].sprite = gunAsset.activeGunIcon;
                     }
                     else
                     {
@@ -238,7 +246,15 @@ namespace RatGamesStudios.OperationDeratization.UI
 
                 if (i < ammoText.Length && ammoText[i] != null)
                 {
-                    ammoText[i].SetWeapon(gun);
+                    ActiveWeapon matchingLogic = null;
+
+                    if (gunAsset != null)
+                    {
+                        matchingLogic = allActiveWeaponsOnPlayer
+                            .FirstOrDefault(w => w.GunData == gunAsset);
+                    }
+
+                    ammoText[i].SetWeapon(gunAsset, matchingLogic);
                 }
             }
         }

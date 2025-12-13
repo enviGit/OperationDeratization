@@ -217,7 +217,7 @@ namespace RatGamesStudios.OperationDeratization.Player
             GetComponent<PlayerMotor>().enabled = false;
             GetComponent<PlayerInteract>().enabled = false;
             GetComponent<PlayerInventory>().enabled = false;
-            GetComponent<PlayerShoot>().enabled = false;
+            GetComponent<PlayerWeaponController>().enabled = false;
         }
 
         private void PlaySecondDeathClip()

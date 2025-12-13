@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace RatGamesStudios.OperationDeratization
 {
@@ -38,7 +37,8 @@ namespace RatGamesStudios.OperationDeratization
         public float aimRecoilZ;
         public float snappiness;
         public float returnSpeed;
-        private Dictionary<GunType, (Vector3 position, Vector3 rotation, Vector3 aimingPosition, Vector3 aimingRotation)> gunTypePositions = new Dictionary<GunType, (Vector3 position, Vector3 rotation, Vector3 aimingPosition, Vector3 aimingRotation)>()
+
+        private readonly Dictionary<GunType, (Vector3 position, Vector3 rotation, Vector3 aimingPosition, Vector3 aimingRotation)> gunTypePositions = new Dictionary<GunType, (Vector3, Vector3, Vector3, Vector3)>()
         {
             { GunType.Melee, (new Vector3(0.05f, -0.0578f, 0.1701f), new Vector3(20.84f, -161.87f, 100f), new Vector3(0.05f, -0.0578f, 0.1701f), new Vector3(20.84f, -161.87f, 100f)) },
             { GunType.Pistol, (new Vector3(0.18f, -0.12f, 0.46f), new Vector3(3f, 5f, 0), new Vector3(0, -0.07f, 0.52f), new Vector3(0, 0, 0)) },
@@ -51,28 +51,8 @@ namespace RatGamesStudios.OperationDeratization
             { GunType.Smoke, (new Vector3(0.16f, -0.15f, 0.3f), new Vector3(3f, 0, 0), new Vector3(0.16f, -0.15f, 0.3f), new Vector3(3f, 0, 0)) },
             { GunType.Molotov, (new Vector3(0.12f, -0.16f, 0.17f), new Vector3(3f, 0, 0), new Vector3(0.12f, -0.16f, 0.17f), new Vector3(3f, 0, 0)) }
         };
-        public Dictionary<GunType, (Vector3 position, Vector3 rotation, Vector3 aimingPosition, Vector3 aimingRotation)> GunTypePositions
-        {
-            get
-            {
-                return new Dictionary<GunType, (Vector3 position, Vector3 rotation, Vector3 aimingPosition, Vector3 aimingRotation)>(gunTypePositions);
-            }
-        }
 
-        private void OnEnable()
-        {
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-        private void OnDisable()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            magazineSize = editorAmmoValue;
-            currentAmmoCount = editorAmmoValue;
-            maxAmmoCount = editorAmmoValue * 3;
-        }
+        public Dictionary<GunType, (Vector3 position, Vector3 rotation, Vector3 aimingPosition, Vector3 aimingRotation)> GunTypePositions => gunTypePositions;
     }
 
     public enum GunType { Melee, Pistol, Revolver, Shotgun, Rifle, Sniper, Grenade, Flashbang, Smoke, Molotov }

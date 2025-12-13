@@ -9,7 +9,7 @@ namespace RatGamesStudios.OperationDeratization.UI
     {
         [SerializeField] private Slider sensitivitySlider;
         [SerializeField] private TextMeshProUGUI sliderText;
-        [SerializeField] private PlayerShoot pointerSensitivity;
+        [SerializeField] private PlayerWeaponController pointerSensitivity;
         private float originalSensitivity;
 
         private void Start()

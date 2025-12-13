@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using RatGamesStudios.OperationDeratization.Equipment;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -8,8 +9,8 @@ namespace RatGamesStudios.OperationDeratization.UI
     {
         [SerializeField] private TextMeshProUGUI _text;
         [SerializeField] private bool isAlwaysUpdated = true;
-
-        private Gun currentWeapon;
+        private Gun currentGunAsset;
+        private ActiveWeapon currentActiveWeapon;
         private StringBuilder ammoStringBuilder = new StringBuilder();
 
         private void Start()
@@ -19,15 +20,16 @@ namespace RatGamesStudios.OperationDeratization.UI
 
         private void Update()
         {
-            if (isAlwaysUpdated && currentWeapon != null)
+            if (isAlwaysUpdated && currentGunAsset != null)
             {
                 UpdateAmmoText();
             }
         }
 
-        public void SetWeapon(Gun weapon)
+        public void SetWeapon(Gun gun, ActiveWeapon activeLogic)
         {
-            currentWeapon = weapon;
+            currentGunAsset = gun;
+            currentActiveWeapon = activeLogic;
             UpdateAmmoText();
         }
 
@@ -37,18 +39,39 @@ namespace RatGamesStudios.OperationDeratization.UI
 
             ammoStringBuilder.Clear();
 
-            if (currentWeapon == null || currentWeapon.gunStyle == GunStyle.Melee)
+            if (currentGunAsset == null || currentGunAsset.gunStyle == GunStyle.Melee)
             {
                 _text.text = "";
                 return;
             }
 
-            if (currentWeapon.gunStyle == GunStyle.Primary || currentWeapon.gunStyle == GunStyle.Secondary)
-                ammoStringBuilder.Append(currentWeapon.currentAmmoCount).Append(" / ").Append(currentWeapon.maxAmmoCount);
+            if (currentActiveWeapon != null)
+            {
+                if (IsGrenade(currentGunAsset.gunStyle))
+                {
+                    ammoStringBuilder.Append(currentActiveWeapon.TotalAmmo);
+                }
+                else
+                {
+                    ammoStringBuilder.Append(currentActiveWeapon.CurrentClip)
+                                     .Append(" / ")
+                                     .Append(currentActiveWeapon.CurrentStash);
+                }
+            }
             else
-                ammoStringBuilder.Append(currentWeapon.currentAmmoCount);
+            {
+                ammoStringBuilder.Append("--");
+            }
 
             _text.text = ammoStringBuilder.ToString();
+        }
+
+        private bool IsGrenade(GunStyle style)
+        {
+            return style == GunStyle.Grenade ||
+                   style == GunStyle.Flashbang ||
+                   style == GunStyle.Smoke ||
+                   style == GunStyle.Molotov;
         }
     }
 }
