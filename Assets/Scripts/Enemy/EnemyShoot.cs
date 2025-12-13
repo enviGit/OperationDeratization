@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Equipment;
 using RatGamesStudios.OperationDeratization.Interactables;
 using RatGamesStudios.OperationDeratization.Manager;
 using RatGamesStudios.OperationDeratization.Optimization;
@@ -20,6 +21,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private AudioSource gunReloadAudio;
         public AiWeapons aiWeapons;
         public Gun currentWeapon;
+        private ActiveWeapon activeGunLogic;
         public LayerMask layerMask;
         private AudioEventManager audioEventManager;
 
@@ -32,9 +34,15 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private void Start()
         {
             aiWeapons = GetComponent<AiWeapons>();
-            gunFireAudio = transform.Find("Sounds/WeaponFire").GetComponent<AudioSource>();
-            gunReloadAudio = transform.Find("Sounds/WeaponReload").GetComponent<AudioSource>();
-            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
+
+            Transform fireSound = transform.Find("Sounds/WeaponFire");
+            if (fireSound) gunFireAudio = fireSound.GetComponent<AudioSource>();
+
+            Transform reloadSound = transform.Find("Sounds/WeaponReload");
+            if (reloadSound) gunReloadAudio = reloadSound.GetComponent<AudioSource>();
+
+            var audioMgr = GameObject.FindGameObjectWithTag("AudioEventManager");
+            if (audioMgr) audioEventManager = audioMgr.GetComponent<AudioEventManager>();
 
             if (Settings.QualityPreset == 0)
                 isLowQuality = true;
@@ -42,7 +50,17 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private void Update()
         {
             if (aiWeapons.currentWeapon != null)
-                SetCurrentWeapon();
+            {
+                if (activeGunLogic == null || activeGunLogic.gameObject != aiWeapons.currentWeapon)
+                {
+                    SetCurrentWeapon();
+                }
+            }
+            else
+            {
+                currentWeapon = null;
+                activeGunLogic = null;
+            }
         }
         public void StartFiring()
         {
@@ -54,165 +72,167 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         public void Shoot()
         {
-            RaycastHit hit;
+            if (currentWeapon == null || activeGunLogic == null) return;
 
-            if (currentWeapon != null && currentWeapon.currentAmmoCount == 0 && currentWeapon.maxAmmoCount != 0 && !isReloading)
+            if (activeGunLogic.CurrentClip <= 0 && activeGunLogic.CurrentStash > 0 && !isReloading)
             {
                 StartCoroutine(ReloadCoroutine());
-
                 return;
             }
-            if (Time.time > autoShotTimer && currentWeapon != null && currentWeapon.currentAmmoCount > 0 && !isReloading && isFiring)
+
+            if (Time.time > autoShotTimer && activeGunLogic.CurrentClip > 0 && !isReloading && isFiring)
             {
-                gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
-                gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
-                audioEventManager.NotifyAudioEvent(gunFireAudio);
-                currentWeapon.currentAmmoCount--;
-                Transform muzzle = null;
-                string[] bonePrefixes = { "mixamorig:", "mixamorig1:", "mixamorig4:", "mixamorig6:", "mixamorig7:", "mixamorig9:", "mixamorig10:", "mixamorig12:" };
+                if (!activeGunLogic.TryShoot()) return;
 
-                foreach (string prefix in bonePrefixes)
+                if (gunFireAudio)
                 {
-                    muzzle = transform.Find($"{prefix}Hips/{prefix}Spine/{prefix}Spine1/{prefix}Spine2/{prefix}RightShoulder/{prefix}RightArm/{prefix}RightForeArm/{prefix}RightHand/socketRightHand/{currentWeapon.gunPrefab.name}(Clone)/muzzle");
-
-                    if (muzzle != null)
-                        break;
+                    gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
+                    if (currentWeapon.gunAudioClips.Length > 0)
+                        gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                    if (audioEventManager) audioEventManager.NotifyAudioEvent(gunFireAudio);
                 }
+
+                Transform muzzle = FindMuzzle();
+                if (muzzle == null) return;
 
                 ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
 
-                if (Physics.Raycast(muzzle.transform.position, muzzle.forward, out hit, currentWeapon.range, layerMask))
+                if (Physics.Raycast(muzzle.transform.position, muzzle.forward, out RaycastHit hit, currentWeapon.range, layerMask))
                 {
-                    Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
-                    var hitBox = hit.collider.GetComponent<HitBox>();
-
-                    if (currentWeapon.gunType == GunType.Shotgun)
-                    {
-                        int numPellets = 5;
-                        float maxSpread = 0.1f;
-
-                        for (int i = 0; i < numPellets; i++)
-                        {
-                            Vector3 spreadDirection = muzzle.forward + new Vector3(Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread),
-                                Random.Range(-maxSpread, maxSpread));
-                            RaycastHit spreadHit;
-
-                            if (Physics.Raycast(muzzle.transform.position, spreadDirection, out spreadHit, currentWeapon.range, layerMask))
-                            {
-                                ObjectPoolManager.SpawnObject(impactRicochet, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), ObjectPoolManager.PoolType.ParticleSystem);
-                                HitBox spreadHitBox = spreadHit.collider.GetComponent<HitBox>();
-
-                                if (!isLowQuality && spreadHitBox == null)
-                                {
-                                    if (spreadHit.collider.gameObject.GetComponent<Weapon>() == null && !spreadHit.collider.CompareTag("GraveyardWall") && !spreadHit.collider.CompareTag("Glass")
-                                        && spreadHit.collider.gameObject.layer != LayerMask.NameToLayer("Water"))
-                                    {
-                                        if (spreadHit.rigidbody != null || spreadHit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                                            ObjectPoolManager.SpawnObject(impactEffect, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
-                                        else
-                                            ObjectPoolManager.SpawnObject(impactEffect, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), ObjectPoolManager.PoolType.ParticleSystem);
-                                    }
-                                }
-                                if (spreadHit.collider.CompareTag("Glass"))
-                                    spreadHit.collider.GetComponent<Glass>().Break(spreadHit.point, currentWeapon.impactForce);
-                                if (spreadHitBox != null)
-                                {
-                                    if (spreadHitBox.health != null)
-                                    {
-                                        spreadHitBox.OnRaycastHit(currentWeapon, muzzle.forward, gameObject); //Or transform.forward
-                                        ObjectPoolManager.SpawnObject(bloodSpread, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), ObjectPoolManager.PoolType.VFX);
-
-                                        if (!isLowQuality)
-                                            ObjectPoolManager.SpawnObject(bloodWound, spreadHit.point, Quaternion.LookRotation(spreadHit.normal), spreadHit.collider.transform);
-                                    }
-                                    if (spreadHitBox.playerHealth != null)
-                                    {
-                                        spreadHitBox.OnRaycastHitPlayer(currentWeapon, gameObject);
-
-                                        if (spreadHitBox.damageToPlayer > 0)
-                                            DISystem.CreateIndicator(this.transform);
-                                    }
-                                }
-                            }
-                            if (spreadHit.rigidbody != null)
-                                spreadHit.rigidbody.AddForce(-spreadHit.normal * currentWeapon.impactForce);
-                        }
-                    }
-                    if (hitBox == null)
-                    {
-                        ObjectPoolManager.SpawnObject(impactRicochet, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
-
-                        if (!isLowQuality)
-                        {
-                            if (hit.collider.gameObject.GetComponent<Weapon>() == null && !hit.collider.CompareTag("GraveyardWall") && !hit.collider.CompareTag("Glass") && hit.collider.gameObject.layer != LayerMask.NameToLayer("Water"))
-                            {
-                                if (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
-                                    ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, hit.collider.transform);
-                                else
-                                    ObjectPoolManager.SpawnObject(impactEffect, hit.point, impactRotation, ObjectPoolManager.PoolType.ParticleSystem);
-                            }
-                        }
-                        if (hit.collider.CompareTag("Glass"))
-                            hit.collider.GetComponent<Glass>().Break(hit.point, currentWeapon.impactForce);
-                    }
-                    else
-                    {
-                        if (hitBox.health != null)
-                        {
-                            hitBox.OnRaycastHit(currentWeapon, muzzle.forward, gameObject); //Or transform.forward
-                            ObjectPoolManager.SpawnObject(bloodSpread, hit.point, impactRotation, ObjectPoolManager.PoolType.VFX);
-
-                            if (!isLowQuality)
-                                ObjectPoolManager.SpawnObject(bloodWound, hit.point, impactRotation, hit.collider.transform);
-                        }
-                        if (hitBox.playerHealth != null)
-                        {
-                            hitBox.OnRaycastHitPlayer(currentWeapon, gameObject);
-
-                            if (hitBox.damageToPlayer > 0)
-                                DISystem.CreateIndicator(this.transform);
-                        }
-                    }
-                    if (hit.rigidbody != null)
-                        hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
+                    ProcessHit(hit, muzzle.forward);
                 }
 
                 autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
             }
         }
+
+        private Transform FindMuzzle()
+        {
+            string[] bonePrefixes = { "mixamorig:", "mixamorig1:", "mixamorig4:", "mixamorig6:", "mixamorig7:", "mixamorig9:", "mixamorig10:", "mixamorig12:" };
+
+            foreach (string prefix in bonePrefixes)
+            {
+                Transform t = transform.Find($"{prefix}Hips/{prefix}Spine/{prefix}Spine1/{prefix}Spine2/{prefix}RightShoulder/{prefix}RightArm/{prefix}RightForeArm/{prefix}RightHand/socketRightHand/{currentWeapon.gunPrefab.name}(Clone)/muzzle");
+                if (t != null) return t;
+            }
+            return null;
+        }
+
+        private void ProcessHit(RaycastHit hit, Vector3 direction)
+        {
+            Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+            var hitBox = hit.collider.GetComponent<HitBox>();
+
+            if (currentWeapon.gunType == GunType.Shotgun)
+            {
+                int numPellets = 5;
+                float maxSpread = 0.1f;
+                for (int i = 0; i < numPellets; i++)
+                {
+                    Vector3 spreadDir = direction + new Vector3(Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread), Random.Range(-maxSpread, maxSpread));
+                    if (Physics.Raycast(hit.point - direction * 0.1f, spreadDir, out RaycastHit spreadHit, currentWeapon.range, layerMask))
+                    {
+                        HandleBulletImpact(spreadHit, spreadDir, impactRotation);
+                    }
+                }
+            }
+            else
+            {
+                HandleBulletImpact(hit, direction, impactRotation);
+            }
+        }
+
+        private void HandleBulletImpact(RaycastHit hit, Vector3 direction, Quaternion rotation)
+        {
+            var hitBox = hit.collider.GetComponent<HitBox>();
+
+            if (hitBox == null)
+            {
+                ObjectPoolManager.SpawnObject(impactRicochet, hit.point, rotation, ObjectPoolManager.PoolType.ParticleSystem);
+
+                if (!isLowQuality)
+                {
+                    bool isIgnored = hit.collider.GetComponent<Weapon>() != null ||
+                                     hit.collider.CompareTag("GraveyardWall") ||
+                                     hit.collider.CompareTag("Glass") ||
+                                     hit.collider.gameObject.layer == LayerMask.NameToLayer("Water");
+
+                    if (!isIgnored)
+                    {
+                        Transform parent = (hit.rigidbody != null || hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable")) ? hit.collider.transform : null;
+                        ObjectPoolManager.PoolType type = parent ? ObjectPoolManager.PoolType.VFX : ObjectPoolManager.PoolType.ParticleSystem;
+                        ObjectPoolManager.SpawnObject(impactEffect, hit.point, rotation, parent);
+                    }
+                }
+
+                if (hit.collider.CompareTag("Glass"))
+                    hit.collider.GetComponent<Glass>()?.Break(hit.point, currentWeapon.impactForce);
+            }
+            else
+            {
+                if (hitBox.health != null)
+                {
+                    hitBox.OnRaycastHit(currentWeapon, direction, gameObject);
+                    ObjectPoolManager.SpawnObject(bloodSpread, hit.point, rotation, ObjectPoolManager.PoolType.VFX);
+                    if (!isLowQuality)
+                        ObjectPoolManager.SpawnObject(bloodWound, hit.point, rotation, hit.collider.transform);
+                }
+                if (hitBox.playerHealth != null)
+                {
+                    hitBox.OnRaycastHitPlayer(currentWeapon, gameObject);
+                    if (hitBox.damageToPlayer > 0)
+                        DISystem.CreateIndicator(this.transform);
+                }
+            }
+
+            if (hit.rigidbody != null)
+                hit.rigidbody.AddForce(-hit.normal * currentWeapon.impactForce);
+        }
+
         public IEnumerator ReloadCoroutine()
         {
             isReloading = true;
-            gunReloadAudio.clip = currentWeapon.gunAudioClips[2];
-            gunReloadAudio.Play();
-            audioEventManager.NotifyAudioEvent(gunFireAudio);
+            if (currentWeapon.gunAudioClips.Length > 2 && gunReloadAudio)
+            {
+                gunReloadAudio.clip = currentWeapon.gunAudioClips[2];
+                gunReloadAudio.Play();
+                if (audioEventManager) audioEventManager.NotifyAudioEvent(gunReloadAudio);
+            }
 
             yield return new WaitForSeconds(currentWeapon.reloadTime);
 
-            if (currentWeapon.currentAmmoCount == currentWeapon.magazineSize)
+            if (activeGunLogic != null)
             {
-                isReloading = false;
-
-                yield break;
+                activeGunLogic.Reload();
             }
 
-            int ammoNeeded = currentWeapon.magazineSize - currentWeapon.currentAmmoCount;
-            int ammoAvailable = Mathf.Min(currentWeapon.maxAmmoCount, ammoNeeded);
-
-            if (ammoAvailable == 0)
-            {
-                isReloading = false;
-
-                yield break;
-            }
-
-            currentWeapon.currentAmmoCount += ammoAvailable;
-            currentWeapon.maxAmmoCount -= currentWeapon.magazineSize;
             isReloading = false;
         }
         private void SetCurrentWeapon()
         {
-            currentWeapon = aiWeapons.currentWeapon.GetComponent<Weapon>().gun;
+            if (aiWeapons.currentWeapon == null) return;
+
+            var wScript = aiWeapons.currentWeapon.GetComponent<Weapon>();
+            if (wScript)
+            {
+                currentWeapon = wScript.gun;
+            }
+            else
+            {
+                Debug.LogWarning($"Bot {name} ma broń bez komponentu Weapon!");
+                return;
+            }
+
+            activeGunLogic = aiWeapons.currentWeapon.GetComponentInChildren<ActiveWeapon>();
+
+            if (activeGunLogic == null)
+            {
+
+            }
+            else
+            {
+                activeGunLogic.InitializeAmmo();
+            }
         }
     }
 }

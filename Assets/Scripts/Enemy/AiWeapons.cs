@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Equipment;
 using RatGamesStudios.OperationDeratization.Interactables;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,6 +48,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         [HideInInspector] public GameObject currentWeapon;
         private EnemyShoot weapon;
         public bool hasLootedAmmo = false;
+        private ActiveWeapon activeGunLogic;
 
         [Header("Weapons")]
         private Animator animator;
@@ -78,16 +80,31 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             else
                 weapon.StopFiring();
         }
-        public void Equip(GameObject weapon, MeshSockets sockets)
+        public void Equip(GameObject weaponObj, MeshSockets sockets)
         {
             weaponSockets = sockets;
-            currentWeapon = weapon;
-            currentWeapon.GetComponent<Weapon>().prompt = "";
-            currentWeapon.GetComponent<Weapon>().enabled = false;
+            currentWeapon = weaponObj;
+
+            // Konfiguracja podniesionego obiektu
+            var wScript = currentWeapon.GetComponent<Weapon>();
+            if (wScript)
+            {
+                wScript.prompt = "";
+                wScript.enabled = false;
+            }
+
             currentWeapon.tag = "Untagged";
             currentWeapon.layer = LayerMask.NameToLayer("Default");
             SetLayerRecursively(currentWeapon, LayerMask.NameToLayer("Default"));
+
             sockets.Attach(currentWeapon.transform, MeshSockets.SocketId.Spine);
+
+            activeGunLogic = currentWeapon.GetComponentInChildren<ActiveWeapon>();
+
+            if (activeGunLogic != null)
+            {
+                activeGunLogic.InitializeAmmo();
+            }
         }
         public void ActiveWeapon()
         {
@@ -95,7 +112,11 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         private IEnumerator EquipWeapon()
         {
-            animator.runtimeAnimatorController = currentWeapon.GetComponent<Weapon>().animator;
+            var wScript = currentWeapon.GetComponent<Weapon>();
+            if (wScript && wScript.animator)
+            {
+                animator.runtimeAnimatorController = wScript.animator;
+            }
             animator.SetBool("Equip", true);
 
             yield return new WaitForSeconds(0.5f);
@@ -107,9 +128,18 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             {
                 Transform muzzleTransform = currentWeapon.transform.Find("muzzle");
 
+                if (muzzleTransform == null && wScript && wScript.gun)
+                {
+                }
+
                 if (muzzleTransform != null)
                 {
                     weaponIk.SetAimTransform(muzzleTransform);
+                    weaponActive = true;
+                }
+                else
+                {
+                    weaponIk.SetAimTransform(currentWeapon.transform);
                     weaponActive = true;
                 }
             }
@@ -138,14 +168,24 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             if (currentWeapon)
             {
                 currentWeapon.transform.SetParent(null);
-                Rigidbody rb = currentWeapon.AddComponent<Rigidbody>();
+
+                Rigidbody rb = currentWeapon.GetComponent<Rigidbody>();
+                if (!rb) rb = currentWeapon.AddComponent<Rigidbody>();
+
+                rb.isKinematic = false;
+                rb.useGravity = true;
                 rb.mass = 2f;
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-                currentWeapon.GetComponent<Weapon>().enabled = true;
+
+                var wScript = currentWeapon.GetComponent<Weapon>();
+                if (wScript) wScript.enabled = true;
+
                 currentWeapon.tag = "Weapon";
                 currentWeapon.layer = LayerMask.NameToLayer("Interactable");
                 SetLayerRecursively(currentWeapon, LayerMask.NameToLayer("Interactable"));
+
                 currentWeapon = null;
+                activeGunLogic = null;
             }
         }
         public bool HasWeapon()
@@ -154,19 +194,20 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         public void OnAnimationEvent(string eventName)
         {
-            if (eventName == "equipWeapon")
+            if (eventName == "equipWeapon" && currentWeapon != null)
             {
                 weaponSockets.Attach(currentWeapon.transform, MeshSockets.SocketId.RightHand);
 
-                if (currentWeapon)
+                var wScript = currentWeapon.GetComponent<Weapon>();
+                if (wScript && wScript.gun)
                 {
-                    GunType gunType = currentWeapon.GetComponent<Weapon>().gun.gunType;
+                    GunType gunType = wScript.gun.gunType;
 
                     if (gunType == GunType.Pistol)
                         currentWeapon.transform.localPosition = new Vector3(0.0836f, -0.0644f, -0.0415f);
                     else if (gunType == GunType.Revolver)
                         currentWeapon.transform.localPosition = new Vector3(0.1347f, -0.0921f, -0.1241f);
-                    else if(gunType == GunType.Sniper)
+                    else if (gunType == GunType.Sniper)
                         currentWeapon.transform.localPosition = new Vector3(0.1012f, 0.039f, 0.196f);
                     else
                         currentWeapon.transform.localPosition = Vector3.zero;
@@ -220,22 +261,19 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         public void RefillAmmo(int magazineSize)
         {
-            Gun weapon = currentWeapon.GetComponent<Weapon>().gun;
+            if (activeGunLogic == null) return;
 
-            if (weapon && weapon.maxAmmoCount < weapon.editorAmmoValue * 3)
+            if (!activeGunLogic.IsFull())
             {
-                weapon.maxAmmoCount += magazineSize;
+                activeGunLogic.AddAmmo(magazineSize);
                 hasLootedAmmo = true;
             }
         }
         public bool IsLowAmmo()
         {
-            Gun weapon = currentWeapon.GetComponent<Weapon>().gun;
+            if (activeGunLogic == null) return true;
 
-            if (weapon)
-                return weapon.currentAmmoCount == 0 && weapon.maxAmmoCount == 0;
-
-            return false;
+            return activeGunLogic.CurrentClip <= 0 && activeGunLogic.CurrentStash <= 0;
         }
         public static void SetLayerRecursively(GameObject obj, int layer)
         {
