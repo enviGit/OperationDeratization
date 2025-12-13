@@ -255,7 +255,7 @@ namespace RatGamesStudios.OperationDeratization.Player
                         Rigidbody rb = grenade.GetComponent<Rigidbody>();
                         Weapon weaponScript = grenade.GetComponent<Weapon>();
                         Destroy(weaponScript);
-                        rb.velocity = Vector3.zero;
+                        rb.linearVelocity = Vector3.zero;
                         rb.angularVelocity = Vector3.zero;
                         rb.isKinematic = false;
                         rb.constraints = RigidbodyConstraints.None;

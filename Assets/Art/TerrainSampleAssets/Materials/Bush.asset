@@ -25,15 +25,17 @@ Material:
   m_Name: Bush
   m_Shader: {fileID: -6465566751694194690, guid: dfa3b96612ed4df4a97b7fd06217ba23,
     type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _BUILTIN_ALPHATEST_ON
   - _BUILTIN_AlphaClip
+  m_InvalidKeywords:
   - _DISABLE_DECALS
   - _DISABLE_SSR
   - _DISABLE_SSR_TRANSPARENT
   - _DOUBLESIDED_ON
-  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 1
@@ -48,6 +50,7 @@ Material:
   - TransparentBackface
   - RayTracingPrepass
   - ForwardEmissiveForDeferred
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -130,7 +133,7 @@ Material:
     - _AlphaCutoffEnable: 1
     - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
-    - _AlphaToMask: 0
+    - _AlphaToMask: 1
     - _AlphaToMaskInspectorValue: 0
     - _BUILTIN_AlphaClip: 1
     - _BUILTIN_Blend: 0
@@ -145,6 +148,7 @@ Material:
     - _BUILTIN_ZWriteControl: 0
     - _Blend: 0
     - _BlendMode: 0
+    - _BlendModePreserveSpecular: 0
     - _CastShadows: 1
     - _ConservativeDepthOffsetEnable: 0
     - _Cull: 0
@@ -157,6 +161,7 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
     - _DstBlend: 0
+    - _DstBlendAlpha: 0
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
     - _FadeBias: 1
@@ -172,6 +177,7 @@ Material:
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
     - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
     - _StencilRef: 0
     - _StencilRefDepth: 0
     - _StencilRefDistortionVec: 4
@@ -218,3 +224,4 @@ Material:
     - _Subsurface_Scattering_Color: {r: 1, g: 1, b: 1, a: 0}
     - _Thickness_Remap: {r: 0, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

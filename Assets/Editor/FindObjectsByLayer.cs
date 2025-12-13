@@ -51,7 +51,7 @@ public class FindObjectsByLayer : EditorWindow
 
         foreach (var obj in objectsInLayer)
         {
-            if(useTag)
+            if (useTag)
                 if (!string.IsNullOrEmpty(targetTag) && obj.CompareTag(targetTag) == false)
                     continue;
 

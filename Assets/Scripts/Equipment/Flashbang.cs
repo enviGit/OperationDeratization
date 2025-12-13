@@ -140,7 +140,7 @@ namespace RatGamesStudios.OperationDeratization.Equipment
             else
             {
                 Rigidbody rb = GetComponent<Rigidbody>();
-                rb.velocity *= 1f;
+                rb.linearVelocity *= 1f;
             }
         }
     }

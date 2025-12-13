@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: mat_fx_sparks_01
   m_Shader: {fileID: 4800000, guid: 0406db5a14f94604a8c57ccfbc9f3b46, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _EMISSION
   - _FADING_ON
@@ -25,6 +27,7 @@ Material:
   disabledShaderPasses:
   - SHADOWCASTER
   - DepthOnly
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -88,6 +91,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaTestRef: 0.5
+    - _AlphaToMask: 0
     - _Blend: 2
     - _BlendOp: 0
     - _BumpScale: 1
@@ -105,6 +109,7 @@ Material:
     - _DistortionStrength: 1
     - _DistortionStrengthScaled: 0.1
     - _DstBlend: 1
+    - _DstBlendAlpha: 1
     - _EmissionScale: 1
     - _FlipbookBlending: 0
     - _FlipbookMode: 0
@@ -121,6 +126,7 @@ Material:
     - _SoftParticlesFarFadeDistance: 1
     - _SoftParticlesNearFadeDistance: 0
     - _SrcBlend: 5
+    - _SrcBlendAlpha: 1
     - _Surface: 1
     - _UVPrim: 0
     - _UVSec: 0
@@ -138,6 +144,7 @@ Material:
     - _SpecularColor: {r: 0, g: 0, b: 0, a: 1}
     - _TintColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &2628490838492050098
 MonoBehaviour:
   m_ObjectHideFlags: 11
@@ -150,4 +157,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 10

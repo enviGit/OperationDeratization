@@ -70,9 +70,9 @@ namespace RatGamesStudios.OperationDeratization.Equipment
         {
             float deltaTime = Time.deltaTime;
             float groundedMultiplier = mover.isGrounded ? 1 : 0;
-            speedCurve += deltaTime * (mover.isGrounded ? rb.velocity.magnitude : 1f) * timeScale + 0.01f;
+            speedCurve += deltaTime * (mover.isGrounded ? rb.linearVelocity.magnitude : 1f) * timeScale + 0.01f;
             swayPosition.x = (curveCos * swayLimit.x * groundedMultiplier) - (walkInput.x * travelLimit.x);
-            swayPosition.y = (curveSin * swayLimit.y) - (rb.velocity.y * travelLimit.y);
+            swayPosition.y = (curveSin * swayLimit.y) - (rb.linearVelocity.y * travelLimit.y);
             swayPosition.z = -(walkInput.y * travelLimit.z);
         }
         private void SwayRotation()
