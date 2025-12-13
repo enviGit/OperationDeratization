@@ -3,256 +3,240 @@ using UnityEngine;
 
 namespace RatGamesStudios.OperationDeratization.Player
 {
+    [RequireComponent(typeof(CharacterController))]
     public class PlayerMotor : MonoBehaviour
     {
         [Header("References")]
+        [SerializeField] private Transform feet;
+        [SerializeField] private PlayerStamina stamina;
+        [SerializeField] private PlayerHealth health;
+        [SerializeField] private PlayerShoot aiming;
+
+        [SerializeField] private AudioSource movementSound;
+        [SerializeField] private AudioClip[] movementClips;
+
         private CharacterController controller;
-        private PlayerStance currentState = new PlayerStance();
-        private PlayerStamina stamina;
-        private PlayerHealth health;
-        private PlayerShoot aiming;
         private Camera cam;
         private AudioEventManager audioEventManager;
-        [SerializeField] private Transform feet;
 
-        [Header("Movement")]
-        private Vector3 playerVelocity;
-        public float gravity = -9.8f;
-        public float jumpHeight = 0.7f;
-        private float playerCrouchHeight = 2f;
-        public float moveSpeed = 4f;
-        private AudioSource movementSound;
-        public AudioClip[] movementClips;
+        [Header("Settings")]
+        public float walkSpeed = 4f;
+        public float runSpeed = 6f;
+        public float crouchSpeed = 2f;
+        public float aimSpeed = 2f;
+        public float gravity = -9.81f;
+        public float jumpHeight = 1.0f;
 
-        [Header("Fall damage")]
-        public float fallDamageMultiplier = 1.5f;
-        private float fallTime = 0f;
-        private float fallDamageTaken;
-        private float fallTimeCalc = 0.7f;
+        [Header("Crouch Settings")]
+        [SerializeField] private float standHeight = 3.6f;
+        [SerializeField] private float crouchHeight = 2.5f;
+        [SerializeField] private float standCamHeight = 2f;
+        [SerializeField] private float crouchCamHeight = 1.5f;
+        [SerializeField] private float crouchTransitionSpeed = 10f;
 
-        [Header("Bool checks")]
+        [Header("Fall Damage")]
+        public float fallDamageMultiplier = 5f;
+        public float minFallVelocity = -15f;
+
+        [Header("State")]
         public bool isGrounded;
-        public bool _isClimbing = false;
-        public bool isCrouching = false;
-        public bool isMoving = false;
-        public bool isRunning = false;
-        private bool _isAiming = false;
-        public bool shouldDetachFromLadder = false;
+        public bool isCrouching;
+        public bool isMoving;
+        public bool isRunning;
+        public bool _isClimbing;
+        public bool shouldDetachFromLadder;
+
+        private Vector3 playerVelocity;
+        [HideInInspector] public float currentSpeed;
+        private LayerMask playerMask;
+
+        private float stepCycle = 0f;
+        private float nextStep = 0f;
+        [SerializeField] private float stepInterval = 0.5f;
+        [SerializeField] private float runStepInterval = 0.3f;
 
         private void Start()
         {
+            controller = GetComponent<CharacterController>();
+            cam = Camera.main;
+
+            var audioMgr = GameObject.FindGameObjectWithTag("AudioEventManager");
+            if (audioMgr) audioEventManager = audioMgr.GetComponent<AudioEventManager>();
+
+            if (stamina == null) stamina = GetComponent<PlayerStamina>();
+            if (health == null) health = GetComponent<PlayerHealth>();
+            if (aiming == null) aiming = GetComponent<PlayerShoot>();
+
+            playerMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing") | 1 << LayerMask.NameToLayer("Hitbox"));
+
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            controller = GetComponent<CharacterController>();
-            currentState = new PlayerStance();
-            currentState.playerStance = PlayerStance.Stance.Idle;
-            cam = Camera.main;
-            currentState.camHeight = 2f;
-            stamina = GetComponent<PlayerStamina>();
-            health = GetComponent<PlayerHealth>();
-            audioEventManager = GameObject.FindGameObjectWithTag("AudioEventManager").GetComponent<AudioEventManager>();
-            aiming = GetComponent<PlayerShoot>();
-            movementSound = transform.Find("Sounds/Movement").GetComponent<AudioSource>();
         }
+
         private void Update()
         {
             isGrounded = controller.isGrounded;
-            _isAiming = aiming.isAiming;
-            Jump();
 
             if (controller.enabled)
             {
-                Move();
-                CrouchToggle();
-                Crouch();
-                Gravity();
+                HandleMovement();
+                HandleGravity();
+                HandleJump();
+                HandleCrouch();
             }
         }
-        private void Move()
+
+        private void HandleMovement()
         {
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
-            Vector3 moveDirection = transform.right * x + transform.forward * z;
+            Vector3 inputDir = transform.right * x + transform.forward * z;
 
-            if (moveDirection.magnitude > 0)
+            isMoving = inputDir.sqrMagnitude > 0.01f;
+
+            if (isCrouching)
             {
-                if (moveDirection.magnitude > 1)
-                    moveDirection = moveDirection.normalized;
-
-                isMoving = true;
-
-                if (isCrouching)
-                {
-                    currentState.playerStance = PlayerStance.Stance.Crouching;
-
-                    moveSpeed = !_isAiming ? 2f : 1f;
-                    movementSound.pitch = Random.Range(0.35f, 0.65f);
-                    movementSound.volume = 0.5f;
-                    movementSound.maxDistance = 5f;
-                    movementSound.clip = movementClips[0];
-                }
-                else
-                {
-                    currentState.playerStance = isRunning ? PlayerStance.Stance.Running : PlayerStance.Stance.Walking;
-                    moveSpeed = !_isAiming ? 4f : 2f;
-
-                    if (isGrounded)
-                    {
-                        if (isRunning)
-                        {
-                            movementSound.pitch = Random.Range(1.15f, 1.45f);
-                            movementSound.volume = 1f;
-                            movementSound.maxDistance = 35f;
-                            movementSound.clip = movementClips[1];
-
-                        }
-                        else
-                        {
-                            movementSound.pitch = Random.Range(0.85f, 1.15f);
-                            movementSound.volume = 0.9f;
-                            movementSound.maxDistance = 30f;
-                            movementSound.clip = movementClips[0];
-                        }
-                    }
-                }
-                if (!movementSound.isPlaying)
-                {
-                    movementSound.Play();
-                    audioEventManager.NotifyAudioEvent(movementSound);
-                }
+                currentSpeed = crouchSpeed;
+                isRunning = false;
             }
-            else
+            else if (aiming.isAiming)
             {
-                isMoving = false;
-                currentState.playerStance = isCrouching ? PlayerStance.Stance.Crouching : PlayerStance.Stance.Idle;
-                movementSound.Stop();
+                currentSpeed = aimSpeed;
+                isRunning = false;
             }
-            if (Input.GetKey(KeyCode.LeftShift) && isGrounded && !isCrouching && stamina.currentStamina > 0f && !_isAiming)
+            else if (Input.GetKey(KeyCode.LeftShift) && isGrounded && stamina.currentStamina > 0)
             {
                 isRunning = true;
-                moveSpeed *= 1.5f;
+                currentSpeed = runSpeed;
             }
             else
+            {
                 isRunning = false;
+                currentSpeed = walkSpeed;
+            }
 
-            controller.Move(moveDirection * moveSpeed * Time.deltaTime);
-        }
-        private void Gravity()
-        {
-            playerVelocity.y += gravity * Time.deltaTime;
-            controller.Move(playerVelocity * Time.deltaTime);
+            if (inputDir.magnitude > 1) inputDir.Normalize();
 
-            if (controller.isGrounded)
+            controller.Move(inputDir * currentSpeed * Time.deltaTime);
+
+            if (isMoving && isGrounded)
             {
-                if (_isClimbing)
-                    isGrounded = false;
+                HandleFootsteps(currentSpeed);
+            }
+            else
+            {
+                stepCycle = 0f;
+                nextStep = 0f;
+            }
+        }
 
-                fallTime = 0f;
+        private void HandleFootsteps(float speed)
+        {
+            stepCycle += (speed * (isRunning ? 1f : 0.8f)) * Time.deltaTime;
+
+            if (stepCycle > nextStep)
+            {
+                nextStep = stepCycle + (isRunning ? runStepInterval : stepInterval);
+                PlayFootstepAudio();
+            }
+        }
+
+        private void PlayFootstepAudio()
+        {
+            if (movementSound == null || movementClips.Length == 0) return;
+
+            movementSound.pitch = Random.Range(0.85f, 1.1f);
+            movementSound.volume = isCrouching ? 0.3f : (isRunning ? 1f : 0.6f);
+
+            movementSound.PlayOneShot(isRunning && movementClips.Length > 1 ? movementClips[1] : movementClips[0]);
+
+            audioEventManager?.NotifyAudioEvent(movementSound);
+        }
+
+        private void HandleGravity()
+        {
+            if (isGrounded && playerVelocity.y < 0)
+            {
+                if (playerVelocity.y < minFallVelocity)
+                {
+                    float damage = Mathf.Abs(playerVelocity.y + minFallVelocity) * fallDamageMultiplier;
+                    health.TakeFallingDamage(damage);
+                }
                 playerVelocity.y = -2f;
+            }
 
-                if (fallDamageTaken > 0)
-                {
-                    health.TakeFallingDamage(fallDamageTaken);
-                    fallDamageTaken = 0;
-                }
+            if (!_isClimbing)
+            {
+                playerVelocity.y += gravity * Time.deltaTime;
             }
             else
             {
-                if (!_isClimbing)
-                    fallTime += Time.deltaTime;
-                if (fallTime > fallTimeCalc)
-                {
-                    float fallDamage = fallTime * fallDamageMultiplier * Time.timeScale;
-
-                    if (fallDamage > 0)
-                        fallDamageTaken += fallDamage;
-                }
+                playerVelocity.y = 0;
             }
+
+            controller.Move(playerVelocity * Time.deltaTime);
         }
-        private void Crouch()
+
+        private void HandleJump()
         {
-            if (currentState.playerStance == PlayerStance.Stance.Crouching)
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             {
-                float camNewHeight = Mathf.Lerp(cam.transform.localPosition.y, currentState.camHeight, Time.deltaTime * 5f);
-                cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, camNewHeight, cam.transform.localPosition.z);
-                controller.height = 2.5f;
-            }
-            else
-            {
-                float camNewHeight = Mathf.Lerp(cam.transform.localPosition.y, currentState.camHeight, Time.deltaTime * 5f);
-                cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, camNewHeight, cam.transform.localPosition.z);
-                controller.height = 3.6f;
+                if (isCrouching)
+                {
+                    if (CanStandUp())
+                    {
+                        isCrouching = false;
+                    }
+                    else return;
+                }
+
+                if (stamina.HasStamina(stamina.jumpStaminaCost))
+                {
+                    stamina.UseStamina(stamina.jumpStaminaCost);
+
+                    playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+                    if (_isClimbing) shouldDetachFromLadder = true;
+
+                    if (movementClips.Length > 2)
+                    {
+                        movementSound.pitch = Random.Range(0.9f, 1.1f);
+                        movementSound.PlayOneShot(movementClips[2]);
+                        audioEventManager?.NotifyAudioEvent(movementSound);
+                    }
+                }
             }
         }
-        private void CrouchToggle()
+
+        private void HandleCrouch()
         {
             if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.LeftControl))
             {
-                if (!isGrounded)
-                    return;
-                if (currentState.playerStance == PlayerStance.Stance.Crouching)
+                if (isCrouching)
                 {
-                    RaycastHit hit;
-                    LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
-
-                    if (Physics.Raycast(feet.position, transform.up, out hit, playerCrouchHeight, obstacleMask))
-                    {
-                        isCrouching = true;
-                        currentState.playerStance = PlayerStance.Stance.Crouching;
-                        currentState.camHeight = 1.5f;
-                    }
-                    else
-                    {
-                        isCrouching = false;
-                        currentState.playerStance = PlayerStance.Stance.Idle;
-                        currentState.camHeight = 2f;
-                    }
+                    if (CanStandUp()) isCrouching = false;
                 }
                 else
                 {
                     isCrouching = true;
-                    currentState.playerStance = PlayerStance.Stance.Crouching;
-                    currentState.camHeight = 1.5f;
                 }
             }
+
+            float targetHeight = isCrouching ? crouchHeight : standHeight;
+            float targetCamHeight = isCrouching ? crouchCamHeight : standCamHeight;
+
+            controller.height = Mathf.Lerp(controller.height, targetHeight, Time.deltaTime * crouchTransitionSpeed);
+
+            controller.center = new Vector3(0, controller.height / 2f, 0);
+
+            Vector3 camPos = cam.transform.localPosition;
+            camPos.y = Mathf.Lerp(camPos.y, targetCamHeight, Time.deltaTime * crouchTransitionSpeed);
+            cam.transform.localPosition = camPos;
         }
-        private void Jump()
+
+        private bool CanStandUp()
         {
-            if (Input.GetKey(KeyCode.Space) && isGrounded && stamina.HasStamina(stamina.jumpStaminaCost / 2))
-            {
-                RaycastHit hit;
-                LayerMask obstacleMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Postprocessing"));
-
-                if (!isCrouching && Physics.Raycast(feet.position, transform.up, out hit, jumpHeight, obstacleMask))
-                    return;
-                else if (isCrouching && Physics.Raycast(feet.position, transform.up, out hit, playerCrouchHeight + jumpHeight, obstacleMask))
-                    return;
-                if (_isClimbing)
-                    shouldDetachFromLadder = true;
-                if (isCrouching)
-                {
-                    isCrouching = false;
-                    currentState.playerStance = PlayerStance.Stance.Idle;
-                    currentState.camHeight = 2f;
-                }
-
-                fallTimeCalc = 1.2f;
-                fallDamageMultiplier = 0.6f;
-                playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-                stamina.UseStamina(stamina.jumpStaminaCost);
-                movementSound.clip = movementClips[2];
-                movementSound.pitch = 1f;
-                movementSound.Play();
-                audioEventManager.NotifyAudioEvent(movementSound);
-            }
-            else
-            {
-                if (isGrounded)
-                {
-                    fallTimeCalc = 0.7f;
-                    fallDamageMultiplier = 1.5f;
-                }
-            }
+            return !Physics.Raycast(feet.position, Vector3.up, standHeight, playerMask);
         }
     }
 }

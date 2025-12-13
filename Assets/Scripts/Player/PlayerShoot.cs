@@ -22,7 +22,6 @@ namespace RatGamesStudios.OperationDeratization.Player
         private AudioSource gunFireAudio;
         private AudioSource gunReloadAudio;
         private AudioSource gunSwitchAudio;
-        private PlayerStance currentState = new PlayerStance();
         [HideInInspector] public Camera cam;
         private PlayerMotor playerMotor;
         private PlayerInventory inventory;
@@ -418,12 +417,12 @@ namespace RatGamesStudios.OperationDeratization.Player
 
                 yield break;
             }
-            if(isReloading)
+            if (isReloading)
             {
                 weaponReload.currentAmmoCount += ammoAvailable;
                 weaponReload.maxAmmoCount -= weaponReload.magazineSize;
             }
-            
+
             isReloading = false;
         }
         private void PointerPosition()
@@ -476,10 +475,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                     dynamicFieldOfView = 25f;
                     sniperCam.gameObject.SetActive(false);
                 }
-                if (currentState.playerStance == PlayerStance.Stance.Idle || currentState.playerStance == PlayerStance.Stance.Walking)
-                    playerMotor.moveSpeed = 4f;
-                else
-                    playerMotor.moveSpeed = 2f;
             }
         }
         private float CalculateSensitivity()
