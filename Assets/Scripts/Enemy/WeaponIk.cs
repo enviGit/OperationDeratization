@@ -13,13 +13,15 @@ namespace RatGamesStudios.OperationDeratization.Enemy
     {
         private Transform targetTransform;
         private Transform aimTransform;
-        //private Vector3 targetOffset = new Vector3(0, 0.65f, 0);
-        public int iterations = 10;
+        public int iterations = 20;
         [Range(0, 1)] public float weight = 1f;
         public float angleLimit = 90f;
         public float distanceLimit = 1.5f;
         public HumanBone[] humanBones;
         private Transform[] boneTransforms;
+
+        [Header("IK Smoothing")]
+        public float slerpSpeed = 8f;
 
         private void Start()
         {
@@ -31,18 +33,35 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         private void LateUpdate()
         {
-            if (aimTransform == null)
-                return;
-            if (targetTransform == null)
+            if (aimTransform == null || targetTransform == null)
                 return;
 
-            Vector3 targetPosition = GetTargetPosition();
+            Vector3 targetPosition = targetTransform.position;
+            Vector3 aimOrigin = aimTransform.position;
+            Vector3 targetDirection = targetPosition - aimOrigin;
+            Vector3 aimDirection = aimTransform.forward;
+
+            float targetAngle = Vector3.Angle(targetDirection, aimDirection);
+            float targetDistance = targetDirection.magnitude;
+
+            float targetWeight = weight;
+            if (targetDistance < distanceLimit)
+            {
+                targetWeight = Mathf.Lerp(targetWeight, 0.5f, (distanceLimit - targetDistance) / distanceLimit);
+            }
+
+            if (targetAngle > angleLimit)
+            {
+                targetWeight = Mathf.Lerp(weight, 0f, (targetAngle - angleLimit) / 45f);
+            }
+
+            targetWeight = Mathf.Clamp01(targetWeight);
 
             for (int i = 0; i < iterations; i++)
                 for (int j = 0; j < boneTransforms.Length; j++)
                 {
                     Transform bone = boneTransforms[j];
-                    float boneWeight = humanBones[j].weight * weight;
+                    float boneWeight = humanBones[j].weight * targetWeight;
                     AimAtTarget(bone, targetPosition, boneWeight);
                 }
         }
@@ -50,29 +69,12 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         {
             Vector3 aimDirection = aimTransform.forward;
             Vector3 targetDirection = targetPosition - aimTransform.position;
+
             Quaternion aimTowards = Quaternion.FromToRotation(aimDirection, targetDirection);
+
             Quaternion blendedRotation = Quaternion.Slerp(Quaternion.identity, aimTowards, weight);
-            bone.rotation = blendedRotation * bone.rotation;
-        }
-        private Vector3 GetTargetPosition()
-        {
-            //Vector3 targetDirection = (targetTransform.position + targetOffset) - aimTransform.position;
-            Vector3 targetDirection = targetTransform.position - aimTransform.position;
-            Vector3 aimDirection = aimTransform.forward;
-            float blendOut = 0;
-            float targetAngle = Vector3.Angle(targetDirection, aimDirection);
-
-            if (targetAngle > angleLimit)
-                blendOut += (targetAngle - angleLimit) / 50f;
-
-            float targetDistance = targetDirection.magnitude;
-
-            if (targetDistance < distanceLimit)
-                blendOut += distanceLimit - targetDistance;
-
-            Vector3 direction = Vector3.Slerp(targetDirection, aimDirection, blendOut);
-
-            return aimTransform.position + direction;
+            Quaternion desiredRotation = blendedRotation * bone.rotation;
+            bone.rotation = Quaternion.Slerp(bone.rotation, desiredRotation, Time.deltaTime * slerpSpeed);
         }
         public void SetTargetTransform(Transform target)
         {

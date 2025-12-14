@@ -22,7 +22,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
                     agent.stateMachine.ChangeState(AiStateId.FindAmmo);
                 else
                     agent.stateMachine.ChangeState(AiStateId.FindTarget);
-                
+
                 return;
             }
 
@@ -39,29 +39,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
             else
                 agent.weapons.SetFiring(false);
         }
-        /*private void ReloadWeapon(AiAgent agent)
-        {
-            var weapon = agent.weapons.currentWeapon;
-
-            if(weapon && weapon.GetComponent<Weapon>().gun.currentAmmoCount <= 0)
-                StartCoroutine(agent.weapons.ReloadCoroutine); 
-        }
-        private void SelectWeapon(AiAgent agent)
-        {
-            var bestWeapon = ChooseWeapon(agent);
-
-            if (bestWeapon != agent.weapons.currentWeaponSlot)
-                agent.weapons.SwitchWeapon(bestWeapon);
-        }
-        AiWeapons.WeaponSlot ChooseWeapon(AiAgent agent)
-        {
-            float distance = agent.targeting.TargetDistance;
-
-            if (distance > agent.config.attackCloseRange)
-                return AiWeapons.WeaponSlot.Primary;
-            else
-                return AiWeapons.WeaponSlotSecondary;
-        }*/
         private void UpdateLowAmmo(AiAgent agent)
         {
             if (agent.weapons.IsLowAmmo())

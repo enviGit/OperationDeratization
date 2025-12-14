@@ -24,14 +24,19 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                 {
                     string soundPath = GetGameObjectPath(audioGameObject.gameObject);
                     Debug.Log("Bot: " + gameObject.name + " has detected sound: " + audioGameObject.name + " at path: " + soundPath);
-                } 
+                }
                 if (IsHighPrioritySound(audioGameObject.name) && agent.weapons.HasWeapon() && !agent.targeting.HasTarget && !agent.weapons.IsLowAmmo())
                 {
                     lastDetectedSoundPosition = audioGameObject.transform.position;
                     lastDetectedSoundAudible = true;
                     agent.stateMachine.ChangeState(AiStateId.InvestigateSound);
+                    Invoke(nameof(ClearSoundDetection), 1.0f);
                 }
             }
+        }
+        public void ClearSoundDetection()
+        {
+            lastDetectedSoundAudible = false;
         }
         private bool IsAudioAudible(AudioSource audioSource)
         {
@@ -41,10 +46,14 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         private bool IsChildOfMyObject(Transform potentialChild)
         {
-            if (potentialChild.parent != null)
-                return potentialChild.parent.IsChildOf(transform);
-            else
-                return false;
+            Transform current = potentialChild;
+            while (current != null)
+            {
+                if (current == transform)
+                    return true;
+                current = current.parent;
+            }
+            return false;
         }
         private bool IsHighPrioritySound(string soundName)
         {

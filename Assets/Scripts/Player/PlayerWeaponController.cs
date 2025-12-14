@@ -122,11 +122,9 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void HandleInput()
         {
-            // Sprawdzamy stan amunicji z lokalnego komponentu (activeGunLogic), a nie ze ScriptableObject
             int currentAmmo = activeGunLogic != null ? activeGunLogic.CurrentClip : 0;
             bool isMelee = currentWeapon.gunStyle == GunStyle.Melee;
 
-            // Logika strzelania (gdy mamy amunicję LUB broń biała)
             if (Input.GetMouseButton(0) && (currentAmmo > 0 || isMelee) && !isReloading)
             {
                 if (currentWeapon.autoFire)
@@ -138,14 +136,13 @@ namespace RatGamesStudios.OperationDeratization.Player
                     if (Input.GetMouseButtonDown(0) && Time.time >= nextShotTime) Shoot();
                 }
             }
-            // Klikanie pusta bronią
             else if (Input.GetMouseButtonDown(0) && currentAmmo <= 0 && !isReloading && !isMelee)
             {
                 if (Time.time >= nextShotTime)
                 {
                     gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
                     if (currentWeapon.gunAudioClips.Length > 1)
-                        gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[1]); // Dźwięk puste/klik
+                        gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[1]);
                     nextShotTime = Time.time + 0.2f;
                 }
             }
@@ -162,8 +159,6 @@ namespace RatGamesStudios.OperationDeratization.Player
                 return;
             }
 
-            // NOWE: Zlecenie odjęcia amunicji lokalnemu komponentowi
-            // TryShoot zwróci false jeśli jakimś cudem nie ma amunicji
             if (activeGunLogic != null)
             {
                 bool shotSuccess = activeGunLogic.TryShoot();
@@ -250,10 +245,8 @@ namespace RatGamesStudios.OperationDeratization.Player
 
         private void HandleReload()
         {
-            // Bezpieczniki: czy mamy komponent broni?
             if (activeGunLogic == null) return;
 
-            // Sprawdzamy lokalny stan magazynka i rezerwy
             bool canReload = activeGunLogic.CurrentClip < currentWeapon.magazineSize && activeGunLogic.CurrentStash > 0;
 
             if (Input.GetKeyDown(KeyCode.R) && !isReloading && canReload)

@@ -24,68 +24,27 @@ namespace RatGamesStudios.OperationDeratization.Enemy.State
         }
         public void Update(AiAgent agent)
         {
-            // Find pickup
             pickup = FindPickup(agent);
 
             if (pickup)
                 CollectPickup(agent, pickup);
             else
             {
-                // Wander if no pickup is found
                 if (!agent.navMeshAgent.hasPath)
                 {
-                    Vector3 randomPoint = RandomNavmeshLocation(wanderRadius, agent);
+                    Vector3 randomPoint = agent.RandomNavmeshLocation(wanderRadius);
                     agent.navMeshAgent.SetDestination(randomPoint);
                 }
             }
-            //Wander
             if (!agent.navMeshAgent.hasPath)
             {
-                Vector3 randomPoint = RandomNavmeshLocation(wanderRadius, agent);
+                Vector3 randomPoint = agent.RandomNavmeshLocation(wanderRadius);
                 agent.navMeshAgent.SetDestination(randomPoint);
             }
-            if(agent.targeting.HasTarget)
+            if (agent.targeting.HasTarget)
                 agent.stateMachine.ChangeState(AiStateId.AttackTarget);
             if (!agent.health.IsLowHealth())
                 agent.stateMachine.ChangeState(AiStateId.Patrol);
-        }
-        private Vector3 RandomNavmeshLocation(float radius, AiAgent agent)
-        {
-            // Find the closest pickup location
-            CriticalLocations closestLocation = null;
-            float closestDistance = float.MaxValue;
-
-            foreach (CriticalLocations location in agent.locations)
-            {
-                float distance = Vector3.Distance(agent.transform.position, location.location.position);
-
-                if (distance < closestDistance)
-                {
-                    closestLocation = location;
-                    closestDistance = distance;
-                }
-            }
-
-            // If a valid location is found, select a random point within its radius
-            if (closestLocation != null)
-            {
-                Vector3 randomDirection = Random.insideUnitSphere * closestLocation.radius;
-                randomDirection += closestLocation.location.position;
-                NavMeshHit navHit;
-                NavMesh.SamplePosition(randomDirection, out navHit, closestLocation.radius, NavMesh.AllAreas);
-
-                return navHit.position;
-            }
-            else
-            {
-                // No valid pickup location found, return a random point within the entire radius
-                Vector3 randomDirection = Random.insideUnitSphere * radius;
-                randomDirection += agent.transform.position;
-                NavMeshHit navHit;
-                NavMesh.SamplePosition(randomDirection, out navHit, radius, NavMesh.AllAreas);
-
-                return navHit.position;
-            }
         }
         private GameObject FindPickup(AiAgent agent)
         {

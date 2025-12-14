@@ -118,21 +118,34 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                 audioEventManager?.NotifyAudioEvent(impactSound);
             }
         }
-        private void ApplyDamage(float damage)
+        private void ApplyDamage(float rawDamage)
         {
-            float damageToHealth = damage;
+            float damageToArmor = rawDamage;
+            float damageToHealth = rawDamage;
 
             if (currentArmor > 0)
             {
-                damageToHealth = damage * 0.5f;
-                currentArmor = Mathf.Clamp(currentArmor - damage, 0, maxArmor);
+                float armorMitigation = 0.75f;
+                if (armorMitigation == 0) armorMitigation = 0.5f;
+
+                damageToHealth = rawDamage * (1.0f - armorMitigation);
+
+                damageToArmor = rawDamage * 1.0f;
+
+                currentArmor = Mathf.Clamp(currentArmor - damageToArmor, 0, maxArmor);
             }
             else if (armorSocket && armorSocket.childCount > 0)
             {
                 armorSocket.GetChild(0).gameObject.SetActive(false);
+                damageToHealth = rawDamage;
             }
 
             currentHealth = Mathf.Clamp(currentHealth - damageToHealth, 0, enemyStats.maxHealth);
+
+            if (currentArmor <= 0 && armorSocket && armorSocket.childCount > 0 && armorSocket.GetChild(0).gameObject.activeSelf)
+            {
+                armorSocket.GetChild(0).gameObject.SetActive(false);
+            }
         }
         public bool IsLowHealth()
         {

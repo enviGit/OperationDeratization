@@ -23,6 +23,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         public Gun currentWeapon;
         private ActiveWeapon activeGunLogic;
         public LayerMask layerMask;
+        private LayerMask selfHitboxLayer;
         private AudioEventManager audioEventManager;
 
         [Header("Weapon")]
@@ -30,6 +31,18 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         public bool isReloading = false;
         public bool isFiring = false;
         private bool isLowQuality = false;
+
+        [Header("Spread & Burst Settings")]
+        public int burstCount = 3;
+        public float burstDelay = 0.08f;
+        public float resetTime = 0.5f;
+        private float maxSpreadAngle = 1.0f;
+        private float distancePenaltyMultiplier = 0.01f;
+
+        [HideInInspector] public int currentBurstShots = 0;
+        private float lastShotTimeInBurst = 0f;
+        private float lastShotTime = 0f;
+        private float currentSpread = 0f;
 
         private void Start()
         {
@@ -46,6 +59,14 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 
             if (Settings.QualityPreset == 0)
                 isLowQuality = true;
+
+            selfHitboxLayer = 1 << gameObject.layer;
+            int hitboxLayerIndex = LayerMask.NameToLayer("Hitbox");
+
+            if (hitboxLayerIndex != -1)
+            {
+                layerMask = layerMask & ~hitboxLayerIndex;
+            }
         }
         private void Update()
         {
@@ -80,33 +101,79 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                 return;
             }
 
-            if (Time.time > autoShotTimer && activeGunLogic.CurrentClip > 0 && !isReloading && isFiring)
+            if (Time.time - lastShotTime > resetTime)
             {
-                if (!activeGunLogic.TryShoot()) return;
+                currentSpread = 0f;
+            }
 
-                if (gunFireAudio)
+
+            if (isFiring && !isReloading)
+            {
+                if (currentBurstShots <= 0)
                 {
-                    gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
-                    if (currentWeapon.gunAudioClips.Length > 0)
-                        gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
-                    if (audioEventManager) audioEventManager.NotifyAudioEvent(gunFireAudio);
+                    if (Time.time > lastShotTime + currentWeapon.timeBetweenShots * 4f)
+                    {
+                        currentBurstShots = burstCount;
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
 
-                Transform muzzle = FindMuzzle();
-                if (muzzle == null) return;
-
-                ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
-
-                if (Physics.Raycast(muzzle.transform.position, muzzle.forward, out RaycastHit hit, currentWeapon.range, layerMask))
+                if (currentBurstShots > 0)
                 {
-                    ProcessHit(hit, muzzle.forward);
-                }
+                    if (Time.time > lastShotTimeInBurst)
+                    {
+                        if (!activeGunLogic.TryShoot())
+                        {
+                            currentBurstShots = 0;
+                            return;
+                        }
 
-                autoShotTimer = Time.time + currentWeapon.timeBetweenShots;
+
+                        Transform muzzle = FindMuzzle();
+                        if (muzzle == null) return;
+
+                        currentSpread += maxSpreadAngle / burstCount;
+
+                        float distanceToTarget = 50f;
+                        if (aiWeapons.currentTarget != null)
+                        {
+                            distanceToTarget = Vector3.Distance(muzzle.position, aiWeapons.currentTarget.position);
+                        }
+
+                        float finalSpread = currentSpread + (distanceToTarget * distancePenaltyMultiplier);
+                        finalSpread = Mathf.Clamp(finalSpread, 0f, maxSpreadAngle * 2f);
+
+                        Vector3 originalDirection = muzzle.forward;
+                        Vector3 randomSpread = Random.insideUnitSphere * finalSpread;
+                        Vector3 finalDirection = (originalDirection + randomSpread).normalized;
+
+                        if (gunFireAudio)
+                        {
+                            gunFireAudio.pitch = Random.Range(0.85f, 1.15f);
+                            if (currentWeapon.gunAudioClips.Length > 0)
+                                gunFireAudio.PlayOneShot(currentWeapon.gunAudioClips[0]);
+                            if (audioEventManager) audioEventManager.NotifyAudioEvent(gunFireAudio);
+                        }
+
+                        ObjectPoolManager.SpawnObject(muzzleFlash, muzzle.position, muzzle.rotation, muzzle);
+
+                        if (Physics.Raycast(muzzle.transform.position, finalDirection, out RaycastHit hit, currentWeapon.range, layerMask))
+                        {
+                            ProcessHit(hit, finalDirection);
+                        }
+
+                        currentBurstShots--;
+                        lastShotTimeInBurst = Time.time + burstDelay;
+                        lastShotTime = Time.time;
+                    }
+                }
             }
         }
 
-        private Transform FindMuzzle()
+        public Transform FindMuzzle()
         {
             string[] bonePrefixes = { "mixamorig:", "mixamorig1:", "mixamorig4:", "mixamorig6:", "mixamorig7:", "mixamorig9:", "mixamorig10:", "mixamorig12:" };
 

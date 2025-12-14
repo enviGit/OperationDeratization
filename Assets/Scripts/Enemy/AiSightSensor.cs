@@ -1,3 +1,4 @@
+using RatGamesStudios.OperationDeratization.Player;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -58,7 +59,25 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         private bool IsValidTarget(GameObject obj)
         {
-            return obj != gameObject && (obj.CompareTag("Weapon") || obj.CompareTag("AmmoBox") || obj.CompareTag("FirstAidKit") || obj.CompareTag("Armor") || obj.CompareTag("Enemy") || obj.CompareTag("Player"));
+            if (obj == gameObject) return false;
+
+            if (obj.CompareTag("Player") || obj.CompareTag("Enemy"))
+            {
+                var health = obj.GetComponent<EnemyHealth>();
+                if (health && !health.isAlive) return false;
+
+                var playerHealth = obj.GetComponent<PlayerHealth>();
+                if (playerHealth && !playerHealth.isAlive) return false;
+
+                return true;
+            }
+
+            if (obj.CompareTag("Weapon") || obj.CompareTag("AmmoBox") || obj.CompareTag("FirstAidKit") || obj.CompareTag("Armor"))
+            {
+                return true;
+            }
+
+            return false;
         }
         public bool IsInSight(GameObject obj)
         {

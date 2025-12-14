@@ -8,53 +8,18 @@ namespace RatGamesStudios.OperationDeratization.Enemy
 {
     public class AiWeapons : MonoBehaviour
     {
-        /*public enum WeaponState
-        {
-            Holstering,
-            Holstered,
-            Activating,
-            Active,
-            Reloading
-        }
-        public enum WeaponSlot
-        {
-            Primary,
-            Secondary
-        }
-        public Gun currentGun
-        {
-            get
-            {
-                return weapons[current];
-            }
-        }
-        public WeaponSlot currentWeaponSlot
-        {
-            get
-            {
-                return (WeaponSlot)current;
-            }
-        }
-        private Gun[] weapons = new Gun[2];
-        private int current = 0;
-        private WeaponState weaponState = WeaponState.Holstered
-        private GameObject magazineHand
-        public bool IsActive()
-        {
-            return weaponState == WeaponState.Active;
-        }*/
-
         [Header("References")]
         [HideInInspector] public GameObject currentWeapon;
         private EnemyShoot weapon;
         public bool hasLootedAmmo = false;
+        public ActiveWeapon ActiveGunLogic => activeGunLogic;
         private ActiveWeapon activeGunLogic;
 
         [Header("Weapons")]
         private Animator animator;
         private MeshSockets weaponSockets;
         private WeaponIk weaponIk;
-        private Transform currentTarget;
+        public Transform currentTarget;
         public bool weaponActive = false;
         public float inaccuracy = 0.4f;
 
@@ -85,7 +50,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             weaponSockets = sockets;
             currentWeapon = weaponObj;
 
-            // Konfiguracja podniesionego obiektu
             var wScript = currentWeapon.GetComponent<Weapon>();
             if (wScript)
             {

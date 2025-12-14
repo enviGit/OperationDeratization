@@ -61,6 +61,9 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             stateClipMap[AiStateId.FindTarget] = searchStateClips;
             stateClipMap[AiStateId.InvestigateSound] = searchStateClips;
             stateClipMap[AiStateId.AttackTarget] = attackStateClips;
+            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            navMeshAgent.avoidancePriority = Random.Range(1, 99);
+
         }
         private void Update()
         {
@@ -69,7 +72,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         }
         public void CheckAndPlayRandomClip()
         {
-            if (!talkSound.isPlaying && stateClipMap.ContainsKey(currentState)) // Check if the talkSound audio source is not currently playing any sound
+            if (!talkSound.isPlaying && stateClipMap.ContainsKey(currentState))
             {
                 float timeSinceLastPlay = Time.time - lastPlayTime;
                 float minTimeBetweenPlays = (currentState == AiStateId.FindTarget || currentState == AiStateId.InvestigateSound) ? 25f : 5f;
@@ -89,6 +92,41 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             talkSound.clip = randomClip;
             talkSound.Play();
         }
+        public Vector3 RandomNavmeshLocation(float radius)
+        {
+            CriticalLocations closestLocation = null;
+            float closestDistance = float.MaxValue;
+
+            foreach (CriticalLocations location in locations)
+            {
+                float distance = Vector3.Distance(transform.position, location.location.position);
+
+                if (distance < closestDistance)
+                {
+                    closestLocation = location;
+                    closestDistance = distance;
+                }
+            }
+
+            if (closestLocation != null)
+            {
+                Vector3 randomDirection = Random.insideUnitSphere * closestLocation.radius;
+                randomDirection += closestLocation.location.position;
+                NavMeshHit navHit;
+                NavMesh.SamplePosition(randomDirection, out navHit, closestLocation.radius, NavMesh.AllAreas);
+
+                return navHit.position;
+            }
+            else
+            {
+                Vector3 randomDirection = Random.insideUnitSphere * radius;
+                randomDirection += transform.position;
+                NavMeshHit navHit;
+                NavMesh.SamplePosition(randomDirection, out navHit, radius, NavMesh.AllAreas);
+
+                return navHit.position;
+            }
+        }
         private void OnDrawGizmos()
         {
             if (locations != null)
@@ -100,5 +138,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
                 }
             }
         }
+
     }
 }

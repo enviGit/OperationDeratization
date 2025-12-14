@@ -12,6 +12,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
         [Header("Weapon Data")]
         public Gun gun;
         public RuntimeAnimatorController animator;
+        private AiAgent currentHolder = null;
 
         [Header("References")]
         private PlayerInventory inventory;
@@ -150,7 +151,7 @@ namespace RatGamesStudios.OperationDeratization.Interactables
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Enemy"))
+            if (other.CompareTag("Enemy") && currentHolder == null)
             {
                 var aiAgent = other.GetComponent<AiAgent>();
                 var aiWeapons = other.GetComponent<AiWeapons>();
@@ -159,13 +160,25 @@ namespace RatGamesStudios.OperationDeratization.Interactables
                 {
                     if ((gun.gunStyle == GunStyle.Primary || gun.gunStyle == GunStyle.Secondary) && aiWeapons.currentWeapon == null)
                     {
+                        currentHolder = aiAgent;
                         var sockets = other.GetComponentInChildren<MeshSockets>();
                         GameObject newWeapon = Instantiate(gun.gunPrefab);
                         aiWeapons.Equip(newWeapon, sockets);
+                        gameObject.tag = "Untagged";
+                        gameObject.layer = LayerMask.NameToLayer("Default");
+                        SetLayerRecursively(gameObject, LayerMask.NameToLayer("Default"));
+                        prompt = "";
                         Destroy(gameObject);
                     }
                 }
             }
+        }
+        public static void SetLayerRecursively(GameObject obj, int layer)
+        {
+            obj.layer = layer;
+
+            foreach (Transform child in obj.transform)
+                SetLayerRecursively(child.gameObject, layer);
         }
     }
 }
