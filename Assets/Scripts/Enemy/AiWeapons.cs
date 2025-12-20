@@ -21,7 +21,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private WeaponIk weaponIk;
         public Transform currentTarget;
         public bool weaponActive = false;
-        public float inaccuracy = 0.4f;
 
         private void Start()
         {
@@ -34,7 +33,6 @@ namespace RatGamesStudios.OperationDeratization.Enemy
             if (currentTarget && currentWeapon && weaponActive)
             {
                 Vector3 target = currentTarget.position;
-                target += Random.insideUnitSphere * inaccuracy;
                 weapon.Shoot();
             }
         }

@@ -21,7 +21,7 @@ namespace RatGamesStudios.OperationDeratization.Enemy
         private Transform[] boneTransforms;
 
         [Header("IK Smoothing")]
-        public float slerpSpeed = 8f;
+        private float slerpSpeed = 15f;
 
         private void Start()
         {
